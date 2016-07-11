@@ -19,94 +19,164 @@ package hu.akarnokd.rxjava2.math;
 import static hu.akarnokd.rxjava2.math.MathFlowable.*;
 
 import org.junit.Test;
-import org.reactivestreams.Publisher;
 
+import hu.akarnokd.rxjava2.test.BaseTest;
 import io.reactivex.Flowable;
-import io.reactivex.subscribers.TestSubscriber;
 
-public class MathFlowableTest {
+public class MathFlowableTest extends BaseTest {
     
-    static <T> void assertResult(Publisher<T> source, T... array) {
-        TestSubscriber<T> ts = new TestSubscriber<T>();
-        
-        source.subscribe(ts);
-        
-        ts.assertValues(array)
-        .assertNoErrors()
-        .assertComplete();
+    static Flowable<Integer> intEmpty() {
+        return Flowable.empty();
     }
-    
-    static <T> Flowable<T> values(T... array) {
-        return Flowable.fromArray(array);
+
+    static Flowable<Long> longEmpty() {
+        return Flowable.empty();
     }
-    
+
+    static Flowable<Float> floatEmpty() {
+        return Flowable.empty();
+    }
+
+    static Flowable<Double> doubleEmpty() {
+        return Flowable.empty();
+    }
     @Test
     public void normalSumInt() {
-        assertResult(sumInt(values(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)), 55);
+        assertResult(sumInt(flow(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)), 55);
     }
     
     @Test
     public void normalSumLong() {
-        assertResult(sumLong(values(1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L)), 55L);
+        assertResult(sumLong(flow(1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L)), 55L);
     }
 
     @Test
     public void normalSumFloat() {
-        assertResult(sumFloat(values(1F, 2F, 3F, 4F, 5F, 6F, 7F, 8F, 9F, 10F)), 55F);
+        assertResult(sumFloat(flow(1F, 2F, 3F, 4F, 5F, 6F, 7F, 8F, 9F, 10F)), 55F);
     }
 
     @Test
     public void normalSumDouble() {
-        assertResult(sumDouble(values(1D, 2D, 3D, 4D, 5D, 6D, 7D, 8D, 9D, 10D)), 55D);
+        assertResult(sumDouble(flow(1D, 2D, 3D, 4D, 5D, 6D, 7D, 8D, 9D, 10D)), 55D);
     }
     
     @Test
     public void normalMinInt() {
-        assertResult(min(values(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)), 1);
+        assertResult(min(flow(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)), 1);
     }
     
     @Test
     public void normalMinLong() {
-        assertResult(min(values(1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L)), 1L);
+        assertResult(min(flow(1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L)), 1L);
     }
 
     @Test
     public void normalMinFloat() {
-        assertResult(min(values(1F, 2F, 3F, 4F, 5F, 6F, 7F, 8F, 9F, 10F)), 1F);
+        assertResult(min(flow(1F, 2F, 3F, 4F, 5F, 6F, 7F, 8F, 9F, 10F)), 1F);
     }
 
     @Test
     public void normalMinDouble() {
-        assertResult(min(values(1D, 2D, 3D, 4D, 5D, 6D, 7D, 8D, 9D, 10D)), 1D);
+        assertResult(min(flow(1D, 2D, 3D, 4D, 5D, 6D, 7D, 8D, 9D, 10D)), 1D);
     }
     
     @Test
     public void normalMaxInt() {
-        assertResult(max(values(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)), 10);
+        assertResult(max(flow(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)), 10);
     }
     
     @Test
     public void normalMaxLong() {
-        assertResult(max(values(1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L)), 10L);
+        assertResult(max(flow(1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L)), 10L);
     }
 
     @Test
     public void normalMaxFloat() {
-        assertResult(max(values(1F, 2F, 3F, 4F, 5F, 6F, 7F, 8F, 9F, 10F)), 10F);
+        assertResult(max(flow(1F, 2F, 3F, 4F, 5F, 6F, 7F, 8F, 9F, 10F)), 10F);
     }
 
     @Test
     public void normalMaxDouble() {
-        assertResult(max(values(1D, 2D, 3D, 4D, 5D, 6D, 7D, 8D, 9D, 10D)), 10D);
+        assertResult(max(flow(1D, 2D, 3D, 4D, 5D, 6D, 7D, 8D, 9D, 10D)), 10D);
     }
     
     @Test
     public void normalAverageFloat() {
-        assertResult(averageFloat(values(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)), 5.5F);
+        assertResult(averageFloat(flow(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)), 5.5F);
     }
     
     @Test
     public void normalAverageDouble() {
-        assertResult(averageDouble(values(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)), 5.5D);
+        assertResult(averageDouble(flow(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)), 5.5D);
+    }
+    
+    @Test
+    public void emptySumInt() {
+        assertResult(sumInt(intEmpty()));
+    }
+
+    @Test
+    public void emptySumLong() {
+        assertResult(sumLong(longEmpty()));
+    }
+
+    @Test
+    public void emptySumFloat() {
+        assertResult(sumFloat(floatEmpty()));
+    }
+
+    @Test
+    public void emptySumDouble() {
+        assertResult(sumDouble(doubleEmpty()));
+    }
+    
+    @Test
+    public void emptyMinInt() {
+        assertResult(min(intEmpty()));
+    }
+
+    @Test
+    public void emptyMinLong() {
+        assertResult(min(longEmpty()));
+    }
+
+    @Test
+    public void emptyMinFloat() {
+        assertResult(min(floatEmpty()));
+    }
+
+    @Test
+    public void emptyMinDouble() {
+        assertResult(min(doubleEmpty()));
+    }
+
+    @Test
+    public void emptyMaxInt() {
+        assertResult(max(intEmpty()));
+    }
+
+    @Test
+    public void emptyMaxLong() {
+        assertResult(max(longEmpty()));
+    }
+
+    @Test
+    public void emptyMaxFloat() {
+        assertResult(max(floatEmpty()));
+    }
+
+    @Test
+    public void emptyMaxDouble() {
+        assertResult(max(doubleEmpty()));
+    }
+    
+    @Test
+    public void emptyAverageFloat() {
+        assertResult(averageFloat(floatEmpty()));
+    }
+
+    @Test
+    public void emptyAverageDouble() {
+        assertResult(averageDouble(doubleEmpty()));
     }
 }
