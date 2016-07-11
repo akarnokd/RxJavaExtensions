@@ -48,8 +48,10 @@ apply plugin: 'osgi'
 dependencies {
     signature 'org.codehaus.mojo.signature:java16:1.1@signature'
 
-    compile "io.reactivex.rxjava2:rxjava:+"
+    compile "org.reactivestreams:reactive-streams:1.0.0"
+    compileOnly "io.reactivex.rxjava2:rxjava:+"
 
+    testCompile "io.reactivex.rxjava2:rxjava:+"
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 

@@ -16,30 +16,30 @@
 
 package hu.akarnokd.rxjava2.math;
 
-import static hu.akarnokd.rxjava2.math.MathFlowable.*;
-
 import org.junit.Test;
-import org.reactivestreams.Publisher;
 
-import io.reactivex.Flowable;
-import io.reactivex.subscribers.TestSubscriber;
+import static hu.akarnokd.rxjava2.math.MathObservable.*;
 
-public class MathFlowableTest {
-    
-    static <T> void assertResult(Publisher<T> source, T... array) {
-        TestSubscriber<T> ts = new TestSubscriber<T>();
+import io.reactivex.*;
+import io.reactivex.observers.TestObserver;
+
+public class MathObservableTest {
+
+    static <T> void assertResult(ObservableConsumable<T> source, T... array) {
+        TestObserver<T> ts = new TestObserver<T>();
         
         source.subscribe(ts);
         
-        ts.assertValues(array)
-        .assertNoErrors()
-        .assertComplete();
+        ts.assertValues(array);
+        ts.assertNoErrors();
+        ts.assertComplete();
+    }
+
+    static <T> Observable<T> values(T... array) {
+        return Observable.fromArray(array);
     }
     
-    static <T> Flowable<T> values(T... array) {
-        return Flowable.fromArray(array);
-    }
-    
+
     @Test
     public void normalSumInt() {
         assertResult(sumInt(values(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)), 55);
