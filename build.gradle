@@ -49,9 +49,8 @@ dependencies {
     signature 'org.codehaus.mojo.signature:java16:1.1@signature'
 
     compile "org.reactivestreams:reactive-streams:1.0.0"
-    compileOnly "io.reactivex.rxjava2:rxjava:+"
+    compile "io.reactivex.rxjava2:rxjava:+"
 
-    testCompile "io.reactivex.rxjava2:rxjava:+"
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 
@@ -66,9 +65,21 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 }
 
 artifacts {
-	archives jar
+    archives jar
     archives sourcesJar
     archives javadocJar
+}
+
+uploadMavenCentral {
+    repositories {
+        mavenDeployer {
+            pom.whenConfigured {
+                p -> p.dependencies = p.dependencies.findAll { 
+                    dep -> dep.artifactId != "rxjava" 
+                }
+            }
+        }
+    }
 }
 
 jar {
