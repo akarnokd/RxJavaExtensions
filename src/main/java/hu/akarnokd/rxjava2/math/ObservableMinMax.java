@@ -20,16 +20,15 @@ import java.util.Comparator;
 
 import hu.akarnokd.rxjava2.util.DeferredScalarObserver;
 import io.reactivex.*;
-import io.reactivex.internal.operators.observable.ObservableSource;
-import io.reactivex.internal.util.Exceptions;
+import io.reactivex.exceptions.Exceptions;
 
-final class ObservableMinMax<T> extends ObservableSource<T, T> {
+final class ObservableMinMax<T> extends ObservableWithSource<T, T> {
 
     final Comparator<? super T> comparator;
     
     final int flag;
     
-    public ObservableMinMax(ObservableConsumable<T> source, Comparator<? super T> comparator, int flag) {
+    public ObservableMinMax(ObservableSource<T> source, Comparator<? super T> comparator, int flag) {
         super(source);
         this.comparator = comparator;
         this.flag = flag;

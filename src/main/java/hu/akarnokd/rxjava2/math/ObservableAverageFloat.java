@@ -18,11 +18,10 @@ package hu.akarnokd.rxjava2.math;
 
 import hu.akarnokd.rxjava2.util.DeferredScalarObserver;
 import io.reactivex.*;
-import io.reactivex.internal.operators.observable.ObservableSource;
 
-public class ObservableAverageFloat extends ObservableSource<Number, Float> {
+public class ObservableAverageFloat extends ObservableWithSource<Number, Float> {
 
-    public ObservableAverageFloat(ObservableConsumable<Number> source) {
+    public ObservableAverageFloat(ObservableSource<Number> source) {
         super(source);
     }
 

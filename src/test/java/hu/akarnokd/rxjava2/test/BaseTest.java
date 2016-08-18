@@ -24,7 +24,7 @@ import io.reactivex.subscribers.TestSubscriber;
 
 public class BaseTest {
     
-    public static <T> void assertResult(ObservableConsumable<T> source, T... array) {
+    public static <T> void assertResult(ObservableSource<T> source, T... array) {
         TestObserver<T> ts = new TestObserver<T>();
         
         source.subscribe(ts);

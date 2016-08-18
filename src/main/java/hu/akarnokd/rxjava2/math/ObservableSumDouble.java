@@ -18,11 +18,10 @@ package hu.akarnokd.rxjava2.math;
 
 import hu.akarnokd.rxjava2.util.DeferredScalarObserver;
 import io.reactivex.*;
-import io.reactivex.internal.operators.observable.ObservableSource;
 
-public class ObservableSumDouble extends ObservableSource<Double, Double> {
+public class ObservableSumDouble extends ObservableWithSource<Double, Double> {
 
-    public ObservableSumDouble(ObservableConsumable<Double> source) {
+    public ObservableSumDouble(ObservableSource<Double> source) {
         super(source);
     }
 

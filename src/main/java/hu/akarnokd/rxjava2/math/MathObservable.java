@@ -30,48 +30,48 @@ public final class MathObservable {
         throw new IllegalStateException("No instances!");
     }
     
-    public static Observable<Integer> sumInt(ObservableConsumable<Integer> source) {
+    public static Observable<Integer> sumInt(ObservableSource<Integer> source) {
         return new ObservableSumInt(source);
     }
 
-    public static Observable<Long> sumLong(ObservableConsumable<Long> source) {
+    public static Observable<Long> sumLong(ObservableSource<Long> source) {
         return new ObservableSumLong(source);
     }
 
-    public static Observable<Float> sumFloat(ObservableConsumable<Float> source) {
+    public static Observable<Float> sumFloat(ObservableSource<Float> source) {
         return new ObservableSumFloat(source);
     }
 
-    public static Observable<Double> sumDouble(ObservableConsumable<Double> source) {
+    public static Observable<Double> sumDouble(ObservableSource<Double> source) {
         return new ObservableSumDouble(source);
     }
 
-    public static <T extends Comparable<? super T>> Observable<T> max(ObservableConsumable<T> source) {
+    public static <T extends Comparable<? super T>> Observable<T> max(ObservableSource<T> source) {
         Comparator<T> comp = SelfComparator.instance();
         return max(source, comp);
     }
 
-    public static <T> Observable<T> max(ObservableConsumable<T> source, Comparator<? super T> comparator) {
+    public static <T> Observable<T> max(ObservableSource<T> source, Comparator<? super T> comparator) {
         return new ObservableMinMax<T>(source, comparator, -1);
     }
 
-    public static <T extends Comparable<? super T>> Observable<T> min(ObservableConsumable<T> source) {
+    public static <T extends Comparable<? super T>> Observable<T> min(ObservableSource<T> source) {
         Comparator<T> comp = SelfComparator.instance();
         return min(source, comp);
     }
 
-    public static <T> Observable<T> min(ObservableConsumable<T> source, Comparator<? super T> comparator) {
+    public static <T> Observable<T> min(ObservableSource<T> source, Comparator<? super T> comparator) {
         return new ObservableMinMax<T>(source, comparator, 1);
     }
 
     @SuppressWarnings("unchecked")
-    public static Observable<Float> averageFloat(ObservableConsumable<? extends Number> source) {
-        return new ObservableAverageFloat((ObservableConsumable<Number>)source);
+    public static Observable<Float> averageFloat(ObservableSource<? extends Number> source) {
+        return new ObservableAverageFloat((ObservableSource<Number>)source);
     }
 
     @SuppressWarnings("unchecked")
-    public static Observable<Double> averageDouble(ObservableConsumable<? extends Number> source) {
-        return new ObservableAverageDouble((ObservableConsumable<Number>)source);
+    public static Observable<Double> averageDouble(ObservableSource<? extends Number> source) {
+        return new ObservableAverageDouble((ObservableSource<Number>)source);
     }
 
 }
