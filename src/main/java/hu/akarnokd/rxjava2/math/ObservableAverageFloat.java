@@ -16,7 +16,7 @@
 
 package hu.akarnokd.rxjava2.math;
 
-import hu.akarnokd.rxjava2.util.DeferredScalarObserver;
+import io.reactivex.internal.subscribers.observable.DeferredScalarObserver;
 import io.reactivex.*;
 
 public class ObservableAverageFloat extends ObservableWithSource<Number, Float> {
@@ -31,6 +31,9 @@ public class ObservableAverageFloat extends ObservableWithSource<Number, Float> 
     }
     
     static final class AverageFloatObserver extends DeferredScalarObserver<Number, Float> {
+
+        /** */
+        private static final long serialVersionUID = -4845767048730060914L;
 
         float accumulator;
         

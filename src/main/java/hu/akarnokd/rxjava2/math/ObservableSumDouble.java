@@ -16,7 +16,7 @@
 
 package hu.akarnokd.rxjava2.math;
 
-import hu.akarnokd.rxjava2.util.DeferredScalarObserver;
+import io.reactivex.internal.subscribers.observable.DeferredScalarObserver;
 import io.reactivex.*;
 
 public class ObservableSumDouble extends ObservableWithSource<Double, Double> {
@@ -32,7 +32,12 @@ public class ObservableSumDouble extends ObservableWithSource<Double, Double> {
     
     static final class SumDoubleObserver extends DeferredScalarObserver<Double, Double> {
 
+        /** */
+        private static final long serialVersionUID = -769098775594601087L;
+
         double accumulator;
+        
+        boolean hasValue;
         
         public SumDoubleObserver(Observer<? super Double> actual) {
             super(actual);

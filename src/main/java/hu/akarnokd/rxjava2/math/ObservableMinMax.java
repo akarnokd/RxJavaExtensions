@@ -18,7 +18,7 @@ package hu.akarnokd.rxjava2.math;
 
 import java.util.Comparator;
 
-import hu.akarnokd.rxjava2.util.DeferredScalarObserver;
+import io.reactivex.internal.subscribers.observable.DeferredScalarObserver;
 import io.reactivex.*;
 import io.reactivex.exceptions.Exceptions;
 
@@ -41,6 +41,9 @@ final class ObservableMinMax<T> extends ObservableWithSource<T, T> {
     
     static final class MinMaxSubscriber<T> extends DeferredScalarObserver<T, T> {
 
+        /** */
+        private static final long serialVersionUID = -4484454790848904397L;
+
         final Comparator<? super T> comparator;
         
         final int flag;
@@ -54,13 +57,13 @@ final class ObservableMinMax<T> extends ObservableWithSource<T, T> {
         @Override
         public void onNext(T value) {
             try {
-                if (hasValue) {
-                    if (comparator.compare(this.value, value) * flag > 0) {
+                T v = value;
+                if (v != null) {
+                    if (comparator.compare(v, value) * flag > 0) {
                         this.value = value;
                     }
                 } else {
                     this.value = value;
-                    hasValue = true;
                 }
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);

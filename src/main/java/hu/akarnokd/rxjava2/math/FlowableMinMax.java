@@ -20,8 +20,8 @@ import java.util.Comparator;
 
 import org.reactivestreams.*;
 
-import hu.akarnokd.rxjava2.util.DeferredScalarSubscriber;
 import io.reactivex.exceptions.Exceptions;
+import io.reactivex.internal.subscribers.flowable.DeferredScalarSubscriber;
 
 final class FlowableMinMax<T> extends FlowableSource<T, T> {
 

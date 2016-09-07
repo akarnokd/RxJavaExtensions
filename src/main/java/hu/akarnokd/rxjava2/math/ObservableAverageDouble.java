@@ -16,8 +16,8 @@
 
 package hu.akarnokd.rxjava2.math;
 
-import hu.akarnokd.rxjava2.util.DeferredScalarObserver;
 import io.reactivex.*;
+import io.reactivex.internal.subscribers.observable.DeferredScalarObserver;
 
 public class ObservableAverageDouble extends ObservableWithSource<Number, Double> {
 
@@ -31,6 +31,9 @@ public class ObservableAverageDouble extends ObservableWithSource<Number, Double
     }
     
     static final class AverageDoubleObserver extends DeferredScalarObserver<Number, Double> {
+
+        /** */
+        private static final long serialVersionUID = 6990557227019180008L;
 
         double accumulator;
         

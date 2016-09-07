@@ -14,27 +14,23 @@
  * limitations under the License.
  */
 
-package hu.akarnokd.rxjava2.util;
+package hu.akarnokd.rxjava2.parallel;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.*;
 
-import io.reactivex.internal.fuseable.QueueDisposable;
+import io.reactivex.functions.Function;
 
-public abstract class BaseIntQueueDisposable<T> 
-extends AtomicInteger
-implements QueueDisposable<T> {
+final class SorterFunction<T> implements Function<List<T>, List<T>> {
 
-    /** */
-    private static final long serialVersionUID = -1001730202384742097L;
+    Comparator<? super T> comparator;
 
-    @Override
-    public final boolean offer(T e) {
-        throw new UnsupportedOperationException("Should not be called");
-    }
-
-    @Override
-    public boolean offer(T v1, T v2) {
-        throw new UnsupportedOperationException("Should not be called");
+    public SorterFunction(Comparator<? super T> comparator) {
+        this.comparator = comparator;
     }
     
+    @Override
+    public List<T> apply(List<T> t) throws Exception {
+        Collections.sort(t, comparator); 
+        return t;
+    }
 }

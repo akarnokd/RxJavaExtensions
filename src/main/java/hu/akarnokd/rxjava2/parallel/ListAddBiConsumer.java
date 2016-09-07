@@ -14,19 +14,31 @@
  * limitations under the License.
  */
 
-package hu.akarnokd.rxjava2.util;
+package hu.akarnokd.rxjava2.parallel;
 
-import io.reactivex.internal.fuseable.QueueDisposable;
+import java.util.List;
 
-public abstract class BaseQueueDisposable<T> implements QueueDisposable<T> {
+import io.reactivex.functions.*;
 
-    @Override
-    public final boolean offer(T e) {
-        throw new UnsupportedOperationException("Should not be called");
+@SuppressWarnings("rawtypes")
+enum ListAddBiConsumer implements BiConsumer<List, Object>, BiFunction<List, Object, List> {
+    INSTANCE;
+    
+    @SuppressWarnings("unchecked")
+    public static <T> BiFunction<List<T>, T, List<T>> instance() {
+        return (BiFunction)INSTANCE;
     }
     
+    @SuppressWarnings("unchecked")
     @Override
-    public boolean offer(T v1, T v2) {
-        throw new UnsupportedOperationException("Should not be called");
+    public void accept(List t1, Object t2) throws Exception {
+        t1.add(t2);
+    }
+    
+    @SuppressWarnings("unchecked")
+    @Override
+    public List apply(List t1, Object t2) throws Exception {
+        t1.add(t2);
+        return t1;
     }
 }
