@@ -16,12 +16,11 @@
 
 package hu.akarnokd.rxjava2.parallel;
 
-import java.util.Objects;
-
 import org.reactivestreams.*;
 
 import io.reactivex.exceptions.Exceptions;
 import io.reactivex.functions.*;
+import io.reactivex.internal.functions.ObjectHelper;
 import io.reactivex.internal.subscriptions.*;
 import io.reactivex.plugins.RxJavaPlugins;
 
@@ -55,14 +54,14 @@ final class ParallelPeek<T> extends ParallelFlowable<T> {
     ) {
         this.source = source;
         
-        this.onNext = Objects.requireNonNull(onNext, "onNext");
-        this.onAfterNext = Objects.requireNonNull(onAfterNext, "onAfterNext");
-        this.onError = Objects.requireNonNull(onError, "onError");
-        this.onComplete = Objects.requireNonNull(onComplete, "onComplete");
-        this.onAfterTerminated = Objects.requireNonNull(onAfterTerminated, "onAfterTerminated");
-        this.onSubscribe = Objects.requireNonNull(onSubscribe, "onSubscribe");
-        this.onRequest = Objects.requireNonNull(onRequest, "onRequest");
-        this.onCancel = Objects.requireNonNull(onCancel, "onCancel");
+        this.onNext = ObjectHelper.requireNonNull(onNext, "onNext");
+        this.onAfterNext = ObjectHelper.requireNonNull(onAfterNext, "onAfterNext");
+        this.onError = ObjectHelper.requireNonNull(onError, "onError");
+        this.onComplete = ObjectHelper.requireNonNull(onComplete, "onComplete");
+        this.onAfterTerminated = ObjectHelper.requireNonNull(onAfterTerminated, "onAfterTerminated");
+        this.onSubscribe = ObjectHelper.requireNonNull(onSubscribe, "onSubscribe");
+        this.onRequest = ObjectHelper.requireNonNull(onRequest, "onRequest");
+        this.onCancel = ObjectHelper.requireNonNull(onCancel, "onCancel");
     }
 
     @Override

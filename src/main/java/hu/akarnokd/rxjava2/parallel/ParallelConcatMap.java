@@ -16,11 +16,10 @@
 
 package hu.akarnokd.rxjava2.parallel;
 
-import java.util.Objects;
-
 import org.reactivestreams.*;
 
 import io.reactivex.functions.Function;
+import io.reactivex.internal.functions.ObjectHelper;
 import io.reactivex.internal.operators.flowable.FlowableConcatMap;
 import io.reactivex.internal.util.ErrorMode;
 
@@ -45,9 +44,9 @@ final class ParallelConcatMap<T, R> extends ParallelFlowable<R> {
             Function<? super T, ? extends Publisher<? extends R>> mapper, 
                     int prefetch, ErrorMode errorMode) {
         this.source = source;
-        this.mapper = Objects.requireNonNull(mapper, "mapper");
+        this.mapper = ObjectHelper.requireNonNull(mapper, "mapper");
         this.prefetch = prefetch;
-        this.errorMode = Objects.requireNonNull(errorMode, "errorMode");
+        this.errorMode = ObjectHelper.requireNonNull(errorMode, "errorMode");
     }
     
     @Override

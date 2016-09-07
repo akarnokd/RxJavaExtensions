@@ -24,7 +24,7 @@ import org.reactivestreams.*;
 import io.reactivex.*;
 import io.reactivex.exceptions.Exceptions;
 import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
+import io.reactivex.internal.functions.*;
 import io.reactivex.internal.subscriptions.EmptySubscription;
 import io.reactivex.internal.util.*;
 
@@ -114,7 +114,7 @@ public abstract class ParallelFlowable<T> {
             throw new IllegalArgumentException("prefetch > 0 required but it was " + prefetch);
         }
         
-        Objects.requireNonNull(source, "queueSupplier");
+        ObjectHelper.requireNonNull(source, "queueSupplier");
 
         return new ParallelFromPublisher<T>(source, parallelism, prefetch);
     }
@@ -128,7 +128,7 @@ public abstract class ParallelFlowable<T> {
      * @return the new ParallelFlowable instance
      */
     public final <R> ParallelFlowable<R> map(Function<? super T, ? extends R> mapper) {
-        Objects.requireNonNull(mapper, "mapper");
+        ObjectHelper.requireNonNull(mapper, "mapper");
         return new ParallelMap<T, R>(this, mapper);
     }
     
@@ -140,7 +140,7 @@ public abstract class ParallelFlowable<T> {
      * @return the new ParallelFlowable instance
      */
     public final ParallelFlowable<T> filter(Predicate<? super T> predicate) {
-        Objects.requireNonNull(predicate, "predicate");
+        ObjectHelper.requireNonNull(predicate, "predicate");
         return new ParallelFilter<T>(this, predicate);
     }
     
@@ -192,7 +192,7 @@ public abstract class ParallelFlowable<T> {
         if (prefetch <= 0) {
             throw new IllegalArgumentException("prefetch > 0 required but it was " + prefetch);
         }
-        Objects.requireNonNull(scheduler, "scheduler");
+        ObjectHelper.requireNonNull(scheduler, "scheduler");
         return new ParallelRunOn<T>(this, scheduler, prefetch);
     }
 
@@ -205,7 +205,7 @@ public abstract class ParallelFlowable<T> {
      * @return the new Px instance emitting the reduced value or empty if the ParallelFlowable was empty
      */
     public final Flowable<T> reduce(BiFunction<T, T, T> reducer) {
-        Objects.requireNonNull(reducer, "reducer");
+        ObjectHelper.requireNonNull(reducer, "reducer");
         return new ParallelReduceFull<T>(this, reducer);
     }
     
@@ -221,8 +221,8 @@ public abstract class ParallelFlowable<T> {
      * @return the new ParallelFlowable instance
      */
     public final <R> ParallelFlowable<R> reduce(Callable<R> initialSupplier, BiFunction<R, T, R> reducer) {
-        Objects.requireNonNull(initialSupplier, "initialSupplier");
-        Objects.requireNonNull(reducer, "reducer");
+        ObjectHelper.requireNonNull(initialSupplier, "initialSupplier");
+        ObjectHelper.requireNonNull(reducer, "reducer");
         return new ParallelReduce<T, R>(this, initialSupplier, reducer);
     }
     
