@@ -18,7 +18,7 @@ package hu.akarnokd.rxjava2.parallel;
 
 import org.reactivestreams.*;
 
-import io.reactivex.exceptions.Exceptions;
+import io.reactivex.exceptions.*;
 import io.reactivex.functions.*;
 import io.reactivex.internal.functions.ObjectHelper;
 import io.reactivex.internal.subscriptions.*;
@@ -179,8 +179,7 @@ final class ParallelPeek<T> extends ParallelFlowable<T> {
                 parent.onError.accept(t);
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
-                ex.addSuppressed(t);
-                t = ex;
+                t = new CompositeException(t, ex);
             }
             actual.onError(t);
             
