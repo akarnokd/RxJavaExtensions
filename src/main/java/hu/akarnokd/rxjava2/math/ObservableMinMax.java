@@ -57,7 +57,7 @@ final class ObservableMinMax<T> extends ObservableWithSource<T, T> {
         @Override
         public void onNext(T value) {
             try {
-                T v = value;
+                T v = this.value;
                 if (v != null) {
                     if (comparator.compare(v, value) * flag > 0) {
                         this.value = value;
