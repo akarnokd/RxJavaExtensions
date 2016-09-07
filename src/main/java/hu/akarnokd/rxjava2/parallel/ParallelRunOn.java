@@ -32,7 +32,7 @@ import io.reactivex.plugins.RxJavaPlugins;
  *
  * @param <T> the value type
  */
-public final class ParallelRunOn<T> extends ParallelFlowable<T> {
+final class ParallelRunOn<T> extends ParallelFlowable<T> {
     final ParallelFlowable<? extends T> source;
     
     final Scheduler scheduler;
