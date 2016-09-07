@@ -100,8 +100,6 @@ final class ParallelCollect<T, C> extends ParallelFlowable<C> {
 
         C collection;
         
-        Subscription s;
-
         boolean done;
         
         public ParallelCollectSubscriber(Subscriber<? super C> subscriber, 

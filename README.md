@@ -12,7 +12,7 @@ Extra sources, operators and components and ports of many 1.x companion librarie
 
 ```
 dependencies {
-    compile "com.github.akarnokd:rxjava2-extensions:0.2.0"
+    compile "com.github.akarnokd:rxjava2-extensions:0.2.1"
 }
 ```
 

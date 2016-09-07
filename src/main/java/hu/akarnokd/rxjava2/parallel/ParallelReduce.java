@@ -98,8 +98,6 @@ final class ParallelReduce<T, R> extends ParallelFlowable<R> {
         final BiFunction<R, T, R> reducer;
 
         R accumulator;
-        
-        Subscription s;
 
         boolean done;
         
