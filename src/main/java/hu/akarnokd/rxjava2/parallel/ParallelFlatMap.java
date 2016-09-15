@@ -31,20 +31,20 @@ import io.reactivex.internal.operators.flowable.FlowableFlatMap;
 final class ParallelFlatMap<T, R> extends ParallelFlowable<R> {
 
     final ParallelFlowable<T> source;
-    
+
     final Function<? super T, ? extends Publisher<? extends R>> mapper;
-    
+
     final boolean delayError;
-    
+
     final int maxConcurrency;
-    
+
     final int prefetch;
 
-    public ParallelFlatMap(
-            ParallelFlowable<T> source, 
+    ParallelFlatMap(
+            ParallelFlowable<T> source,
             Function<? super T, ? extends Publisher<? extends R>> mapper,
-            boolean delayError, 
-            int maxConcurrency, 
+            boolean delayError,
+            int maxConcurrency,
             int prefetch) {
         this.source = source;
         this.mapper = mapper;
@@ -52,43 +52,43 @@ final class ParallelFlatMap<T, R> extends ParallelFlowable<R> {
         this.maxConcurrency = maxConcurrency;
         this.prefetch = prefetch;
     }
-    
+
     @Override
     public int parallelism() {
         return source.parallelism();
     }
-    
+
     @Override
     public void subscribe(Subscriber<? super R>[] subscribers) {
         if (!validate(subscribers)) {
             return;
         }
-        
+
         int n = subscribers.length;
-        
+
         @SuppressWarnings("unchecked")
         final Subscriber<T>[] parents = new Subscriber[n];
-        
+
         // FIXME cheat until we have support from RxJava2 internals
         Publisher<T> p = new Publisher<T>() {
             int i;
-            
+
             @SuppressWarnings("unchecked")
             @Override
             public void subscribe(Subscriber<? super T> s) {
                 parents[i++] = (Subscriber<T>)s;
             }
         };
-        
+
         FlowableFlatMap<T, R> op = new FlowableFlatMap<T, R>(p, mapper, delayError, maxConcurrency, prefetch);
-        
+
         for (int i = 0; i < n; i++) {
-            
+
             op.subscribe(subscribers[i]);
 // FIXME needs a FlatMap subscriber
-//            parents[i] = FlowableFlatMap.createSubscriber(s, mapper, delayError, maxConcurrency, prefetch); 
+//            parents[i] = FlowableFlatMap.createSubscriber(s, mapper, delayError, maxConcurrency, prefetch);
         }
-        
+
         source.subscribe(parents);
     }
 }

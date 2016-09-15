@@ -29,17 +29,17 @@ public class ObservableSumFloat extends ObservableWithSource<Float, Float> {
     protected void subscribeActual(Observer<? super Float> observer) {
         source.subscribe(new SumFloatObserver(observer));
     }
-    
+
     static final class SumFloatObserver extends DeferredScalarObserver<Float, Float> {
 
-        /** */
+
         private static final long serialVersionUID = -6344890278713820111L;
 
         float accumulator;
-        
+
         boolean hasValue;
-        
-        public SumFloatObserver(Observer<? super Float> actual) {
+
+        SumFloatObserver(Observer<? super Float> actual) {
             super(actual);
         }
 
@@ -50,7 +50,7 @@ public class ObservableSumFloat extends ObservableWithSource<Float, Float> {
             }
             accumulator += value.floatValue();
         }
-        
+
         @Override
         public void onComplete() {
             if (hasValue) {

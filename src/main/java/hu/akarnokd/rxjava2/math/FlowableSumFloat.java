@@ -22,7 +22,7 @@ import io.reactivex.internal.subscribers.flowable.DeferredScalarSubscriber;
 
 final class FlowableSumFloat extends FlowableSource<Float, Float> {
 
-    public FlowableSumFloat(Publisher<Float> source) {
+    FlowableSumFloat(Publisher<Float> source) {
         super(source);
     }
 
@@ -30,15 +30,15 @@ final class FlowableSumFloat extends FlowableSource<Float, Float> {
     protected void subscribeActual(Subscriber<? super Float> observer) {
         source.subscribe(new SumFloatSubscriber(observer));
     }
-    
+
     static final class SumFloatSubscriber extends DeferredScalarSubscriber<Float, Float> {
 
-        /** */
+
         private static final long serialVersionUID = 600979972678601618L;
 
         float accumulator;
-        
-        public SumFloatSubscriber(Subscriber<? super Float> actual) {
+
+        SumFloatSubscriber(Subscriber<? super Float> actual) {
             super(actual);
         }
 

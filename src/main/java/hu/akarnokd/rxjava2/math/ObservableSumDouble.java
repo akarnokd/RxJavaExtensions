@@ -29,17 +29,17 @@ public class ObservableSumDouble extends ObservableWithSource<Double, Double> {
     protected void subscribeActual(Observer<? super Double> observer) {
         source.subscribe(new SumDoubleObserver(observer));
     }
-    
+
     static final class SumDoubleObserver extends DeferredScalarObserver<Double, Double> {
 
-        /** */
+
         private static final long serialVersionUID = -769098775594601087L;
 
         double accumulator;
-        
+
         boolean hasValue;
-        
-        public SumDoubleObserver(Observer<? super Double> actual) {
+
+        SumDoubleObserver(Observer<? super Double> actual) {
             super(actual);
         }
 
@@ -50,7 +50,7 @@ public class ObservableSumDouble extends ObservableWithSource<Double, Double> {
             }
             accumulator += value.doubleValue();
         }
-        
+
         @Override
         public void onComplete() {
             if (hasValue) {

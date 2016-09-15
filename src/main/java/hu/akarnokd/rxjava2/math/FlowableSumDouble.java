@@ -22,7 +22,7 @@ import io.reactivex.internal.subscribers.flowable.DeferredScalarSubscriber;
 
 final class FlowableSumDouble extends FlowableSource<Double, Double> {
 
-    public FlowableSumDouble(Publisher<Double> source) {
+    FlowableSumDouble(Publisher<Double> source) {
         super(source);
     }
 
@@ -30,15 +30,15 @@ final class FlowableSumDouble extends FlowableSource<Double, Double> {
     protected void subscribeActual(Subscriber<? super Double> observer) {
         source.subscribe(new SumDoubleSubscriber(observer));
     }
-    
+
     static final class SumDoubleSubscriber extends DeferredScalarSubscriber<Double, Double> {
 
-        /** */
+
         private static final long serialVersionUID = 600979972678601618L;
 
         double accumulator;
-        
-        public SumDoubleSubscriber(Subscriber<? super Double> actual) {
+
+        SumDoubleSubscriber(Subscriber<? super Double> actual) {
             super(actual);
         }
 

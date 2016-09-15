@@ -21,7 +21,7 @@ import org.junit.Test;
 import hu.akarnokd.rxjava2.test.BaseTest;
 
 public class StringFlowableTest extends BaseTest {
-    
+
     @Test
     public void characters() {
         assertResult(StringFlowable.characters("abcdef"), 97, 98, 99, 100, 101, 102);

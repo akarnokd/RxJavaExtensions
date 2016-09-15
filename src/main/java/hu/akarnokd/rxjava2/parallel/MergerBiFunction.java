@@ -24,7 +24,7 @@ final class MergerBiFunction<T> implements BiFunction<List<T>, List<T>, List<T>>
 
     Comparator<? super T> comparator;
 
-    public MergerBiFunction(Comparator<? super T> comparator) {
+    MergerBiFunction(Comparator<? super T> comparator) {
         this.comparator = comparator;
     }
 
@@ -35,13 +35,13 @@ final class MergerBiFunction<T> implements BiFunction<List<T>, List<T>, List<T>>
             return new ArrayList<T>();
         }
         List<T> both = new ArrayList<T>(n);
-        
+
         Iterator<T> at = a.iterator();
         Iterator<T> bt = b.iterator();
-        
+
         T s1 = at.hasNext() ? at.next() : null;
         T s2 = bt.hasNext() ? bt.next() : null;
-        
+
         while (s1 != null && s2 != null) {
             if (comparator.compare(s1, s2) < 0) { // s1 comes before s2
                 both.add(s1);
@@ -57,14 +57,14 @@ final class MergerBiFunction<T> implements BiFunction<List<T>, List<T>, List<T>>
             while (at.hasNext()) {
                 both.add(at.next());
             }
-        } else 
+        } else
         if (s2 != null) {
             both.add(s2);
             while (bt.hasNext()) {
                 both.add(bt.next());
             }
         }
-        
+
         return both;
     }
 }

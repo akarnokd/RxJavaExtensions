@@ -34,78 +34,78 @@ import io.reactivex.internal.util.BackpressureHelper;
  */
 final class ParallelFromPublisher<T> extends ParallelFlowable<T> {
     final Publisher<? extends T> source;
-    
+
     final int parallelism;
-    
+
     final int prefetch;
 
-    public ParallelFromPublisher(Publisher<? extends T> source, int parallelism, int prefetch) {
+    ParallelFromPublisher(Publisher<? extends T> source, int parallelism, int prefetch) {
         this.source = source;
         this.parallelism = parallelism;
         this.prefetch = prefetch;
     }
-    
+
     @Override
     public int parallelism() {
         return parallelism;
     }
-    
+
     @Override
     public void subscribe(Subscriber<? super T>[] subscribers) {
         if (!validate(subscribers)) {
             return;
         }
-        
+
         source.subscribe(new ParallelDispatcher<T>(subscribers, prefetch));
     }
-    
-    static final class ParallelDispatcher<T> 
+
+    static final class ParallelDispatcher<T>
     extends AtomicInteger
     implements Subscriber<T> {
 
-        /** */
+
         private static final long serialVersionUID = -4470634016609963609L;
 
         final Subscriber<? super T>[] subscribers;
-        
+
         final AtomicLongArray requests;
 
         final long[] emissions;
 
         final int prefetch;
-        
+
         final int limit;
 
         Subscription s;
-        
+
         SimpleQueue<T> queue;
-        
+
         Throwable error;
-        
+
         volatile boolean done;
-        
+
         int index;
-        
+
         volatile boolean cancelled;
-        
-        /** 
+
+        /**
          * Counts how many subscribers were setup to delay triggering the
          * drain of upstream until all of them have been setup.
          */
         final AtomicInteger subscriberCount = new AtomicInteger();
-        
+
         int produced;
-        
+
         int sourceMode;
 
-        public ParallelDispatcher(Subscriber<? super T>[] subscribers, int prefetch) {
+        ParallelDispatcher(Subscriber<? super T>[] subscribers, int prefetch) {
             this.subscribers = subscribers;
             this.prefetch = prefetch;
             this.limit = prefetch - (prefetch >> 2);
             this.requests = new AtomicLongArray(subscribers.length);
             this.emissions = new long[subscribers.length];
         }
-        
+
         @Override
         public void onSubscribe(Subscription s) {
             if (SubscriptionHelper.validate(this.s, s)) {
@@ -114,9 +114,9 @@ final class ParallelFromPublisher<T> extends ParallelFlowable<T> {
                 if (s instanceof QueueSubscription) {
                     @SuppressWarnings("unchecked")
                     QueueSubscription<T> qs = (QueueSubscription<T>) s;
-                    
+
                     int m = qs.requestFusion(QueueSubscription.ANY);
-                    
+
                     if (m == QueueSubscription.SYNC) {
                         sourceMode = m;
                         queue = qs;
@@ -128,26 +128,26 @@ final class ParallelFromPublisher<T> extends ParallelFlowable<T> {
                     if (m == QueueSubscription.ASYNC) {
                         sourceMode = m;
                         queue = qs;
-                        
+
                         setupSubscribers();
-                        
+
                         s.request(prefetch);
-                        
+
                         return;
                     }
                 }
-                
+
                 queue = new SpscArrayQueue<T>(prefetch);
-                
+
                 setupSubscribers();
-                
+
                 s.request(prefetch);
             }
         }
-        
+
         void setupSubscribers() {
             final int m = subscribers.length;
-            
+
             for (int i = 0; i < m; i++) {
                 if (cancelled) {
                     return;
@@ -155,7 +155,7 @@ final class ParallelFromPublisher<T> extends ParallelFlowable<T> {
                 final int j = i;
 
                 subscriberCount.lazySet(i + 1);
-                
+
                 subscribers[i].onSubscribe(new Subscription() {
                     @Override
                     public void request(long n) {
@@ -176,7 +176,7 @@ final class ParallelFromPublisher<T> extends ParallelFlowable<T> {
                             }
                         }
                     }
-                    
+
                     @Override
                     public void cancel() {
                         ParallelDispatcher.this.cancel();
@@ -209,21 +209,21 @@ final class ParallelFromPublisher<T> extends ParallelFlowable<T> {
             done = true;
             drain();
         }
-        
+
         void cancel() {
             if (!cancelled) {
                 cancelled = true;
                 this.s.cancel();
-                
+
                 if (getAndIncrement() == 0) {
                     queue.clear();
                 }
             }
         }
-        
+
         void drainAsync() {
             int missed = 1;
-            
+
             SimpleQueue<T> q = queue;
             Subscriber<? super T>[] a = this.subscribers;
             AtomicLongArray r = this.requests;
@@ -231,17 +231,17 @@ final class ParallelFromPublisher<T> extends ParallelFlowable<T> {
             int n = e.length;
             int idx = index;
             int consumed = produced;
-            
+
             for (;;) {
 
                 int notReady = 0;
-                
+
                 for (;;) {
                     if (cancelled) {
                         q.clear();
                         return;
                     }
-                    
+
                     boolean d = done;
                     if (d) {
                         Throwable ex = error;
@@ -255,7 +255,7 @@ final class ParallelFromPublisher<T> extends ParallelFlowable<T> {
                     }
 
                     boolean empty = q.isEmpty();
-                    
+
                     if (d && empty) {
                         for (Subscriber<? super T> s : a) {
                             s.onComplete();
@@ -266,13 +266,13 @@ final class ParallelFromPublisher<T> extends ParallelFlowable<T> {
                     if (empty) {
                         break;
                     }
-                    
+
                     long ridx = r.get(idx);
                     long eidx = e[idx];
                     if (ridx != eidx) {
 
                         T v;
-                        
+
                         try {
                             v = q.poll();
                         } catch (Throwable ex) {
@@ -283,15 +283,15 @@ final class ParallelFromPublisher<T> extends ParallelFlowable<T> {
                             }
                             return;
                         }
-                        
+
                         if (v == null) {
                             break;
                         }
-                        
+
                         a[idx].onNext(v);
-                        
+
                         e[idx] = eidx + 1;
-                        
+
                         int c = ++consumed;
                         if (c == limit) {
                             consumed = 0;
@@ -301,17 +301,17 @@ final class ParallelFromPublisher<T> extends ParallelFlowable<T> {
                     } else {
                         notReady++;
                     }
-                    
+
                     idx++;
                     if (idx == n) {
                         idx = 0;
                     }
-                    
+
                     if (notReady == n) {
                         break;
                     }
                 }
-                
+
                 int w = get();
                 if (w == missed) {
                     index = idx;
@@ -325,29 +325,29 @@ final class ParallelFromPublisher<T> extends ParallelFlowable<T> {
                 }
             }
         }
-        
+
         void drainSync() {
             int missed = 1;
-            
+
             SimpleQueue<T> q = queue;
             Subscriber<? super T>[] a = this.subscribers;
             AtomicLongArray r = this.requests;
             long[] e = this.emissions;
             int n = e.length;
             int idx = index;
-            
+
             for (;;) {
 
                 int notReady = 0;
-                
+
                 for (;;) {
                     if (cancelled) {
                         q.clear();
                         return;
                     }
-                    
+
                     boolean empty;
-                    
+
                     try {
                         empty = q.isEmpty();
                     } catch (Throwable ex) {
@@ -358,7 +358,7 @@ final class ParallelFromPublisher<T> extends ParallelFlowable<T> {
                         }
                         return;
                     }
-                    
+
                     if (empty) {
                         for (Subscriber<? super T> s : a) {
                             s.onComplete();
@@ -371,7 +371,7 @@ final class ParallelFromPublisher<T> extends ParallelFlowable<T> {
                     if (ridx != eidx) {
 
                         T v;
-                        
+
                         try {
                             v = q.poll();
                         } catch (Throwable ex) {
@@ -382,33 +382,33 @@ final class ParallelFromPublisher<T> extends ParallelFlowable<T> {
                             }
                             return;
                         }
-                        
+
                         if (v == null) {
                             for (Subscriber<? super T> s : a) {
                                 s.onComplete();
                             }
                             return;
                         }
-                        
+
                         a[idx].onNext(v);
-                        
+
                         e[idx] = eidx + 1;
-                        
+
                         notReady = 0;
                     } else {
                         notReady++;
                     }
-                    
+
                     idx++;
                     if (idx == n) {
                         idx = 0;
                     }
-                    
+
                     if (notReady == n) {
                         break;
                     }
                 }
-                
+
                 int w = get();
                 if (w == missed) {
                     index = idx;
@@ -421,12 +421,12 @@ final class ParallelFromPublisher<T> extends ParallelFlowable<T> {
                 }
             }
         }
-        
+
         void drain() {
             if (getAndIncrement() != 0) {
                 return;
             }
-            
+
             if (sourceMode == QueueSubscription.SYNC) {
                 drainSync();
             } else {

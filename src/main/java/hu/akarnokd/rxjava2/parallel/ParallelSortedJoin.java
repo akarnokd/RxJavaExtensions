@@ -31,16 +31,16 @@ import io.reactivex.plugins.RxJavaPlugins;
  * emit the smallest item from these parallel Lists to the Subscriber.
  * <p>
  * It expects the source to emit exactly one list (which could be empty).
- * 
+ *
  * @param <T> the value type
  */
 final class ParallelSortedJoin<T> extends Flowable<T> {
 
     final ParallelFlowable<List<T>> source;
-    
+
     final Comparator<? super T> comparator;
 
-    public ParallelSortedJoin(ParallelFlowable<List<T>> source, Comparator<? super T> comparator) {
+    ParallelSortedJoin(ParallelFlowable<List<T>> source, Comparator<? super T> comparator) {
         this.source = source;
         this.comparator = comparator;
     }
@@ -49,41 +49,41 @@ final class ParallelSortedJoin<T> extends Flowable<T> {
     protected void subscribeActual(Subscriber<? super T> s) {
         SortedJoinSubscription<T> parent = new SortedJoinSubscription<T>(s, source.parallelism(), comparator);
         s.onSubscribe(parent);
-        
+
         source.subscribe(parent.subscribers);
     }
-    
-    static final class SortedJoinSubscription<T> 
+
+    static final class SortedJoinSubscription<T>
     extends AtomicInteger
     implements Subscription {
-        /** */
+
         private static final long serialVersionUID = 3481980673745556697L;
 
         final Subscriber<? super T> actual;
-        
+
         final SortedJoinInnerSubscriber<T>[] subscribers;
-        
+
         final List<T>[] lists;
-        
+
         final int[] indexes;
-        
+
         final Comparator<? super T> comparator;
 
         final AtomicLong requested = new AtomicLong();
-        
+
         volatile boolean cancelled;
 
         final AtomicInteger remaining = new AtomicInteger();
 
         final AtomicThrowable error = new AtomicThrowable();
-        
+
         @SuppressWarnings("unchecked")
-        public SortedJoinSubscription(Subscriber<? super T> actual, int n, Comparator<? super T> comparator) {
+        SortedJoinSubscription(Subscriber<? super T> actual, int n, Comparator<? super T> comparator) {
             this.actual = actual;
             this.comparator = comparator;
-            
+
             SortedJoinInnerSubscriber<T>[] s = new SortedJoinInnerSubscriber[n];
-            
+
             for (int i = 0; i < n; i++) {
                 s[i] = new SortedJoinInnerSubscriber<T>(this, i);
             }
@@ -92,7 +92,7 @@ final class ParallelSortedJoin<T> extends Flowable<T> {
             this.indexes = new int[n];
             remaining.lazySet(n);
         }
-        
+
         @Override
         public void request(long n) {
             if (SubscriptionHelper.validate(n)) {
@@ -113,20 +113,20 @@ final class ParallelSortedJoin<T> extends Flowable<T> {
                 }
             }
         }
-        
+
         void cancelAll() {
             for (SortedJoinInnerSubscriber<T> s : subscribers) {
                 s.cancel();
             }
         }
-        
+
         void innerNext(List<T> value, int index) {
             lists[index] = value;
             if (remaining.decrementAndGet() == 0) {
                 drain();
             }
         }
-        
+
         void innerError(Throwable e) {
             if (error.addThrowable(e)) {
                 drain();
@@ -134,29 +134,29 @@ final class ParallelSortedJoin<T> extends Flowable<T> {
                 RxJavaPlugins.onError(e);
             }
         }
-        
+
         void drain() {
             if (getAndIncrement() != 0) {
                 return;
             }
-            
+
             int missed = 1;
             Subscriber<? super T> a = actual;
             List<T>[] lists = this.lists;
             int[] indexes = this.indexes;
             int n = indexes.length;
-            
+
             for (;;) {
-                
+
                 long r = requested.get();
                 long e = 0L;
-                
+
                 while (e != r) {
                     if (cancelled) {
                         Arrays.fill(lists, null);
                         return;
                     }
-                    
+
                     Throwable ex = error.get();
                     if (ex != null) {
                         cancelAll();
@@ -164,14 +164,14 @@ final class ParallelSortedJoin<T> extends Flowable<T> {
                         a.onError(error.terminate());
                         return;
                     }
-                    
+
                     T min = null;
                     int minIndex = -1;
 
                     for (int i = 0; i < n; i++) {
                         List<T> list = lists[i];
                         int index = indexes[i];
-                        
+
                         if (list.size() != index) {
                             if (min == null) {
                                 min = list.get(index);
@@ -185,26 +185,26 @@ final class ParallelSortedJoin<T> extends Flowable<T> {
                             }
                         }
                     }
-                    
+
                     if (min == null) {
                         Arrays.fill(lists, null);
                         a.onComplete();
                         return;
                     }
-                    
+
                     a.onNext(min);
-                    
+
                     indexes[minIndex]++;
-                    
+
                     e++;
                 }
-                
+
                 if (e == r) {
                     if (cancelled) {
                         Arrays.fill(lists, null);
                         return;
                     }
-                    
+
                     Throwable ex = error.get();
                     if (ex != null) {
                         cancelAll();
@@ -214,25 +214,25 @@ final class ParallelSortedJoin<T> extends Flowable<T> {
                     }
 
                     boolean empty = true;
-                    
+
                     for (int i = 0; i < n; i++) {
                         if (indexes[i] != lists[i].size()) {
                             empty = false;
                             break;
                         }
                     }
-                    
+
                     if (empty) {
                         Arrays.fill(lists, null);
                         a.onComplete();
                         return;
                     }
                 }
-                
+
                 if (e != 0 && r != Long.MAX_VALUE) {
                     requested.addAndGet(-e);
                 }
-                
+
                 int w = get();
                 if (w == missed) {
                     missed = addAndGet(-missed);
@@ -245,23 +245,23 @@ final class ParallelSortedJoin<T> extends Flowable<T> {
             }
         }
     }
-    
-    static final class SortedJoinInnerSubscriber<T> 
+
+    static final class SortedJoinInnerSubscriber<T>
     extends AtomicReference<Subscription>
     implements Subscriber<List<T>> {
 
-        /** */
+
         private static final long serialVersionUID = 6751017204873808094L;
 
         final SortedJoinSubscription<T> parent;
-        
+
         final int index;
-        
-        public SortedJoinInnerSubscriber(SortedJoinSubscription<T> parent, int index) {
+
+        SortedJoinInnerSubscriber(SortedJoinSubscription<T> parent, int index) {
             this.parent = parent;
             this.index = index;
         }
-        
+
         @Override
         public void onSubscribe(Subscription s) {
             if (SubscriptionHelper.setOnce(this, s)) {
@@ -283,7 +283,7 @@ final class ParallelSortedJoin<T> extends Flowable<T> {
         public void onComplete() {
             // ignored
         }
-        
+
         void cancel() {
             SubscriptionHelper.cancel(this);
         }

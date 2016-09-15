@@ -22,29 +22,29 @@ import org.reactivestreams.Subscriber;
 /**
  * Wraps multiple Publishers into a ParallelFlowable which runs them
  * in parallel.
- * 
+ *
  * @param <T> the value type
  */
 final class ParallelFromArray<T> extends ParallelFlowable<T> {
     final Publisher<T>[] sources;
-    
-    public ParallelFromArray(Publisher<T>[] sources) {
+
+    ParallelFromArray(Publisher<T>[] sources) {
         this.sources = sources;
     }
-    
+
     @Override
     public int parallelism() {
         return sources.length;
     }
-    
+
     @Override
     public void subscribe(Subscriber<? super T>[] subscribers) {
         if (!validate(subscribers)) {
             return;
         }
-        
+
         int n = subscribers.length;
-        
+
         for (int i = 0; i < n; i++) {
             sources[i].subscribe(subscribers[i]);
         }

@@ -33,10 +33,10 @@ import io.reactivex.plugins.RxJavaPlugins;
 final class ParallelMap<T, R> extends ParallelFlowable<R> {
 
     final ParallelFlowable<T> source;
-    
+
     final Function<? super T, ? extends R> mapper;
-    
-    public ParallelMap(ParallelFlowable<T> source, Function<? super T, ? extends R> mapper) {
+
+    ParallelMap(ParallelFlowable<T> source, Function<? super T, ? extends R> mapper) {
         this.source = source;
         this.mapper = mapper;
     }
@@ -46,15 +46,15 @@ final class ParallelMap<T, R> extends ParallelFlowable<R> {
         if (!validate(subscribers)) {
             return;
         }
-        
+
         int n = subscribers.length;
         @SuppressWarnings("unchecked")
         Subscriber<? super T>[] parents = new Subscriber[n];
-        
+
         for (int i = 0; i < n; i++) {
             parents[i] = new ParallelMapSubscriber<T, R>(subscribers[i], mapper);
         }
-        
+
         source.subscribe(parents);
     }
 
@@ -66,14 +66,14 @@ final class ParallelMap<T, R> extends ParallelFlowable<R> {
     static final class ParallelMapSubscriber<T, R> implements Subscriber<T>, Subscription {
 
         final Subscriber<? super R> actual;
-        
+
         final Function<? super T, ? extends R> mapper;
-        
+
         Subscription s;
-        
+
         boolean done;
-        
-        public ParallelMapSubscriber(Subscriber<? super R> actual, Function<? super T, ? extends R> mapper) {
+
+        ParallelMapSubscriber(Subscriber<? super R> actual, Function<? super T, ? extends R> mapper) {
             this.actual = actual;
             this.mapper = mapper;
         }
@@ -92,7 +92,7 @@ final class ParallelMap<T, R> extends ParallelFlowable<R> {
         public void onSubscribe(Subscription s) {
             if (SubscriptionHelper.validate(this.s, s)) {
                 this.s = s;
-                
+
                 actual.onSubscribe(this);
             }
         }
@@ -103,7 +103,7 @@ final class ParallelMap<T, R> extends ParallelFlowable<R> {
                 return;
             }
             R v;
-            
+
             try {
                 v = ObjectHelper.requireNonNull(mapper.apply(t), "The mapper returned a null value");
             } catch (Throwable ex) {
@@ -112,7 +112,7 @@ final class ParallelMap<T, R> extends ParallelFlowable<R> {
                 onError(ex);
                 return;
             }
-            
+
             actual.onNext(v);
         }
 
@@ -134,6 +134,6 @@ final class ParallelMap<T, R> extends ParallelFlowable<R> {
             done = true;
             actual.onComplete();
         }
-        
+
     }
 }

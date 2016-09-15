@@ -29,17 +29,17 @@ public class ObservableAverageDouble extends ObservableWithSource<Number, Double
     protected void subscribeActual(Observer<? super Double> observer) {
         source.subscribe(new AverageDoubleObserver(observer));
     }
-    
+
     static final class AverageDoubleObserver extends DeferredScalarObserver<Number, Double> {
 
-        /** */
+
         private static final long serialVersionUID = 6990557227019180008L;
 
         double accumulator;
-        
+
         long count;
-        
-        public AverageDoubleObserver(Observer<? super Double> actual) {
+
+        AverageDoubleObserver(Observer<? super Double> actual) {
             super(actual);
         }
 
@@ -48,7 +48,7 @@ public class ObservableAverageDouble extends ObservableWithSource<Number, Double
             count++;
             accumulator += value.doubleValue();
         }
-        
+
         @Override
         public void onComplete() {
             long c = count;

@@ -32,57 +32,57 @@ import io.reactivex.internal.util.ErrorMode;
 final class ParallelConcatMap<T, R> extends ParallelFlowable<R> {
 
     final ParallelFlowable<T> source;
-    
+
     final Function<? super T, ? extends Publisher<? extends R>> mapper;
-    
+
     final int prefetch;
-    
+
     final ErrorMode errorMode;
 
-    public ParallelConcatMap(
-            ParallelFlowable<T> source, 
-            Function<? super T, ? extends Publisher<? extends R>> mapper, 
+    ParallelConcatMap(
+            ParallelFlowable<T> source,
+            Function<? super T, ? extends Publisher<? extends R>> mapper,
                     int prefetch, ErrorMode errorMode) {
         this.source = source;
         this.mapper = ObjectHelper.requireNonNull(mapper, "mapper");
         this.prefetch = prefetch;
         this.errorMode = ObjectHelper.requireNonNull(errorMode, "errorMode");
     }
-    
+
     @Override
     public int parallelism() {
         return source.parallelism();
     }
-    
+
     @Override
     public void subscribe(Subscriber<? super R>[] subscribers) {
         if (!validate(subscribers)) {
             return;
         }
-        
+
         int n = subscribers.length;
-        
+
         @SuppressWarnings("unchecked")
         final Subscriber<T>[] parents = new Subscriber[n];
 
         // FIXME cheat until we have support from RxJava2 internals
         Publisher<T> p = new Publisher<T>() {
             int i;
-            
+
             @SuppressWarnings("unchecked")
             @Override
             public void subscribe(Subscriber<? super T> s) {
                 parents[i++] = (Subscriber<T>)s;
             }
         };
-        
+
         FlowableConcatMap<T, R> op = new FlowableConcatMap<T, R>(p, mapper, prefetch, errorMode);
-        
+
         for (int i = 0; i < n; i++) {
-            
+
             op.subscribe(subscribers[i]);
 // FIXME needs a FlatMap subscriber
-//            parents[i] = FlowableConcatMap.createSubscriber(s, mapper, prefetch, errorMode); 
+//            parents[i] = FlowableConcatMap.createSubscriber(s, mapper, prefetch, errorMode);
         }
 
         source.subscribe(parents);

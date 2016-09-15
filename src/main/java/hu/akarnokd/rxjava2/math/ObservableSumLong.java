@@ -29,17 +29,17 @@ public class ObservableSumLong extends ObservableWithSource<Long, Long> {
     protected void subscribeActual(Observer<? super Long> observer) {
         source.subscribe(new SumLongObserver(observer));
     }
-    
+
     static final class SumLongObserver extends DeferredScalarObserver<Long, Long> {
 
-        /** */
+
         private static final long serialVersionUID = 8645575082613773782L;
 
         long accumulator;
-        
+
         boolean hasValue;
-        
-        public SumLongObserver(Observer<? super Long> actual) {
+
+        SumLongObserver(Observer<? super Long> actual) {
             super(actual);
         }
 
@@ -50,7 +50,7 @@ public class ObservableSumLong extends ObservableWithSource<Long, Long> {
             }
             accumulator += value.longValue();
         }
-        
+
         @Override
         public void onComplete() {
             if (hasValue) {

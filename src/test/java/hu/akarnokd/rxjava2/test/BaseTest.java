@@ -22,33 +22,33 @@ import io.reactivex.*;
 import io.reactivex.observers.TestObserver;
 import io.reactivex.subscribers.TestSubscriber;
 
-public class BaseTest {
-    
+public abstract class BaseTest {
+
     public static <T> void assertResult(ObservableSource<T> source, T... array) {
         TestObserver<T> ts = new TestObserver<T>();
-        
+
         source.subscribe(ts);
-        
+
         ts.assertValues(array);
         ts.assertNoErrors();
         ts.assertComplete();
     }
-    
+
     public static <T> void assertResult(Publisher<T> source, T... array) {
         TestSubscriber<T> ts = new TestSubscriber<T>();
-        
+
         source.subscribe(ts);
-        
+
         ts.assertValues(array)
         .assertNoErrors()
         .assertComplete();
     }
-    
+
 
     public static <T> Observable<T> observe(T... array) {
         return Observable.fromArray(array);
     }
-    
+
     public static <T> Flowable<T> flow(T... array) {
         return Flowable.fromArray(array);
     }

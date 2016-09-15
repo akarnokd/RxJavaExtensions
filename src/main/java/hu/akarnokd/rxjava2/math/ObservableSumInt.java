@@ -21,7 +21,7 @@ import io.reactivex.*;
 
 final class ObservableSumInt extends ObservableWithSource<Integer, Integer> {
 
-    public ObservableSumInt(ObservableSource<Integer> source) {
+    ObservableSumInt(ObservableSource<Integer> source) {
         super(source);
     }
 
@@ -29,17 +29,17 @@ final class ObservableSumInt extends ObservableWithSource<Integer, Integer> {
     protected void subscribeActual(Observer<? super Integer> observer) {
         source.subscribe(new SumIntObserver(observer));
     }
-    
+
     static final class SumIntObserver extends DeferredScalarObserver<Integer, Integer> {
 
-        /** */
+
         private static final long serialVersionUID = 5434323279399190675L;
 
         int accumulator;
-        
+
         boolean hasValue;
-        
-        public SumIntObserver(Observer<? super Integer> actual) {
+
+        SumIntObserver(Observer<? super Integer> actual) {
             super(actual);
         }
 
@@ -50,7 +50,7 @@ final class ObservableSumInt extends ObservableWithSource<Integer, Integer> {
             }
             accumulator += value.intValue();
         }
-        
+
         @Override
         public void onComplete() {
             if (hasValue) {

@@ -29,17 +29,17 @@ public class ObservableAverageFloat extends ObservableWithSource<Number, Float> 
     protected void subscribeActual(Observer<? super Float> observer) {
         source.subscribe(new AverageFloatObserver(observer));
     }
-    
+
     static final class AverageFloatObserver extends DeferredScalarObserver<Number, Float> {
 
-        /** */
+
         private static final long serialVersionUID = -4845767048730060914L;
 
         float accumulator;
-        
+
         int count;
-        
-        public AverageFloatObserver(Observer<? super Float> actual) {
+
+        AverageFloatObserver(Observer<? super Float> actual) {
             super(actual);
         }
 
@@ -48,7 +48,7 @@ public class ObservableAverageFloat extends ObservableWithSource<Number, Float> 
             count++;
             accumulator += value.floatValue();
         }
-        
+
         @Override
         public void onComplete() {
             int c = count;

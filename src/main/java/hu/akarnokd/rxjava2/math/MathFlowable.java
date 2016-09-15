@@ -31,7 +31,7 @@ public final class MathFlowable {
     private MathFlowable() {
         throw new IllegalStateException("No instances!");
     }
-    
+
     public static Flowable<Integer> sumInt(Publisher<Integer> source) {
         return new FlowableSumInt(source);
     }

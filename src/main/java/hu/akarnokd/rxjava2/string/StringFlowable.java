@@ -18,12 +18,20 @@ package hu.akarnokd.rxjava2.string;
 
 import io.reactivex.Flowable;
 
+/**
+ * Utility class for String operations with {@link Flowable}s.
+ */
 public final class StringFlowable {
     /** Utility class. */
     private StringFlowable() {
         throw new IllegalStateException("No instances!");
     }
-    
+
+    /**
+     * Signals each character of the given string CharSequence as Integers.
+     * @param string the source of characters
+     * @return the new Flowable instance
+     */
     public static Flowable<Integer> characters(CharSequence string) {
         return new FlowableCharSequence(string);
     }

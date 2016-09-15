@@ -24,13 +24,13 @@ final class SorterFunction<T> implements Function<List<T>, List<T>> {
 
     Comparator<? super T> comparator;
 
-    public SorterFunction(Comparator<? super T> comparator) {
+    SorterFunction(Comparator<? super T> comparator) {
         this.comparator = comparator;
     }
-    
+
     @Override
     public List<T> apply(List<T> t) throws Exception {
-        Collections.sort(t, comparator); 
+        Collections.sort(t, comparator);
         return t;
     }
 }

@@ -31,10 +31,10 @@ import io.reactivex.plugins.RxJavaPlugins;
 final class ParallelFilter<T> extends ParallelFlowable<T> {
 
     final ParallelFlowable<T> source;
-    
+
     final Predicate<? super T> predicate;
-    
-    public ParallelFilter(ParallelFlowable<T> source, Predicate<? super T> predicate) {
+
+    ParallelFilter(ParallelFlowable<T> source, Predicate<? super T> predicate) {
         this.source = source;
         this.predicate = predicate;
     }
@@ -44,15 +44,15 @@ final class ParallelFilter<T> extends ParallelFlowable<T> {
         if (!validate(subscribers)) {
             return;
         }
-        
+
         int n = subscribers.length;
         @SuppressWarnings("unchecked")
         Subscriber<? super T>[] parents = new Subscriber[n];
-        
+
         for (int i = 0; i < n; i++) {
             parents[i] = new ParallelFilterSubscriber<T>(subscribers[i], predicate);
         }
-        
+
         source.subscribe(parents);
     }
 
@@ -64,14 +64,14 @@ final class ParallelFilter<T> extends ParallelFlowable<T> {
     static final class ParallelFilterSubscriber<T> implements Subscriber<T>, Subscription {
 
         final Subscriber<? super T> actual;
-        
+
         final Predicate<? super T> predicate;
-        
+
         Subscription s;
-        
+
         boolean done;
-        
-        public ParallelFilterSubscriber(Subscriber<? super T> actual, Predicate<? super T> predicate) {
+
+        ParallelFilterSubscriber(Subscriber<? super T> actual, Predicate<? super T> predicate) {
             this.actual = actual;
             this.predicate = predicate;
         }
@@ -90,7 +90,7 @@ final class ParallelFilter<T> extends ParallelFlowable<T> {
         public void onSubscribe(Subscription s) {
             if (SubscriptionHelper.validate(this.s, s)) {
                 this.s = s;
-                
+
                 actual.onSubscribe(this);
             }
         }
@@ -101,7 +101,7 @@ final class ParallelFilter<T> extends ParallelFlowable<T> {
                 return;
             }
             boolean b;
-            
+
             try {
                 b = predicate.test(t);
             } catch (Throwable ex) {
@@ -110,7 +110,7 @@ final class ParallelFilter<T> extends ParallelFlowable<T> {
                 onError(ex);
                 return;
             }
-            
+
             if (b) {
                 actual.onNext(t);
             } else {
@@ -136,6 +136,6 @@ final class ParallelFilter<T> extends ParallelFlowable<T> {
             done = true;
             actual.onComplete();
         }
-        
+
     }
 }

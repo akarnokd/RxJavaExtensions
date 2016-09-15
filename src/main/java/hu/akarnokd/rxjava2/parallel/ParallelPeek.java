@@ -32,7 +32,7 @@ import io.reactivex.plugins.RxJavaPlugins;
 final class ParallelPeek<T> extends ParallelFlowable<T> {
 
     final ParallelFlowable<T> source;
-    
+
     final Consumer<? super T> onNext;
     final Consumer<? super T> onAfterNext;
     final Consumer<? super Throwable> onError;
@@ -41,8 +41,8 @@ final class ParallelPeek<T> extends ParallelFlowable<T> {
     final Consumer<? super Subscription> onSubscribe;
     final LongConsumer onRequest;
     final Action onCancel;
-    
-    public ParallelPeek(ParallelFlowable<T> source, 
+
+    ParallelPeek(ParallelFlowable<T> source,
             Consumer<? super T> onNext,
             Consumer<? super T> onAfterNext,
             Consumer<? super Throwable> onError,
@@ -53,7 +53,7 @@ final class ParallelPeek<T> extends ParallelFlowable<T> {
             Action onCancel
     ) {
         this.source = source;
-        
+
         this.onNext = ObjectHelper.requireNonNull(onNext, "onNext");
         this.onAfterNext = ObjectHelper.requireNonNull(onAfterNext, "onAfterNext");
         this.onError = ObjectHelper.requireNonNull(onError, "onError");
@@ -69,15 +69,15 @@ final class ParallelPeek<T> extends ParallelFlowable<T> {
         if (!validate(subscribers)) {
             return;
         }
-        
+
         int n = subscribers.length;
         @SuppressWarnings("unchecked")
         Subscriber<? super T>[] parents = new Subscriber[n];
-        
+
         for (int i = 0; i < n; i++) {
             parents[i] = new ParallelPeekSubscriber<T>(subscribers[i], this);
         }
-        
+
         source.subscribe(parents);
     }
 
@@ -89,14 +89,14 @@ final class ParallelPeek<T> extends ParallelFlowable<T> {
     static final class ParallelPeekSubscriber<T> implements Subscriber<T>, Subscription {
 
         final Subscriber<? super T> actual;
-        
+
         final ParallelPeek<T> parent;
-        
+
         Subscription s;
-        
+
         boolean done;
-        
-        public ParallelPeekSubscriber(Subscriber<? super T> actual, ParallelPeek<T> parent) {
+
+        ParallelPeekSubscriber(Subscriber<? super T> actual, ParallelPeek<T> parent) {
             this.actual = actual;
             this.parent = parent;
         }
@@ -127,7 +127,7 @@ final class ParallelPeek<T> extends ParallelFlowable<T> {
         public void onSubscribe(Subscription s) {
             if (SubscriptionHelper.validate(this.s, s)) {
                 this.s = s;
-                
+
                 try {
                     parent.onSubscribe.accept(s);
                 } catch (Throwable ex) {
@@ -137,7 +137,7 @@ final class ParallelPeek<T> extends ParallelFlowable<T> {
                     onError(ex);
                     return;
                 }
-                
+
                 actual.onSubscribe(this);
             }
         }
@@ -147,7 +147,7 @@ final class ParallelPeek<T> extends ParallelFlowable<T> {
             if (done) {
                 return;
             }
-            
+
             try {
                 parent.onNext.accept(t);
             } catch (Throwable ex) {
@@ -155,9 +155,9 @@ final class ParallelPeek<T> extends ParallelFlowable<T> {
                 onError(ex);
                 return;
             }
-            
+
             actual.onNext(t);
-            
+
             try {
                 parent.onAfterNext.accept(t);
             } catch (Throwable ex) {
@@ -174,7 +174,7 @@ final class ParallelPeek<T> extends ParallelFlowable<T> {
                 return;
             }
             done = true;
-            
+
             try {
                 parent.onError.accept(t);
             } catch (Throwable ex) {
@@ -182,7 +182,7 @@ final class ParallelPeek<T> extends ParallelFlowable<T> {
                 t = new CompositeException(t, ex);
             }
             actual.onError(t);
-            
+
             try {
                 parent.onAfterTerminated.run();
             } catch (Throwable ex) {
@@ -205,7 +205,7 @@ final class ParallelPeek<T> extends ParallelFlowable<T> {
                 return;
             }
             actual.onComplete();
-            
+
             try {
                 parent.onAfterTerminated.run();
             } catch (Throwable ex) {
@@ -213,6 +213,6 @@ final class ParallelPeek<T> extends ParallelFlowable<T> {
                 RxJavaPlugins.onError(ex);
             }
         }
-        
+
     }
 }

@@ -33,14 +33,14 @@ import io.reactivex.plugins.RxJavaPlugins;
  * @param <C> the collection type
  */
 final class ParallelCollect<T, C> extends ParallelFlowable<C> {
-    
+
     final ParallelFlowable<? extends T> source;
-    
+
     final Callable<C> initialCollection;
-    
+
     final BiConsumer<C, T> collector;
-    
-    public ParallelCollect(ParallelFlowable<? extends T> source, 
+
+    ParallelCollect(ParallelFlowable<? extends T> source,
             Callable<C> initialCollection, BiConsumer<C, T> collector) {
         this.source = source;
         this.initialCollection = initialCollection;
@@ -52,15 +52,15 @@ final class ParallelCollect<T, C> extends ParallelFlowable<C> {
         if (!validate(subscribers)) {
             return;
         }
-        
+
         int n = subscribers.length;
         @SuppressWarnings("unchecked")
         Subscriber<T>[] parents = new Subscriber[n];
-        
+
         for (int i = 0; i < n; i++) {
-            
+
             C initialValue;
-            
+
             try {
                 initialValue = initialCollection.call();
             } catch (Throwable ex) {
@@ -68,18 +68,18 @@ final class ParallelCollect<T, C> extends ParallelFlowable<C> {
                 reportError(subscribers, ex);
                 return;
             }
-            
+
             if (initialValue == null) {
                 reportError(subscribers, new NullPointerException("The initialSupplier returned a null value"));
                 return;
             }
-            
+
             parents[i] = new ParallelCollectSubscriber<T, C>(subscribers[i], initialValue, collector);
         }
-        
+
         source.subscribe(parents);
     }
-    
+
     void reportError(Subscriber<?>[] subscribers, Throwable ex) {
         for (Subscriber<?> s : subscribers) {
             EmptySubscription.error(ex, s);
@@ -93,39 +93,39 @@ final class ParallelCollect<T, C> extends ParallelFlowable<C> {
 
     static final class ParallelCollectSubscriber<T, C> extends DeferredScalarSubscriber<T, C> {
 
-        /** */
+
         private static final long serialVersionUID = -4767392946044436228L;
 
         final BiConsumer<C, T> collector;
 
         C collection;
-        
+
         boolean done;
-        
-        public ParallelCollectSubscriber(Subscriber<? super C> subscriber, 
+
+        ParallelCollectSubscriber(Subscriber<? super C> subscriber,
                 C initialValue, BiConsumer<C, T> collector) {
             super(subscriber);
             this.collection = initialValue;
             this.collector = collector;
         }
-        
+
         @Override
         public void onSubscribe(Subscription s) {
             if (SubscriptionHelper.validate(this.s, s)) {
                 this.s = s;
-                
+
                 actual.onSubscribe(this);
-                
+
                 s.request(Long.MAX_VALUE);
             }
         }
-        
+
         @Override
         public void onNext(T t) {
             if (done) {
                 return;
             }
-            
+
             try {
                 collector.accept(collection, t);
             } catch (Throwable ex) {
@@ -135,7 +135,7 @@ final class ParallelCollect<T, C> extends ParallelFlowable<C> {
                 return;
             }
         }
-        
+
         @Override
         public void onError(Throwable t) {
             if (done) {
@@ -146,7 +146,7 @@ final class ParallelCollect<T, C> extends ParallelFlowable<C> {
             collection = null;
             actual.onError(t);
         }
-        
+
         @Override
         public void onComplete() {
             if (done) {
@@ -157,7 +157,7 @@ final class ParallelCollect<T, C> extends ParallelFlowable<C> {
             collection = null;
             complete(c);
         }
-        
+
         @Override
         public void cancel() {
             super.cancel();

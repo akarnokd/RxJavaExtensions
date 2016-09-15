@@ -24,7 +24,7 @@ import hu.akarnokd.rxjava2.test.BaseTest;
 import io.reactivex.Flowable;
 
 public class MathFlowableTest extends BaseTest {
-    
+
     static Flowable<Integer> intEmpty() {
         return Flowable.empty();
     }
@@ -44,7 +44,7 @@ public class MathFlowableTest extends BaseTest {
     public void normalSumInt() {
         assertResult(sumInt(flow(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)), 55);
     }
-    
+
     @Test
     public void normalSumLong() {
         assertResult(sumLong(flow(1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L)), 55L);
@@ -59,12 +59,12 @@ public class MathFlowableTest extends BaseTest {
     public void normalSumDouble() {
         assertResult(sumDouble(flow(1D, 2D, 3D, 4D, 5D, 6D, 7D, 8D, 9D, 10D)), 55D);
     }
-    
+
     @Test
     public void normalMinInt() {
         assertResult(min(flow(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)), 1);
     }
-    
+
     @Test
     public void normalMinLong() {
         assertResult(min(flow(1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L)), 1L);
@@ -79,12 +79,12 @@ public class MathFlowableTest extends BaseTest {
     public void normalMinDouble() {
         assertResult(min(flow(1D, 2D, 3D, 4D, 5D, 6D, 7D, 8D, 9D, 10D)), 1D);
     }
-    
+
     @Test
     public void normalMaxInt() {
         assertResult(max(flow(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)), 10);
     }
-    
+
     @Test
     public void normalMaxLong() {
         assertResult(max(flow(1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L)), 10L);
@@ -99,17 +99,17 @@ public class MathFlowableTest extends BaseTest {
     public void normalMaxDouble() {
         assertResult(max(flow(1D, 2D, 3D, 4D, 5D, 6D, 7D, 8D, 9D, 10D)), 10D);
     }
-    
+
     @Test
     public void normalAverageFloat() {
         assertResult(averageFloat(flow(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)), 5.5F);
     }
-    
+
     @Test
     public void normalAverageDouble() {
         assertResult(averageDouble(flow(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)), 5.5D);
     }
-    
+
     @Test
     public void emptySumInt() {
         assertResult(sumInt(intEmpty()));
@@ -129,7 +129,7 @@ public class MathFlowableTest extends BaseTest {
     public void emptySumDouble() {
         assertResult(sumDouble(doubleEmpty()));
     }
-    
+
     @Test
     public void emptyMinInt() {
         assertResult(min(intEmpty()));
@@ -169,7 +169,7 @@ public class MathFlowableTest extends BaseTest {
     public void emptyMaxDouble() {
         assertResult(max(doubleEmpty()));
     }
-    
+
     @Test
     public void emptyAverageFloat() {
         assertResult(averageFloat(floatEmpty()));

@@ -34,41 +34,41 @@ import io.reactivex.plugins.RxJavaPlugins;
  */
 final class ParallelRunOn<T> extends ParallelFlowable<T> {
     final ParallelFlowable<? extends T> source;
-    
+
     final Scheduler scheduler;
 
     final int prefetch;
-    
-    public ParallelRunOn(ParallelFlowable<? extends T> parent, 
+
+    ParallelRunOn(ParallelFlowable<? extends T> parent,
             Scheduler scheduler, int prefetch) {
         this.source = parent;
         this.scheduler = scheduler;
         this.prefetch = prefetch;
     }
-    
+
     @Override
     public void subscribe(Subscriber<? super T>[] subscribers) {
         if (!validate(subscribers)) {
             return;
         }
-        
+
         int n = subscribers.length;
-        
+
         @SuppressWarnings("unchecked")
         Subscriber<T>[] parents = new Subscriber[n];
-        
+
         int prefetch = this.prefetch;
-        
+
         for (int i = 0; i < n; i++) {
             Subscriber<? super T> a = subscribers[i];
-            
+
             Worker w = scheduler.createWorker();
             SpscArrayQueue<T> q = new SpscArrayQueue<T>(prefetch);
-            
+
             RunOnSubscriber<T> parent = new RunOnSubscriber<T>(a, prefetch, q, w);
             parents[i] = parent;
         }
-        
+
         source.subscribe(parents);
     }
 
@@ -78,54 +78,54 @@ final class ParallelRunOn<T> extends ParallelFlowable<T> {
         return source.parallelism();
     }
 
-    static final class RunOnSubscriber<T> 
+    static final class RunOnSubscriber<T>
     extends AtomicInteger
     implements Subscriber<T>, Subscription, Runnable {
-        
-        /** */
+
+
         private static final long serialVersionUID = 1075119423897941642L;
 
         final Subscriber<? super T> actual;
-        
+
         final int prefetch;
-        
+
         final int limit;
-        
+
         final SpscArrayQueue<T> queue;
-        
+
         final Worker worker;
-        
+
         Subscription s;
-        
+
         volatile boolean done;
-        
+
         Throwable error;
 
         final AtomicLong requested = new AtomicLong();
-        
+
         volatile boolean cancelled;
-        
+
         int consumed;
 
-        public RunOnSubscriber(Subscriber<? super T> actual, int prefetch, SpscArrayQueue<T> queue, Worker worker) {
+        RunOnSubscriber(Subscriber<? super T> actual, int prefetch, SpscArrayQueue<T> queue, Worker worker) {
             this.actual = actual;
             this.prefetch = prefetch;
             this.queue = queue;
             this.limit = prefetch - (prefetch >> 2);
             this.worker = worker;
         }
-        
+
         @Override
         public void onSubscribe(Subscription s) {
             if (SubscriptionHelper.validate(this.s, s)) {
                 this.s = s;
-                
+
                 actual.onSubscribe(this);
-                
+
                 s.request(prefetch);
             }
         }
-        
+
         @Override
         public void onNext(T t) {
             if (done) {
@@ -137,7 +137,7 @@ final class ParallelRunOn<T> extends ParallelFlowable<T> {
             }
             schedule();
         }
-        
+
         @Override
         public void onError(Throwable t) {
             if (done) {
@@ -148,7 +148,7 @@ final class ParallelRunOn<T> extends ParallelFlowable<T> {
             done = true;
             schedule();
         }
-        
+
         @Override
         public void onComplete() {
             if (done) {
@@ -157,7 +157,7 @@ final class ParallelRunOn<T> extends ParallelFlowable<T> {
             done = true;
             schedule();
         }
-        
+
         @Override
         public void request(long n) {
             if (SubscriptionHelper.validate(n)) {
@@ -165,26 +165,26 @@ final class ParallelRunOn<T> extends ParallelFlowable<T> {
                 schedule();
             }
         }
-        
+
         @Override
         public void cancel() {
             if (!cancelled) {
                 cancelled = true;
                 s.cancel();
                 worker.dispose();
-                
+
                 if (getAndIncrement() == 0) {
                     queue.clear();
                 }
             }
         }
-        
+
         void schedule() {
             if (getAndIncrement() == 0) {
                 worker.schedule(this);
             }
         }
-        
+
         @Override
         public void run() {
             int missed = 1;
@@ -192,87 +192,87 @@ final class ParallelRunOn<T> extends ParallelFlowable<T> {
             SpscArrayQueue<T> q = queue;
             Subscriber<? super T> a = actual;
             int lim = limit;
-            
+
             for (;;) {
-                
+
                 long r = requested.get();
                 long e = 0L;
-                
+
                 while (e != r) {
                     if (cancelled) {
                         q.clear();
                         return;
                     }
-                    
+
                     boolean d = done;
-                    
+
                     if (d) {
                         Throwable ex = error;
                         if (ex != null) {
                             q.clear();
-                            
+
                             a.onError(ex);
-                            
+
                             worker.dispose();
                             return;
                         }
                     }
-                    
+
                     T v = q.poll();
-                    
+
                     boolean empty = v == null;
-                    
+
                     if (d && empty) {
                         a.onComplete();
-                        
+
                         worker.dispose();
                         return;
                     }
-                    
+
                     if (empty) {
                         break;
                     }
-                    
+
                     a.onNext(v);
-                    
+
                     e++;
-                    
+
                     int p = ++c;
                     if (p == lim) {
                         c = 0;
                         s.request(p);
                     }
                 }
-                
+
                 if (e == r) {
                     if (cancelled) {
                         q.clear();
                         return;
                     }
-                    
+
                     if (done) {
                         Throwable ex = error;
                         if (ex != null) {
                             q.clear();
-                            
+
                             a.onError(ex);
-                            
+
                             worker.dispose();
                             return;
                         }
                         if (q.isEmpty()) {
                             a.onComplete();
-                            
+
                             worker.dispose();
                             return;
                         }
                     }
                 }
-                
+
                 if (e != 0L && r != Long.MAX_VALUE) {
                     requested.addAndGet(-e);
                 }
-                
+
                 int w = get();
                 if (w == missed) {
                     consumed = c;

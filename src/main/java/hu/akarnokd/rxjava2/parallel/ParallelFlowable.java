@@ -34,30 +34,30 @@ import io.reactivex.internal.util.*;
  * Use {@code from()} to start processing a regular Publisher in 'rails'.
  * Use {@code runOn()} to introduce where each 'rail' shoud run on thread-vise.
  * Use {@code sequential()} to merge the sources back into a single Flowable.
- * 
+ *
  * @param <T> the value type
  */
 public abstract class ParallelFlowable<T> {
-    
+
     /**
      * Subscribes an array of Subscribers to this ParallelFlowable and triggers
      * the execution chain for all 'rails'.
-     * 
+     *
      * @param subscribers the subscribers array to run in parallel, the number
      * of items must be equal to the parallelism level of this ParallelFlowable
      */
     public abstract void subscribe(Subscriber<? super T>[] subscribers);
-    
+
     /**
      * Returns the number of expected parallel Subscribers.
      * @return the number of expected parallel Subscribers
      */
     public abstract int parallelism();
-    
+
     /**
      * Validates the number of subscribers and returns true if their number
      * matches the parallelism level of this ParallelFlowable.
-     * 
+     *
      * @param subscribers the array of Subscribers
      * @return true if the number of subscribers equals to the parallelism level
      */
@@ -73,7 +73,7 @@ public abstract class ParallelFlowable<T> {
     }
 
     /**
-     * Take a Publisher and prepare to consume it on multiple 'rails' (number of CPUs) 
+     * Take a Publisher and prepare to consume it on multiple 'rails' (number of CPUs)
      * in a round-robin fashion.
      * @param <T> the value type
      * @param source the source Publisher
@@ -95,7 +95,7 @@ public abstract class ParallelFlowable<T> {
     }
 
     /**
-     * Take a Publisher and prepare to consume it on parallallism number of 'rails' , 
+     * Take a Publisher and prepare to consume it on parallallism number of 'rails' ,
      * possibly ordered and round-robin fashion and use custom prefetch amount and queue
      * for dealing with the source Publisher's values.
      * @param <T> the value type
@@ -105,7 +105,7 @@ public abstract class ParallelFlowable<T> {
      * the source until there is a rail ready to process it.
      * @return the new ParallelFlowable instance
      */
-    public static <T> ParallelFlowable<T> from(Publisher<? extends T> source, 
+    public static <T> ParallelFlowable<T> from(Publisher<? extends T> source,
             int parallelism, int prefetch) {
         if (parallelism <= 0) {
             throw new IllegalArgumentException("parallelism > 0 required but it was " + parallelism);
@@ -113,7 +113,7 @@ public abstract class ParallelFlowable<T> {
         if (prefetch <= 0) {
             throw new IllegalArgumentException("prefetch > 0 required but it was " + prefetch);
         }
-        
+
         ObjectHelper.requireNonNull(source, "queueSupplier");
 
         return new ParallelFromPublisher<T>(source, parallelism, prefetch);
@@ -131,7 +131,7 @@ public abstract class ParallelFlowable<T> {
         ObjectHelper.requireNonNull(mapper, "mapper");
         return new ParallelMap<T, R>(this, mapper);
     }
-    
+
     /**
      * Filters the source values on each 'rail'.
      * <p>
@@ -143,7 +143,7 @@ public abstract class ParallelFlowable<T> {
         ObjectHelper.requireNonNull(predicate, "predicate");
         return new ParallelFilter<T>(this, predicate);
     }
-    
+
     /**
      * Specifies where each 'rail' will observe its incoming values with
      * no work-stealing and default prefetch amount.
@@ -159,7 +159,7 @@ public abstract class ParallelFlowable<T> {
      * <p>
      * This operator doesn't require the Scheduler to be trampolining as it
      * does its own built-in trampolining logic.
-     * 
+     *
      * @param scheduler the scheduler to use
      * @return the new ParallelFlowable instance
      */
@@ -182,7 +182,7 @@ public abstract class ParallelFlowable<T> {
      * <p>
      * This operator doesn't require the Scheduler to be trampolining as it
      * does its own built-in trampolining logic.
-     * 
+     *
      * @param scheduler the scheduler to use
      * that rail's worker has run out of work.
      * @param prefetch the number of values to request on each 'rail' from the source
@@ -208,7 +208,7 @@ public abstract class ParallelFlowable<T> {
         ObjectHelper.requireNonNull(reducer, "reducer");
         return new ParallelReduceFull<T>(this, reducer);
     }
-    
+
     /**
      * Reduces all values within a 'rail' to a single value (with a possibly different type) via
      * a reducer function that is initialized on each rail from an initialSupplier value.
@@ -225,7 +225,7 @@ public abstract class ParallelFlowable<T> {
         ObjectHelper.requireNonNull(reducer, "reducer");
         return new ParallelReduce<T, R>(this, initialSupplier, reducer);
     }
-    
+
     /**
      * Merges the values from each 'rail' in a round-robin or same-order fashion and
      * exposes it as a regular Publisher sequence, running with a default prefetch value
@@ -253,13 +253,13 @@ public abstract class ParallelFlowable<T> {
         }
         return new ParallelJoin<T>(this, prefetch);
     }
-    
+
     /**
      * Sorts the 'rails' of this ParallelFlowable and returns a Publisher that sequentially
      * picks the smallest next value from the rails.
      * <p>
      * This operator requires a finite source ParallelFlowable.
-     * 
+     *
      * @param comparator the comparator to use
      * @return the new Px instance
      */
@@ -272,7 +272,7 @@ public abstract class ParallelFlowable<T> {
      * picks the smallest next value from the rails.
      * <p>
      * This operator requires a finite source ParallelFlowable.
-     * 
+     *
      * @param comparator the comparator to use
      * @param capacityHint the expected number of total elements
      * @return the new Px instance
@@ -281,15 +281,15 @@ public abstract class ParallelFlowable<T> {
         int ch = capacityHint / parallelism() + 1;
         ParallelFlowable<List<T>> railReduced = reduce(Functions.<T>createArrayList(ch), ListAddBiConsumer.<T>instance());
         ParallelFlowable<List<T>> railSorted = railReduced.map(new SorterFunction<T>(comparator));
-        
+
         return new ParallelSortedJoin<T>(railSorted, comparator);
     }
-    
+
     /**
      * Sorts the 'rails' according to the comparator and returns a full sorted list as a Publisher.
      * <p>
      * This operator requires a finite source ParallelFlowable.
-     * 
+     *
      * @param comparator the comparator to compare elements
      * @return the new Px instannce
      */
@@ -300,7 +300,7 @@ public abstract class ParallelFlowable<T> {
      * Sorts the 'rails' according to the comparator and returns a full sorted list as a Publisher.
      * <p>
      * This operator requires a finite source ParallelFlowable.
-     * 
+     *
      * @param comparator the comparator to compare elements
      * @param capacityHint the expected number of total elements
      * @return the new Px instannce
@@ -311,13 +311,13 @@ public abstract class ParallelFlowable<T> {
         ParallelFlowable<List<T>> railSorted = railReduced.map(new SorterFunction<T>(comparator));
 
         Flowable<List<T>> merged = railSorted.reduce(new MergerBiFunction<T>(comparator));
-        
+
         return merged;
     }
 
     /**
      * Call the specified consumer with the current element passing through any 'rail'.
-     * 
+     *
      * @param onNext the callback
      * @return the new ParallelFlowable instance
      */
@@ -337,7 +337,7 @@ public abstract class ParallelFlowable<T> {
     /**
      * Call the specified consumer with the current element passing through any 'rail'
      * after it has been delivered to downstream within the rail.
-     * 
+     *
      * @param onAfterNext the callback
      * @return the new ParallelFlowable instance
      */
@@ -356,7 +356,7 @@ public abstract class ParallelFlowable<T> {
 
     /**
      * Call the specified consumer with the exception passing through any 'rail'.
-     * 
+     *
      * @param onError the callback
      * @return the new ParallelFlowable instance
      */
@@ -375,7 +375,7 @@ public abstract class ParallelFlowable<T> {
 
     /**
      * Run the specified Action when a 'rail' completes.
-     * 
+     *
      * @param onComplete the callback
      * @return the new ParallelFlowable instance
      */
@@ -394,7 +394,7 @@ public abstract class ParallelFlowable<T> {
 
     /**
      * Run the specified Action when a 'rail' completes or signals an error.
-     * 
+     *
      * @param onAfterTerminate the callback
      * @return the new ParallelFlowable instance
      */
@@ -413,7 +413,7 @@ public abstract class ParallelFlowable<T> {
 
     /**
      * Call the specified callback when a 'rail' receives a Subscription from its upstream.
-     * 
+     *
      * @param onSubscribe the callback
      * @return the new ParallelFlowable instance
      */
@@ -429,10 +429,10 @@ public abstract class ParallelFlowable<T> {
                 Functions.EMPTY_ACTION
                 );
     }
-    
+
     /**
      * Call the specified consumer with the request amount if any rail receives a request.
-     * 
+     *
      * @param onRequest the callback
      * @return the new ParallelFlowable instance
      */
@@ -448,10 +448,10 @@ public abstract class ParallelFlowable<T> {
                 Functions.EMPTY_ACTION
                 );
     }
-    
+
     /**
      * Run the specified Action when a 'rail' receives a cancellation.
-     * 
+     *
      * @param onCancel the callback
      * @return the new ParallelFlowable instance
      */
@@ -467,11 +467,11 @@ public abstract class ParallelFlowable<T> {
                 onCancel
                 );
     }
-    
+
     /**
      * Collect the elements in each rail into a collection supplied via a collectionSupplier
      * and collected into with a collector action, emitting the collection at the end.
-     * 
+     *
      * @param <C> the collection type
      * @param collectionSupplier the supplier of the collection in each rail
      * @param collector the collector, taking the per-rali collection and the current item
@@ -484,7 +484,7 @@ public abstract class ParallelFlowable<T> {
     /**
      * Wraps multiple Publishers into a ParallelFlowable which runs them
      * in parallel and unordered.
-     * 
+     *
      * @param <T> the value type
      * @param publishers the array of publishers
      * @return the new ParallelFlowable instance
@@ -499,7 +499,7 @@ public abstract class ParallelFlowable<T> {
     /**
      * Perform a fluent transformation to a value via a converter function which
      * receives this ParallelFlowable.
-     * 
+     *
      * @param <U> the output value type
      * @param converter the converter function from ParallelFlowable to some type
      * @return the value returned by the converter function
@@ -512,11 +512,11 @@ public abstract class ParallelFlowable<T> {
             throw ExceptionHelper.wrapOrThrow(ex);
         }
     }
-    
+
     /**
      * Allows composing operators, in assembly time, on top of this ParallelFlowable
      * and returns another ParallelFlowable with composed features.
-     * 
+     *
      * @param <U> the output value type
      * @param composer the composer function from ParallelFlowable (this) to another ParallelFlowable
      * @return the ParallelFlowable returned by the function
@@ -524,12 +524,12 @@ public abstract class ParallelFlowable<T> {
     public final <U> ParallelFlowable<U> compose(Function<? super ParallelFlowable<T>, ParallelFlowable<U>> composer) {
         return to(composer);
     }
-    
+
     /**
      * Generates and flattens Publishers on each 'rail'.
      * <p>
      * Errors are not delayed and uses unbounded concurrency along with default inner prefetch.
-     * 
+     *
      * @param <R> the result type
      * @param mapper the function to map each rail's value into a Publisher
      * @return the new ParallelFlowable instance
@@ -542,7 +542,7 @@ public abstract class ParallelFlowable<T> {
      * Generates and flattens Publishers on each 'rail', optionally delaying errors.
      * <p>
      * It uses unbounded concurrency along with default inner prefetch.
-     * 
+     *
      * @param <R> the result type
      * @param mapper the function to map each rail's value into a Publisher
      * @param delayError should the errors from the main and the inner sources delayed till everybody terminates?
@@ -554,11 +554,11 @@ public abstract class ParallelFlowable<T> {
     }
 
     /**
-     * Generates and flattens Publishers on each 'rail', optionally delaying errors 
+     * Generates and flattens Publishers on each 'rail', optionally delaying errors
      * and having a total number of simultaneous subscriptions to the inner Publishers.
      * <p>
      * It uses a default inner prefetch.
-     * 
+     *
      * @param <R> the result type
      * @param mapper the function to map each rail's value into a Publisher
      * @param delayError should the errors from the main and the inner sources delayed till everybody terminates?
@@ -571,10 +571,10 @@ public abstract class ParallelFlowable<T> {
     }
 
     /**
-     * Generates and flattens Publishers on each 'rail', optionally delaying errors, 
+     * Generates and flattens Publishers on each 'rail', optionally delaying errors,
      * having a total number of simultaneous subscriptions to the inner Publishers
      * and using the given prefetch amount for the inner Publishers.
-     * 
+     *
      * @param <R> the result type
      * @param mapper the function to map each rail's value into a Publisher
      * @param delayError should the errors from the main and the inner sources delayed till everybody terminates?
@@ -589,9 +589,9 @@ public abstract class ParallelFlowable<T> {
     }
 
     /**
-     * Generates and concatenates Publishers on each 'rail', signalling errors immediately 
+     * Generates and concatenates Publishers on each 'rail', signalling errors immediately
      * and generating 2 publishers upfront.
-     * 
+     *
      * @param <R> the result type
      * @param mapper the function to map each rail's value into a Publisher
      * source and the inner Publishers (immediate, boundary, end)
@@ -603,9 +603,9 @@ public abstract class ParallelFlowable<T> {
     }
 
     /**
-     * Generates and concatenates Publishers on each 'rail', signalling errors immediately 
+     * Generates and concatenates Publishers on each 'rail', signalling errors immediately
      * and using the given prefetch amount for generating Publishers upfront.
-     * 
+     *
      * @param <R> the result type
      * @param mapper the function to map each rail's value into a Publisher
      * @param prefetch the number of items to prefetch from each inner Publisher
@@ -619,9 +619,9 @@ public abstract class ParallelFlowable<T> {
     }
 
     /**
-     * Generates and concatenates Publishers on each 'rail', optionally delaying errors 
+     * Generates and concatenates Publishers on each 'rail', optionally delaying errors
      * and generating 2 publishers upfront.
-     * 
+     *
      * @param <R> the result type
      * @param mapper the function to map each rail's value into a Publisher
      * @param errorMode the error handling, i.e., when to report errors from the main
@@ -635,9 +635,9 @@ public abstract class ParallelFlowable<T> {
     }
 
     /**
-     * Generates and concatenates Publishers on each 'rail', optionally delaying errors 
+     * Generates and concatenates Publishers on each 'rail', optionally delaying errors
      * and using the given prefetch amount for generating Publishers upfront.
-     * 
+     *
      * @param <R> the result type
      * @param mapper the function to map each rail's value into a Publisher
      * @param prefetch the number of items to prefetch from each inner Publisher

@@ -36,10 +36,10 @@ import io.reactivex.plugins.RxJavaPlugins;
 final class ParallelReduceFull<T> extends Flowable<T> {
 
     final ParallelFlowable<? extends T> source;
-    
+
     final BiFunction<T, T, T> reducer;
-    
-    public ParallelReduceFull(ParallelFlowable<? extends T> source, BiFunction<T, T, T> reducer) {
+
+    ParallelReduceFull(ParallelFlowable<? extends T> source, BiFunction<T, T, T> reducer) {
         this.source = source;
         this.reducer = reducer;
     }
@@ -48,26 +48,26 @@ final class ParallelReduceFull<T> extends Flowable<T> {
     protected void subscribeActual(Subscriber<? super T> s) {
         ParallelReduceFullMainSubscriber<T> parent = new ParallelReduceFullMainSubscriber<T>(s, source.parallelism(), reducer);
         s.onSubscribe(parent);
-        
+
         source.subscribe(parent.subscribers);
     }
 
     static final class ParallelReduceFullMainSubscriber<T> extends DeferredScalarSubscription<T> {
 
-        /** */
+
         private static final long serialVersionUID = -5370107872170712765L;
 
         final ParallelReduceFullInnerSubscriber<T>[] subscribers;
-        
+
         final BiFunction<T, T, T> reducer;
-        
+
         final AtomicReference<SlotPair<T>> current = new AtomicReference<SlotPair<T>>();
-        
+
         final AtomicInteger remaining = new AtomicInteger();
 
         final AtomicBoolean once = new AtomicBoolean();
-        
-        public ParallelReduceFullMainSubscriber(Subscriber<? super T> subscriber, int n, BiFunction<T, T, T> reducer) {
+
+        ParallelReduceFullMainSubscriber(Subscriber<? super T> subscriber, int n, BiFunction<T, T, T> reducer) {
             super(subscriber);
             @SuppressWarnings("unchecked")
             ParallelReduceFullInnerSubscriber<T>[] a = new ParallelReduceFullInnerSubscriber[n];
@@ -82,14 +82,14 @@ final class ParallelReduceFull<T> extends Flowable<T> {
         SlotPair<T> addValue(T value) {
             for (;;) {
                 SlotPair<T> curr = current.get();
-                
+
                 if (curr == null) {
                     curr = new SlotPair<T>();
                     if (!current.compareAndSet(null, curr)) {
                         continue;
                     }
                 }
-                
+
                 int c = curr.tryAcquireSlot();
                 if (c < 0) {
                     current.compareAndSet(curr, null);
@@ -100,7 +100,7 @@ final class ParallelReduceFull<T> extends Flowable<T> {
                 } else {
                     curr.second = value;
                 }
-                
+
                 if (curr.releaseSlot()) {
                     current.compareAndSet(curr, null);
                     return curr;
@@ -108,14 +108,14 @@ final class ParallelReduceFull<T> extends Flowable<T> {
                 return null;
             }
         }
-        
+
         @Override
         public void cancel() {
             for (ParallelReduceFullInnerSubscriber<T> inner : subscribers) {
                 inner.cancel();
             }
         }
-        
+
         void innerError(Throwable ex) {
             if (once.compareAndSet(false, true)) {
                 cancel();
@@ -124,14 +124,14 @@ final class ParallelReduceFull<T> extends Flowable<T> {
                 RxJavaPlugins.onError(ex);
             }
         }
-        
+
         void innerComplete(T value) {
             if (value != null) {
                 for (;;) {
                     SlotPair<T> sp = addValue(value);
-                    
+
                     if (sp != null) {
-                        
+
                         try {
                             value = reducer.apply(sp.first, sp.second);
                         } catch (Throwable ex) {
@@ -139,7 +139,7 @@ final class ParallelReduceFull<T> extends Flowable<T> {
                             innerError(ex);
                             return;
                         }
-                        
+
                         if (value == null) {
                             innerError(new NullPointerException("The reducer returned a null value"));
                             return;
@@ -149,11 +149,11 @@ final class ParallelReduceFull<T> extends Flowable<T> {
                     }
                 }
             }
-            
+
             if (remaining.decrementAndGet() == 0) {
                 SlotPair<T> sp = current.get();
                 current.lazySet(null);
-                
+
                 if (sp != null) {
                     complete(sp.first);
                 } else {
@@ -162,44 +162,44 @@ final class ParallelReduceFull<T> extends Flowable<T> {
             }
         }
     }
-    
-    static final class ParallelReduceFullInnerSubscriber<T> 
+
+    static final class ParallelReduceFullInnerSubscriber<T>
     extends AtomicReference<Subscription>
     implements Subscriber<T> {
-        /** */
+
         private static final long serialVersionUID = -7954444275102466525L;
 
         final ParallelReduceFullMainSubscriber<T> parent;
-        
+
         final BiFunction<T, T, T> reducer;
-        
+
         T value;
-        
+
         boolean done;
 
-        public ParallelReduceFullInnerSubscriber(ParallelReduceFullMainSubscriber<T> parent, BiFunction<T, T, T> reducer) {
+        ParallelReduceFullInnerSubscriber(ParallelReduceFullMainSubscriber<T> parent, BiFunction<T, T, T> reducer) {
             this.parent = parent;
             this.reducer = reducer;
         }
-        
+
         @Override
         public void onSubscribe(Subscription s) {
             if (SubscriptionHelper.setOnce(this, s)) {
                 s.request(Long.MAX_VALUE);
             }
         }
-        
+
         @Override
         public void onNext(T t) {
             if (done) {
                 return;
             }
             T v = value;
-            
+
             if (v == null) {
                 value = t;
             } else {
-                
+
                 try {
                     v = ObjectHelper.requireNonNull(reducer.apply(v, t), "The reducer returned a null value");
                 } catch (Throwable ex) {
@@ -208,11 +208,11 @@ final class ParallelReduceFull<T> extends Flowable<T> {
                     onError(ex);
                     return;
                 }
-                
+
                 value = v;
             }
         }
-        
+
         @Override
         public void onError(Throwable t) {
             if (done) {
@@ -222,7 +222,7 @@ final class ParallelReduceFull<T> extends Flowable<T> {
             done = true;
             parent.innerError(t);
         }
-        
+
         @Override
         public void onComplete() {
             if (done) {
@@ -231,42 +231,42 @@ final class ParallelReduceFull<T> extends Flowable<T> {
             done = true;
             parent.innerComplete(value);
         }
-        
+
         void cancel() {
             SubscriptionHelper.cancel(this);
         }
     }
-    
+
     static final class SlotPair<T> {
-        
+
         T first;
-        
+
         T second;
-        
+
         volatile int acquireIndex;
         @SuppressWarnings("rawtypes")
         static final AtomicIntegerFieldUpdater<SlotPair> ACQ =
                 AtomicIntegerFieldUpdater.newUpdater(SlotPair.class, "acquireIndex");
-        
-        
+
+
         volatile int releaseIndex;
         @SuppressWarnings("rawtypes")
         static final AtomicIntegerFieldUpdater<SlotPair> REL =
                 AtomicIntegerFieldUpdater.newUpdater(SlotPair.class, "releaseIndex");
-        
+
         int tryAcquireSlot() {
             for (;;) {
                 int acquired = acquireIndex;
                 if (acquired >= 2) {
                     return -1;
                 }
-                
+
                 if (ACQ.compareAndSet(this, acquired, acquired + 1)) {
                     return acquired;
                 }
             }
         }
-        
+
         boolean releaseSlot() {
             return REL.incrementAndGet(this) == 2;
         }

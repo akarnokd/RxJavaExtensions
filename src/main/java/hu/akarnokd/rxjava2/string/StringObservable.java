@@ -16,14 +16,22 @@
 
 package hu.akarnokd.rxjava2.string;
 
-import io.reactivex.Observable;
+import io.reactivex.*;
 
+/**
+ * Utility class for String operations with {@link Observable}s.
+ */
 public final class StringObservable {
     /** Utility class. */
     private StringObservable() {
         throw new IllegalStateException("No instances!");
     }
-    
+
+    /**
+     * Signals each character of the given string CharSequence as Integers.
+     * @param string the source of characters
+     * @return the new Observable instance
+     */
     public static Observable<Integer> characters(CharSequence string) {
         return new ObservableCharSequence(string);
     }

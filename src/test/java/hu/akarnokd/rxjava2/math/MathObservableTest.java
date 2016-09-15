@@ -23,7 +23,7 @@ import org.junit.Test;
 import hu.akarnokd.rxjava2.test.BaseTest;
 import io.reactivex.Observable;
 
-public class MathObservableTest extends BaseTest{
+public class MathObservableTest extends BaseTest {
 
     static Observable<Integer> intEmpty() {
         return Observable.empty();
@@ -45,7 +45,7 @@ public class MathObservableTest extends BaseTest{
     public void normalSumInt() {
         assertResult(sumInt(observe(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)), 55);
     }
-    
+
     @Test
     public void normalSumLong() {
         assertResult(sumLong(observe(1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L)), 55L);
@@ -60,12 +60,12 @@ public class MathObservableTest extends BaseTest{
     public void normalSumDouble() {
         assertResult(sumDouble(observe(1D, 2D, 3D, 4D, 5D, 6D, 7D, 8D, 9D, 10D)), 55D);
     }
-    
+
     @Test
     public void normalMinInt() {
         assertResult(min(observe(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)), 1);
     }
-    
+
     @Test
     public void normalMinLong() {
         assertResult(min(observe(1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L)), 1L);
@@ -80,12 +80,12 @@ public class MathObservableTest extends BaseTest{
     public void normalMinDouble() {
         assertResult(min(observe(1D, 2D, 3D, 4D, 5D, 6D, 7D, 8D, 9D, 10D)), 1D);
     }
-    
+
     @Test
     public void normalMaxInt() {
         assertResult(max(observe(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)), 10);
     }
-    
+
     @Test
     public void normalMaxLong() {
         assertResult(max(observe(1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L)), 10L);
@@ -100,17 +100,17 @@ public class MathObservableTest extends BaseTest{
     public void normalMaxDouble() {
         assertResult(max(observe(1D, 2D, 3D, 4D, 5D, 6D, 7D, 8D, 9D, 10D)), 10D);
     }
-    
+
     @Test
     public void normalAverageFloat() {
         assertResult(averageFloat(observe(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)), 5.5F);
     }
-    
+
     @Test
     public void normalAverageDouble() {
         assertResult(averageDouble(observe(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)), 5.5D);
     }
-    
+
     @Test
     public void emptySumInt() {
         assertResult(sumInt(intEmpty()));
@@ -130,7 +130,7 @@ public class MathObservableTest extends BaseTest{
     public void emptySumDouble() {
         assertResult(sumDouble(doubleEmpty()));
     }
-    
+
     @Test
     public void emptyMinInt() {
         assertResult(min(intEmpty()));
@@ -170,7 +170,7 @@ public class MathObservableTest extends BaseTest{
     public void emptyMaxDouble() {
         assertResult(max(doubleEmpty()));
     }
-    
+
     @Test
     public void emptyAverageFloat() {
         assertResult(averageFloat(floatEmpty()));

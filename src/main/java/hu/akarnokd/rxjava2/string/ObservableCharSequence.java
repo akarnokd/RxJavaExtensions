@@ -21,23 +21,23 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import io.reactivex.*;
 import io.reactivex.disposables.*;
 
-public final class ObservableCharSequence extends Observable<Integer> {
+final class ObservableCharSequence extends Observable<Integer> {
 
     final CharSequence string;
-    
-    public ObservableCharSequence(CharSequence string) {
+
+    ObservableCharSequence(CharSequence string) {
         this.string = string;
     }
 
     @Override
     protected void subscribeActual(Observer<? super Integer> observer) {
         Disposable d = new BooleanDisposable();
-        
+
         observer.onSubscribe(d);
-        
+
         CharSequence s = string;
         int len = s.length();
-        
+
         for (int i = 0; i < len; i++) {
             if (d.isDisposed()) {
                 return;
@@ -49,9 +49,9 @@ public final class ObservableCharSequence extends Observable<Integer> {
         }
         observer.onComplete();
     }
-    
+
     static final class BooleanDisposable extends AtomicBoolean implements Disposable {
-        /** */
+
         private static final long serialVersionUID = -4762798297183704664L;
 
         @Override

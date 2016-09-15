@@ -26,10 +26,10 @@ import io.reactivex.internal.subscribers.flowable.DeferredScalarSubscriber;
 final class FlowableMinMax<T> extends FlowableSource<T, T> {
 
     final Comparator<? super T> comparator;
-    
+
     final int flag;
-    
-    public FlowableMinMax(Publisher<T> source, Comparator<? super T> comparator, int flag) {
+
+    FlowableMinMax(Publisher<T> source, Comparator<? super T> comparator, int flag) {
         super(source);
         this.comparator = comparator;
         this.flag = flag;
@@ -39,19 +39,19 @@ final class FlowableMinMax<T> extends FlowableSource<T, T> {
     protected void subscribeActual(Subscriber<? super T> observer) {
         source.subscribe(new MinMaxSubscriber<T>(observer, comparator, flag));
     }
-    
+
     static final class MinMaxSubscriber<T> extends DeferredScalarSubscriber<T, T> {
 
-        /** */
+
         private static final long serialVersionUID = 600979972678601618L;
-        
+
         final Comparator<? super T> comparator;
-        
+
         final int flag;
 
-        public MinMaxSubscriber(Subscriber<? super T> actual, Comparator<? super T> comparator, int flag) {
+        MinMaxSubscriber(Subscriber<? super T> actual, Comparator<? super T> comparator, int flag) {
             super(actual);
-            this.comparator = comparator; 
+            this.comparator = comparator;
             this.flag = flag;
         }
 
@@ -72,6 +72,6 @@ final class FlowableMinMax<T> extends FlowableSource<T, T> {
                 actual.onError(ex);
             }
         }
-        
+
     }
 }

@@ -22,7 +22,7 @@ import io.reactivex.internal.subscribers.flowable.DeferredScalarSubscriber;
 
 final class FlowableAverageDouble extends FlowableSource<Number, Double> {
 
-    public FlowableAverageDouble(Publisher<Number> source) {
+    FlowableAverageDouble(Publisher<Number> source) {
         super(source);
     }
 
@@ -30,17 +30,16 @@ final class FlowableAverageDouble extends FlowableSource<Number, Double> {
     protected void subscribeActual(Subscriber<? super Double> observer) {
         source.subscribe(new AverageDoubleSubscriber(observer));
     }
-    
+
     static final class AverageDoubleSubscriber extends DeferredScalarSubscriber<Number, Double> {
 
-        /** */
         private static final long serialVersionUID = 600979972678601618L;
 
         double accumulator;
-        
+
         long count;
-        
-        public AverageDoubleSubscriber(Subscriber<? super Double> actual) {
+
+        AverageDoubleSubscriber(Subscriber<? super Double> actual) {
             super(actual);
         }
 

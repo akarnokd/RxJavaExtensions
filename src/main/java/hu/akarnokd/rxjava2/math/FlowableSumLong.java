@@ -22,7 +22,7 @@ import io.reactivex.internal.subscribers.flowable.DeferredScalarSubscriber;
 
 final class FlowableSumLong extends FlowableSource<Long, Long> {
 
-    public FlowableSumLong(Publisher<Long> source) {
+    FlowableSumLong(Publisher<Long> source) {
         super(source);
     }
 
@@ -30,15 +30,15 @@ final class FlowableSumLong extends FlowableSource<Long, Long> {
     protected void subscribeActual(Subscriber<? super Long> observer) {
         source.subscribe(new SumLongSubscriber(observer));
     }
-    
+
     static final class SumLongSubscriber extends DeferredScalarSubscriber<Long, Long> {
 
-        /** */
+
         private static final long serialVersionUID = 600979972678601618L;
 
         long accumulator;
-        
-        public SumLongSubscriber(Subscriber<? super Long> actual) {
+
+        SumLongSubscriber(Subscriber<? super Long> actual) {
             super(actual);
         }
 
@@ -49,7 +49,7 @@ final class FlowableSumLong extends FlowableSource<Long, Long> {
             }
             accumulator += value.longValue();
         }
-        
+
         @Override
         public void onComplete() {
             if (hasValue) {

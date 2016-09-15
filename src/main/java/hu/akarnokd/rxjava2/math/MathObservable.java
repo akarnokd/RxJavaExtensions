@@ -29,7 +29,7 @@ public final class MathObservable {
     private MathObservable() {
         throw new IllegalStateException("No instances!");
     }
-    
+
     public static Observable<Integer> sumInt(ObservableSource<Integer> source) {
         return new ObservableSumInt(source);
     }

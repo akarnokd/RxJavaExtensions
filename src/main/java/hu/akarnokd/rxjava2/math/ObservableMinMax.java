@@ -25,10 +25,10 @@ import io.reactivex.exceptions.Exceptions;
 final class ObservableMinMax<T> extends ObservableWithSource<T, T> {
 
     final Comparator<? super T> comparator;
-    
+
     final int flag;
-    
-    public ObservableMinMax(ObservableSource<T> source, Comparator<? super T> comparator, int flag) {
+
+    ObservableMinMax(ObservableSource<T> source, Comparator<? super T> comparator, int flag) {
         super(source);
         this.comparator = comparator;
         this.flag = flag;
@@ -38,19 +38,19 @@ final class ObservableMinMax<T> extends ObservableWithSource<T, T> {
     protected void subscribeActual(Observer<? super T> observer) {
         source.subscribe(new MinMaxSubscriber<T>(observer, comparator, flag));
     }
-    
+
     static final class MinMaxSubscriber<T> extends DeferredScalarObserver<T, T> {
 
-        /** */
+
         private static final long serialVersionUID = -4484454790848904397L;
 
         final Comparator<? super T> comparator;
-        
+
         final int flag;
 
-        public MinMaxSubscriber(Observer<? super T> actual, Comparator<? super T> comparator, int flag) {
+        MinMaxSubscriber(Observer<? super T> actual, Comparator<? super T> comparator, int flag) {
             super(actual);
-            this.comparator = comparator; 
+            this.comparator = comparator;
             this.flag = flag;
         }
 
@@ -71,6 +71,6 @@ final class ObservableMinMax<T> extends ObservableWithSource<T, T> {
                 actual.onError(ex);
             }
         }
-        
+
     }
 }
