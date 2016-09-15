@@ -417,7 +417,7 @@ public abstract class ParallelFlowable<T> {
      * @param onSubscribe the callback
      * @return the new ParallelFlowable instance
      */
-    public final ParallelFlowable<T> doOnCancel(Consumer<? super Subscription> onSubscribe) {
+    public final ParallelFlowable<T> doOnSubscribe(Consumer<? super Subscription> onSubscribe) {
         return new ParallelPeek<T>(this,
                 Functions.emptyConsumer(),
                 Functions.emptyConsumer(),
