@@ -17,6 +17,7 @@
 package hu.akarnokd.rxjava2.string;
 
 import io.reactivex.Flowable;
+import io.reactivex.plugins.RxJavaPlugins;
 
 /**
  * Utility class for String operations with {@link Flowable}s.
@@ -33,6 +34,6 @@ public final class StringFlowable {
      * @return the new Flowable instance
      */
     public static Flowable<Integer> characters(CharSequence string) {
-        return new FlowableCharSequence(string);
+        return RxJavaPlugins.onAssembly(new FlowableCharSequence(string));
     }
 }

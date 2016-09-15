@@ -27,6 +27,7 @@ import io.reactivex.functions.*;
 import io.reactivex.internal.functions.*;
 import io.reactivex.internal.subscriptions.EmptySubscription;
 import io.reactivex.internal.util.*;
+import io.reactivex.plugins.RxJavaPlugins;
 
 /**
  * Abstract base class for Parallel publishers that take an array of Subscribers.
@@ -206,7 +207,7 @@ public abstract class ParallelFlowable<T> {
      */
     public final Flowable<T> reduce(BiFunction<T, T, T> reducer) {
         ObjectHelper.requireNonNull(reducer, "reducer");
-        return new ParallelReduceFull<T>(this, reducer);
+        return RxJavaPlugins.onAssembly(new ParallelReduceFull<T>(this, reducer));
     }
 
     /**
@@ -251,7 +252,7 @@ public abstract class ParallelFlowable<T> {
         if (prefetch <= 0) {
             throw new IllegalArgumentException("prefetch > 0 required but it was " + prefetch);
         }
-        return new ParallelJoin<T>(this, prefetch);
+        return RxJavaPlugins.onAssembly(new ParallelJoin<T>(this, prefetch));
     }
 
     /**
@@ -282,7 +283,7 @@ public abstract class ParallelFlowable<T> {
         ParallelFlowable<List<T>> railReduced = reduce(Functions.<T>createArrayList(ch), ListAddBiConsumer.<T>instance());
         ParallelFlowable<List<T>> railSorted = railReduced.map(new SorterFunction<T>(comparator));
 
-        return new ParallelSortedJoin<T>(railSorted, comparator);
+        return RxJavaPlugins.onAssembly(new ParallelSortedJoin<T>(railSorted, comparator));
     }
 
     /**
@@ -312,7 +313,7 @@ public abstract class ParallelFlowable<T> {
 
         Flowable<List<T>> merged = railSorted.reduce(new MergerBiFunction<T>(comparator));
 
-        return merged;
+        return RxJavaPlugins.onAssembly(merged);
     }
 
     /**

@@ -22,6 +22,7 @@ import org.reactivestreams.Publisher;
 
 import hu.akarnokd.rxjava2.util.SelfComparator;
 import io.reactivex.Flowable;
+import io.reactivex.plugins.RxJavaPlugins;
 
 /**
  * Utility methods to work with numerical Flowable sources: sum, min, max and average.
@@ -33,19 +34,19 @@ public final class MathFlowable {
     }
 
     public static Flowable<Integer> sumInt(Publisher<Integer> source) {
-        return new FlowableSumInt(source);
+        return RxJavaPlugins.onAssembly(new FlowableSumInt(source));
     }
 
     public static Flowable<Long> sumLong(Publisher<Long> source) {
-        return new FlowableSumLong(source);
+        return RxJavaPlugins.onAssembly(new FlowableSumLong(source));
     }
 
     public static Flowable<Float> sumFloat(Publisher<Float> source) {
-        return new FlowableSumFloat(source);
+        return RxJavaPlugins.onAssembly(new FlowableSumFloat(source));
     }
 
     public static Flowable<Double> sumDouble(Publisher<Double> source) {
-        return new FlowableSumDouble(source);
+        return RxJavaPlugins.onAssembly(new FlowableSumDouble(source));
     }
 
     public static <T extends Comparable<? super T>> Flowable<T> max(Publisher<T> source) {
@@ -54,7 +55,7 @@ public final class MathFlowable {
     }
 
     public static <T> Flowable<T> max(Publisher<T> source, Comparator<? super T> comparator) {
-        return new FlowableMinMax<T>(source, comparator, -1);
+        return RxJavaPlugins.onAssembly(new FlowableMinMax<T>(source, comparator, -1));
     }
 
     public static <T extends Comparable<? super T>> Flowable<T> min(Publisher<T> source) {
@@ -63,17 +64,17 @@ public final class MathFlowable {
     }
 
     public static <T> Flowable<T> min(Publisher<T> source, Comparator<? super T> comparator) {
-        return new FlowableMinMax<T>(source, comparator, 1);
+        return RxJavaPlugins.onAssembly(new FlowableMinMax<T>(source, comparator, 1));
     }
 
     @SuppressWarnings("unchecked")
     public static Flowable<Float> averageFloat(Publisher<? extends Number> source) {
-        return new FlowableAverageFloat((Publisher<Number>)source);
+        return RxJavaPlugins.onAssembly(new FlowableAverageFloat((Publisher<Number>)source));
     }
 
     @SuppressWarnings("unchecked")
     public static Flowable<Double> averageDouble(Publisher<? extends Number> source) {
-        return new FlowableAverageDouble((Publisher<Number>)source);
+        return RxJavaPlugins.onAssembly(new FlowableAverageDouble((Publisher<Number>)source));
     }
 
 }

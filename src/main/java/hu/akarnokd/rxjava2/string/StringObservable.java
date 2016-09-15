@@ -17,6 +17,7 @@
 package hu.akarnokd.rxjava2.string;
 
 import io.reactivex.*;
+import io.reactivex.plugins.RxJavaPlugins;
 
 /**
  * Utility class for String operations with {@link Observable}s.
@@ -33,6 +34,6 @@ public final class StringObservable {
      * @return the new Observable instance
      */
     public static Observable<Integer> characters(CharSequence string) {
-        return new ObservableCharSequence(string);
+        return RxJavaPlugins.onAssembly(new ObservableCharSequence(string));
     }
 }

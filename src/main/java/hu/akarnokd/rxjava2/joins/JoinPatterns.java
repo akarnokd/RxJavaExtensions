@@ -27,9 +27,9 @@ import io.reactivex.observers.SafeObserver;
 /**
  * Join patterns  And, Then and When.
  */
-final class OperatorJoinPatterns {
+final class JoinPatterns {
 
-    private OperatorJoinPatterns() { throw new IllegalStateException("No instances!"); }
+    private JoinPatterns() { throw new IllegalStateException("No instances!"); }
     /**
      * Creates a pattern that matches when both observable sequences have an available element.
      * @param left the left source

@@ -20,6 +20,7 @@ import java.util.Comparator;
 
 import hu.akarnokd.rxjava2.util.SelfComparator;
 import io.reactivex.*;
+import io.reactivex.plugins.RxJavaPlugins;
 
 /**
  * Utility methods to work with numerical Observable sources: sum, min, max and average.
@@ -31,19 +32,19 @@ public final class MathObservable {
     }
 
     public static Observable<Integer> sumInt(ObservableSource<Integer> source) {
-        return new ObservableSumInt(source);
+        return RxJavaPlugins.onAssembly(new ObservableSumInt(source));
     }
 
     public static Observable<Long> sumLong(ObservableSource<Long> source) {
-        return new ObservableSumLong(source);
+        return RxJavaPlugins.onAssembly(new ObservableSumLong(source));
     }
 
     public static Observable<Float> sumFloat(ObservableSource<Float> source) {
-        return new ObservableSumFloat(source);
+        return RxJavaPlugins.onAssembly(new ObservableSumFloat(source));
     }
 
     public static Observable<Double> sumDouble(ObservableSource<Double> source) {
-        return new ObservableSumDouble(source);
+        return RxJavaPlugins.onAssembly(new ObservableSumDouble(source));
     }
 
     public static <T extends Comparable<? super T>> Observable<T> max(ObservableSource<T> source) {
@@ -52,7 +53,7 @@ public final class MathObservable {
     }
 
     public static <T> Observable<T> max(ObservableSource<T> source, Comparator<? super T> comparator) {
-        return new ObservableMinMax<T>(source, comparator, -1);
+        return RxJavaPlugins.onAssembly(new ObservableMinMax<T>(source, comparator, -1));
     }
 
     public static <T extends Comparable<? super T>> Observable<T> min(ObservableSource<T> source) {
@@ -61,17 +62,17 @@ public final class MathObservable {
     }
 
     public static <T> Observable<T> min(ObservableSource<T> source, Comparator<? super T> comparator) {
-        return new ObservableMinMax<T>(source, comparator, 1);
+        return RxJavaPlugins.onAssembly(new ObservableMinMax<T>(source, comparator, 1));
     }
 
     @SuppressWarnings("unchecked")
     public static Observable<Float> averageFloat(ObservableSource<? extends Number> source) {
-        return new ObservableAverageFloat((ObservableSource<Number>)source);
+        return RxJavaPlugins.onAssembly(new ObservableAverageFloat((ObservableSource<Number>)source));
     }
 
     @SuppressWarnings("unchecked")
     public static Observable<Double> averageDouble(ObservableSource<? extends Number> source) {
-        return new ObservableAverageDouble((ObservableSource<Number>)source);
+        return RxJavaPlugins.onAssembly(new ObservableAverageDouble((ObservableSource<Number>)source));
     }
 
 }
