@@ -16,14 +16,19 @@
 
 package hu.akarnokd.rxjava2.functions;
 
-import java.util.concurrent.Callable;
+import io.reactivex.functions.*;
 
 /**
- * A {@link Callable} with suppressed exception on its {@link #call()} method.
- * @param <T> the value type
+ * A {@link BiFunction} with suppressed exception on its
+ * {@link #apply(Object, Object)} method.
+ *
+ * @param <T1> the first argument type
+ * @param <T2> the second argument type
+ * @param <R> the output value type
  */
-public interface Supplier<T> extends Callable<T> {
+public interface PlainBiFunction<T1, T2, R>
+extends BiFunction<T1, T2, R> {
 
     @Override
-    T call();
+    R apply(T1 t1, T2 t2);
 }

@@ -91,11 +91,116 @@ TBD: conversion of RxJavaAsyncUtil
 
 ## Computational expressions
 
-TBD: conversion of RxJavaComputationExpression
+The operators on `StatementFlowable` and `StatementObservable` allow taking different branches at subscription time:
+
+### ifThen - conditionally chose a source to subscribe to
+
+This is similar to the imperative `if` statement but with reactive flows:
+
+```java
+if ((System.currentTimeMillis() & 1) != 0) {
+    System.out.println("An odd millisecond");
+} else {
+    System.out.println("An even millisecond");
+}
+
+
+```java
+Flowable<String> source = StatementFlowable.ifThen(
+    () -> (System.currentTimeMillis() & 1) != 0,
+    Flowable.just("An odd millisecond"),
+    Flowable.just("An even millisecond")
+);
+```
+
+source
+.delay(1, TimeUnit.MILLISECONDS)
+.repeat(1000)
+.subscribe(System.out::println);
+```
+
+### switchCase - calculate a key and pick a source from a Map
+
+This is similar to the imperative `switch` statement:
+
+```java
+switch ((int)(System.currentTimeMillis() & 7)) {
+case 1: System.out.println("one"); break;
+case 2: System.out.println("two"); break;
+case 3: System.out.println("three"); break;
+default: System.out.println("Something else");
+}
+```
+
+```java
+Map<Integer, Flowable<String>> map = new HashMap<>();
+
+map.put(1, Flowable.just("one"));
+map.put(2, Flowable.just("two"));
+map.put(3, Flowable.just("three"));
+
+Flowable<String> source = StatementFlowable.switchCase(
+    () -> (int)(System.currentTimeMillis() & 7),
+    map,
+    Flowable.just("Something else")
+);
+
+source
+.delay(1, TimeUnit.MILLISECONDS)
+.repeat(1000)
+.subscribe(System.out::println);
+```
+
+### doWhile - resubscribe if a condition is true after
+
+This is similar to the imperative `do-while` loop (executing the loop body at least once):
+
+```java
+long start = System.currentTimeMillis();
+do {
+    Thread.sleep(1);
+    System.out.println("Working...");
+while (start + 100 > System.currentTimeMillis());
+```
+
+```java
+long start = System.currentTimeMillis();
+
+Flowable<String> source = StatementFlowable.doWhile(
+    Flowable.just("Working...").delay(1, TimeUnit.MILLISECONDS),
+    () -> start + 100 > System.currentTimeMillis()
+);
+
+source.subscribe(System.out::println);
+```
+
+
+### whileDo - subscribe and resubscribe if a condition is true
+
+This is similar to the imperative `while` loop (where the loop body may not execute if the condition is false
+to begin with):
+
+```java
+
+while ((System.currentTimeMillis() & 1) != 0) {
+    System.out.println("What an odd millisecond!");
+}
+```
+
+```java
+Flowable<String> source = StatementFlowable.whileDo(
+    Flowable.just("What an odd millisecond!"),
+    () -> (System.currentTimeMillis() & 1) != 0
+);
+
+source.subscribe(System.out::println);
+```
 
 ## Join patterns
 
-TBD: conversion of RxJavaJoins
+(Conversion done)
+
+TBD: examples
 
 ## Debug support
 

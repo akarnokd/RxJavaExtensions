@@ -23,6 +23,8 @@ import org.reactivestreams.*;
 import hu.akarnokd.rxjava2.functions.*;
 import io.reactivex.*;
 import io.reactivex.functions.*;
+import io.reactivex.processors.AsyncProcessor;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Utility methods to convert functions and actions into asynchronous operations through the Publisher/Subscriber
@@ -42,6 +44,12 @@ public final class AsyncFlowable {
      * Flowable. Multiple subscriptions to this Flowable observe the same return value.
      * <p>
      * <img width="640" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/start.png" alt="">
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The returned Flowable honors downstream backpressure.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>{@code start} by default operates on the {@code computation} {@link Scheduler}.</dd>
+     * </dl>
      *
      * @param <T> the result value type
      * @param func function to run asynchronously
@@ -50,8 +58,7 @@ public final class AsyncFlowable {
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh229036.aspx">MSDN: Observable.Start</a>
      */
     public static <T> Flowable<T> start(Callable<? extends T> func) {
-        // TODO
-        throw new UnsupportedOperationException();
+        return start(func, Schedulers.computation());
     }
 
     /**
@@ -62,6 +69,12 @@ public final class AsyncFlowable {
      * Flowable. Multiple subscriptions to this Flowable observe the same return value.
      * <p>
      * <img width="640" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/start.s.png" alt="">
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The returned Flowable honors downstream backpressure.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>You specify the {@link Scheduler} {@code start} works on.</dd>
+     * </dl>
      * <p>
      * @param <T> the result value type
      * @param func function to run asynchronously
@@ -70,9 +83,8 @@ public final class AsyncFlowable {
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Async-Operators#wiki-start">RxJava Wiki: start()</a>
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh211721.aspx">MSDN: Observable.Start</a>
      */
-    public static <T> Flowable<T> start(Callable<T> func, Scheduler scheduler) {
-        // TODO
-        throw new UnsupportedOperationException();
+    public static <T> Flowable<T> start(Callable<? extends T> func, Scheduler scheduler) {
+        return Flowable.fromCallable(func).subscribeOn(scheduler).subscribeWith(AsyncProcessor.<T>create());
     }
 
     /**
@@ -80,20 +92,31 @@ public final class AsyncFlowable {
      * <p>
      * <img width="640" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toAsync.an.png" alt="">
      * <p>
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The Flowable returned by the Callable honors downstream backpressure.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>{@code toAsync} by default operates on the {@code computation} {@link Scheduler}.</dd>
+     * </dl>
      * @param action the action to convert
      * @return a function that returns an Flowable that executes the {@code action} and emits {@code null}
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Async-Operators#wiki-toasync-or-asyncaction-or-asyncfunc">RxJava Wiki: toAsync()</a>
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh229868.aspx">MSDN: Observable.ToAsync</a>
      */
-    public static Callable<Flowable<Object>> toAsync(Action action) {
-        // TODO
-        throw new UnsupportedOperationException();
+    public static Supplier<Flowable<Object>> toAsync(Action action) {
+        return toAsync(action, Schedulers.computation());
     }
 
     /**
      * Convert a synchronous function call into an asynchronous function call through a Flowable.
      * <p>
      * <img width="640" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toAsync.png" alt="">
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The Flowable returned by the Callable honors downstream backpressure.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>{@code toAsync} by default operates on the {@code computation} {@link Scheduler}.</dd>
+     * </dl>
      *
      * @param <R> the result value type
      * @param func the function to convert
@@ -102,14 +125,19 @@ public final class AsyncFlowable {
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh229182.aspx">MSDN: Observable.ToAsync</a>
      */
     public static <R> Callable<Flowable<R>> toAsync(Callable<? extends R> func) {
-        // TODO
-        throw new UnsupportedOperationException();
+        return toAsync(func, Schedulers.computation());
     }
 
     /**
      * Convert a synchronous action call into an asynchronous function call through a Flowable.
      * <p>
      * <img width="640" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toAsync.an.png" alt="">
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The Flowable returned by the Callable honors downstream backpressure.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>{@code toAsync} by default operates on the {@code computation} {@link Scheduler}.</dd>
+     * </dl>
      *
      * @param <T1> first parameter type of the action
      * @param action the action to convert
@@ -118,14 +146,19 @@ public final class AsyncFlowable {
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh229657.aspx">MSDN: Observable.ToAsync</a>
      */
     public static <T1> Function<T1, Flowable<Object>> toAsync(Consumer<? super T1> action) {
-        // TODO
-        throw new UnsupportedOperationException();
+        return toAsync(action, Schedulers.computation());
     }
 
     /**
      * Convert a synchronous function call into an asynchronous function call through a Flowable.
      * <p>
      * <img width="640" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toAsync.png" alt="">
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The Flowable returned by the Callable honors downstream backpressure.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>{@code toAsync} by default operates on the {@code computation} {@link Scheduler}.</dd>
+     * </dl>
      *
      * @param <T1> first parameter type of the action
      * @param <R> the result type
@@ -135,14 +168,19 @@ public final class AsyncFlowable {
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh229755.aspx">MSDN: Observable.ToAsync</a>
      */
     public static <T1, R> Function<T1, Flowable<R>> toAsync(Function<? super T1, ? extends R> func) {
-        // TODO
-        throw new UnsupportedOperationException();
+        return toAsync(func, Schedulers.computation());
     }
 
     /**
      * Convert a synchronous action call into an asynchronous function call through a Flowable.
      * <p>
      * <img width="640" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toAsync.an.png" alt="">
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The Flowable returned by the Callable honors downstream backpressure.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>{@code toAsync} by default operates on the {@code computation} {@link Scheduler}.</dd>
+     * </dl>
      *
      * @param <T1> the first parameter type
      * @param <T2> the second parameter type
@@ -152,14 +190,19 @@ public final class AsyncFlowable {
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh211875.aspx">MSDN: Observable.ToAsync</a>
      */
     public static <T1, T2> BiFunction<T1, T2, Flowable<Object>> toAsync(BiConsumer<? super T1, ? super T2> action) {
-        // TODO
-        throw new UnsupportedOperationException();
+        return toAsync(action, Schedulers.computation());
     }
 
     /**
      * Convert a synchronous function call into an asynchronous function call through a Flowable.
      * <p>
      * <img width="640" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toAsync.png" alt="">
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The Flowable returned by the Callable honors downstream backpressure.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>{@code toAsync} by default operates on the {@code computation} {@link Scheduler}.</dd>
+     * </dl>
      *
      * @param <T1> the first parameter type
      * @param <T2> the second parameter type
@@ -170,14 +213,19 @@ public final class AsyncFlowable {
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh229851.aspx">MSDN: Observable.ToAsync</a>
      */
     public static <T1, T2, R> BiFunction<T1, T2, Flowable<R>> toAsync(BiFunction<? super T1, ? super T2, ? extends R> func) {
-        // TODO
-        throw new UnsupportedOperationException();
+        return toAsync(func, Schedulers.computation());
     }
 
     /**
      * Convert a synchronous action call into an asynchronous function call through an Flowable.
      * <p>
      * <img width="640" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toAsync.an.png" alt="">
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The Flowable returned by the Callable honors downstream backpressure.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>{@code toAsync} by default operates on the {@code computation} {@link Scheduler}.</dd>
+     * </dl>
      *
      * @param <T1> the first parameter type
      * @param <T2> the second parameter type
@@ -188,14 +236,19 @@ public final class AsyncFlowable {
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh229336.aspx">MSDN: Observable.ToAsync</a>
      */
     public static <T1, T2, T3> Function3<T1, T2, T3, Flowable<Object>> toAsync(Consumer3<? super T1, ? super T2, ? super T3> action) {
-        // TODO
-        throw new UnsupportedOperationException();
+        return toAsync(action, Schedulers.computation());
     }
 
     /**
      * Convert a synchronous function call into an asynchronous function call through an Flowable.
      * <p>
      * <img width="640" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toAsync.png" alt="">
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The Flowable returned by the Callable honors downstream backpressure.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>{@code toAsync} by default operates on the {@code computation} {@link Scheduler}.</dd>
+     * </dl>
      *
      * @param <T1> the first parameter type
      * @param <T2> the second parameter type
@@ -207,14 +260,19 @@ public final class AsyncFlowable {
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh229450.aspx">MSDN: Observable.ToAsync</a>
      */
     public static <T1, T2, T3, R> Function3<T1, T2, T3, Flowable<R>> toAsync(Function3<? super T1, ? super T2, ? super T3, ? extends R> func) {
-        // TODO
-        throw new UnsupportedOperationException();
+        return toAsync(func, Schedulers.computation());
     }
 
     /**
      * Convert a synchronous action call into an asynchronous function call through an Flowable.
      * <p>
      * <img width="640" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toAsync.an.png" alt="">
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The Flowable returned by the Callable honors downstream backpressure.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>{@code toAsync} by default operates on the {@code computation} {@link Scheduler}.</dd>
+     * </dl>
      *
      * @param <T1> the first parameter type
      * @param <T2> the second parameter type
@@ -226,14 +284,19 @@ public final class AsyncFlowable {
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh229769.aspx">MSDN: Observable.ToAsync</a>
      */
     public static <T1, T2, T3, T4> Function4<T1, T2, T3, T4, Flowable<Object>> toAsync(Consumer4<? super T1, ? super T2, ? super T3, ? super T4> action) {
-        // TODO
-        throw new UnsupportedOperationException();
+        return toAsync(action, Schedulers.computation());
     }
 
     /**
      * Convert a synchronous function call into an asynchronous function call through an Flowable.
      * <p>
      * <img width="640" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toAsync.png" alt="">
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The Flowable returned by the Callable honors downstream backpressure.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>{@code toAsync} by default operates on the {@code computation} {@link Scheduler}.</dd>
+     * </dl>
      *
      * @param <T1> the first parameter type
      * @param <T2> the second parameter type
@@ -246,14 +309,19 @@ public final class AsyncFlowable {
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh229911.aspx">MSDN: Observable.ToAsync</a>
      */
     public static <T1, T2, T3, T4, R> Function4<T1, T2, T3, T4, Flowable<R>> toAsync(Function4<? super T1, ? super T2, ? super T3, ? super T4, ? extends R> func) {
-        // TODO
-        throw new UnsupportedOperationException();
+        return toAsync(func, Schedulers.computation());
     }
 
     /**
      * Convert a synchronous action call into an asynchronous function call through an Flowable.
      * <p>
      * <img width="640" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toAsync.an.png" alt="">
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The Flowable returned by the Callable honors downstream backpressure.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>{@code toAsync} by default operates on the {@code computation} {@link Scheduler}.</dd>
+     * </dl>
      *
      * @param <T1> the first parameter type
      * @param <T2> the second parameter type
@@ -265,15 +333,20 @@ public final class AsyncFlowable {
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Async-Operators#wiki-toasync-or-asyncaction-or-asyncfunc">RxJava Wiki: toAsync()</a>
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh229577.aspx">MSDN: Observable.ToAsync</a>
      */
-    public static <T1, T2, T3, T4, T5> Function5<T1, T2, T3, T4, T5, Flowable<Void>> toAsync(Consumer5<? super T1, ? super T2, ? super T3, ? super T4, ? super T5> action) {
-        // TODO
-        throw new UnsupportedOperationException();
+    public static <T1, T2, T3, T4, T5> PlainFunction5<T1, T2, T3, T4, T5, Flowable<Object>> toAsync(Consumer5<? super T1, ? super T2, ? super T3, ? super T4, ? super T5> action) {
+        return toAsync(action, Schedulers.computation());
     }
 
     /**
      * Convert a synchronous function call into an asynchronous function call through an Flowable.
      * <p>
      * <img width="640" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toAsync.png" alt="">
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The Flowable returned by the Callable honors downstream backpressure.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>{@code toAsync} by default operates on the {@code computation} {@link Scheduler}.</dd>
+     * </dl>
      *
      * @param <T1> the first parameter type
      * @param <T2> the second parameter type
@@ -286,15 +359,20 @@ public final class AsyncFlowable {
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Async-Operators#wiki-toasync-or-asyncaction-or-asyncfunc">RxJava Wiki: toAsync()</a>
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh229571.aspx">MSDN: Observable.ToAsync</a>
      */
-    public static <T1, T2, T3, T4, T5, R> Function5<T1, T2, T3, T4, T5, Flowable<R>> toAsync(Function5<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? extends R> func) {
-        // TODO
-        throw new UnsupportedOperationException();
+    public static <T1, T2, T3, T4, T5, R> PlainFunction5<T1, T2, T3, T4, T5, Flowable<R>> toAsync(Function5<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? extends R> func) {
+        return toAsync(func, Schedulers.computation());
     }
 
     /**
      * Convert a synchronous action call into an asynchronous function call through an Flowable.
      * <p>
      * <img width="640" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toAsync.an.png" alt="">
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The Flowable returned by the Callable honors downstream backpressure.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>{@code toAsync} by default operates on the {@code computation} {@link Scheduler}.</dd>
+     * </dl>
      *
      * @param <T1> the first parameter type
      * @param <T2> the second parameter type
@@ -307,15 +385,20 @@ public final class AsyncFlowable {
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Async-Operators#wiki-toasync-or-asyncaction-or-asyncfunc">RxJava Wiki: toAsync()</a>
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh211773.aspx">MSDN: Observable.ToAsync</a>
      */
-    public static <T1, T2, T3, T4, T5, T6> Function6<T1, T2, T3, T4, T5, T6, Flowable<Void>> toAsync(Consumer6<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? super T6> action) {
-        // TODO
-        throw new UnsupportedOperationException();
+    public static <T1, T2, T3, T4, T5, T6> PlainFunction6<T1, T2, T3, T4, T5, T6, Flowable<Object>> toAsync(Consumer6<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? super T6> action) {
+        return toAsync(action, Schedulers.computation());
     }
 
     /**
      * Convert a synchronous function call into an asynchronous function call through an Flowable.
      * <p>
      * <img width="640" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toAsync.png" alt="">
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The Flowable returned by the Callable honors downstream backpressure.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>{@code toAsync} by default operates on the {@code computation} {@link Scheduler}.</dd>
+     * </dl>
      *
      * @param <T1> the first parameter type
      * @param <T2> the second parameter type
@@ -329,15 +412,20 @@ public final class AsyncFlowable {
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Async-Operators#wiki-toasync-or-asyncaction-or-asyncfunc">RxJava Wiki: toAsync()</a>
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh229716.aspx">MSDN: Observable.ToAsync</a>
      */
-    public static <T1, T2, T3, T4, T5, T6, R> Function6<T1, T2, T3, T4, T5, T6, Flowable<R>> toAsync(Function6<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? super T6, ? extends R> func) {
-        // TODO
-        throw new UnsupportedOperationException();
+    public static <T1, T2, T3, T4, T5, T6, R> PlainFunction6<T1, T2, T3, T4, T5, T6, Flowable<R>> toAsync(Function6<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? super T6, ? extends R> func) {
+        return toAsync(func, Schedulers.computation());
     }
 
     /**
      * Convert a synchronous action call into an asynchronous function call through an Flowable.
      * <p>
      * <img width="640" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toAsync.an.png" alt="">
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The Flowable returned by the Callable honors downstream backpressure.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>{@code toAsync} by default operates on the {@code computation} {@link Scheduler}.</dd>
+     * </dl>
      *
      * @param <T1> the first parameter type
      * @param <T2> the second parameter type
@@ -351,15 +439,20 @@ public final class AsyncFlowable {
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Async-Operators#wiki-toasync-or-asyncaction-or-asyncfunc">RxJava Wiki: toAsync()</a>
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh211812.aspx">MSDN: Observable.ToAsync</a>
      */
-    public static <T1, T2, T3, T4, T5, T6, T7> Function7<T1, T2, T3, T4, T5, T6, T7, Flowable<Void>> toAsync(Consumer7<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? super T6, ? super T7> action) {
-        // TODO
-        throw new UnsupportedOperationException();
+    public static <T1, T2, T3, T4, T5, T6, T7> PlainFunction7<T1, T2, T3, T4, T5, T6, T7, Flowable<Object>> toAsync(Consumer7<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? super T6, ? super T7> action) {
+        return toAsync(action, Schedulers.computation());
     }
 
     /**
      * Convert a synchronous function call into an asynchronous function call through an Flowable.
      * <p>
      * <img width="640" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toAsync.png" alt="">
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The Flowable returned by the Callable honors downstream backpressure.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>{@code toAsync} by default operates on the {@code computation} {@link Scheduler}.</dd>
+     * </dl>
      *
      * @param <T1> the first parameter type
      * @param <T2> the second parameter type
@@ -374,15 +467,20 @@ public final class AsyncFlowable {
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Async-Operators#wiki-toasync-or-asyncaction-or-asyncfunc">RxJava Wiki: toAsync()</a>
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh229773.aspx">MSDN: Observable.ToAsync</a>
      */
-    public static <T1, T2, T3, T4, T5, T6, T7, R> Function7<T1, T2, T3, T4, T5, T6, T7, Flowable<R>> toAsync(Function7<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? super T6, ? super T7, ? extends R> func) {
-        // TODO
-        throw new UnsupportedOperationException();
+    public static <T1, T2, T3, T4, T5, T6, T7, R> PlainFunction7<T1, T2, T3, T4, T5, T6, T7, Flowable<R>> toAsync(Function7<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? super T6, ? super T7, ? extends R> func) {
+        return toAsync(func, Schedulers.computation());
     }
 
     /**
      * Convert a synchronous action call into an asynchronous function call through an Flowable.
      * <p>
      * <img width="640" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toAsync.an.png" alt="">
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The Flowable returned by the Callable honors downstream backpressure.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>{@code toAsync} by default operates on the {@code computation} {@link Scheduler}.</dd>
+     * </dl>
      *
      * @param <T1> the first parameter type
      * @param <T2> the second parameter type
@@ -397,15 +495,20 @@ public final class AsyncFlowable {
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Async-Operators#wiki-toasync-or-asyncaction-or-asyncfunc">RxJava Wiki: toAsync()</a>
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh228993.aspx">MSDN: Observable.ToAsync</a>
      */
-    public static <T1, T2, T3, T4, T5, T6, T7, T8> Function8<T1, T2, T3, T4, T5, T6, T7, T8, Flowable<Void>> toAsync(Consumer8<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? super T6, ? super T7, ? super T8> action) {
-        // TODO
-        throw new UnsupportedOperationException();
+    public static <T1, T2, T3, T4, T5, T6, T7, T8> PlainFunction8<T1, T2, T3, T4, T5, T6, T7, T8, Flowable<Object>> toAsync(Consumer8<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? super T6, ? super T7, ? super T8> action) {
+        return toAsync(action, Schedulers.computation());
     }
 
     /**
      * Convert a synchronous function call into an asynchronous function call through an Flowable.
      * <p>
      * <img width="640" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toAsync.png" alt="">
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The Flowable returned by the Callable honors downstream backpressure.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>{@code toAsync} by default operates on the {@code computation} {@link Scheduler}.</dd>
+     * </dl>
      *
      * @param <T1> the first parameter type
      * @param <T2> the second parameter type
@@ -421,15 +524,20 @@ public final class AsyncFlowable {
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Async-Operators#wiki-toasync-or-asyncaction-or-asyncfunc">RxJava Wiki: toAsync()</a>
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh229910.aspx">MSDN: Observable.ToAsync</a>
      */
-    public static <T1, T2, T3, T4, T5, T6, T7, T8, R> Function8<T1, T2, T3, T4, T5, T6, T7, T8, Flowable<R>> toAsync(Function8<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? super T6, ? super T7, ? super T8, ? extends R> func) {
-        // TODO
-        throw new UnsupportedOperationException();
+    public static <T1, T2, T3, T4, T5, T6, T7, T8, R> PlainFunction8<T1, T2, T3, T4, T5, T6, T7, T8, Flowable<R>> toAsync(Function8<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? super T6, ? super T7, ? super T8, ? extends R> func) {
+        return toAsync(func, Schedulers.computation());
     }
 
     /**
      * Convert a synchronous action call into an asynchronous function call through an Flowable.
      * <p>
      * <img width="640" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toAsync.an.png" alt="">
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The Flowable returned by the Callable honors downstream backpressure.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>{@code toAsync} by default operates on the {@code computation} {@link Scheduler}.</dd>
+     * </dl>
      *
      * @param <T1> the first parameter type
      * @param <T2> the second parameter type
@@ -445,15 +553,20 @@ public final class AsyncFlowable {
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Async-Operators#wiki-toasync-or-asyncaction-or-asyncfunc">RxJava Wiki: toAsync()</a>
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh211702.aspx">MSDN: Observable.ToAsync</a>
      */
-    public static <T1, T2, T3, T4, T5, T6, T7, T8, T9> Function9<T1, T2, T3, T4, T5, T6, T7, T8, T9, Flowable<Void>> toAsync(Consumer9<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? super T6, ? super T7, ? super T8, ? super T9> action) {
-        // TODO
-        throw new UnsupportedOperationException();
+    public static <T1, T2, T3, T4, T5, T6, T7, T8, T9> PlainFunction9<T1, T2, T3, T4, T5, T6, T7, T8, T9, Flowable<Object>> toAsync(Consumer9<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? super T6, ? super T7, ? super T8, ? super T9> action) {
+        return toAsync(action, Schedulers.computation());
     }
 
     /**
      * Convert a synchronous function call into an asynchronous function call through an Flowable.
      * <p>
      * <img width="640" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toAsync.png" alt="">
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The Flowable returned by the Callable honors downstream backpressure.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>{@code toAsync} by default operates on the {@code computation} {@link Scheduler}.</dd>
+     * </dl>
      *
      * @param <T1> the first parameter type
      * @param <T2> the second parameter type
@@ -470,62 +583,92 @@ public final class AsyncFlowable {
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Async-Operators#wiki-toasync-or-asyncaction-or-asyncfunc">RxJava Wiki: toAsync()</a>
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh212074.aspx">MSDN: Observable.ToAsync</a>
      */
-    public static <T1, T2, T3, T4, T5, T6, T7, T8, T9, R> Function9<T1, T2, T3, T4, T5, T6, T7, T8, T9, Flowable<R>> toAsync(Function9<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? super T6, ? super T7, ? super T8, ? super T9, ? extends R> func) {
-        // TODO
-        throw new UnsupportedOperationException();
+    public static <T1, T2, T3, T4, T5, T6, T7, T8, T9, R> PlainFunction9<T1, T2, T3, T4, T5, T6, T7, T8, T9, Flowable<R>> toAsync(Function9<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? super T6, ? super T7, ? super T8, ? super T9, ? extends R> func) {
+        return toAsync(func, Schedulers.computation());
     }
 
     /**
      * Convert a synchronous action call into an asynchronous function call through an Flowable.
      * <p>
      * <img width="640" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toAsync.an.png" alt="">
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The Flowable returned by the Callable honors downstream backpressure.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>{@code toAsyncArray} by default operates on the {@code computation} {@link Scheduler}.</dd>
+     * </dl>
      *
      * @param action the action to convert
      * @return a function that returns an Flowable that executes the {@code action} and emits {@code null}
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Async-Operators#wiki-toasync-or-asyncaction-or-asyncfunc">RxJava Wiki: toAsync()</a>
      */
-    public static Function<Object[], Flowable<Void>> toAsyncArray(Consumer<? super Object[]> action) {
-        // TODO
-        throw new UnsupportedOperationException();
+    public static PlainFunction<Object[], Flowable<Object>> toAsyncArray(Consumer<? super Object[]> action) {
+        return toAsyncArray(action, Schedulers.computation());
     }
 
     /**
      * Convert a synchronous function call into an asynchronous function call through an Flowable.
      * <p>
      * <img width="640" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toAsync.png" alt="">
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The Flowable returned by the Callable honors downstream backpressure.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>{@code toAsyncArray} by default operates on the {@code computation} {@link Scheduler}.</dd>
+     * </dl>
      *
      * @param <R> the result type
      * @param func the function to convert
      * @return a function that returns an Flowable that executes the {@code func} and emits its returned value
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Async-Operators#wiki-toasync-or-asyncaction-or-asyncfunc">RxJava Wiki: toAsync()</a>
      */
-    public static <R> Function<Object[], Flowable<R>> toAsyncArray(Function<? super Object[], ? extends R> func) {
-        // TODO
-        throw new UnsupportedOperationException();
+    public static <R> PlainFunction<Object[], Flowable<R>> toAsyncArray(Function<? super Object[], ? extends R> func) {
+        return toAsyncArray(func, Schedulers.computation());
     }
-
 
     /**
      * Convert a synchronous action call into an asynchronous function call through a Flowable.
      * <p>
      * <img width="640" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toAsync.an.png" alt="">
      * <p>
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The Flowable returned by the Supplier honors downstream backpressure.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>You specify the {@link Scheduler} {@code toAsync} works on.</dd>
+     * </dl>
      * @param action the action to convert
      * @param scheduler the Scheduler used to execute the {@code action}
-     * @return a function that returns an Flowable that executes the {@code action} and emits {@code null}
+     * @return a function that returns an Flowable that executes the {@code action} and emits an Object
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Async-Operators#wiki-toasync-or-asyncaction-or-asyncfunc">RxJava Wiki: toAsync()</a>
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh229868.aspx">MSDN: Observable.ToAsync</a>
      */
-    public static Callable<Flowable<Object>> toAsync(Action action, Scheduler scheduler) {
-        // TODO
-        throw new UnsupportedOperationException();
+    public static Supplier<Flowable<Object>> toAsync(final Action action, final Scheduler scheduler) {
+        return new Supplier<Flowable<Object>>() {
+            @Override
+            public Flowable<Object> call() {
+                return Flowable.fromCallable(new Callable<Object>() {
+                    @Override
+                    public Object call() throws Exception {
+                        action.run();
+                        return AnyValue.INSTANCE;
+                    }
+                })
+                .subscribeOn(scheduler);
+            }
+        };
     }
 
     /**
      * Convert a synchronous function call into an asynchronous function call through a Flowable.
      * <p>
      * <img width="640" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toAsync.png" alt="">
-     *
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The Flowable returned by the Supplier honors downstream backpressure.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>You specify the {@link Scheduler} {@code toAsync} works on.</dd>
+     * </dl>
      * @param <R> the result value type
      * @param func the function to convert
      * @param scheduler the Scheduler used to call the {@code func}
@@ -533,9 +676,13 @@ public final class AsyncFlowable {
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Async-Operators#wiki-toasync-or-asyncaction-or-asyncfunc">RxJava Wiki: toAsync()</a>
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh229182.aspx">MSDN: Observable.ToAsync</a>
      */
-    public static <R> Callable<Flowable<R>> toAsync(Callable<? extends R> func, Scheduler scheduler) {
-        // TODO
-        throw new UnsupportedOperationException();
+    public static <R> Supplier<Flowable<R>> toAsync(final Callable<? extends R> func, final Scheduler scheduler) {
+        return new Supplier<Flowable<R>>() {
+            @Override
+            public Flowable<R> call() {
+                return Flowable.fromCallable(func).subscribeOn(scheduler);
+            }
+        };
     }
 
     /**
@@ -543,6 +690,12 @@ public final class AsyncFlowable {
      * <p>
      * <img width="640" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toAsync.an.png" alt="">
      *
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The Flowable returned by the Function honors downstream backpressure.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>You specify the {@link Scheduler} {@code toAsync} works on.</dd>
+     * </dl>
      * @param <T1> first parameter type of the action
      * @param action the action to convert
      * @param scheduler the Scheduler used to execute the {@code action}
@@ -550,9 +703,20 @@ public final class AsyncFlowable {
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Async-Operators#wiki-toasync-or-asyncaction-or-asyncfunc">RxJava Wiki: toAsync()</a>
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh229657.aspx">MSDN: Observable.ToAsync</a>
      */
-    public static <T1> Function<T1, Flowable<Object>> toAsync(Consumer<? super T1> action, Scheduler scheduler) {
-        // TODO
-        throw new UnsupportedOperationException();
+    public static <T1> PlainFunction<T1, Flowable<Object>> toAsync(final Consumer<? super T1> action, final Scheduler scheduler) {
+        return new PlainFunction<T1, Flowable<Object>>() {
+            @Override
+            public Flowable<Object> apply(final T1 t1) {
+                return Flowable.fromCallable(new Callable<Object>() {
+                    @Override
+                    public Object call() throws Exception {
+                        action.accept(t1);
+                        return AnyValue.INSTANCE;
+                    }
+                })
+                .subscribeOn(scheduler);
+            }
+        };
     }
 
     /**
@@ -560,6 +724,12 @@ public final class AsyncFlowable {
      * <p>
      * <img width="640" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toAsync.png" alt="">
      *
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The Flowable returned by the Function honors downstream backpressure.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>You specify the {@link Scheduler} {@code toAsync} works on.</dd>
+     * </dl>
      * @param <T1> first parameter type of the action
      * @param <R> the result type
      * @param func the function to convert
@@ -568,7 +738,7 @@ public final class AsyncFlowable {
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Async-Operators#wiki-toasync-or-asyncaction-or-asyncfunc">RxJava Wiki: toAsync()</a>
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh229755.aspx">MSDN: Observable.ToAsync</a>
      */
-    public static <T1, R> Function<T1, Flowable<R>> toAsync(Function<? super T1, ? extends R> func, Scheduler scheduler) {
+    public static <T1, R> PlainFunction<T1, Flowable<R>> toAsync(Function<? super T1, ? extends R> func, Scheduler scheduler) {
         // TODO
         throw new UnsupportedOperationException();
     }
@@ -578,6 +748,12 @@ public final class AsyncFlowable {
      * <p>
      * <img width="640" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toAsync.an.png" alt="">
      *
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The Flowable returned by the Function honors downstream backpressure.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>You specify the {@link Scheduler} {@code toAsync} works on.</dd>
+     * </dl>
      * @param <T1> the first parameter type
      * @param <T2> the second parameter type
      * @param action the action to convert
@@ -586,9 +762,20 @@ public final class AsyncFlowable {
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Async-Operators#wiki-toasync-or-asyncaction-or-asyncfunc">RxJava Wiki: toAsync()</a>
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh211875.aspx">MSDN: Observable.ToAsync</a>
      */
-    public static <T1, T2> BiFunction<T1, T2, Flowable<Object>> toAsync(BiConsumer<? super T1, ? super T2> action, Scheduler scheduler) {
-        // TODO
-        throw new UnsupportedOperationException();
+    public static <T1, T2> PlainBiFunction<T1, T2, Flowable<Object>> toAsync(final BiConsumer<? super T1, ? super T2> action, final Scheduler scheduler) {
+        return new PlainBiFunction<T1, T2, Flowable<Object>>() {
+            @Override
+            public Flowable<Object> apply(final T1 t1, final T2 t2) {
+                return Flowable.fromCallable(new Callable<Object>() {
+                    @Override
+                    public Object call() throws Exception {
+                        action.accept(t1, t2);
+                        return AnyValue.INSTANCE;
+                    }
+                })
+                .subscribeOn(scheduler);
+            }
+        };
     }
 
     /**
@@ -596,6 +783,12 @@ public final class AsyncFlowable {
      * <p>
      * <img width="640" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toAsync.png" alt="">
      *
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The Flowable returned by the Function honors downstream backpressure.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>You specify the {@link Scheduler} {@code toAsync} works on.</dd>
+     * </dl>
      * @param <T1> the first parameter type
      * @param <T2> the second parameter type
      * @param <R> the result type
@@ -605,7 +798,7 @@ public final class AsyncFlowable {
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Async-Operators#wiki-toasync-or-asyncaction-or-asyncfunc">RxJava Wiki: toAsync()</a>
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh229851.aspx">MSDN: Observable.ToAsync</a>
      */
-    public static <T1, T2, R> BiFunction<T1, T2, Flowable<R>> toAsync(BiFunction<? super T1, ? super T2, ? extends R> func, Scheduler scheduler) {
+    public static <T1, T2, R> PlainBiFunction<T1, T2, Flowable<R>> toAsync(BiFunction<? super T1, ? super T2, ? extends R> func, Scheduler scheduler) {
         // TODO
         throw new UnsupportedOperationException();
     }
@@ -615,6 +808,12 @@ public final class AsyncFlowable {
      * <p>
      * <img width="640" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toAsync.an.png" alt="">
      *
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The Flowable returned by the Function honors downstream backpressure.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>You specify the {@link Scheduler} {@code toAsync} works on.</dd>
+     * </dl>
      * @param <T1> the first parameter type
      * @param <T2> the second parameter type
      * @param <T3> the third parameter type
@@ -624,9 +823,20 @@ public final class AsyncFlowable {
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Async-Operators#wiki-toasync-or-asyncaction-or-asyncfunc">RxJava Wiki: toAsync()</a>
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh229336.aspx">MSDN: Observable.ToAsync</a>
      */
-    public static <T1, T2, T3> Function3<T1, T2, T3, Flowable<Object>> toAsync(Consumer3<? super T1, ? super T2, ? super T3> action, Scheduler scheduler) {
-        // TODO
-        throw new UnsupportedOperationException();
+    public static <T1, T2, T3> PlainFunction3<T1, T2, T3, Flowable<Object>> toAsync(final Consumer3<? super T1, ? super T2, ? super T3> action, final Scheduler scheduler) {
+        return new PlainFunction3<T1, T2, T3, Flowable<Object>>() {
+            @Override
+            public Flowable<Object> apply(final T1 t1, final T2 t2, final T3 t3) {
+                return Flowable.fromCallable(new Callable<Object>() {
+                    @Override
+                    public Object call() throws Exception {
+                        action.accept(t1, t2, t3);
+                        return AnyValue.INSTANCE;
+                    }
+                })
+                .subscribeOn(scheduler);
+            }
+        };
     }
 
     /**
@@ -634,6 +844,12 @@ public final class AsyncFlowable {
      * <p>
      * <img width="640" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toAsync.png" alt="">
      *
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The Flowable returned by the Function honors downstream backpressure.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>You specify the {@link Scheduler} {@code toAsync} works on.</dd>
+     * </dl>
      * @param <T1> the first parameter type
      * @param <T2> the second parameter type
      * @param <T3> the third parameter type
@@ -644,7 +860,7 @@ public final class AsyncFlowable {
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Async-Operators#wiki-toasync-or-asyncaction-or-asyncfunc">RxJava Wiki: toAsync()</a>
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh229450.aspx">MSDN: Observable.ToAsync</a>
      */
-    public static <T1, T2, T3, R> Function3<T1, T2, T3, Flowable<R>> toAsync(Function3<? super T1, ? super T2, ? super T3, ? extends R> func, Scheduler scheduler) {
+    public static <T1, T2, T3, R> PlainFunction3<T1, T2, T3, Flowable<R>> toAsync(Function3<? super T1, ? super T2, ? super T3, ? extends R> func, Scheduler scheduler) {
         // TODO
         throw new UnsupportedOperationException();
     }
@@ -654,6 +870,12 @@ public final class AsyncFlowable {
      * <p>
      * <img width="640" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toAsync.an.png" alt="">
      *
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The Flowable returned by the Function honors downstream backpressure.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>You specify the {@link Scheduler} {@code toAsync} works on.</dd>
+     * </dl>
      * @param <T1> the first parameter type
      * @param <T2> the second parameter type
      * @param <T3> the third parameter type
@@ -664,9 +886,20 @@ public final class AsyncFlowable {
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Async-Operators#wiki-toasync-or-asyncaction-or-asyncfunc">RxJava Wiki: toAsync()</a>
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh229769.aspx">MSDN: Observable.ToAsync</a>
      */
-    public static <T1, T2, T3, T4> Function4<T1, T2, T3, T4, Flowable<Object>> toAsync(Consumer4<? super T1, ? super T2, ? super T3, ? super T4> action, Scheduler scheduler) {
-        // TODO
-        throw new UnsupportedOperationException();
+    public static <T1, T2, T3, T4> PlainFunction4<T1, T2, T3, T4, Flowable<Object>> toAsync(final Consumer4<? super T1, ? super T2, ? super T3, ? super T4> action, final Scheduler scheduler) {
+        return new PlainFunction4<T1, T2, T3, T4, Flowable<Object>>() {
+            @Override
+            public Flowable<Object> apply(final T1 t1, final T2 t2, final T3 t3, final T4 t4) {
+                return Flowable.fromCallable(new Callable<Object>() {
+                    @Override
+                    public Object call() throws Exception {
+                        action.accept(t1, t2, t3, t4);
+                        return AnyValue.INSTANCE;
+                    }
+                })
+                .subscribeOn(scheduler);
+            }
+        };
     }
 
     /**
@@ -674,6 +907,12 @@ public final class AsyncFlowable {
      * <p>
      * <img width="640" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toAsync.png" alt="">
      *
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The Flowable returned by the Function honors downstream backpressure.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>You specify the {@link Scheduler} {@code toAsync} works on.</dd>
+     * </dl>
      * @param <T1> the first parameter type
      * @param <T2> the second parameter type
      * @param <T3> the third parameter type
@@ -685,7 +924,7 @@ public final class AsyncFlowable {
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Async-Operators#wiki-toasync-or-asyncaction-or-asyncfunc">RxJava Wiki: toAsync()</a>
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh229911.aspx">MSDN: Observable.ToAsync</a>
      */
-    public static <T1, T2, T3, T4, R> Function4<T1, T2, T3, T4, Flowable<R>> toAsync(Function4<? super T1, ? super T2, ? super T3, ? super T4, ? extends R> func, Scheduler scheduler) {
+    public static <T1, T2, T3, T4, R> PlainFunction4<T1, T2, T3, T4, Flowable<R>> toAsync(Function4<? super T1, ? super T2, ? super T3, ? super T4, ? extends R> func, Scheduler scheduler) {
         // TODO
         throw new UnsupportedOperationException();
     }
@@ -695,6 +934,12 @@ public final class AsyncFlowable {
      * <p>
      * <img width="640" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toAsync.an.png" alt="">
      *
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The Flowable returned by the Function honors downstream backpressure.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>You specify the {@link Scheduler} {@code toAsync} works on.</dd>
+     * </dl>
      * @param <T1> the first parameter type
      * @param <T2> the second parameter type
      * @param <T3> the third parameter type
@@ -706,9 +951,20 @@ public final class AsyncFlowable {
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Async-Operators#wiki-toasync-or-asyncaction-or-asyncfunc">RxJava Wiki: toAsync()</a>
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh229577.aspx">MSDN: Observable.ToAsync</a>
      */
-    public static <T1, T2, T3, T4, T5> Function5<T1, T2, T3, T4, T5, Flowable<Void>> toAsync(Consumer5<? super T1, ? super T2, ? super T3, ? super T4, ? super T5> action, Scheduler scheduler) {
-        // TODO
-        throw new UnsupportedOperationException();
+    public static <T1, T2, T3, T4, T5> PlainFunction5<T1, T2, T3, T4, T5, Flowable<Object>> toAsync(final Consumer5<? super T1, ? super T2, ? super T3, ? super T4, ? super T5> action, final Scheduler scheduler) {
+        return new PlainFunction5<T1, T2, T3, T4, T5, Flowable<Object>>() {
+            @Override
+            public Flowable<Object> apply(final T1 t1, final T2 t2, final T3 t3, final T4 t4, final T5 t5) {
+                return Flowable.fromCallable(new Callable<Object>() {
+                    @Override
+                    public Object call() throws Exception {
+                        action.accept(t1, t2, t3, t4, t5);
+                        return AnyValue.INSTANCE;
+                    }
+                })
+                .subscribeOn(scheduler);
+            }
+        };
     }
 
     /**
@@ -716,6 +972,12 @@ public final class AsyncFlowable {
      * <p>
      * <img width="640" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toAsync.png" alt="">
      *
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The Flowable returned by the Function honors downstream backpressure.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>You specify the {@link Scheduler} {@code toAsync} works on.</dd>
+     * </dl>
      * @param <T1> the first parameter type
      * @param <T2> the second parameter type
      * @param <T3> the third parameter type
@@ -728,7 +990,7 @@ public final class AsyncFlowable {
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Async-Operators#wiki-toasync-or-asyncaction-or-asyncfunc">RxJava Wiki: toAsync()</a>
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh229571.aspx">MSDN: Observable.ToAsync</a>
      */
-    public static <T1, T2, T3, T4, T5, R> Function5<T1, T2, T3, T4, T5, Flowable<R>> toAsync(Function5<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? extends R> func, Scheduler scheduler) {
+    public static <T1, T2, T3, T4, T5, R> PlainFunction5<T1, T2, T3, T4, T5, Flowable<R>> toAsync(Function5<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? extends R> func, Scheduler scheduler) {
         // TODO
         throw new UnsupportedOperationException();
     }
@@ -738,6 +1000,12 @@ public final class AsyncFlowable {
      * <p>
      * <img width="640" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toAsync.an.png" alt="">
      *
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The Flowable returned by the Function honors downstream backpressure.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>You specify the {@link Scheduler} {@code toAsync} works on.</dd>
+     * </dl>
      * @param <T1> the first parameter type
      * @param <T2> the second parameter type
      * @param <T3> the third parameter type
@@ -750,9 +1018,20 @@ public final class AsyncFlowable {
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Async-Operators#wiki-toasync-or-asyncaction-or-asyncfunc">RxJava Wiki: toAsync()</a>
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh211773.aspx">MSDN: Observable.ToAsync</a>
      */
-    public static <T1, T2, T3, T4, T5, T6> Function6<T1, T2, T3, T4, T5, T6, Flowable<Void>> toAsync(Consumer6<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? super T6> action, Scheduler scheduler) {
-        // TODO
-        throw new UnsupportedOperationException();
+    public static <T1, T2, T3, T4, T5, T6> PlainFunction6<T1, T2, T3, T4, T5, T6, Flowable<Object>> toAsync(final Consumer6<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? super T6> action, final Scheduler scheduler) {
+        return new PlainFunction6<T1, T2, T3, T4, T5, T6, Flowable<Object>>() {
+            @Override
+            public Flowable<Object> apply(final T1 t1, final T2 t2, final T3 t3, final T4 t4, final T5 t5, final T6 t6) {
+                return Flowable.fromCallable(new Callable<Object>() {
+                    @Override
+                    public Object call() throws Exception {
+                        action.accept(t1, t2, t3, t4, t5, t6);
+                        return AnyValue.INSTANCE;
+                    }
+                })
+                .subscribeOn(scheduler);
+            }
+        };
     }
 
     /**
@@ -760,6 +1039,12 @@ public final class AsyncFlowable {
      * <p>
      * <img width="640" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toAsync.png" alt="">
      *
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The Flowable returned by the Function honors downstream backpressure.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>You specify the {@link Scheduler} {@code toAsync} works on.</dd>
+     * </dl>
      * @param <T1> the first parameter type
      * @param <T2> the second parameter type
      * @param <T3> the third parameter type
@@ -773,7 +1058,7 @@ public final class AsyncFlowable {
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Async-Operators#wiki-toasync-or-asyncaction-or-asyncfunc">RxJava Wiki: toAsync()</a>
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh229716.aspx">MSDN: Observable.ToAsync</a>
      */
-    public static <T1, T2, T3, T4, T5, T6, R> Function6<T1, T2, T3, T4, T5, T6, Flowable<R>> toAsync(Function6<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? super T6, ? extends R> func, Scheduler scheduler) {
+    public static <T1, T2, T3, T4, T5, T6, R> PlainFunction6<T1, T2, T3, T4, T5, T6, Flowable<R>> toAsync(Function6<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? super T6, ? extends R> func, Scheduler scheduler) {
         // TODO
         throw new UnsupportedOperationException();
     }
@@ -783,6 +1068,12 @@ public final class AsyncFlowable {
      * <p>
      * <img width="640" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toAsync.an.png" alt="">
      *
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The Flowable returned by the Function honors downstream backpressure.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>You specify the {@link Scheduler} {@code toAsync} works on.</dd>
+     * </dl>
      * @param <T1> the first parameter type
      * @param <T2> the second parameter type
      * @param <T3> the third parameter type
@@ -796,10 +1087,21 @@ public final class AsyncFlowable {
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Async-Operators#wiki-toasync-or-asyncaction-or-asyncfunc">RxJava Wiki: toAsync()</a>
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh211812.aspx">MSDN: Observable.ToAsync</a>
      */
-    public static <T1, T2, T3, T4, T5, T6, T7> Function7<T1, T2, T3, T4, T5, T6, T7, Flowable<Void>> toAsync(
-            Consumer7<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? super T6, ? super T7> action, Scheduler scheduler) {
-        // TODO
-        throw new UnsupportedOperationException();
+    public static <T1, T2, T3, T4, T5, T6, T7> PlainFunction7<T1, T2, T3, T4, T5, T6, T7, Flowable<Object>> toAsync(
+            final Consumer7<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? super T6, ? super T7> action, final Scheduler scheduler) {
+        return new PlainFunction7<T1, T2, T3, T4, T5, T6, T7, Flowable<Object>>() {
+            @Override
+            public Flowable<Object> apply(final T1 t1, final T2 t2, final T3 t3, final T4 t4, final T5 t5, final T6 t6, final T7 t7) {
+                return Flowable.fromCallable(new Callable<Object>() {
+                    @Override
+                    public Object call() throws Exception {
+                        action.accept(t1, t2, t3, t4, t5, t6, t7);
+                        return AnyValue.INSTANCE;
+                    }
+                })
+                .subscribeOn(scheduler);
+            }
+        };
     }
 
     /**
@@ -807,6 +1109,12 @@ public final class AsyncFlowable {
      * <p>
      * <img width="640" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toAsync.png" alt="">
      *
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The Flowable returned by the Function honors downstream backpressure.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>You specify the {@link Scheduler} {@code toAsync} works on.</dd>
+     * </dl>
      * @param <T1> the first parameter type
      * @param <T2> the second parameter type
      * @param <T3> the third parameter type
@@ -821,7 +1129,7 @@ public final class AsyncFlowable {
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Async-Operators#wiki-toasync-or-asyncaction-or-asyncfunc">RxJava Wiki: toAsync()</a>
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh229773.aspx">MSDN: Observable.ToAsync</a>
      */
-    public static <T1, T2, T3, T4, T5, T6, T7, R> Function7<T1, T2, T3, T4, T5, T6, T7, Flowable<R>> toAsync(
+    public static <T1, T2, T3, T4, T5, T6, T7, R> PlainFunction7<T1, T2, T3, T4, T5, T6, T7, Flowable<R>> toAsync(
             Function7<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? super T6, ? super T7, ? extends R> func, Scheduler scheduler) {
         // TODO
         throw new UnsupportedOperationException();
@@ -832,6 +1140,12 @@ public final class AsyncFlowable {
      * <p>
      * <img width="640" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toAsync.an.png" alt="">
      *
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The Flowable returned by the Function honors downstream backpressure.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>You specify the {@link Scheduler} {@code toAsync} works on.</dd>
+     * </dl>
      * @param <T1> the first parameter type
      * @param <T2> the second parameter type
      * @param <T3> the third parameter type
@@ -846,10 +1160,21 @@ public final class AsyncFlowable {
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Async-Operators#wiki-toasync-or-asyncaction-or-asyncfunc">RxJava Wiki: toAsync()</a>
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh228993.aspx">MSDN: Observable.ToAsync</a>
      */
-    public static <T1, T2, T3, T4, T5, T6, T7, T8> Function8<T1, T2, T3, T4, T5, T6, T7, T8, Flowable<Void>> toAsync(
-            Consumer8<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? super T6, ? super T7, ? super T8> action, Scheduler scheduler) {
-        // TODO
-        throw new UnsupportedOperationException();
+    public static <T1, T2, T3, T4, T5, T6, T7, T8> PlainFunction8<T1, T2, T3, T4, T5, T6, T7, T8, Flowable<Object>> toAsync(
+            final Consumer8<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? super T6, ? super T7, ? super T8> action, final Scheduler scheduler) {
+        return new PlainFunction8<T1, T2, T3, T4, T5, T6, T7, T8, Flowable<Object>>() {
+            @Override
+            public Flowable<Object> apply(final T1 t1, final T2 t2, final T3 t3, final T4 t4, final T5 t5, final T6 t6, final T7 t7, final T8 t8) {
+                return Flowable.fromCallable(new Callable<Object>() {
+                    @Override
+                    public Object call() throws Exception {
+                        action.accept(t1, t2, t3, t4, t5, t6, t7, t8);
+                        return AnyValue.INSTANCE;
+                    }
+                })
+                .subscribeOn(scheduler);
+            }
+        };
     }
 
     /**
@@ -857,6 +1182,12 @@ public final class AsyncFlowable {
      * <p>
      * <img width="640" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toAsync.png" alt="">
      *
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The Flowable returned by the Function honors downstream backpressure.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>You specify the {@link Scheduler} {@code toAsync} works on.</dd>
+     * </dl>
      * @param <T1> the first parameter type
      * @param <T2> the second parameter type
      * @param <T3> the third parameter type
@@ -872,7 +1203,7 @@ public final class AsyncFlowable {
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Async-Operators#wiki-toasync-or-asyncaction-or-asyncfunc">RxJava Wiki: toAsync()</a>
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh229910.aspx">MSDN: Observable.ToAsync</a>
      */
-    public static <T1, T2, T3, T4, T5, T6, T7, T8, R> Function8<T1, T2, T3, T4, T5, T6, T7, T8, Flowable<R>> toAsync(
+    public static <T1, T2, T3, T4, T5, T6, T7, T8, R> PlainFunction8<T1, T2, T3, T4, T5, T6, T7, T8, Flowable<R>> toAsync(
             Function8<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? super T6, ? super T7, ? super T8, ? extends R> func, Scheduler scheduler) {
         // TODO
         throw new UnsupportedOperationException();
@@ -883,6 +1214,12 @@ public final class AsyncFlowable {
      * <p>
      * <img width="640" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toAsync.an.png" alt="">
      *
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The Flowable returned by the Function honors downstream backpressure.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>You specify the {@link Scheduler} {@code toAsync} works on.</dd>
+     * </dl>
      * @param <T1> the first parameter type
      * @param <T2> the second parameter type
      * @param <T3> the third parameter type
@@ -898,10 +1235,21 @@ public final class AsyncFlowable {
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Async-Operators#wiki-toasync-or-asyncaction-or-asyncfunc">RxJava Wiki: toAsync()</a>
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh211702.aspx">MSDN: Observable.ToAsync</a>
      */
-    public static <T1, T2, T3, T4, T5, T6, T7, T8, T9> Function9<T1, T2, T3, T4, T5, T6, T7, T8, T9, Flowable<Void>> toAsync(
-            Consumer9<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? super T6, ? super T7, ? super T8, ? super T9> action, Scheduler scheduler) {
-        // TODO
-        throw new UnsupportedOperationException();
+    public static <T1, T2, T3, T4, T5, T6, T7, T8, T9> PlainFunction9<T1, T2, T3, T4, T5, T6, T7, T8, T9, Flowable<Object>> toAsync(
+            final Consumer9<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? super T6, ? super T7, ? super T8, ? super T9> action, final Scheduler scheduler) {
+        return new PlainFunction9<T1, T2, T3, T4, T5, T6, T7, T8, T9, Flowable<Object>>() {
+            @Override
+            public Flowable<Object> apply(final T1 t1, final T2 t2, final T3 t3, final T4 t4, final T5 t5, final T6 t6, final T7 t7, final T8 t8, final T9 t9) {
+                return Flowable.fromCallable(new Callable<Object>() {
+                    @Override
+                    public Object call() throws Exception {
+                        action.accept(t1, t2, t3, t4, t5, t6, t7, t8, t9);
+                        return AnyValue.INSTANCE;
+                    }
+                })
+                .subscribeOn(scheduler);
+            }
+        };
     }
 
     /**
@@ -909,6 +1257,12 @@ public final class AsyncFlowable {
      * <p>
      * <img width="640" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toAsync.png" alt="">
      *
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The Flowable returned by the Function honors downstream backpressure.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>You specify the {@link Scheduler} {@code toAsync} works on.</dd>
+     * </dl>
      * @param <T1> the first parameter type
      * @param <T2> the second parameter type
      * @param <T3> the third parameter type
@@ -925,7 +1279,7 @@ public final class AsyncFlowable {
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Async-Operators#wiki-toasync-or-asyncaction-or-asyncfunc">RxJava Wiki: toAsync()</a>
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh212074.aspx">MSDN: Observable.ToAsync</a>
      */
-    public static <T1, T2, T3, T4, T5, T6, T7, T8, T9, R> Function9<T1, T2, T3, T4, T5, T6, T7, T8, T9, Flowable<R>> toAsync(
+    public static <T1, T2, T3, T4, T5, T6, T7, T8, T9, R> PlainFunction9<T1, T2, T3, T4, T5, T6, T7, T8, T9, Flowable<R>> toAsync(
             Function9<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? super T6, ? super T7, ? super T8, ? super T9, ? extends R> func, Scheduler scheduler) {
         // TODO
         throw new UnsupportedOperationException();
@@ -936,14 +1290,31 @@ public final class AsyncFlowable {
      * <p>
      * <img width="640" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toAsync.an.png" alt="">
      *
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The Flowable returned by the Function honors downstream backpressure.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>You specify the {@link Scheduler} {@code toAsync} works on.</dd>
+     * </dl>
      * @param action the action to convert
      * @param scheduler the Scheduler used to execute the {@code action}
      * @return a function that returns an Flowable that executes the {@code action} and emits {@code null}
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Async-Operators#wiki-toasync-or-asyncaction-or-asyncfunc">RxJava Wiki: toAsync()</a>
      */
-    public static Function<Object[], Flowable<Void>> toAsyncArray(Consumer<? super Object[]> action, Scheduler scheduler) {
-        // TODO
-        throw new UnsupportedOperationException();
+    public static PlainFunction<Object[], Flowable<Object>> toAsyncArray(final Consumer<? super Object[]> action, final Scheduler scheduler) {
+        return new PlainFunction<Object[], Flowable<Object>>() {
+            @Override
+            public Flowable<Object> apply(final Object[] t) {
+                return Flowable.fromCallable(new Callable<Object>() {
+                    @Override
+                    public Object call() throws Exception {
+                        action.accept(t);
+                        return AnyValue.INSTANCE;
+                    }
+                })
+                .subscribeOn(scheduler);
+            }
+        };
     }
 
     /**
@@ -951,15 +1322,31 @@ public final class AsyncFlowable {
      * <p>
      * <img width="640" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toAsync.png" alt="">
      *
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The Flowable returned by the Function honors downstream backpressure.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>You specify the {@link Scheduler} {@code toAsync} works on.</dd>
+     * </dl>
      * @param <R> the result type
      * @param func the function to convert
      * @param scheduler the Scheduler used to call the {@code func}
      * @return a function that returns an Flowable that executes the {@code func} and emits its returned value
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Async-Operators#wiki-toasync-or-asyncaction-or-asyncfunc">RxJava Wiki: toAsync()</a>
      */
-    public static <R> Function<Object[], Flowable<R>> toAsyncArray(Function<? super Object[], ? extends R> func, Scheduler scheduler) {
-        // TODO
-        throw new UnsupportedOperationException();
+    public static <R> PlainFunction<Object[], Flowable<R>> toAsyncArray(final Function<? super Object[], ? extends R> func, final Scheduler scheduler) {
+        return new PlainFunction<Object[], Flowable<R>>() {
+            @Override
+            public Flowable<R> apply(final Object[] t) {
+                return Flowable.fromCallable(new Callable<R>() {
+                    @Override
+                    public R call() throws Exception {
+                        return func.apply(t);
+                    }
+                })
+                .subscribeOn(scheduler);
+            }
+        };
     }
 
     /**
@@ -1052,7 +1439,7 @@ public final class AsyncFlowable {
      * @see #forEachFuture(Publisher, Consumer, Scheduler)
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Async-Operators#wiki-foreachfuture">RxJava Wiki: forEachFuture()</a>
      */
-    public static <T> FutureTask<Void> forEachFuture(
+    public static <T> FutureTask<Object> forEachFuture(
             Publisher<? extends T> source,
             Consumer<? super T> onNext) {
         // TODO
@@ -1077,7 +1464,7 @@ public final class AsyncFlowable {
      * @see #forEachFuture(Publisher, Consumer, Consumer, Scheduler)
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Async-Operators#wiki-foreachfuture">RxJava Wiki: forEachFuture()</a>
      */
-    public static <T> FutureTask<Void> forEachFuture(
+    public static <T> FutureTask<Object> forEachFuture(
             Publisher<? extends T> source,
             Consumer<? super T> onNext,
             Consumer<? super Throwable> onError) {
@@ -1104,7 +1491,7 @@ public final class AsyncFlowable {
      * @see #forEachFuture(Publisher, Consumer, Consumer, Action, Scheduler)
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Async-Operators#wiki-foreachfuture">RxJava Wiki: forEachFuture()</a>
      */
-    public static <T> FutureTask<Void> forEachFuture(
+    public static <T> FutureTask<Object> forEachFuture(
             Publisher<? extends T> source,
             Consumer<? super T> onNext,
             Consumer<? super Throwable> onError,
@@ -1127,7 +1514,7 @@ public final class AsyncFlowable {
      * @return the Future representing the entire for-each operation
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Async-Operators#wiki-foreachfuture">RxJava Wiki: forEachFuture()</a>
      */
-    public static <T> FutureTask<Void> forEachFuture(
+    public static <T> FutureTask<Object> forEachFuture(
             Publisher<? extends T> source,
             Consumer<? super T> onNext,
             Scheduler scheduler) {
@@ -1150,7 +1537,7 @@ public final class AsyncFlowable {
      * @return the Future representing the entire for-each operation
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Async-Operators#wiki-foreachfuture">RxJava Wiki: forEachFuture()</a>
      */
-    public static <T> FutureTask<Void> forEachFuture(
+    public static <T> FutureTask<Object> forEachFuture(
             Publisher<? extends T> source,
             Consumer<? super T> onNext,
             Consumer<? super Throwable> onError,
@@ -1175,7 +1562,7 @@ public final class AsyncFlowable {
      * @return the Future representing the entire for-each operation
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Async-Operators#wiki-foreachfuture">RxJava Wiki: forEachFuture()</a>
      */
-    public static <T> FutureTask<Void> forEachFuture(
+    public static <T> FutureTask<Object> forEachFuture(
             Publisher<? extends T> source,
             Consumer<? super T> onNext,
             Consumer<? super Throwable> onError,

@@ -16,14 +16,16 @@
 
 package hu.akarnokd.rxjava2.functions;
 
-import java.util.concurrent.Callable;
+import io.reactivex.functions.Function;
 
 /**
- * A {@link Callable} with suppressed exception on its {@link #call()} method.
- * @param <T> the value type
+ * A {@link Function} with suppressed exception on its {@link #apply(Object)} method.
+ *
+ * @param <T> the input value type
+ * @param <R> the output value type
  */
-public interface Supplier<T> extends Callable<T> {
+public interface PlainFunction<T, R> extends Function<T, R> {
 
     @Override
-    T call();
+    R apply(T t);
 }

@@ -14,16 +14,12 @@
  * limitations under the License.
  */
 
-package hu.akarnokd.rxjava2.functions;
-
-import java.util.concurrent.Callable;
+package hu.akarnokd.rxjava2.async;
 
 /**
- * A {@link Callable} with suppressed exception on its {@link #call()} method.
- * @param <T> the value type
+ * Placeholder instance when one has to return something (and used to return {@code null} in 1.x).
  */
-public interface Supplier<T> extends Callable<T> {
-
-    @Override
-    T call();
+public enum AnyValue {
+    /** An arbitrary object value. */
+    INSTANCE;
 }
