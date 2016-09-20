@@ -221,9 +221,9 @@ AsyncFlowable.runAsync(Schedulers.single(),
 
 The operators on `StatementFlowable` and `StatementObservable` allow taking different branches at subscription time:
 
-### ifThen - conditionally chose a source to subscribe to
+### ifThen
 
-This is similar to the imperative `if` statement but with reactive flows:
+Conditionally chose a source to subscribe to. This is similar to the imperative `if` statement but with reactive flows:
 
 ```java
 if ((System.currentTimeMillis() & 1) != 0) {
@@ -246,9 +246,9 @@ source
 .subscribe(System.out::println);
 ```
 
-### switchCase - calculate a key and pick a source from a Map
+### switchCase
 
-This is similar to the imperative `switch` statement:
+Calculate a key and pick a source from a Map. This is similar to the imperative `switch` statement:
 
 ```java
 switch ((int)(System.currentTimeMillis() & 7)) {
@@ -278,9 +278,9 @@ source
 .subscribe(System.out::println);
 ```
 
-### doWhile - resubscribe if a condition is true after
+### doWhile
 
-This is similar to the imperative `do-while` loop (executing the loop body at least once):
+Resubscribe if a condition is true after the last subscription completed normally. This is similar to the imperative `do-while` loop (executing the loop body at least once):
 
 ```java
 long start = System.currentTimeMillis();
@@ -302,9 +302,9 @@ source.subscribe(System.out::println);
 ```
 
 
-### whileDo - subscribe and resubscribe if a condition is true
+### whileDo
 
-This is similar to the imperative `while` loop (where the loop body may not execute if the condition is false
+Subscribe and resubscribe if a condition is true. This is similar to the imperative `while` loop (where the loop body may not execute if the condition is false
 to begin with):
 
 ```java
