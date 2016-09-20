@@ -331,7 +331,49 @@ TBD: examples
 
 ## Debug support
 
-TBD: some of RxJavaDebug and the assembly tracking feature of RxJava 1.x moved here.
+By default, RxJava 2's RxJavaPlugins only offers the ability to hook into the assembly process (i.e., when you apply an operator on a sequence or create one) unlike 1.x where there is an `RxJavaHooks.enableAssemblyTracking()` method. Since the standard format is of discussion there, 2.x doesn't have such feature built in but only
+in this extension library.
+
+### Usage
+
+You enable tracking via:
+
+```java
+RxJavaAssemblyTracking.enable();
+```
+
+and disable via:
+
+```java
+RxJavaAssemblyTracking.disable();
+```
+
+Note that this doesn't save or preserve the old hooks you may have set as of now.
+
+### Output
+
+In debug mode, you can walk through the reference graph of Disposables and Subscriptions to find an `FlowableOnAssemblyX` named nodes (similar in the other base types) where there is an `assembled` field of type `RxJavaAssemblyException`. This has also a field named `stacktrace` that contains a pretty printed stacktrace string pointing to the assembly location:
+
+```
+RxJavaAssemblyException: assembled
+at io.reactivex.Completable.error(Completable.java:280)
+at hu.akarnokd.rxjava2.debug.RxJava2AssemblyTrackingTest.createCompletable(RxJava2AssemblyTrackingTest.java:78)
+at hu.akarnokd.rxjava2.debug.RxJava2AssemblyTrackingTest.completable(RxJava2AssemblyTrackingTest.java:185)
+```
+
+This is a filtered list of stacktrace elements (skipping threading, unit test and self-related entries). 
+
+To avoid interference, the `RxJavaAssemblyException` is attached as the last cause to potential chain of the original exception that travels through each operator to the end consumer.
+
+You can programmatically find this via:
+
+```java
+RxJavaAssemblyException assembled = RxJavaAssemblyException.find(someThrowable);
+
+if (assembled != null) {
+    System.err.println(assembled.stacktrace());
+}
+```
 
 # Releases
 

@@ -25,7 +25,6 @@ import io.reactivex.exceptions.*;
 import io.reactivex.functions.*;
 import io.reactivex.internal.disposables.SequentialDisposable;
 import io.reactivex.internal.functions.Functions;
-import io.reactivex.internal.operators.observable.ObservableSubscribeOn;
 import io.reactivex.internal.subscribers.observable.LambdaObserver;
 import io.reactivex.plugins.RxJavaPlugins;
 import io.reactivex.schedulers.Schedulers;
@@ -1607,7 +1606,6 @@ public final class AsyncObservable {
      * @return the Future representing the entire for-each operation
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Async-Operators#wiki-foreachfuture">RxJava Wiki: forEachFuture()</a>
      */
-    @SuppressWarnings("unchecked")
     public static <T> Future<Object> forEachFuture(
             ObservableSource<? extends T> source,
             Consumer<? super T> onNext,
@@ -1650,7 +1648,8 @@ public final class AsyncObservable {
         });
         d.lazySet(ls);
 
-        RxJavaPlugins.onAssembly(new ObservableSubscribeOn<T>((Observable<T>)Observable.wrap(source), scheduler)).subscribe(ls);
+        // FIXME next RxJava 2.x release will allow using ObservableSubscribeOn with ObservableSource
+        Observable.wrap(source).subscribeOn(scheduler).subscribe(ls);
 
         return f;
     }
