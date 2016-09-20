@@ -231,7 +231,7 @@ if ((System.currentTimeMillis() & 1) != 0) {
 } else {
     System.out.println("An even millisecond");
 }
-
+```
 
 ```java
 Flowable<String> source = StatementFlowable.ifThen(
