@@ -348,7 +348,7 @@ and disable via:
 RxJavaAssemblyTracking.disable();
 ```
 
-Note that this doesn't save or preserve the old hooks you may have set as of now.
+Note that this doesn't save or preserve the old hooks (named `Assembly`) you may have set as of now.
 
 ### Output
 
@@ -361,7 +361,7 @@ at hu.akarnokd.rxjava2.debug.RxJava2AssemblyTrackingTest.createCompletable(RxJav
 at hu.akarnokd.rxjava2.debug.RxJava2AssemblyTrackingTest.completable(RxJava2AssemblyTrackingTest.java:185)
 ```
 
-This is a filtered list of stacktrace elements (skipping threading, unit test and self-related entries). 
+This is a filtered list of stacktrace elements (skipping threading, unit test and self-related entries). Most modern IDEs should allow you to navigate to the locations when printed on (or pasted into) its console.
 
 To avoid interference, the `RxJavaAssemblyException` is attached as the last cause to potential chain of the original exception that travels through each operator to the end consumer.
 
