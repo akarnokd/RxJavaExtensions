@@ -15,12 +15,12 @@ and have functional interfaces of functions without the `throws Exception`.
 
   - `Supplier<T>` - `Callable<T>` without `throws Exception`
   - `Consumer3` - 3 argument `Consumer`
-  - `Consumer4` - 3 argument `Consumer`
-  - `Consumer5` - 3 argument `Consumer`
-  - `Consumer6` - 3 argument `Consumer`
-  - `Consumer7` - 3 argument `Consumer`
-  - `Consumer8` - 3 argument `Consumer`
-  - `Consumer9` - 3 argument `Consumer`
+  - `Consumer4` - 4 argument `Consumer`
+  - `Consumer5` - 5 argument `Consumer`
+  - `Consumer6` - 6 argument `Consumer`
+  - `Consumer7` - 7 argument `Consumer`
+  - `Consumer8` - 8 argument `Consumer`
+  - `Consumer9` - 9 argument `Consumer`
   - `PlainFunction` - `Function` without `throws Exception`
   - `PlainBiFunction` - `BiFunction` without `throws Exception`
   - `PlainFunction3` - `Function3` without `throws Exception`
