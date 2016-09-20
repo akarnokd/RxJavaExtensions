@@ -8,6 +8,33 @@ Extra sources, operators and components and ports of many 1.x companion librarie
 
 # Features
 
+## Extra functional interfaces
+
+Support the join-patterns and async-util with functional interfaces of consumers with 3-9 type arguments
+and have functional interfaces of functions without the `throws Exception`.
+
+  - `Supplier<T>` - `Callable<T>` without `throws Exception`
+  - `Consumer3` - 3 argument `Consumer`
+  - `Consumer4` - 3 argument `Consumer`
+  - `Consumer5` - 3 argument `Consumer`
+  - `Consumer6` - 3 argument `Consumer`
+  - `Consumer7` - 3 argument `Consumer`
+  - `Consumer8` - 3 argument `Consumer`
+  - `Consumer9` - 3 argument `Consumer`
+  - `PlainFunction` - `Function` without `throws Exception`
+  - `PlainBiFunction` - `BiFunction` without `throws Exception`
+  - `PlainFunction3` - `Function3` without `throws Exception`
+  - `PlainFunction4` - `Function4` without `throws Exception`
+  - `PlainFunction5` - `Function5` without `throws Exception`
+  - `PlainFunction6` - `Function6` without `throws Exception`
+  - `PlainFunction7` - `Function7` without `throws Exception`
+  - `PlainFunction8` - `Function8` without `throws Exception`
+  - `PlainFunction9` - `Function9` without `throws Exception`
+  
+
+Utility functions supporting these can be found in `FunctionsEx` class.
+
+
 ## Mathematical operations over numerical sequences
 
 Although most of the operations can be performed with `reduce`, these operators have lower overhead
@@ -87,7 +114,108 @@ StringFlowable.characters("Hello world")
 
 ## Asynchronous jumpstarting a sequence
 
-TBD: conversion of RxJavaAsyncUtil
+Wrap functions and consumers into Flowables and Observables or into another layer of Functions.
+Most of these can now be achieved via `fromCallable` and some function composition in plain RxJava (1.x and 2.x alike).
+
+### start 
+
+Run a function or action once on a background thread and cache its result.
+
+```java
+AtomicInteger counter = new AtomicInteger();
+
+Flowable<Integer> source = AsyncFlowable.start(() -> counter.incrementAndGet());
+
+source.test()
+    .awaitDone(5, TimeUnit.SECONDS)
+    .assertResult(1);
+
+source.test()
+    .awaitDone(5, TimeUnit.SECONDS)
+    .assertResult(1);
+```
+
+### toAsync
+
+Call a function (with parameters) to call a function inside a `Flowable`/`Observable` with the same
+parameter and have the result emitted by that `Flowable`/`Observable` from a background thread.
+
+```java
+
+Function<Integer, Flowable<String>> func = AsyncFlowable.toAsync(
+    param -> "[" + param + "]"
+);
+
+func.apply(1)
+    .test()
+    .awaitDone(5, TimeUnit.SECONDS)
+    .assertResult("[1]")
+;
+```
+### startFuture
+
+Run a Callable that returns a Future to call blocking get() on to get the solo value or exception.
+
+```java
+ExecutorService exec = Executors.newSingleThreadedScheduler();
+
+AsyncFlowable.startFuture(() -> exec.submit(() -> 1))
+    .test()
+    .awaitDone(5, TimeUnit.SECONDS)
+    .assertResult(1);
+    
+exec.shutdown();
+```
+
+### deferFuture
+
+Run a Callable that returns a Future to call blocking get() on to get a `Publisher` to stream back.
+
+```java
+ExecutorService exec = Executors.newSingleThreadedScheduler();
+
+AsyncFlowable.startFuture(() -> exec.submit(() -> Flowable.range(1, 5)))
+    .test()
+    .awaitDone(5, TimeUnit.SECONDS)
+    .assertResult(1, 2, 3, 4, 5);
+    
+exec.shutdown();
+```
+
+### forEachFuture
+
+Consume a `Publisher` and have `Future` that completes when the consumption ends with `onComplete` or `onError`.
+
+```java
+Future<Object> f = AsyncFlowable.forEachFuture(Flowable.range(1, 100), System.out::println);
+
+f.get();
+```
+
+### runAsync
+
+Allows emitting multiple values through a Processor mediator from a background thread and allows disposing
+the sequence externally.
+
+```java
+AsyncFlowable.runAsync(Schedulers.single(),
+        UnicastProcessor.<Object>create(),
+        new BiConsumer<Subscriber<Object>, Disposable>() {
+            @Override
+            public void accept(Subscriber<? super Object> s, Disposable d) throws Exception {
+                s.onNext(1);
+                s.onNext(2);
+                s.onNext(3);
+                Thread.sleep(200);
+                s.onNext(4);
+                s.onNext(5);
+                s.onComplete();
+            }
+        }
+).test()
+.awaitDone(5, TimeUnit.SECONDS)
+.assertResult(1, 2, 3, 4, 5);
+```
 
 ## Computational expressions
 
@@ -111,7 +239,6 @@ Flowable<String> source = StatementFlowable.ifThen(
     Flowable.just("An odd millisecond"),
     Flowable.just("An even millisecond")
 );
-```
 
 source
 .delay(1, TimeUnit.MILLISECONDS)

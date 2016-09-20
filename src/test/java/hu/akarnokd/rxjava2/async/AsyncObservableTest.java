@@ -24,24 +24,24 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
 
 import org.junit.Test;
-import org.reactivestreams.Subscriber;
 
 import hu.akarnokd.rxjava2.functions.*;
-import io.reactivex.Flowable;
+import io.reactivex.Observable;
+import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.*;
 import io.reactivex.internal.functions.Functions;
-import io.reactivex.processors.UnicastProcessor;
 import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subjects.UnicastSubject;
 
-public class AsyncFlowableTest {
+public class AsyncObservableTest {
 
     @Test
     public void startDefault() {
 
         final AtomicInteger counter = new AtomicInteger();
 
-        Flowable<Integer> source = AsyncFlowable.start(new Callable<Integer>() {
+        Observable<Integer> source = AsyncObservable.start(new Callable<Integer>() {
             @Override
             public Integer call() throws Exception {
                 return counter.incrementAndGet();
@@ -61,7 +61,7 @@ public class AsyncFlowableTest {
     public void startCustomScheduler() {
         final AtomicInteger counter = new AtomicInteger();
 
-        Flowable<Integer> source = AsyncFlowable.start(new Callable<Integer>() {
+        Observable<Integer> source = AsyncObservable.start(new Callable<Integer>() {
             @Override
             public Integer call() throws Exception {
                 return counter.incrementAndGet();
@@ -204,7 +204,7 @@ public class AsyncFlowableTest {
     public void toAsyncConsumer0() {
         final AtomicInteger counter = new AtomicInteger();
 
-        AsyncFlowable.toAsync(new Action() {
+        AsyncObservable.toAsync(new Action() {
             @Override
             public void run() throws Exception {
                 counter.getAndIncrement();
@@ -221,7 +221,7 @@ public class AsyncFlowableTest {
     public void toAsyncConsumer1() {
         MultiFunction f = new MultiFunction();
 
-        AsyncFlowable.toAsync((Consumer<Object>)f)
+        AsyncObservable.toAsync((Consumer<Object>)f)
         .apply(1)
         .test()
         .awaitDone(5, TimeUnit.SECONDS)
@@ -235,7 +235,7 @@ public class AsyncFlowableTest {
     public void toAsyncConsumer2() {
         MultiFunction f = new MultiFunction();
 
-        AsyncFlowable.toAsync((BiConsumer<Object, Object>)f)
+        AsyncObservable.toAsync((BiConsumer<Object, Object>)f)
         .apply(1, 2)
         .test()
         .awaitDone(5, TimeUnit.SECONDS)
@@ -249,7 +249,7 @@ public class AsyncFlowableTest {
     public void toAsyncConsumer3() {
         MultiFunction f = new MultiFunction();
 
-        AsyncFlowable.toAsync((Consumer3<Object, Object, Object>)f)
+        AsyncObservable.toAsync((Consumer3<Object, Object, Object>)f)
         .apply(1, 2, 3)
         .test()
         .awaitDone(5, TimeUnit.SECONDS)
@@ -263,7 +263,7 @@ public class AsyncFlowableTest {
     public void toAsyncConsumer4() {
         MultiFunction f = new MultiFunction();
 
-        AsyncFlowable.toAsync((Consumer4<Object, Object, Object, Object>)f)
+        AsyncObservable.toAsync((Consumer4<Object, Object, Object, Object>)f)
         .apply(1, 2, 3, 4)
         .test()
         .awaitDone(5, TimeUnit.SECONDS)
@@ -277,7 +277,7 @@ public class AsyncFlowableTest {
     public void toAsyncConsumer5() {
         MultiFunction f = new MultiFunction();
 
-        AsyncFlowable.toAsync((Consumer5<Object, Object, Object, Object, Object>)f)
+        AsyncObservable.toAsync((Consumer5<Object, Object, Object, Object, Object>)f)
         .apply(1, 2, 3, 4, 5)
         .test()
         .awaitDone(5, TimeUnit.SECONDS)
@@ -291,7 +291,7 @@ public class AsyncFlowableTest {
     public void toAsyncConsumer6() {
         MultiFunction f = new MultiFunction();
 
-        AsyncFlowable.toAsync((Consumer6<Object, Object, Object, Object, Object, Object>)f)
+        AsyncObservable.toAsync((Consumer6<Object, Object, Object, Object, Object, Object>)f)
         .apply(1, 2, 3, 4, 5, 6)
         .test()
         .awaitDone(5, TimeUnit.SECONDS)
@@ -305,7 +305,7 @@ public class AsyncFlowableTest {
     public void toAsyncConsumer7() {
         MultiFunction f = new MultiFunction();
 
-        AsyncFlowable.toAsync((Consumer7<Object, Object, Object, Object, Object, Object, Object>)f)
+        AsyncObservable.toAsync((Consumer7<Object, Object, Object, Object, Object, Object, Object>)f)
         .apply(1, 2, 3, 4, 5, 6, 7)
         .test()
         .awaitDone(5, TimeUnit.SECONDS)
@@ -319,7 +319,7 @@ public class AsyncFlowableTest {
     public void toAsyncConsumer8() {
         MultiFunction f = new MultiFunction();
 
-        AsyncFlowable.toAsync((Consumer8<Object, Object, Object, Object, Object, Object, Object, Object>)f)
+        AsyncObservable.toAsync((Consumer8<Object, Object, Object, Object, Object, Object, Object, Object>)f)
         .apply(1, 2, 3, 4, 5, 6, 7, 8)
         .test()
         .awaitDone(5, TimeUnit.SECONDS)
@@ -333,7 +333,7 @@ public class AsyncFlowableTest {
     public void toAsyncConsumer9() {
         MultiFunction f = new MultiFunction();
 
-        AsyncFlowable.toAsync((Consumer9<Object, Object, Object, Object, Object, Object, Object, Object, Object>)f)
+        AsyncObservable.toAsync((Consumer9<Object, Object, Object, Object, Object, Object, Object, Object, Object>)f)
         .apply(1, 2, 3, 4, 5, 6, 7, 8, 9)
         .test()
         .awaitDone(5, TimeUnit.SECONDS)
@@ -347,7 +347,7 @@ public class AsyncFlowableTest {
     public void toAsyncConsumerN() {
         MultiFunction f = new MultiFunction();
 
-        AsyncFlowable.toAsyncArray((Consumer<Object[]>)f)
+        AsyncObservable.toAsyncArray((Consumer<Object[]>)f)
         .apply(new Object[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 })
         .test()
         .awaitDone(5, TimeUnit.SECONDS)
@@ -361,7 +361,7 @@ public class AsyncFlowableTest {
     public void toAsyncFunction0() {
         MultiFunction f = new MultiFunction();
 
-        AsyncFlowable.toAsync((Supplier<Object>)f)
+        AsyncObservable.toAsync((Supplier<Object>)f)
         .call()
         .test()
         .awaitDone(5, TimeUnit.SECONDS)
@@ -373,7 +373,7 @@ public class AsyncFlowableTest {
     public void toAsyncFunction1() {
         MultiFunction f = new MultiFunction();
 
-        AsyncFlowable.toAsync((Function<Object, Object>)f)
+        AsyncObservable.toAsync((Function<Object, Object>)f)
         .apply(1)
         .test()
         .awaitDone(5, TimeUnit.SECONDS)
@@ -385,7 +385,7 @@ public class AsyncFlowableTest {
     public void toAsyncFunction2() {
         MultiFunction f = new MultiFunction();
 
-        AsyncFlowable.toAsync((BiFunction<Object, Object, Object>)f)
+        AsyncObservable.toAsync((BiFunction<Object, Object, Object>)f)
         .apply(1, 2)
         .test()
         .awaitDone(5, TimeUnit.SECONDS)
@@ -397,7 +397,7 @@ public class AsyncFlowableTest {
     public void toAsyncFunction3() {
         MultiFunction f = new MultiFunction();
 
-        AsyncFlowable.toAsync((Function3<Object, Object, Object, Object>)f)
+        AsyncObservable.toAsync((Function3<Object, Object, Object, Object>)f)
         .apply(1, 2, 3)
         .test()
         .awaitDone(5, TimeUnit.SECONDS)
@@ -409,7 +409,7 @@ public class AsyncFlowableTest {
     public void toAsyncFunction4() {
         MultiFunction f = new MultiFunction();
 
-        AsyncFlowable.toAsync((Function4<Object, Object, Object, Object, Object>)f)
+        AsyncObservable.toAsync((Function4<Object, Object, Object, Object, Object>)f)
         .apply(1, 2, 3, 4)
         .test()
         .awaitDone(5, TimeUnit.SECONDS)
@@ -421,7 +421,7 @@ public class AsyncFlowableTest {
     public void toAsyncFunction5() {
         MultiFunction f = new MultiFunction();
 
-        AsyncFlowable.toAsync((Function5<Object, Object, Object, Object, Object, Object>)f)
+        AsyncObservable.toAsync((Function5<Object, Object, Object, Object, Object, Object>)f)
         .apply(1, 2, 3, 4, 5)
         .test()
         .awaitDone(5, TimeUnit.SECONDS)
@@ -433,7 +433,7 @@ public class AsyncFlowableTest {
     public void toAsyncFunction6() {
         MultiFunction f = new MultiFunction();
 
-        AsyncFlowable.toAsync((Function6<Object, Object, Object, Object, Object, Object, Object>)f)
+        AsyncObservable.toAsync((Function6<Object, Object, Object, Object, Object, Object, Object>)f)
         .apply(1, 2, 3, 4, 5, 6)
         .test()
         .awaitDone(5, TimeUnit.SECONDS)
@@ -445,7 +445,7 @@ public class AsyncFlowableTest {
     public void toAsyncFunction7() {
         MultiFunction f = new MultiFunction();
 
-        AsyncFlowable.toAsync((Function7<Object, Object, Object, Object, Object, Object, Object, Object>)f)
+        AsyncObservable.toAsync((Function7<Object, Object, Object, Object, Object, Object, Object, Object>)f)
         .apply(1, 2, 3, 4, 5, 6, 7)
         .test()
         .awaitDone(5, TimeUnit.SECONDS)
@@ -457,7 +457,7 @@ public class AsyncFlowableTest {
     public void toAsyncFunction8() {
         MultiFunction f = new MultiFunction();
 
-        AsyncFlowable.toAsync((Function8<Object, Object, Object, Object, Object, Object, Object, Object, Object>)f)
+        AsyncObservable.toAsync((Function8<Object, Object, Object, Object, Object, Object, Object, Object, Object>)f)
         .apply(1, 2, 3, 4, 5, 6, 7, 8)
         .test()
         .awaitDone(5, TimeUnit.SECONDS)
@@ -469,7 +469,7 @@ public class AsyncFlowableTest {
     public void toAsyncFunction9() {
         MultiFunction f = new MultiFunction();
 
-        AsyncFlowable.toAsync((Function9<Object, Object, Object, Object, Object, Object, Object, Object, Object, Object>)f)
+        AsyncObservable.toAsync((Function9<Object, Object, Object, Object, Object, Object, Object, Object, Object, Object>)f)
         .apply(1, 2, 3, 4, 5, 6, 7, 8, 9)
         .test()
         .awaitDone(5, TimeUnit.SECONDS)
@@ -481,7 +481,7 @@ public class AsyncFlowableTest {
     public void toAsyncFunctionN() {
         MultiFunction f = new MultiFunction();
 
-        AsyncFlowable.toAsync((Function<Object[], Object>)f)
+        AsyncObservable.toAsync((Function<Object[], Object>)f)
         .apply(new Object[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 })
         .test()
         .awaitDone(5, TimeUnit.SECONDS)
@@ -492,7 +492,7 @@ public class AsyncFlowableTest {
     public void toAsyncConsumer0Scheduler() {
         final AtomicInteger counter = new AtomicInteger();
 
-        AsyncFlowable.toAsync(new Action() {
+        AsyncObservable.toAsync(new Action() {
             @Override
             public void run() throws Exception {
                 counter.getAndIncrement();
@@ -509,7 +509,7 @@ public class AsyncFlowableTest {
     public void toAsyncConsumer1Scheduler() {
         MultiFunction f = new MultiFunction();
 
-        AsyncFlowable.toAsync((Consumer<Object>)f, Schedulers.single())
+        AsyncObservable.toAsync((Consumer<Object>)f, Schedulers.single())
         .apply(1)
         .test()
         .awaitDone(5, TimeUnit.SECONDS)
@@ -523,7 +523,7 @@ public class AsyncFlowableTest {
     public void toAsyncConsumer2Scheduler() {
         MultiFunction f = new MultiFunction();
 
-        AsyncFlowable.toAsync((BiConsumer<Object, Object>)f, Schedulers.single())
+        AsyncObservable.toAsync((BiConsumer<Object, Object>)f, Schedulers.single())
         .apply(1, 2)
         .test()
         .awaitDone(5, TimeUnit.SECONDS)
@@ -537,7 +537,7 @@ public class AsyncFlowableTest {
     public void toAsyncConsumer3Scheduler() {
         MultiFunction f = new MultiFunction();
 
-        AsyncFlowable.toAsync((Consumer3<Object, Object, Object>)f, Schedulers.single())
+        AsyncObservable.toAsync((Consumer3<Object, Object, Object>)f, Schedulers.single())
         .apply(1, 2, 3)
         .test()
         .awaitDone(5, TimeUnit.SECONDS)
@@ -551,7 +551,7 @@ public class AsyncFlowableTest {
     public void toAsyncConsumer4Scheduler() {
         MultiFunction f = new MultiFunction();
 
-        AsyncFlowable.toAsync((Consumer4<Object, Object, Object, Object>)f, Schedulers.single())
+        AsyncObservable.toAsync((Consumer4<Object, Object, Object, Object>)f, Schedulers.single())
         .apply(1, 2, 3, 4)
         .test()
         .awaitDone(5, TimeUnit.SECONDS)
@@ -565,7 +565,7 @@ public class AsyncFlowableTest {
     public void toAsyncConsumer5Scheduler() {
         MultiFunction f = new MultiFunction();
 
-        AsyncFlowable.toAsync((Consumer5<Object, Object, Object, Object, Object>)f, Schedulers.single())
+        AsyncObservable.toAsync((Consumer5<Object, Object, Object, Object, Object>)f, Schedulers.single())
         .apply(1, 2, 3, 4, 5)
         .test()
         .awaitDone(5, TimeUnit.SECONDS)
@@ -579,7 +579,7 @@ public class AsyncFlowableTest {
     public void toAsyncConsumer6Scheduler() {
         MultiFunction f = new MultiFunction();
 
-        AsyncFlowable.toAsync((Consumer6<Object, Object, Object, Object, Object, Object>)f, Schedulers.single())
+        AsyncObservable.toAsync((Consumer6<Object, Object, Object, Object, Object, Object>)f, Schedulers.single())
         .apply(1, 2, 3, 4, 5, 6)
         .test()
         .awaitDone(5, TimeUnit.SECONDS)
@@ -593,7 +593,7 @@ public class AsyncFlowableTest {
     public void toAsyncConsumer7Scheduler() {
         MultiFunction f = new MultiFunction();
 
-        AsyncFlowable.toAsync((Consumer7<Object, Object, Object, Object, Object, Object, Object>)f, Schedulers.single())
+        AsyncObservable.toAsync((Consumer7<Object, Object, Object, Object, Object, Object, Object>)f, Schedulers.single())
         .apply(1, 2, 3, 4, 5, 6, 7)
         .test()
         .awaitDone(5, TimeUnit.SECONDS)
@@ -607,7 +607,7 @@ public class AsyncFlowableTest {
     public void toAsyncConsumer8Scheduler() {
         MultiFunction f = new MultiFunction();
 
-        AsyncFlowable.toAsync((Consumer8<Object, Object, Object, Object, Object, Object, Object, Object>)f, Schedulers.single())
+        AsyncObservable.toAsync((Consumer8<Object, Object, Object, Object, Object, Object, Object, Object>)f, Schedulers.single())
         .apply(1, 2, 3, 4, 5, 6, 7, 8)
         .test()
         .awaitDone(5, TimeUnit.SECONDS)
@@ -621,7 +621,7 @@ public class AsyncFlowableTest {
     public void toAsyncConsumer9Scheduler() {
         MultiFunction f = new MultiFunction();
 
-        AsyncFlowable.toAsync((Consumer9<Object, Object, Object, Object, Object, Object, Object, Object, Object>)f, Schedulers.single())
+        AsyncObservable.toAsync((Consumer9<Object, Object, Object, Object, Object, Object, Object, Object, Object>)f, Schedulers.single())
         .apply(1, 2, 3, 4, 5, 6, 7, 8, 9)
         .test()
         .awaitDone(5, TimeUnit.SECONDS)
@@ -635,7 +635,7 @@ public class AsyncFlowableTest {
     public void toAsyncConsumerNScheduler() {
         MultiFunction f = new MultiFunction();
 
-        AsyncFlowable.toAsyncArray((Consumer<Object[]>)f, Schedulers.single())
+        AsyncObservable.toAsyncArray((Consumer<Object[]>)f, Schedulers.single())
         .apply(new Object[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 })
         .test()
         .awaitDone(5, TimeUnit.SECONDS)
@@ -649,7 +649,7 @@ public class AsyncFlowableTest {
     public void toAsyncFunction0Scheduler() {
         MultiFunction f = new MultiFunction();
 
-        AsyncFlowable.toAsync((Supplier<Object>)f, Schedulers.single())
+        AsyncObservable.toAsync((Supplier<Object>)f, Schedulers.single())
         .call()
         .test()
         .awaitDone(5, TimeUnit.SECONDS)
@@ -661,7 +661,7 @@ public class AsyncFlowableTest {
     public void toAsyncFunction1Scheduler() {
         MultiFunction f = new MultiFunction();
 
-        AsyncFlowable.toAsync((Function<Object, Object>)f, Schedulers.single())
+        AsyncObservable.toAsync((Function<Object, Object>)f, Schedulers.single())
         .apply(1)
         .test()
         .awaitDone(5, TimeUnit.SECONDS)
@@ -673,7 +673,7 @@ public class AsyncFlowableTest {
     public void toAsyncFunction2Scheduler() {
         MultiFunction f = new MultiFunction();
 
-        AsyncFlowable.toAsync((BiFunction<Object, Object, Object>)f, Schedulers.single())
+        AsyncObservable.toAsync((BiFunction<Object, Object, Object>)f, Schedulers.single())
         .apply(1, 2)
         .test()
         .awaitDone(5, TimeUnit.SECONDS)
@@ -685,7 +685,7 @@ public class AsyncFlowableTest {
     public void toAsyncFunction3Scheduler() {
         MultiFunction f = new MultiFunction();
 
-        AsyncFlowable.toAsync((Function3<Object, Object, Object, Object>)f, Schedulers.single())
+        AsyncObservable.toAsync((Function3<Object, Object, Object, Object>)f, Schedulers.single())
         .apply(1, 2, 3)
         .test()
         .awaitDone(5, TimeUnit.SECONDS)
@@ -697,7 +697,7 @@ public class AsyncFlowableTest {
     public void toAsyncFunction4Scheduler() {
         MultiFunction f = new MultiFunction();
 
-        AsyncFlowable.toAsync((Function4<Object, Object, Object, Object, Object>)f, Schedulers.single())
+        AsyncObservable.toAsync((Function4<Object, Object, Object, Object, Object>)f, Schedulers.single())
         .apply(1, 2, 3, 4)
         .test()
         .awaitDone(5, TimeUnit.SECONDS)
@@ -709,7 +709,7 @@ public class AsyncFlowableTest {
     public void toAsyncFunction5Scheduler() {
         MultiFunction f = new MultiFunction();
 
-        AsyncFlowable.toAsync((Function5<Object, Object, Object, Object, Object, Object>)f, Schedulers.single())
+        AsyncObservable.toAsync((Function5<Object, Object, Object, Object, Object, Object>)f, Schedulers.single())
         .apply(1, 2, 3, 4, 5)
         .test()
         .awaitDone(5, TimeUnit.SECONDS)
@@ -721,7 +721,7 @@ public class AsyncFlowableTest {
     public void toAsyncFunction6Scheduler() {
         MultiFunction f = new MultiFunction();
 
-        AsyncFlowable.toAsync((Function6<Object, Object, Object, Object, Object, Object, Object>)f, Schedulers.single())
+        AsyncObservable.toAsync((Function6<Object, Object, Object, Object, Object, Object, Object>)f, Schedulers.single())
         .apply(1, 2, 3, 4, 5, 6)
         .test()
         .awaitDone(5, TimeUnit.SECONDS)
@@ -733,7 +733,7 @@ public class AsyncFlowableTest {
     public void toAsyncFunction7Scheduler() {
         MultiFunction f = new MultiFunction();
 
-        AsyncFlowable.toAsync((Function7<Object, Object, Object, Object, Object, Object, Object, Object>)f, Schedulers.single())
+        AsyncObservable.toAsync((Function7<Object, Object, Object, Object, Object, Object, Object, Object>)f, Schedulers.single())
         .apply(1, 2, 3, 4, 5, 6, 7)
         .test()
         .awaitDone(5, TimeUnit.SECONDS)
@@ -745,7 +745,7 @@ public class AsyncFlowableTest {
     public void toAsyncFunction8Scheduler() {
         MultiFunction f = new MultiFunction();
 
-        AsyncFlowable.toAsync((Function8<Object, Object, Object, Object, Object, Object, Object, Object, Object>)f, Schedulers.single())
+        AsyncObservable.toAsync((Function8<Object, Object, Object, Object, Object, Object, Object, Object, Object>)f, Schedulers.single())
         .apply(1, 2, 3, 4, 5, 6, 7, 8)
         .test()
         .awaitDone(5, TimeUnit.SECONDS)
@@ -757,7 +757,7 @@ public class AsyncFlowableTest {
     public void toAsyncFunction9Scheduler() {
         MultiFunction f = new MultiFunction();
 
-        AsyncFlowable.toAsync((Function9<Object, Object, Object, Object, Object, Object, Object, Object, Object, Object>)f, Schedulers.single())
+        AsyncObservable.toAsync((Function9<Object, Object, Object, Object, Object, Object, Object, Object, Object, Object>)f, Schedulers.single())
         .apply(1, 2, 3, 4, 5, 6, 7, 8, 9)
         .test()
         .awaitDone(5, TimeUnit.SECONDS)
@@ -769,7 +769,7 @@ public class AsyncFlowableTest {
     public void toAsyncFunctionNScheduler() {
         MultiFunction f = new MultiFunction();
 
-        AsyncFlowable.toAsync((Function<Object[], Object>)f, Schedulers.single())
+        AsyncObservable.toAsync((Function<Object[], Object>)f, Schedulers.single())
         .apply(new Object[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 })
         .test()
         .awaitDone(5, TimeUnit.SECONDS)
@@ -780,7 +780,7 @@ public class AsyncFlowableTest {
     public void startFuture() {
         final FutureTask<Integer> ft = new FutureTask<Integer>(Functions.EMPTY_RUNNABLE, 1);
         ft.run();
-        AsyncFlowable.startFuture(new Callable<Future<Integer>>() {
+        AsyncObservable.startFuture(new Callable<Future<Integer>>() {
             @Override
             public Future<Integer> call() throws Exception {
                 return ft;
@@ -795,7 +795,7 @@ public class AsyncFlowableTest {
     public void startFutureNull() {
         final FutureTask<Integer> ft = new FutureTask<Integer>(Functions.EMPTY_RUNNABLE, null);
         ft.run();
-        AsyncFlowable.startFuture(new Callable<Future<Integer>>() {
+        AsyncObservable.startFuture(new Callable<Future<Integer>>() {
             @Override
             public Future<Integer> call() throws Exception {
                 return ft;
@@ -810,7 +810,7 @@ public class AsyncFlowableTest {
     public void startFutureCustomScheduler() {
         final FutureTask<Integer> ft = new FutureTask<Integer>(Functions.EMPTY_RUNNABLE, 1);
         ft.run();
-        AsyncFlowable.startFuture(new Callable<Future<Integer>>() {
+        AsyncObservable.startFuture(new Callable<Future<Integer>>() {
             @Override
             public Future<Integer> call() throws Exception {
                 return ft;
@@ -823,12 +823,12 @@ public class AsyncFlowableTest {
 
     @Test
     public void deferFuture() {
-        final FutureTask<Flowable<Integer>> ft = new FutureTask<Flowable<Integer>>(Functions.EMPTY_RUNNABLE, Flowable.just(1));
+        final FutureTask<Observable<Integer>> ft = new FutureTask<Observable<Integer>>(Functions.EMPTY_RUNNABLE, Observable.just(1));
         ft.run();
 
-        AsyncFlowable.deferFuture(new Callable<Future<Flowable<Integer>>>() {
+        AsyncObservable.deferFuture(new Callable<Future<Observable<Integer>>>() {
             @Override
-            public Future<Flowable<Integer>> call() throws Exception {
+            public Future<Observable<Integer>> call() throws Exception {
                 return ft;
             }
         })
@@ -839,12 +839,12 @@ public class AsyncFlowableTest {
 
     @Test
     public void deferFutureCustomScheduler() {
-        final FutureTask<Flowable<Integer>> ft = new FutureTask<Flowable<Integer>>(Functions.EMPTY_RUNNABLE, Flowable.just(1));
+        final FutureTask<Observable<Integer>> ft = new FutureTask<Observable<Integer>>(Functions.EMPTY_RUNNABLE, Observable.just(1));
         ft.run();
 
-        AsyncFlowable.deferFuture(new Callable<Future<Flowable<Integer>>>() {
+        AsyncObservable.deferFuture(new Callable<Future<Observable<Integer>>>() {
             @Override
-            public Future<Flowable<Integer>> call() throws Exception {
+            public Future<Observable<Integer>> call() throws Exception {
                 return ft;
             }
         }, Schedulers.single())
@@ -857,7 +857,7 @@ public class AsyncFlowableTest {
     public void forEachFutureC1() throws Exception {
         final List<Integer> list = new ArrayList<Integer>();
 
-        assertNull(AsyncFlowable.forEachFuture(Flowable.range(1, 5), new Consumer<Integer>() {
+        assertNull(AsyncObservable.forEachFuture(Observable.range(1, 5), new Consumer<Integer>() {
             @Override
             public void accept(Integer v) throws Exception {
                 list.add(v);
@@ -873,7 +873,7 @@ public class AsyncFlowableTest {
         final List<Integer> list = new ArrayList<Integer>();
 
         try {
-            AsyncFlowable.forEachFuture(Flowable.<Integer>error(new IOException()), new Consumer<Integer>() {
+            AsyncObservable.forEachFuture(Observable.<Integer>error(new IOException()), new Consumer<Integer>() {
                 @Override
                 public void accept(Integer v) throws Exception {
                     list.add(v);
@@ -893,7 +893,7 @@ public class AsyncFlowableTest {
     public void forEachFutureC1C2() throws Exception {
         final List<Integer> list = new ArrayList<Integer>();
 
-        assertNull(AsyncFlowable.forEachFuture(Flowable.range(1, 5), new Consumer<Integer>() {
+        assertNull(AsyncObservable.forEachFuture(Observable.range(1, 5), new Consumer<Integer>() {
             @Override
             public void accept(Integer v) throws Exception {
                 list.add(v);
@@ -913,7 +913,7 @@ public class AsyncFlowableTest {
     public void forEachFutureC1C2Error() throws Exception {
         final List<Integer> list = new ArrayList<Integer>();
         try {
-            AsyncFlowable.forEachFuture(Flowable.<Integer>error(new IOException()), new Consumer<Integer>() {
+            AsyncObservable.forEachFuture(Observable.<Integer>error(new IOException()), new Consumer<Integer>() {
                 @Override
                 public void accept(Integer v) throws Exception {
                     list.add(v);
@@ -938,7 +938,7 @@ public class AsyncFlowableTest {
     public void forEachFutureC1C2A3() throws Exception {
         final List<Integer> list = new ArrayList<Integer>();
 
-        assertNull(AsyncFlowable.forEachFuture(Flowable.range(1, 5), new Consumer<Integer>() {
+        assertNull(AsyncObservable.forEachFuture(Observable.range(1, 5), new Consumer<Integer>() {
             @Override
             public void accept(Integer v) throws Exception {
                 list.add(v);
@@ -963,7 +963,7 @@ public class AsyncFlowableTest {
     public void forEachFutureC1C2A3Error() throws Exception {
         final List<Integer> list = new ArrayList<Integer>();
         try {
-            AsyncFlowable.forEachFuture(Flowable.<Integer>error(new IOException()), new Consumer<Integer>() {
+            AsyncObservable.forEachFuture(Observable.<Integer>error(new IOException()), new Consumer<Integer>() {
                 @Override
                 public void accept(Integer v) throws Exception {
                     list.add(v);
@@ -993,7 +993,7 @@ public class AsyncFlowableTest {
     public void forEachFutureC1Scheduler() throws Exception {
         final List<Integer> list = new ArrayList<Integer>();
 
-        assertNull(AsyncFlowable.forEachFuture(Flowable.range(1, 5), new Consumer<Integer>() {
+        assertNull(AsyncObservable.forEachFuture(Observable.range(1, 5), new Consumer<Integer>() {
             @Override
             public void accept(Integer v) throws Exception {
                 list.add(v);
@@ -1009,7 +1009,7 @@ public class AsyncFlowableTest {
         final List<Integer> list = new ArrayList<Integer>();
 
         try {
-            AsyncFlowable.forEachFuture(Flowable.<Integer>error(new IOException()), new Consumer<Integer>() {
+            AsyncObservable.forEachFuture(Observable.<Integer>error(new IOException()), new Consumer<Integer>() {
                 @Override
                 public void accept(Integer v) throws Exception {
                     list.add(v);
@@ -1029,7 +1029,7 @@ public class AsyncFlowableTest {
     public void forEachFutureC1C2Scheduler() throws Exception {
         final List<Integer> list = new ArrayList<Integer>();
 
-        assertNull(AsyncFlowable.forEachFuture(Flowable.range(1, 5), new Consumer<Integer>() {
+        assertNull(AsyncObservable.forEachFuture(Observable.range(1, 5), new Consumer<Integer>() {
             @Override
             public void accept(Integer v) throws Exception {
                 list.add(v);
@@ -1049,7 +1049,7 @@ public class AsyncFlowableTest {
     public void forEachFutureC1C2ErrorScheduler() throws Exception {
         final List<Integer> list = new ArrayList<Integer>();
         try {
-            AsyncFlowable.forEachFuture(Flowable.<Integer>error(new IOException()), new Consumer<Integer>() {
+            AsyncObservable.forEachFuture(Observable.<Integer>error(new IOException()), new Consumer<Integer>() {
                 @Override
                 public void accept(Integer v) throws Exception {
                     list.add(v);
@@ -1074,7 +1074,7 @@ public class AsyncFlowableTest {
     public void forEachFutureC1C2A3Scheduler() throws Exception {
         final List<Integer> list = new ArrayList<Integer>();
 
-        assertNull(AsyncFlowable.forEachFuture(Flowable.range(1, 5), new Consumer<Integer>() {
+        assertNull(AsyncObservable.forEachFuture(Observable.range(1, 5), new Consumer<Integer>() {
             @Override
             public void accept(Integer v) throws Exception {
                 list.add(v);
@@ -1099,7 +1099,7 @@ public class AsyncFlowableTest {
     public void forEachFutureC1C2A3ErrorScheduler() throws Exception {
         final List<Integer> list = new ArrayList<Integer>();
         try {
-            AsyncFlowable.forEachFuture(Flowable.<Integer>error(new IOException()), new Consumer<Integer>() {
+            AsyncObservable.forEachFuture(Observable.<Integer>error(new IOException()), new Consumer<Integer>() {
                 @Override
                 public void accept(Integer v) throws Exception {
                     list.add(v);
@@ -1128,9 +1128,9 @@ public class AsyncFlowableTest {
     @Test
     public void runAsync() {
 
-        AsyncFlowable.runAsync(Schedulers.single(), new BiConsumer<Subscriber<Object>, Disposable>() {
+        AsyncObservable.runAsync(Schedulers.single(), new BiConsumer<Observer<Object>, Disposable>() {
             @Override
-            public void accept(Subscriber<? super Object> s, Disposable d) throws Exception {
+            public void accept(Observer<? super Object> s, Disposable d) throws Exception {
                 Thread.sleep(200);
                 s.onNext(1);
                 s.onNext(2);
@@ -1148,11 +1148,11 @@ public class AsyncFlowableTest {
 
     @Test
     public void runAsyncProcessor() {
-        AsyncFlowable.runAsync(Schedulers.single(),
-            UnicastProcessor.<Object>create(),
-        new BiConsumer<Subscriber<Object>, Disposable>() {
+        AsyncObservable.runAsync(Schedulers.single(),
+            UnicastSubject.<Object>create(),
+        new BiConsumer<Observer<Object>, Disposable>() {
             @Override
-            public void accept(Subscriber<? super Object> s, Disposable d) throws Exception {
+            public void accept(Observer<? super Object> s, Disposable d) throws Exception {
                 s.onNext(1);
                 s.onNext(2);
                 s.onNext(3);
