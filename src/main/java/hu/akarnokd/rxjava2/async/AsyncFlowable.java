@@ -28,7 +28,7 @@ import io.reactivex.functions.*;
 import io.reactivex.internal.disposables.SequentialDisposable;
 import io.reactivex.internal.functions.Functions;
 import io.reactivex.internal.operators.flowable.FlowableSubscribeOn;
-import io.reactivex.internal.subscribers.flowable.LambdaSubscriber;
+import io.reactivex.internal.subscribers.LambdaSubscriber;
 import io.reactivex.plugins.RxJavaPlugins;
 import io.reactivex.processors.*;
 import io.reactivex.schedulers.Schedulers;

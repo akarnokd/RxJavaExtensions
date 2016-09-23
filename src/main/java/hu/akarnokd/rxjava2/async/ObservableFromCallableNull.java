@@ -20,7 +20,7 @@ import java.util.concurrent.Callable;
 
 import io.reactivex.*;
 import io.reactivex.exceptions.Exceptions;
-import io.reactivex.internal.subscribers.observable.DeferredScalarDisposable;
+import io.reactivex.internal.observers.DeferredScalarDisposable;
 
 /**
  * Runs a callable and treats a null result as completion.

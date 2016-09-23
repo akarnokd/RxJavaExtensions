@@ -18,7 +18,7 @@ package hu.akarnokd.rxjava2.math;
 
 import org.reactivestreams.*;
 
-import io.reactivex.internal.subscribers.flowable.DeferredScalarSubscriber;
+import io.reactivex.internal.subscribers.DeferredScalarSubscriber;
 
 final class FlowableAverageFloat extends FlowableSource<Number, Float> {
 

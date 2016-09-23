@@ -17,7 +17,7 @@
 package hu.akarnokd.rxjava2.debug;
 
 import io.reactivex.*;
-import io.reactivex.internal.subscribers.observable.BasicFuseableObserver;
+import io.reactivex.internal.observers.BasicFuseableObserver;
 
 /**
  * Wraps a ObservableSource and inject the assembly info.

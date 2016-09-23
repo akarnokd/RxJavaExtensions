@@ -25,7 +25,7 @@ import io.reactivex.exceptions.*;
 import io.reactivex.functions.*;
 import io.reactivex.internal.disposables.SequentialDisposable;
 import io.reactivex.internal.functions.Functions;
-import io.reactivex.internal.subscribers.observable.LambdaObserver;
+import io.reactivex.internal.observers.LambdaObserver;
 import io.reactivex.plugins.RxJavaPlugins;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.*;

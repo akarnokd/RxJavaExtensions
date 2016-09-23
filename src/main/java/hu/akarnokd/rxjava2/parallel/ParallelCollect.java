@@ -22,7 +22,7 @@ import org.reactivestreams.*;
 
 import io.reactivex.exceptions.Exceptions;
 import io.reactivex.functions.BiConsumer;
-import io.reactivex.internal.subscribers.flowable.DeferredScalarSubscriber;
+import io.reactivex.internal.subscribers.DeferredScalarSubscriber;
 import io.reactivex.internal.subscriptions.*;
 import io.reactivex.plugins.RxJavaPlugins;
 

@@ -18,7 +18,7 @@ package hu.akarnokd.rxjava2.math;
 
 import java.util.Comparator;
 
-import io.reactivex.internal.subscribers.observable.DeferredScalarObserver;
+import io.reactivex.internal.observers.DeferredScalarObserver;
 import io.reactivex.*;
 import io.reactivex.exceptions.Exceptions;
 

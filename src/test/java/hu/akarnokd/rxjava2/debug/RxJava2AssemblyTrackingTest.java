@@ -134,7 +134,7 @@ public class RxJava2AssemblyTrackingTest {
         try {
             Single<Integer> source = createSingle();
 
-            TestSubscriber<Integer> ts = source.test()
+            TestObserver<Integer> ts = source.test()
             .assertFailure(IOException.class);
 
             String st = RxJavaAssemblyException.find(ts.errors().get(0)).stacktrace();
@@ -147,7 +147,7 @@ public class RxJava2AssemblyTrackingTest {
 
         Single<Integer> source = createSingle();
 
-        TestSubscriber<Integer> ts = source.test()
+        TestObserver<Integer> ts = source.test()
         .assertFailure(IOException.class);
 
         assertNull(RxJavaAssemblyException.find(ts.errors().get(0)));
@@ -159,7 +159,7 @@ public class RxJava2AssemblyTrackingTest {
         try {
             Maybe<Integer> source = createMaybe();
 
-            TestSubscriber<Integer> ts = source.test()
+            TestObserver<Integer> ts = source.test()
             .assertFailure(IOException.class);
 
             String st = RxJavaAssemblyException.find(ts.errors().get(0)).stacktrace();
@@ -172,7 +172,7 @@ public class RxJava2AssemblyTrackingTest {
 
         Maybe<Integer> source = createMaybe();
 
-        TestSubscriber<Integer> ts = source.test()
+        TestObserver<Integer> ts = source.test()
         .assertFailure(IOException.class);
 
         assertNull(RxJavaAssemblyException.find(ts.errors().get(0)));
@@ -184,7 +184,7 @@ public class RxJava2AssemblyTrackingTest {
         try {
             Completable source = createCompletable();
 
-            TestSubscriber<Void> ts = source.test()
+            TestObserver<Void> ts = source.test()
             .assertFailure(IOException.class);
 
             String st = RxJavaAssemblyException.find(ts.errors().get(0)).stacktrace();
@@ -197,7 +197,7 @@ public class RxJava2AssemblyTrackingTest {
 
         Completable source = createCompletable();
 
-        TestSubscriber<Void> ts = source.test()
+        TestObserver<Void> ts = source.test()
         .assertFailure(IOException.class);
 
         assertNull(RxJavaAssemblyException.find(ts.errors().get(0)));
