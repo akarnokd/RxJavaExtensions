@@ -381,7 +381,7 @@ if (assembled != null) {
 
 ```
 dependencies {
-    compile "com.github.akarnokd:rxjava2-extensions:0.2.1"
+    compile "com.github.akarnokd:rxjava2-extensions:0.5.0"
 }
 ```
 
