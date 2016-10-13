@@ -375,6 +375,28 @@ if (assembled != null) {
 }
 ```
 
+## SingleSubject, MaybeSubject and CompletableSubject
+
+These are the hot variants of the respective base reactive types.
+
+```java
+MaybeSubject<Integer> ms = MaybeSubject.create();
+
+TestObserver<Integer> to = ms.test();
+
+ms.onSuccess(1);
+
+to.assertResult(1);
+
+CompletableSubject cs = CompletableSubject.create();
+
+TestObserver<Void> to2 = cs.test();
+
+ms.onComplete();
+
+to2.assertResult();
+```
+
 # Releases
 
 **gradle**
