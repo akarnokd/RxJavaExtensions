@@ -401,13 +401,27 @@ ms.onComplete();
 to2.assertResult();
 ```
 
+and
+
+
+```java
+SingleSubject<Integer> ss = SingleSubject.create();
+
+TestObserver<Integer> to = ss.test();
+
+ms.onSuccess(1);
+
+to.assertResult(1);
+```
+
+
 # Releases
 
 **gradle**
 
 ```
 dependencies {
-    compile "com.github.akarnokd:rxjava2-extensions:0.5.1"
+    compile "com.github.akarnokd:rxjava2-extensions:0.5.2"
 }
 ```
 
