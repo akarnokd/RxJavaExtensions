@@ -387,7 +387,11 @@ TestObserver<Integer> to = ms.test();
 ms.onSuccess(1);
 
 to.assertResult(1);
+```
 
+Similarly:
+
+```java
 CompletableSubject cs = CompletableSubject.create();
 
 TestObserver<Void> to2 = cs.test();
