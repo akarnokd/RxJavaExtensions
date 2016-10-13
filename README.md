@@ -396,7 +396,7 @@ CompletableSubject cs = CompletableSubject.create();
 
 TestObserver<Void> to2 = cs.test();
 
-ms.onComplete();
+cs.onComplete();
 
 to2.assertResult();
 ```
@@ -407,11 +407,11 @@ and
 ```java
 SingleSubject<Integer> ss = SingleSubject.create();
 
-TestObserver<Integer> to = ss.test();
+TestObserver<Integer> to3 = ss.test();
 
-ms.onSuccess(1);
+ss.onSuccess(1);
 
-to.assertResult(1);
+to3.assertResult(1);
 ```
 
 
