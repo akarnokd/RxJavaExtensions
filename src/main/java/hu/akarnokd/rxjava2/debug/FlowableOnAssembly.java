@@ -19,7 +19,7 @@ package hu.akarnokd.rxjava2.debug;
 import org.reactivestreams.*;
 
 import io.reactivex.Flowable;
-import io.reactivex.internal.fuseable.ConditionalSubscriber;
+import io.reactivex.internal.fuseable.*;
 import io.reactivex.internal.subscribers.*;
 
 /**
@@ -68,7 +68,13 @@ final class FlowableOnAssembly<T> extends Flowable<T> {
 
         @Override
         public int requestFusion(int mode) {
-            return transitiveFusion(mode);
+            QueueSubscription<T> qs = this.qs;
+            if (qs != null) {
+                int m = qs.requestFusion(mode);
+                sourceMode = m;
+                return m;
+            }
+            return NONE;
         }
 
         @Override

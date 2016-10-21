@@ -17,6 +17,7 @@
 package hu.akarnokd.rxjava2.debug;
 
 import io.reactivex.*;
+import io.reactivex.internal.fuseable.QueueDisposable;
 import io.reactivex.internal.observers.BasicFuseableObserver;
 
 /**
@@ -61,7 +62,13 @@ final class ObservableOnAssembly<T> extends Observable<T> {
 
         @Override
         public int requestFusion(int mode) {
-            return transitiveFusion(mode);
+            QueueDisposable<T> qs = this.qs;
+            if (qs != null) {
+                int m = qs.requestFusion(mode);
+                sourceMode = m;
+                return m;
+            }
+            return NONE;
         }
 
         @Override
