@@ -1764,7 +1764,7 @@ public final class AsyncFlowable {
         });
         d.lazySet(ls);
 
-        RxJavaPlugins.onAssembly(new FlowableSubscribeOn<T>((Publisher<T>)source, scheduler)).subscribe(ls);
+        RxJavaPlugins.onAssembly(new FlowableSubscribeOn<T>((Publisher<T>)source, scheduler, false)).subscribe(ls);
 
         return f;
     }
