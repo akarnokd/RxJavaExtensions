@@ -443,7 +443,7 @@ Flowable.just(1)
 
 ```
 dependencies {
-    compile "com.github.akarnokd:rxjava2-extensions:0.5.2"
+    compile "com.github.akarnokd:rxjava2-extensions:0.6.2"
 }
 ```
 
