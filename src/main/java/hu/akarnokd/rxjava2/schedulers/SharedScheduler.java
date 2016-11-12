@@ -39,8 +39,20 @@ public final class SharedScheduler extends Scheduler {
 
     final Worker worker;
 
+    /**
+     * Constructs a SharedScheduler and asks for a Worker from the provided other Scheduler.
+     * @param other the other Scheduler instance, not null
+     */
     public SharedScheduler(Scheduler other) {
-        worker = other.createWorker();
+        this.worker = other.createWorker();
+    }
+
+    /**
+     * Constructs a SharedScheduler and uses the Worker instance provided.
+     * @param worker the worker to use, not null
+     */
+    public SharedScheduler(Worker worker) {
+        this.worker = worker;
     }
 
     @Override

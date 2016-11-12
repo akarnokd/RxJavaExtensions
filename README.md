@@ -414,6 +414,28 @@ ss.onSuccess(1);
 to3.assertResult(1);
 ```
 
+## Custom Schedulers
+
+### SharedScheduler
+
+This `Scheduler` implementation takes a `Worker` directly or from another `Scheduler` and shares it across its own `Worker`s while
+making sure disposing one of its own `SharedWorker` doesn't dispose any other `SharedWorker` or the underlying shared `Worker`.
+
+This type of scheduler may help solve the problem when one has to return to the same thread/scheduler at different stages of the pipeline
+but one doesn't want to or isn't able to use `SingleScheduler` or some other single-threaded thread-pool wrapped via `Schedulers.from()`.
+
+```java
+SharedScheduler shared = new SharedScheduler(Schedulers.io());
+
+Flowable.just(1)
+.subscribeOn(shared)
+.map(v -> Thread.currentThread().getName())
+.observeOn(Schedulers.computation())
+.map(v -> v.toLowerCase())
+.observeOn(shared)
+.map(v -> v.equals(Thread.currentThread().getName().toLowerCase()))
+.blockingForEach(System.out::println);
+```
 
 # Releases
 
