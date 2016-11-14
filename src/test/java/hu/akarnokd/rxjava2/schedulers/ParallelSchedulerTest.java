@@ -24,10 +24,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.Test;
 
+import hu.akarnokd.rxjava2.schedulers.ParallelScheduler.TrackingParallelWorker.TrackedAction;
 import hu.akarnokd.rxjava2.test.TestHelper;
 import io.reactivex.*;
 import io.reactivex.Scheduler.Worker;
 import io.reactivex.disposables.*;
+import io.reactivex.internal.functions.Functions;
 import io.reactivex.internal.schedulers.RxThreadFactory;
 import io.reactivex.schedulers.Schedulers;
 
@@ -316,5 +318,100 @@ public class ParallelSchedulerTest implements Runnable {
 
             TestHelper.race(r, r, Schedulers.single());
         }
+    }
+
+    @Test
+    public void setFutureRace() {
+        final Scheduler s = new ParallelScheduler(2, true);
+        try {
+            for (int i = 0; i < 1000; i++) {
+                final Worker w = s.createWorker();
+
+                Runnable r1 = new Runnable() {
+                    @Override
+                    public void run() {
+                        w.schedule(ParallelSchedulerTest.this);
+                    }
+                };
+
+                Runnable r2 = new Runnable() {
+                    @Override
+                    public void run() {
+                        w.dispose();
+                    }
+                };
+                TestHelper.race(r1, r2, Schedulers.single());
+            }
+        } finally {
+            s.shutdown();
+        }
+    }
+
+    @Test
+    public void setFutureRace2() {
+        final Scheduler s = new ParallelScheduler(2, true);
+        try {
+            for (int i = 0; i < 1000; i++) {
+                final CompositeDisposable cd = new CompositeDisposable();
+                final TrackedAction tt = new TrackedAction(this, cd);
+                final FutureTask<Object> ft = new FutureTask<Object>(Functions.EMPTY_RUNNABLE, null);
+
+                Runnable r1 = new Runnable() {
+                    @Override
+                    public void run() {
+                        tt.setFuture(ft);
+                    }
+                };
+
+                Runnable r2 = new Runnable() {
+                    @Override
+                    public void run() {
+                        tt.future.set(TrackedAction.FINISHED);
+                    }
+                };
+                TestHelper.race(r1, r2, Schedulers.single());
+            }
+        } finally {
+            s.shutdown();
+        }
+    }
+
+    @Test
+    public void setFutureRace3() {
+        final Scheduler s = new ParallelScheduler(2, true);
+        try {
+            for (int i = 0; i < 1000; i++) {
+                final CompositeDisposable cd = new CompositeDisposable();
+                final TrackedAction tt = new TrackedAction(this, cd);
+                final FutureTask<Object> ft = new FutureTask<Object>(Functions.EMPTY_RUNNABLE, null);
+
+                Runnable r1 = new Runnable() {
+                    @Override
+                    public void run() {
+                        tt.setFuture(ft);
+                    }
+                };
+
+                Runnable r2 = new Runnable() {
+                    @Override
+                    public void run() {
+                        tt.future.set(TrackedAction.DISPOSED);
+                    }
+                };
+                TestHelper.race(r1, r2, Schedulers.single());
+            }
+        } finally {
+            s.shutdown();
+        }
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void illegalParallelism() {
+        new ParallelScheduler(0);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void illegalPriority() {
+        new ParallelScheduler(2, true, -1);
     }
 }

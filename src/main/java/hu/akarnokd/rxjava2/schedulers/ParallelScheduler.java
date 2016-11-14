@@ -74,7 +74,14 @@ public final class ParallelScheduler extends Scheduler {
     }
 
     public ParallelScheduler(int parallelism, boolean tracking, int priority, String threadNamePrefix) {
-        this(parallelism, new RxThreadFactory(threadNamePrefix, priority), tracking);
+        this(parallelism, new RxThreadFactory(threadNamePrefix, checkPriority(priority)), tracking);
+    }
+
+    static int checkPriority(int priority) {
+        if (priority < Thread.MIN_PRIORITY || priority > Thread.MAX_PRIORITY) {
+            throw new IllegalArgumentException("priority out of range");
+        }
+        return priority;
     }
 
     public ParallelScheduler(int parallelism, ThreadFactory factory) {
@@ -82,6 +89,9 @@ public final class ParallelScheduler extends Scheduler {
     }
 
     public ParallelScheduler(int parallelism, ThreadFactory factory, boolean tracking) {
+        if (parallelism <= 0) {
+            throw new IllegalArgumentException("parallelism > 0 required but it was " + parallelism);
+        }
         this.parallelism = parallelism;
         this.factory = factory;
         this.tracking = tracking;

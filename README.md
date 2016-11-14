@@ -414,6 +414,14 @@ ss.onSuccess(1);
 to3.assertResult(1);
 ```
 
+## FlowableProcessor utils
+
+### FlowableProcessors
+
+An utility class that helps working with Reactive-Streams `Processor` and `FlowableProcessor` instances.
+
+- `wrap`: wraps an arbitrary `Processor` into a `FlowableProcessor`
+
 ## Custom Schedulers
 
 ### SharedScheduler
@@ -435,6 +443,30 @@ Flowable.just(1)
 .observeOn(shared)
 .map(v -> v.equals(Thread.currentThread().getName().toLowerCase()))
 .blockingForEach(System.out::println);
+```
+
+### ParallelScheduler
+
+It is similar to `Schedulers.computation()` but you can control the number of threads, the thread name prefix, the thread priority and to track each task sumbitted to its worker.
+
+Tracking a task means that if one calls `Worker.dispose()`, all outstanding tasks is cancelled. However, certain use cases can get away with just preventing the execution of the task body and just run through all outstanding tasks yielding lower overhead.
+
+The `ParallelScheduler` supports `start` and `shutdown` to start and stop the backing thread-pools. The non-`ThreadFactory` constructors create a daemon-thread backed set of single-threaded thread-pools.
+
+```java
+Scheduler s = new ParallelScheduler(3);
+
+try {
+    Flowable.range(1, 10)
+    .flatMap(v -> Flowable.just(1).subscribeOn(s).map(v -> v + 1))
+    .test()
+    .awaitDone(5, TimeUnit.SECONDS)
+    .assertValueSet(Arrays.asList(2, 3, 4, 5, 6, 7, 8, 9, 10, 11))
+    .assertComplete()
+    .assertNoErrors();
+} finally {
+    s.shutdown();
+}
 ```
 
 # Releases
