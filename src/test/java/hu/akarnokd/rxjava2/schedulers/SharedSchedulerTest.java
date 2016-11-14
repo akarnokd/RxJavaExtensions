@@ -36,18 +36,18 @@ import io.reactivex.schedulers.*;
 public class SharedSchedulerTest implements Runnable {
 
     volatile int calls;
-    
+
     @Override
     public void run() {
         calls++;
     }
-    
+
     @Test(timeout = 5000)
     public void normal() {
         SharedScheduler scheduler = new SharedScheduler(Schedulers.io());
         try {
             final Set<String> threads = new HashSet<String>();
-            
+
             for (int i = 0; i < 100; i++) {
                 Flowable.just(1).subscribeOn(scheduler)
                 .map(new Function<Integer, Object>() {
@@ -58,7 +58,7 @@ public class SharedSchedulerTest implements Runnable {
                 })
                 .blockingLast();
             }
-            
+
             assertEquals(1, threads.size());
         } finally {
             scheduler.shutdown();
@@ -70,7 +70,7 @@ public class SharedSchedulerTest implements Runnable {
         SharedScheduler scheduler = new SharedScheduler(Schedulers.io());
         try {
             final Set<String> threads = new HashSet<String>();
-            
+
             for (int i = 0; i < 100; i++) {
                 Flowable.just(1).delay(1, TimeUnit.MILLISECONDS, scheduler)
                 .map(new Function<Integer, Object>() {
@@ -81,7 +81,7 @@ public class SharedSchedulerTest implements Runnable {
                 })
                 .blockingLast();
             }
-            
+
             assertEquals(1, threads.size());
         } finally {
             scheduler.shutdown();
@@ -105,40 +105,40 @@ public class SharedSchedulerTest implements Runnable {
 
             long before = memoryUsage();
             System.out.printf("Start: %.1f%n", before / 1024.0 / 1024.0);
-            
+
             for (int i = 0; i < 100 * 1000; i++) {
                 worker.schedule(Functions.EMPTY_RUNNABLE, 1, TimeUnit.DAYS);
             }
-            
+
             long middle = memoryUsage();
 
             System.out.printf("Middle: %.1f -> %.1f%n", before / 1024.0 / 1024.0, middle / 1024.0 / 1024.0);
-            
+
             worker.dispose();
-            
+
             System.gc();
-            
+
             int wait = 300;
-            
+
             while (wait-- > 0) {
                 long after = memoryUsage();
-                
+
                 System.out.printf("Usage: %.1f -> %.1f -> %.1f%n", before / 1024.0 / 1024.0, middle / 1024.0 / 1024.0, after / 1024.0 / 1024.0);
-                
+
                 if (middle > after * 2) {
                     break;
                 }
-                
+
                 Thread.sleep(100);
                 System.gc();
             }
 
             long after = memoryUsage();
-            
+
             if (middle < after * 2) {
                 fail(String.format("Looks like there is a memory leak: %.1f -> %.1f -> %.1f", before / 1024.0 / 1024.0, middle / 1024.0 / 1024.0, after / 1024.0 / 1024.0));
             }
-            
+
         } finally {
             scheduler.shutdown();
         }
@@ -147,41 +147,41 @@ public class SharedSchedulerTest implements Runnable {
     @Test
     public void now() {
         TestScheduler test = new TestScheduler();
-        
+
         SharedScheduler scheduler = new SharedScheduler(test);
-        
+
         assertEquals(0L, scheduler.now(TimeUnit.MILLISECONDS));
-        
+
         assertEquals(0L, scheduler.createWorker().now(TimeUnit.MILLISECONDS));
     }
 
     @Test
     public void direct() {
         TestScheduler test = new TestScheduler();
-        
+
         SharedScheduler scheduler = new SharedScheduler(test);
-        
+
         scheduler.scheduleDirect(this);
-        
+
         test.advanceTimeBy(1, TimeUnit.MILLISECONDS);
-        
+
         assertEquals(1, calls);
-        
+
         scheduler.scheduleDirect(this, 1, TimeUnit.MILLISECONDS);
 
         test.advanceTimeBy(1, TimeUnit.MILLISECONDS);
-        
+
         assertEquals(2, calls);
 
         scheduler.schedulePeriodicallyDirect(this, 1, 1, TimeUnit.MILLISECONDS);
 
         test.advanceTimeBy(10, TimeUnit.MILLISECONDS);
-        
+
         assertEquals(12, calls);
 
         Worker worker = scheduler.createWorker();
         worker.dispose();
-        
+
         assertSame(Disposables.disposed(), worker.schedule(this));
 
         assertSame(Disposables.disposed(), worker.schedule(this, 1, TimeUnit.MILLISECONDS));
@@ -190,7 +190,7 @@ public class SharedSchedulerTest implements Runnable {
     @Test
     public void taskCrash() {
         TestScheduler test = new TestScheduler();
-        
+
         SharedScheduler scheduler = new SharedScheduler(test);
 
         Disposable d = scheduler.createWorker().schedule(new Runnable() {
@@ -201,13 +201,13 @@ public class SharedSchedulerTest implements Runnable {
         });
 
         assertFalse(d.isDisposed());
-        
+
         try {
             test.triggerActions();
         } catch (IllegalArgumentException ex) {
             // expected
         }
-        
+
         assertTrue(d.isDisposed());
     }
 
@@ -219,7 +219,7 @@ public class SharedSchedulerTest implements Runnable {
             for (int i = 0; i < 1000; i++) {
                w.schedule(this);
             }
-            
+
             while (calls != 1000) {
                 Thread.sleep(100);
             }
@@ -232,7 +232,7 @@ public class SharedSchedulerTest implements Runnable {
     public void disposeSetFutureRace() {
         for (int i = 0; i < 1000; i++) {
             final SharedAction sa = new SharedAction(this, new CompositeDisposable());
-    
+
             final Disposable d = Disposables.empty();
 
             Runnable r1 = new Runnable() {
@@ -241,7 +241,7 @@ public class SharedSchedulerTest implements Runnable {
                     sa.setFuture(d);
                 }
             };
-            
+
             Runnable r2 = new Runnable() {
                 @Override
                 public void run() {
@@ -250,7 +250,7 @@ public class SharedSchedulerTest implements Runnable {
             };
 
             TestHelper.race(r1, r2, Schedulers.single());
-            
+
             assertTrue("Future not disposed", d.isDisposed());
         }
     }
@@ -259,7 +259,7 @@ public class SharedSchedulerTest implements Runnable {
     public void runSetFutureRace() {
         for (int i = 0; i < 1000; i++) {
             final SharedAction sa = new SharedAction(this, new CompositeDisposable());
-    
+
             final Disposable d = Disposables.empty();
 
             Runnable r1 = new Runnable() {
@@ -268,7 +268,7 @@ public class SharedSchedulerTest implements Runnable {
                     sa.setFuture(d);
                 }
             };
-            
+
             Runnable r2 = new Runnable() {
                 @Override
                 public void run() {
@@ -277,7 +277,7 @@ public class SharedSchedulerTest implements Runnable {
             };
 
             TestHelper.race(r1, r2, Schedulers.single());
-            
+
             assertFalse("Future disposed", d.isDisposed());
             assertEquals(i + 1, calls);
         }

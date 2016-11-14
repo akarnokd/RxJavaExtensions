@@ -21,7 +21,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import io.reactivex.Scheduler;
 import io.reactivex.disposables.*;
-import io.reactivex.internal.disposables.DisposableHelper;
+import io.reactivex.internal.disposables.*;
 
 /**
  * A Scheduler implementation that uses one of the Workers from another Scheduler
@@ -64,22 +64,22 @@ public final class SharedScheduler extends Scheduler {
     public Disposable scheduleDirect(Runnable run) {
         return worker.schedule(run);
     }
-    
+
     @Override
     public Disposable scheduleDirect(Runnable run, long delay, TimeUnit unit) {
         return worker.schedule(run, delay, unit);
     }
-    
+
     @Override
     public Disposable schedulePeriodicallyDirect(Runnable run, long initialDelay, long period, TimeUnit unit) {
         return worker.schedulePeriodically(run, initialDelay, period, unit);
     }
-    
+
     @Override
     public long now(TimeUnit unit) {
         return worker.now(unit);
     }
-    
+
     @Override
     public Worker createWorker() {
         return new SharedWorker(worker);
@@ -90,7 +90,7 @@ public final class SharedScheduler extends Scheduler {
         final Worker worker;
 
         final CompositeDisposable tasks;
-        
+
         SharedWorker(Worker worker) {
             this.worker = worker;
             this.tasks = new CompositeDisposable();
@@ -113,7 +113,7 @@ public final class SharedScheduler extends Scheduler {
             }
             SharedAction sa = new SharedAction(run, tasks);
             tasks.add(sa);
-            
+
             Disposable d;
             if (delay <= 0L) {
                 d = worker.schedule(sa);
@@ -121,30 +121,30 @@ public final class SharedScheduler extends Scheduler {
                 d = worker.schedule(sa, delay, unit);
             }
             sa.setFuture(d);
-            
+
             return sa;
         }
-        
+
         @Override
         public long now(TimeUnit unit) {
             return worker.now(unit);
         }
-        
+
         static final class SharedAction
-        extends AtomicReference<CompositeDisposable>
+        extends AtomicReference<DisposableContainer>
         implements Runnable, Disposable {
             private static final long serialVersionUID = 4949851341419870956L;
 
             final AtomicReference<Disposable> future;
-            
+
             final Runnable actual;
-            
-            SharedAction(Runnable actual, CompositeDisposable parent) {
+
+            SharedAction(Runnable actual, DisposableContainer parent) {
                 this.actual = actual;
                 this.lazySet(parent);
                 this.future = new AtomicReference<Disposable>();
             }
-            
+
             @Override
             public void run() {
                 try {
@@ -153,9 +153,9 @@ public final class SharedScheduler extends Scheduler {
                     complete();
                 }
             }
-            
+
             void complete() {
-                CompositeDisposable cd = get();
+                DisposableContainer cd = get();
                 if (cd != null && compareAndSet(cd, null)) {
                     cd.delete(this);
                 }
@@ -166,21 +166,21 @@ public final class SharedScheduler extends Scheduler {
                     }
                 }
             }
-            
+
             @Override
             public void dispose() {
-                CompositeDisposable cd = getAndSet(null);
+                DisposableContainer cd = getAndSet(null);
                 if (cd != null) {
                     cd.delete(this);
                 }
                 DisposableHelper.dispose(future);
             }
-            
+
             @Override
             public boolean isDisposed() {
                 return get() == null;
             }
-            
+
             void setFuture(Disposable d) {
                 Disposable f = future.get();
                 if (f != this) {
