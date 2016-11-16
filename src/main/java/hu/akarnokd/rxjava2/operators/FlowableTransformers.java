@@ -32,7 +32,7 @@ import io.reactivex.internal.functions.ObjectHelper;
 public final class FlowableTransformers {
     /** Utility class. */
     private FlowableTransformers() {
-        throw new IllegalStateException("No instance!");
+        throw new IllegalStateException("No instances!");
     }
 
     /**
