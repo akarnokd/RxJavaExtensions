@@ -8,6 +8,19 @@ Extra sources, operators and components and ports of many 1.x companion librarie
 
 # Features
 
+  - [Extra functional interfaces](#extra-functional-interfaces)
+  - [Mathematical operations over numerical sequences](#mathematical-operations-over-numerical-sequences)
+  - [Parallel operations](#parallel-operations)
+  - [String operations](#string-operations)
+  - [Asynchronous jumpstarting a sequence](#asynchronous-jumpstarting-a-sequence)
+  - [Computational expressions](#computational-expressions)
+  - [Join patterns](#join-patterns)
+  - [Debug support](#debug-support)
+  - [SingleSubject, MaybeSubject and CompletableSubject](#singlesubject-maybesubject-and-completablesubject)
+  - [FlowableProcessor utils](#flowableprocessor-utils)
+  - [Custom Schedulers](#custom-schedulers)
+  - [Custom operators and transformers](#custom-operators-and-transformers)
+
 ## Extra functional interfaces
 
 Support the join-patterns and async-util with functional interfaces of consumers with 3-9 type arguments
@@ -467,6 +480,41 @@ try {
 } finally {
     s.shutdown();
 }
+```
+
+## Custom operators and transformers
+
+The custom transformers (to be applied with `Flowable.compose` for example), can be found in `hu.akarnokd.rxjava2.operators.FlowableTransformers` class. The operators and transformers for the other base
+reactive classes follow the usual naming scheme.
+
+### Valve
+
+Pauses and resumes a main flow if the secondary flow signals false and true respectively.
+
+```java
+PublishProcessor<Boolean> valveSource = PublishProcessor.create();
+
+Flowable.intervalRange(1, 20, 1, 1, TimeUnit.SECONDS)
+.compose(FlowableTransformers.<Long>valve(valveSource))
+.subscribe(System.out::println, Throwable::printStackTrace);
+
+Thread.sleep(3100);
+
+valveSource.onNext(false);
+
+Thread.sleep(5000);
+
+valveSource.onNext(true);
+
+Thread.sleep(3000);
+
+valveSource.onNext(false);
+
+Thread.sleep(6000);
+
+valveSource.onNext(true);
+
+Thread.sleep(3000);
 ```
 
 # Releases
