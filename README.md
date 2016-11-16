@@ -523,7 +523,7 @@ Thread.sleep(3000);
 
 ```
 dependencies {
-    compile "com.github.akarnokd:rxjava2-extensions:0.6.2"
+    compile "com.github.akarnokd:rxjava2-extensions:0.7.2"
 }
 ```
 
