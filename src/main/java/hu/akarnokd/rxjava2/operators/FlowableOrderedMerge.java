@@ -275,6 +275,7 @@ final class FlowableOrderedMerge<T> extends Flowable<T> {
                             try {
                                 v = q != null ? q.poll() : null;
                             } catch (Throwable ex) {
+                                Exceptions.throwIfFatal(ex);
                                 err.addThrowable(ex);
                                 inner.setDone();
                                 if (!delayErrors) {
@@ -310,6 +311,7 @@ final class FlowableOrderedMerge<T> extends Flowable<T> {
                                     smaller = true;
                                 }
                             } catch (Throwable ex) {
+                                Exceptions.throwIfFatal(ex);
                                 err.addThrowable(ex);
                                 cancelAndClearSources();
                                 a.onError(err.terminate());
@@ -368,6 +370,7 @@ final class FlowableOrderedMerge<T> extends Flowable<T> {
                             try {
                                 o = q.poll();
                             } catch (Throwable ex) {
+                                Exceptions.throwIfFatal(ex);
                                 err.addThrowable(ex);
                                 if (!delayErrors) {
                                     cancelAndClearSources();

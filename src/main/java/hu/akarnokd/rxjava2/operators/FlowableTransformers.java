@@ -16,11 +16,15 @@
 
 package hu.akarnokd.rxjava2.operators;
 
+import java.util.*;
+import java.util.concurrent.Callable;
+
 import org.reactivestreams.Publisher;
 
 import io.reactivex.*;
 import io.reactivex.annotations.*;
-import io.reactivex.internal.functions.ObjectHelper;
+import io.reactivex.functions.Predicate;
+import io.reactivex.internal.functions.*;
 
 /**
  * Additional operators in the form of {@link FlowableTransformer},
@@ -79,6 +83,8 @@ public final class FlowableTransformers {
      * 
      * @since 0.7.2
      */
+    @SchedulerSupport(SchedulerSupport.NONE)
+    @BackpressureSupport(BackpressureKind.PASS_THROUGH)
     public static <T> FlowableTransformer<T, T> valve(Publisher<Boolean> other, boolean defaultOpen) {
         return valve(other, defaultOpen, Flowable.bufferSize());
     }
@@ -102,9 +108,80 @@ public final class FlowableTransformers {
      * @throws NullPointerException if {@code other} is null
      * @since 0.7.2
      */
+    @SchedulerSupport(SchedulerSupport.NONE)
+    @BackpressureSupport(BackpressureKind.PASS_THROUGH)
     public static <T> FlowableTransformer<T, T> valve(Publisher<Boolean> other, boolean defaultOpen, int bufferSize) {
         ObjectHelper.requireNonNull(other, "other is null");
         ObjectHelper.verifyPositive(bufferSize, "bufferSize");
         return new FlowableValve<T>(null, other, defaultOpen, bufferSize);
+    }
+
+    /**
+     * Buffers elements into a List while the given predicate returns true; if the
+     * predicate returns false for an item, a new buffer is created with the specified item.
+     * @param <T> the source value type
+     * @param predicate the predicate receiving the current value and if returns false,
+     *                  a new buffer is created with the specified item
+     * @return the new Flowable instance
+     *
+     * @since 0.8.0
+     */
+    @SchedulerSupport(SchedulerSupport.NONE)
+    @BackpressureSupport(BackpressureKind.FULL)
+    public static <T> FlowableTransformer<T, List<T>> bufferWhile(Predicate<? super T> predicate) {
+        return bufferWhile(predicate, Functions.<T>createArrayList(16));
+    }
+
+    /**
+     * Buffers elements into a custom collection while the given predicate returns true; if the
+     * predicate returns false for an item, a new collection is created with the specified item.
+     * @param <T> the source value type
+     * @param <C> the collection type
+     * @param predicate the predicate receiving the current value and if returns false,
+     *                  a new collection is created with the specified item
+     * @param bufferSupplier the callable that returns a fresh collection
+     * @return the new Flowable instance
+     *
+     * @since 0.8.0
+     */
+    @SchedulerSupport(SchedulerSupport.NONE)
+    @BackpressureSupport(BackpressureKind.FULL)
+    public static <T, C extends Collection<? super T>> FlowableTransformer<T, C> bufferWhile(Predicate<? super T> predicate, Callable<C> bufferSupplier) {
+        return new FlowableBufferPredicate<T, C>(null, predicate, false, bufferSupplier);
+    }
+
+    /**
+     * Buffers elements into a List until the given predicate returns true at which
+     * point a new empty buffer is started.
+     * @param <T> the source value type
+     * @param predicate the predicate receiving the current itam and if returns true,
+     *                  the current buffer is emitted and a fresh empty buffer is created
+     * @return the new Flowable instance
+     *
+     * @since 0.8.0
+     */
+    @SchedulerSupport(SchedulerSupport.NONE)
+    @BackpressureSupport(BackpressureKind.FULL)
+    public static <T> FlowableTransformer<T, List<T>> bufferUntil(Predicate<? super T> predicate) {
+        return bufferUntil(predicate, Functions.<T>createArrayList(16));
+    }
+
+
+    /**
+     * Buffers elements into a custom collection until the given predicate returns true at which
+     * point a new empty custom collection is started.
+     * @param <T> the source value type
+     * @param <C> the collection type
+     * @param predicate the predicate receiving the current itam and if returns true,
+     *                  the current collection is emitted and a fresh empty collection is created
+     * @param bufferSupplier the callable that returns a fresh collection
+     * @return the new Flowable instance
+     *
+     * @since 0.8.0
+     */
+    @SchedulerSupport(SchedulerSupport.NONE)
+    @BackpressureSupport(BackpressureKind.FULL)
+    public static <T, C extends Collection<? super T>> FlowableTransformer<T, C> bufferUntil(Predicate<? super T> predicate, Callable<C> bufferSupplier) {
+        return new FlowableBufferPredicate<T, C>(null, predicate, true, bufferSupplier);
     }
 }

@@ -1,0 +1,205 @@
+/*
+ * Copyright 2016 David Karnok
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package hu.akarnokd.rxjava2.operators;
+
+import java.util.Collection;
+import java.util.concurrent.Callable;
+
+import org.reactivestreams.*;
+
+import io.reactivex.*;
+import io.reactivex.exceptions.Exceptions;
+import io.reactivex.functions.Predicate;
+import io.reactivex.internal.functions.ObjectHelper;
+import io.reactivex.internal.subscriptions.*;
+import io.reactivex.plugins.RxJavaPlugins;
+
+/**
+ * Buffer into the same buffer while the predicate returns true or
+ * buffer into the same buffer until predicate returns true.
+ *
+ * @param <T> the source value type
+ * @param <C> the buffer type
+ *
+ * @since 0.8.0
+ */
+final class FlowableBufferPredicate<T, C extends Collection<? super T>> extends Flowable<C> implements FlowableTransformer<T, C> {
+
+    final Publisher<T> source;
+
+    final Predicate<? super T> predicate;
+
+    final boolean cutAfter;
+
+    final Callable<C> bufferSupplier;
+
+    FlowableBufferPredicate(Publisher<T> source, Predicate<? super T> predicate, boolean cutAfter,
+            Callable<C> bufferSupplier) {
+        this.source = source;
+        this.predicate = predicate;
+        this.cutAfter = cutAfter;
+        this.bufferSupplier = bufferSupplier;
+    }
+
+    @Override
+    protected void subscribeActual(Subscriber<? super C> s) {
+        C buffer;
+
+        try {
+            buffer = ObjectHelper.requireNonNull(bufferSupplier.call(), "The bufferSupplier returned a null buffer");
+        } catch (Throwable ex) {
+            Exceptions.throwIfFatal(ex);
+            EmptySubscription.error(ex, s);
+            return;
+        }
+
+        source.subscribe(new BufferPredicateSubscriber<T, C>(s, buffer, predicate, cutAfter, bufferSupplier));
+    }
+
+    @Override
+    public Publisher<C> apply(Flowable<T> upstream) {
+        return new FlowableBufferPredicate<T, C>(upstream, predicate, cutAfter, bufferSupplier);
+    }
+
+    static final class BufferPredicateSubscriber<T, C extends Collection<? super T>> implements Subscriber<T>, Subscription {
+
+        final Subscriber<? super C> actual;
+
+        final Predicate<? super T> predicate;
+
+        final boolean cutAfter;
+
+        final Callable<C> bufferSupplier;
+
+        C buffer;
+
+        Subscription s;
+
+        int count;
+
+        BufferPredicateSubscriber(Subscriber<? super C> actual,
+                C buffer,
+                Predicate<? super T> predicate, boolean cutAfter,
+                Callable<C> bufferSupplier) {
+            this.actual = actual;
+            this.predicate = predicate;
+            this.cutAfter = cutAfter;
+            this.buffer = buffer;
+            this.bufferSupplier = bufferSupplier;
+        }
+
+        @Override
+        public void onSubscribe(Subscription s) {
+            if (SubscriptionHelper.validate(this.s, s)) {
+                this.s = s;
+
+                actual.onSubscribe(this);
+            }
+        }
+
+        @Override
+        public void onNext(T t) {
+            C buf = buffer;
+            if (buf != null) {
+                boolean b;
+
+                try {
+                    b = predicate.test(t);
+                } catch (Throwable ex) {
+                    Exceptions.throwIfFatal(ex);
+                    s.cancel();
+                    buffer = null;
+                    actual.onError(ex);
+                    return;
+                }
+
+                if (cutAfter) {
+                    buf.add(t);
+                    if (b) {
+                        actual.onNext(buf);
+
+                        try {
+                            buffer = bufferSupplier.call();
+                        } catch (Throwable ex) {
+                            Exceptions.throwIfFatal(ex);
+                            s.cancel();
+                            onError(ex);
+                            return;
+                        }
+
+                        count = 0;
+                    } else {
+                        count++;
+                        s.request(1);
+                    }
+                } else {
+                    if (b) {
+                        buf.add(t);
+                        count++;
+                        s.request(1);
+                    } else {
+                        actual.onNext(buf);
+                        try {
+                            buf = bufferSupplier.call();
+                        } catch (Throwable ex) {
+                            Exceptions.throwIfFatal(ex);
+                            s.cancel();
+                            onError(ex);
+                            return;
+                        }
+
+                        buf.add(t);
+                        buffer = buf;
+                        count = 1;
+                    }
+                }
+            }
+        }
+
+        @Override
+        public void onError(Throwable t) {
+            if (buffer != null) {
+                buffer = null;
+                actual.onError(t);
+            } else {
+                RxJavaPlugins.onError(t);
+            }
+        }
+
+        @Override
+        public void onComplete() {
+            C b = buffer;
+            if (b != null) {
+                buffer = null;
+                if (count != 0) {
+                    actual.onNext(b);
+                }
+                actual.onComplete();
+            }
+        }
+
+        @Override
+        public void request(long n) {
+            s.request(n);
+        }
+
+        @Override
+        public void cancel() {
+            s.cancel();
+        }
+    }
+}

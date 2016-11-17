@@ -528,6 +528,39 @@ Flowables.orderedMerge(Flowable.just(1, 3, 5), Flowable.just(2, 4, 6))
 .assertResult(1, 2, 3, 4, 5, 6);
 ```
 
+### FlowableTransformers.bufferWhile
+
+Buffers into a list/collection while the given predicate returns true for
+the current item, otherwise starts a new list/collection containing the given item (i.e., the "separator" ends up in the next list/collection).
+
+```java
+Flowable.just("1", "2", "#", "3", "#", "4", "#")
+.compose(FlowableTransformers.bufferWhile(v -> !"#".equals(v)))
+.test()
+.assertResult(
+    Arrays.asList("1", "2"),
+    Arrays.asList("#", "3"),
+    Arrays.asList("#", "4"),
+    Arrays.asList("#")
+);
+```
+
+### FlowableTransformers.bufferUntil
+
+Buffers into a list/collection until the given predicate returns true for
+the current item and starts an new empty list/collection  (i.e., the "separator" ends up in the same list/collection).
+
+```java
+Flowable.just("1", "2", "#", "3", "#", "4", "#")
+.compose(FlowableTransformers.bufferUntil(v -> "#".equals(v)))
+.test()
+.assertResult(
+    Arrays.asList("1", "2", "#"),
+    Arrays.asList("3", "#"),
+    Arrays.asList("4", "#")
+);
+```
+
 # Releases
 
 **gradle**
