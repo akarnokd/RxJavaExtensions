@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.util.*;
 
 import org.junit.Test;
-import org.reactivestreams.Publisher;
 
 import hu.akarnokd.rxjava2.test.TestHelper;
 import io.reactivex.Flowable;
@@ -470,26 +469,6 @@ public class FlowableOrderedMergeTest {
                 null, Flowable.just(1), null)
         .test()
         .assertFailure(NullPointerException.class);
-    }
-
-    @SuppressWarnings("unchecked")
-    @Test
-    public void normal5() {
-        Flowables.orderedMerge(new Publisher[] { Flowable.just(1), Flowable.just(2) },
-                Functions.<Integer>naturalComparator()
-        )
-        .test()
-        .assertResult(1, 2);
-    }
-
-    @SuppressWarnings("unchecked")
-    @Test
-    public void normal6() {
-        Flowables.orderedMerge(new Publisher[] { Flowable.just(1), Flowable.just(2) },
-                Functions.<Integer>naturalComparator(), true
-        )
-        .test()
-        .assertResult(1, 2);
     }
 
     @SuppressWarnings("unchecked")

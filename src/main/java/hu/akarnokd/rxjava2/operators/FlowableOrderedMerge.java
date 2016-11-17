@@ -38,7 +38,7 @@ import io.reactivex.plugins.RxJavaPlugins;
  * 
  * @since 0.8.0
  */
-public final class FlowableOrderedMerge<T> extends Flowable<T> {
+final class FlowableOrderedMerge<T> extends Flowable<T> {
 
     final Publisher<T>[] sources;
 
@@ -50,7 +50,7 @@ public final class FlowableOrderedMerge<T> extends Flowable<T> {
 
     final int prefetch;
 
-    public FlowableOrderedMerge(Publisher<T>[] sources, Iterable<? extends Publisher<T>> sourcesIterable,
+    FlowableOrderedMerge(Publisher<T>[] sources, Iterable<? extends Publisher<T>> sourcesIterable,
             Comparator<? super T> comparator,
             boolean delayErrors, int prefetch) {
         this.sources = sources;

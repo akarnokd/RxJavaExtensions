@@ -484,10 +484,10 @@ try {
 
 ## Custom operators and transformers
 
-The custom transformers (to be applied with `Flowable.compose` for example), can be found in `hu.akarnokd.rxjava2.operators.FlowableTransformers` class. The operators and transformers for the other base
-reactive classes follow the usual naming scheme.
+The custom transformers (to be applied with `Flowable.compose` for example), can be found in `hu.akarnokd.rxjava2.operators.FlowableTransformers` class. The custom source-like operators can be found in `hu.akarnokd.rxjava2.operators.Flowables` class. The operators and transformers for the other base
+reactive classes (will) follow the usual naming scheme.
 
-### Valve
+### FlowableTransflormers.Valve
 
 Pauses and resumes a main flow if the secondary flow signals false and true respectively.
 
@@ -515,6 +515,17 @@ Thread.sleep(6000);
 valveSource.onNext(true);
 
 Thread.sleep(3000);
+```
+
+### Flowables.orderedMerge
+
+Given a fixed number of input sources (which can be self-comparable or given a `Comparator`) merges them
+into a single stream by repeatedly picking the smallest one from each source until all of them completes.
+
+```java
+Flowables.orderedMerge(Flowable.just(1, 3, 5), Flowable.just(2, 4, 6))
+.test()
+.assertResult(1, 2, 3, 4, 5, 6);
 ```
 
 # Releases
