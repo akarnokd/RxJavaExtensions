@@ -491,4 +491,76 @@ public class FlowableOrderedMergeTest {
         .test()
         .assertResult(1, 2);
     }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void comparatorThrows() {
+        Flowables.orderedMerge(new Comparator<Integer>() {
+                    @Override
+                    public int compare(Integer a, Integer b) {
+                        throw new IllegalArgumentException();
+                    }
+                },
+                Flowable.just(1, 3), Flowable.just(2, 4))
+        .test()
+        .assertFailure(IllegalArgumentException.class);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void selfComparableArray() {
+        Flowables.orderedMerge(
+                Flowable.just(1), Flowable.just(2))
+        .test()
+        .assertResult(1, 2);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void selfComparableArrayDelayError() {
+        Flowables.orderedMerge(true,
+                Flowable.just(1), Flowable.just(2))
+        .test()
+        .assertResult(1, 2);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void selfComparableArrayDelayErrorPrefetch() {
+        Flowables.orderedMerge(true, 1,
+                Flowable.just(1), Flowable.just(2))
+        .test()
+        .assertResult(1, 2);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void selfComparableIterable() {
+        Flowables.orderedMerge(
+                Arrays.asList(Flowable.just(1), Flowable.just(2)))
+        .test()
+        .assertResult(1, 2);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void selfComparableIterableDelayError() {
+        Flowables.orderedMerge(
+                Arrays.asList(Flowable.just(1), Flowable.just(2))
+                , true
+        )
+        .test()
+        .assertResult(1, 2);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void selfComparableIterableDelayErrorPrefetch() {
+        Flowables.orderedMerge(
+                Arrays.asList(Flowable.just(1), Flowable.just(2))
+                , true, 1
+        )
+        .test()
+        .assertResult(1, 2);
+    }
 }

@@ -302,8 +302,20 @@ public final class FlowableOrderedMerge<T> extends Flowable<T> {
                         }
 
                         if (v != null && v != this) {
-                            if (smallest == null
-                                    || comp.compare(smallest, (T)v) > 0) {
+                            boolean smaller;
+                            try {
+                                if (smallest != null) {
+                                    smaller = comp.compare(smallest, (T)v) > 0;
+                                } else {
+                                    smaller = true;
+                                }
+                            } catch (Throwable ex) {
+                                err.addThrowable(ex);
+                                cancelAndClearSources();
+                                a.onError(err.terminate());
+                                return;
+                            }
+                            if (smaller) {
                                 smallest = (T)v;
                                 pick = i;
                             }

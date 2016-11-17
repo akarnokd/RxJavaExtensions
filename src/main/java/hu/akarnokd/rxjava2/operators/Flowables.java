@@ -21,7 +21,7 @@ import java.util.Comparator;
 import org.reactivestreams.Publisher;
 
 import io.reactivex.Flowable;
-import io.reactivex.internal.functions.ObjectHelper;
+import io.reactivex.internal.functions.*;
 import io.reactivex.plugins.RxJavaPlugins;
 
 /**
@@ -31,6 +31,18 @@ public final class Flowables {
     /** Utility class. */
     private Flowables() {
         throw new IllegalStateException("No instances!");
+    }
+
+    public static <T extends Comparable<? super T>> Flowable<T> orderedMerge(Publisher<T>... sources) {
+        return orderedMerge(sources, Functions.naturalOrder(), false, Flowable.bufferSize());
+    }
+
+    public static <T extends Comparable<? super T>> Flowable<T> orderedMerge(boolean delayErrors, Publisher<T>... sources) {
+        return orderedMerge(sources, Functions.naturalOrder(), delayErrors, Flowable.bufferSize());
+    }
+
+    public static <T extends Comparable<? super T>> Flowable<T> orderedMerge(boolean delayErrors, int prefetch, Publisher<T>... sources) {
+        return orderedMerge(sources, Functions.naturalOrder(), delayErrors, prefetch);
     }
 
     public static <T> Flowable<T> orderedMerge(Comparator<? super T> comparator, Publisher<T>... sources) {
@@ -59,6 +71,7 @@ public final class Flowables {
         ObjectHelper.verifyPositive(prefetch, "prefetch");
         return RxJavaPlugins.onAssembly(new FlowableOrderedMerge<T>(sources, null, comparator, delayErrors, prefetch));
     }
+
     public static <T> Flowable<T> orderedMerge(Iterable<? extends Publisher<T>> sources, Comparator<? super T> comparator) {
         return orderedMerge(sources, comparator, false, Flowable.bufferSize());
     }
@@ -72,5 +85,17 @@ public final class Flowables {
         ObjectHelper.requireNonNull(sources, "sources is null");
         ObjectHelper.verifyPositive(prefetch, "prefetch");
         return RxJavaPlugins.onAssembly(new FlowableOrderedMerge<T>(null, sources, comparator, delayErrors, prefetch));
+    }
+
+    public static <T extends Comparable<? super T>> Flowable<T> orderedMerge(Iterable<? extends Publisher<T>> sources) {
+        return orderedMerge(sources, Functions.naturalOrder(), false, Flowable.bufferSize());
+    }
+
+    public static <T extends Comparable<? super T>> Flowable<T> orderedMerge(Iterable<? extends Publisher<T>> sources, boolean delayErrors) {
+        return orderedMerge(sources, Functions.naturalOrder(), delayErrors, Flowable.bufferSize());
+    }
+
+    public static <T extends Comparable<? super T>> Flowable<T> orderedMerge(Iterable<? extends Publisher<T>> sources, boolean delayErrors, int prefetch) {
+        return orderedMerge(sources, Functions.naturalOrder(), delayErrors, prefetch);
     }
 }
