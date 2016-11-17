@@ -25,6 +25,7 @@ import io.reactivex.*;
 import io.reactivex.exceptions.Exceptions;
 import io.reactivex.functions.Predicate;
 import io.reactivex.internal.functions.ObjectHelper;
+import io.reactivex.internal.fuseable.ConditionalSubscriber;
 import io.reactivex.internal.subscriptions.*;
 import io.reactivex.plugins.RxJavaPlugins;
 
@@ -75,7 +76,8 @@ final class FlowableBufferPredicate<T, C extends Collection<? super T>> extends 
         return new FlowableBufferPredicate<T, C>(upstream, predicate, cutAfter, bufferSupplier);
     }
 
-    static final class BufferPredicateSubscriber<T, C extends Collection<? super T>> implements Subscriber<T>, Subscription {
+    static final class BufferPredicateSubscriber<T, C extends Collection<? super T>>
+    implements ConditionalSubscriber<T>, Subscription {
 
         final Subscriber<? super C> actual;
 
@@ -113,6 +115,13 @@ final class FlowableBufferPredicate<T, C extends Collection<? super T>> extends 
 
         @Override
         public void onNext(T t) {
+            if (!tryOnNext(t)) {
+                s.request(1);
+            }
+        }
+
+        @Override
+        public boolean tryOnNext(T t) {
             C buf = buffer;
             if (buf != null) {
                 boolean b;
@@ -124,7 +133,7 @@ final class FlowableBufferPredicate<T, C extends Collection<? super T>> extends 
                     s.cancel();
                     buffer = null;
                     actual.onError(ex);
-                    return;
+                    return true;
                 }
 
                 if (cutAfter) {
@@ -138,19 +147,19 @@ final class FlowableBufferPredicate<T, C extends Collection<? super T>> extends 
                             Exceptions.throwIfFatal(ex);
                             s.cancel();
                             onError(ex);
-                            return;
+                            return true;
                         }
 
                         count = 0;
                     } else {
                         count++;
-                        s.request(1);
+                        return false;
                     }
                 } else {
                     if (b) {
                         buf.add(t);
                         count++;
-                        s.request(1);
+                        return false;
                     } else {
                         actual.onNext(buf);
                         try {
@@ -159,7 +168,7 @@ final class FlowableBufferPredicate<T, C extends Collection<? super T>> extends 
                             Exceptions.throwIfFatal(ex);
                             s.cancel();
                             onError(ex);
-                            return;
+                            return true;
                         }
 
                         buf.add(t);
@@ -168,6 +177,7 @@ final class FlowableBufferPredicate<T, C extends Collection<? super T>> extends 
                     }
                 }
             }
+            return true;
         }
 
         @Override

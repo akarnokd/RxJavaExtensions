@@ -52,6 +52,25 @@ public class FlowableBufferPredicateTest {
 
     @SuppressWarnings("unchecked")
     @Test
+    public void whileNormalHidden() {
+        Flowable.just(1, 2, -1, 3, 4, 5, -1, -1, 6).hide()
+        .compose(FlowableTransformers.bufferWhile(new Predicate<Integer>() {
+            @Override
+            public boolean test(Integer v) throws Exception {
+                return v != -1;
+            }
+        }))
+        .test()
+        .assertResult(
+                Arrays.asList(1, 2),
+                Arrays.asList(-1, 3, 4, 5),
+                Arrays.asList(-1),
+                Arrays.asList(-1, 6)
+        );
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
     public void whileNormalBackpressured() {
         Flowable.just(1, 2, -1, 3, 4, 5, -1, -1, 6)
         .compose(FlowableTransformers.bufferWhile(new Predicate<Integer>() {
@@ -81,6 +100,25 @@ public class FlowableBufferPredicateTest {
     @Test
     public void untilNormal() {
         Flowable.just(1, 2, -1, 3, 4, 5, -1, -1, 6)
+        .compose(FlowableTransformers.bufferUntil(new Predicate<Integer>() {
+            @Override
+            public boolean test(Integer v) throws Exception {
+                return v == -1;
+            }
+        }))
+        .test()
+        .assertResult(
+                Arrays.asList(1, 2, -1),
+                Arrays.asList(3, 4, 5, -1),
+                Arrays.asList(-1),
+                Arrays.asList(6)
+        );
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void untilNormalHidden() {
+        Flowable.just(1, 2, -1, 3, 4, 5, -1, -1, 6).hide()
         .compose(FlowableTransformers.bufferUntil(new Predicate<Integer>() {
             @Override
             public boolean test(Integer v) throws Exception {
