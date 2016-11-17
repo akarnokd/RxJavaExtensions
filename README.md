@@ -567,7 +567,7 @@ Flowable.just("1", "2", "#", "3", "#", "4", "#")
 
 ```
 dependencies {
-    compile "com.github.akarnokd:rxjava2-extensions:0.7.2"
+    compile "com.github.akarnokd:rxjava2-extensions:0.8.0"
 }
 ```
 
