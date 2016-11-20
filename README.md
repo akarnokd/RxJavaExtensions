@@ -561,13 +561,26 @@ Flowable.just("1", "2", "#", "3", "#", "4", "#")
 );
 ```
 
+### FlowableTransformers.spanout
+
+Inserts a time delay between emissions from the upstream. For example, if the upstream emits 1, 2, 3 in a quick succession, a spanout(1, TimeUnit.SECONDS) will emit 1 immediately, 2 after a second and 3 after a second after 2. You can specify the initial delay, a custom scheduler and if an upstream error should be delayed after the normal items or not.
+
+```java
+Flowable.range(1, 10)
+.compose(FlowableTransformers.spanout(1, 1, TimeUnit.SECONDS))
+.doOnNext(v -> System.out.println(System.currentTimeMillis() + ": " + v))
+.test()
+.awaitDone(20, TimeUnit.SECONDS)
+.assertResult(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+```
+
 # Releases
 
 **gradle**
 
 ```
 dependencies {
-    compile "com.github.akarnokd:rxjava2-extensions:0.8.0"
+    compile "com.github.akarnokd:rxjava2-extensions:0.9.0"
 }
 ```
 

@@ -17,7 +17,7 @@
 package hu.akarnokd.rxjava2.operators;
 
 import java.util.*;
-import java.util.concurrent.Callable;
+import java.util.concurrent.*;
 
 import org.reactivestreams.Publisher;
 
@@ -25,6 +25,7 @@ import io.reactivex.*;
 import io.reactivex.annotations.*;
 import io.reactivex.functions.Predicate;
 import io.reactivex.internal.functions.*;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Additional operators in the form of {@link FlowableTransformer},
@@ -122,7 +123,7 @@ public final class FlowableTransformers {
      * @param <T> the source value type
      * @param predicate the predicate receiving the current value and if returns false,
      *                  a new buffer is created with the specified item
-     * @return the new Flowable instance
+     * @return the new FlowableTransformer instance
      *
      * @since 0.8.0
      */
@@ -140,7 +141,7 @@ public final class FlowableTransformers {
      * @param predicate the predicate receiving the current value and if returns false,
      *                  a new collection is created with the specified item
      * @param bufferSupplier the callable that returns a fresh collection
-     * @return the new Flowable instance
+     * @return the new FlowableTransformer instance
      *
      * @since 0.8.0
      */
@@ -156,7 +157,7 @@ public final class FlowableTransformers {
      * @param <T> the source value type
      * @param predicate the predicate receiving the current itam and if returns true,
      *                  the current buffer is emitted and a fresh empty buffer is created
-     * @return the new Flowable instance
+     * @return the new FlowableTransformer instance
      *
      * @since 0.8.0
      */
@@ -183,5 +184,197 @@ public final class FlowableTransformers {
     @BackpressureSupport(BackpressureKind.FULL)
     public static <T, C extends Collection<? super T>> FlowableTransformer<T, C> bufferUntil(Predicate<? super T> predicate, Callable<C> bufferSupplier) {
         return new FlowableBufferPredicate<T, C>(null, predicate, true, bufferSupplier);
+    }
+
+    /**
+     * Inserts a time delay between emissions from the upstream source.
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The operator itself doesn't interfere with backpressure and uses an unbounded
+     *  internal buffer to store elements that need delay.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>The operator uses the computation {@link Scheduler}.</dd>
+     * </dl>
+     * @param <T> the value type
+     * @param betweenDelay the (minimum) delay time between elements
+     * @param unit the time unit of the initial delay and the between delay values
+     * @return the new FlowableTransformer instance
+     * 
+     * @since 0.9.0
+     */
+    @BackpressureSupport(BackpressureKind.PASS_THROUGH)
+    @SchedulerSupport(SchedulerSupport.COMPUTATION)
+    public static <T> FlowableTransformer<T, T> spanout(long betweenDelay, TimeUnit unit) {
+        return spanout(0L, betweenDelay, unit, Schedulers.computation(), false);
+    }
+
+
+    /**
+     * Inserts a time delay between emissions from the upstream source.
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The operator itself doesn't interfere with backpressure and uses an unbounded
+     *  internal buffer to store elements that need delay.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>The operator uses a custom {@link Scheduler} you provide.</dd>
+     * </dl>
+     * @param <T> the value type
+     * @param betweenDelay the (minimum) delay time between elements
+     * @param unit the time unit of the initial delay and the between delay values
+     * @param scheduler the scheduler to delay and emit the values on
+     * @return the new FlowableTransformer instance
+     * 
+     * @since 0.9.0
+     */
+    @BackpressureSupport(BackpressureKind.PASS_THROUGH)
+    @SchedulerSupport(SchedulerSupport.CUSTOM)
+    public static <T> FlowableTransformer<T, T> spanout(long betweenDelay, TimeUnit unit, Scheduler scheduler) {
+        return spanout(0L, betweenDelay, unit, scheduler, false);
+    }
+
+
+    /**
+     * Inserts a time delay between emissions from the upstream source, including an initial delay.
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The operator itself doesn't interfere with backpressure and uses an unbounded
+     *  internal buffer to store elements that need delay.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>The operator uses the computation {@link Scheduler}.</dd>
+     * </dl>
+     * @param <T> the value type
+     * @param initialDelay the initial delay
+     * @param betweenDelay the (minimum) delay time between elements
+     * @param unit the time unit of the initial delay and the between delay values
+     * @return the new FlowableTransformer instance
+     * 
+     * @since 0.9.0
+     */
+    @BackpressureSupport(BackpressureKind.PASS_THROUGH)
+    @SchedulerSupport(SchedulerSupport.COMPUTATION)
+    public static <T> FlowableTransformer<T, T> spanout(long initialDelay, long betweenDelay, TimeUnit unit) {
+        return spanout(initialDelay, betweenDelay, unit, Schedulers.computation(), false);
+    }
+
+    /**
+     * Inserts a time delay between emissions from the upstream source, including an initial delay.
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The operator itself doesn't interfere with backpressure and uses an unbounded
+     *  internal buffer to store elements that need delay.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>The operator uses a custom {@link Scheduler} you provide.</dd>
+     * </dl>
+     * @param <T> the value type
+     * @param initialDelay the initial delay
+     * @param betweenDelay the (minimum) delay time between elements
+     * @param unit the time unit of the initial delay and the between delay values
+     * @param scheduler the scheduler to delay and emit the values on
+     * @return the new FlowableTransformer instance
+     * 
+     * @since 0.9.0
+     */
+    @BackpressureSupport(BackpressureKind.PASS_THROUGH)
+    @SchedulerSupport(SchedulerSupport.CUSTOM)
+    public static <T> FlowableTransformer<T, T> spanout(long initialDelay, long betweenDelay, TimeUnit unit, Scheduler scheduler) {
+        return spanout(initialDelay, betweenDelay, unit, scheduler, false);
+    }
+
+    /**
+     * Inserts a time delay between emissions from the upstream source, including an initial delay.
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The operator itself doesn't interfere with backpressure and uses an unbounded
+     *  internal buffer to store elements that need delay.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>The operator uses the computation {@link Scheduler}.</dd>
+     * </dl>
+     * @param <T> the value type
+     * @param betweenDelay the (minimum) delay time between elements
+     * @param unit the time unit of the initial delay and the between delay values
+     * @param delayError delay the onError event from upstream
+     * @return the new FlowableTransformer instance
+     * 
+     * @since 0.9.0
+     */
+    @BackpressureSupport(BackpressureKind.PASS_THROUGH)
+    @SchedulerSupport(SchedulerSupport.COMPUTATION)
+    public static <T> FlowableTransformer<T, T> spanout(long betweenDelay, TimeUnit unit, boolean delayError) {
+        return spanout(0L, betweenDelay, unit, Schedulers.computation(), delayError);
+    }
+
+
+    /**
+     * Inserts a time delay between emissions from the upstream source, including an initial delay.
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The operator itself doesn't interfere with backpressure and uses an unbounded
+     *  internal buffer to store elements that need delay.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>The operator uses a custom {@link Scheduler} you provide.</dd>
+     * </dl>
+     * @param <T> the value type
+     * @param betweenDelay the (minimum) delay time between elements
+     * @param unit the time unit of the initial delay and the between delay values
+     * @param scheduler the scheduler to delay and emit the values on
+     * @param delayError delay the onError event from upstream
+     * @return the new FlowableTransformer instance
+     * 
+     * @since 0.9.0
+     */
+    @BackpressureSupport(BackpressureKind.PASS_THROUGH)
+    @SchedulerSupport(SchedulerSupport.CUSTOM)
+    public static <T> FlowableTransformer<T, T> spanout(long betweenDelay, TimeUnit unit, Scheduler scheduler, boolean delayError) {
+        return spanout(0L, betweenDelay, unit, scheduler, delayError);
+    }
+
+
+    /**
+     * Inserts a time delay between emissions from the upstream source, including an initial delay.
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The operator itself doesn't interfere with backpressure and uses an unbounded
+     *  internal buffer to store elements that need delay.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>The operator uses the computation {@link Scheduler}.</dd>
+     * </dl>
+     * @param <T> the value type
+     * @param initialDelay the initial delay
+     * @param betweenDelay the (minimum) delay time between elements
+     * @param unit the time unit of the initial delay and the between delay values
+     * @param delayError delay the onError event from upstream
+     * @return the new FlowableTransformer instance
+     * 
+     * @since 0.9.0
+     */
+    @BackpressureSupport(BackpressureKind.PASS_THROUGH)
+    @SchedulerSupport(SchedulerSupport.COMPUTATION)
+    public static <T> FlowableTransformer<T, T> spanout(long initialDelay, long betweenDelay, TimeUnit unit, boolean delayError) {
+        return spanout(initialDelay, betweenDelay, unit, Schedulers.computation(), delayError);
+    }
+
+    /**
+     * Inserts a time delay between emissions from the upstream source, including an initial delay.
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The operator itself doesn't interfere with backpressure and uses an unbounded
+     *  internal buffer to store elements that need delay.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>The operator uses a custom {@link Scheduler} you provide.</dd>
+     * </dl>
+     * @param <T> the value type
+     * @param initialDelay the initial delay
+     * @param betweenDelay the (minimum) delay time between elements
+     * @param unit the time unit of the initial delay and the between delay values
+     * @param scheduler the scheduler to delay and emit the values on
+     * @param delayError delay the onError event from upstream
+     * @return the new FlowableTransformer instance
+     * 
+     * @since 0.9.0
+     */
+    @BackpressureSupport(BackpressureKind.PASS_THROUGH)
+    @SchedulerSupport(SchedulerSupport.CUSTOM)
+    public static <T> FlowableTransformer<T, T> spanout(long initialDelay, long betweenDelay, TimeUnit unit, Scheduler scheduler, boolean delayError) {
+        return new FlowableSpanout<T>(null, initialDelay, betweenDelay, unit, scheduler, delayError, Flowable.bufferSize());
     }
 }
