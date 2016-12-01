@@ -23,7 +23,7 @@ import org.reactivestreams.Publisher;
 
 import io.reactivex.*;
 import io.reactivex.annotations.*;
-import io.reactivex.functions.Predicate;
+import io.reactivex.functions.*;
 import io.reactivex.internal.functions.*;
 import io.reactivex.schedulers.Schedulers;
 
@@ -375,6 +375,25 @@ public final class FlowableTransformers {
     @BackpressureSupport(BackpressureKind.PASS_THROUGH)
     @SchedulerSupport(SchedulerSupport.CUSTOM)
     public static <T> FlowableTransformer<T, T> spanout(long initialDelay, long betweenDelay, TimeUnit unit, Scheduler scheduler, boolean delayError) {
+        ObjectHelper.requireNonNull(unit, "unit is null");
+        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
         return new FlowableSpanout<T>(null, initialDelay, betweenDelay, unit, scheduler, delayError, Flowable.bufferSize());
+    }
+
+    /**
+     * Allows mapping or filtering an upstream value through an emitter.
+     * @param <T> the input value type
+     * @param <R> the output value type
+     * @param consumer the consumer that is called for each upstream value and should call one of the doXXX methods
+     * on the BasicEmitter it receives (individual to each Subscriber).
+     * @return the new FlowableTransformer instance
+     * 
+     * @since 0.10.0
+     */
+    @BackpressureSupport(BackpressureKind.PASS_THROUGH)
+    @SchedulerSupport(SchedulerSupport.NONE)
+    public static <T, R> FlowableTransformer<T, R> mapFilter(BiConsumer<? super T, ? super BasicEmitter<R>> consumer) {
+        ObjectHelper.requireNonNull(consumer, "consumer is null");
+        return new FlowableMapFilter<T, R>(null, consumer);
     }
 }

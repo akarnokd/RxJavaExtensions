@@ -31,14 +31,14 @@ import io.reactivex.*;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.disposables.*;
-import io.reactivex.exceptions.CompositeException;
+import io.reactivex.exceptions.*;
 import io.reactivex.functions.*;
 import io.reactivex.internal.fuseable.SimpleQueue;
 import io.reactivex.internal.operators.maybe.MaybeToFlowable;
 import io.reactivex.internal.operators.single.SingleToFlowable;
 import io.reactivex.internal.subscriptions.BooleanSubscription;
 import io.reactivex.internal.util.ExceptionHelper;
-import io.reactivex.observers.TestObserver;
+import io.reactivex.observers.*;
 import io.reactivex.plugins.RxJavaPlugins;
 import io.reactivex.processors.PublishProcessor;
 import io.reactivex.subjects.Subject;
@@ -1654,5 +1654,28 @@ public enum TestHelper {
             p.onNext(v);
         }
         p.onComplete();
+    }
+
+    public static <T> TestSubscriber<T> fusedSubscriber(int mode) {
+        TestSubscriber<T> ts = new TestSubscriber<T>();
+        try {
+            Field f = BaseTestConsumer.class.getDeclaredField("initialFusionMode");
+            f.setAccessible(true);
+            f.set(ts, mode);
+        } catch (Throwable ex) {
+            throw Exceptions.propagate(ex);
+        }
+        return ts;
+    }
+
+    public static <T> Consumer<TestSubscriber<T>> assertFusedSubscriber(final int mode) {
+        return new Consumer<TestSubscriber<T>>() {
+            @Override
+            public void accept(TestSubscriber<T> ts) throws Exception {
+                Field f = BaseTestConsumer.class.getDeclaredField("establishedFusionMode");
+                f.setAccessible(true);
+                assertEquals(mode, f.get(ts));
+            }
+        };
     }
 }

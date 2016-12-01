@@ -574,6 +574,25 @@ Flowable.range(1, 10)
 .assertResult(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
 ```
 
+### FlowableTransformers.mapFilter
+
+A callback `Consumer` is called with the current upstream value and a `BasicEmitter` on which doXXX methods can be called
+to transform a value, signal an error or stop a sequence. If none of the `doXXX` methods is called, the current value is dropped and another is requested from upstream. The operator is a pass-through for downstream requests otherwise.
+
+```java
+Flowable.range(1, 10)
+.compose(FlowableTransformers.mapFilter((v, e) -> {
+    if (v % 2 == 0) {
+        e.doNext(v * 2);
+    }
+    if (v == 5) {
+        e.doComplete();
+    }
+}))
+.test()
+.assertResult(4, 8);
+```
+
 # Releases
 
 **gradle**
