@@ -599,7 +599,7 @@ Flowable.range(1, 10)
 
 ```
 dependencies {
-    compile "com.github.akarnokd:rxjava2-extensions:0.9.0"
+    compile "com.github.akarnokd:rxjava2-extensions:0.10.0"
 }
 ```
 
