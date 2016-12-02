@@ -253,6 +253,9 @@ public abstract class Nono implements Publisher<Void> {
 
     public static <R> Nono using(Callable<R> resourceSupplier, Function<? super R, ? extends Nono> sourceSupplier,
             Consumer<? super R> disposer, boolean eager) {
+        ObjectHelper.requireNonNull(resourceSupplier, "resourceSupplier is null");
+        ObjectHelper.requireNonNull(sourceSupplier, "sourceSupplier is null");
+        ObjectHelper.requireNonNull(disposer, "disposer is null");
         // TODO implement
         throw new UnsupportedOperationException();
     }
@@ -290,11 +293,14 @@ public abstract class Nono implements Publisher<Void> {
     // -----------------------------------------------------------
 
     public final <T> Flowable<T> andThen(Publisher<? extends T> other) {
+        ObjectHelper.requireNonNull(other, "other is null");
         // TODO implement
         throw new UnsupportedOperationException();
     }
 
     public final Nono andThen(Nono other) {
+        ObjectHelper.requireNonNull(other, "other is null");
+        // TODO implement
         throw new UnsupportedOperationException();
     }
 
@@ -305,10 +311,13 @@ public abstract class Nono implements Publisher<Void> {
 
     @SchedulerSupport(SchedulerSupport.CUSTOM)
     public final Nono delay(long delay, TimeUnit unit, Scheduler scheduler) {
+        ObjectHelper.requireNonNull(unit, "unit is null");
+        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
         return onAssembly(new NonoDelay(this, delay, unit, scheduler));
     }
 
     public final Nono delaySubscription(Publisher<?> other) {
+        ObjectHelper.requireNonNull(other, "other is null");
         // TODO implement
         throw new UnsupportedOperationException();
     }
@@ -330,11 +339,16 @@ public abstract class Nono implements Publisher<Void> {
     }
 
     public final Nono timeout(long delay, TimeUnit unit, Scheduler scheduler) {
+        ObjectHelper.requireNonNull(unit, "unit is null");
+        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
         // TODO implement
         throw new UnsupportedOperationException();
     }
 
     public final Nono timeout(long delay, TimeUnit unit, Scheduler scheduler, Nono fallback) {
+        ObjectHelper.requireNonNull(unit, "unit is null");
+        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
+        ObjectHelper.requireNonNull(fallback, "fallback is null");
         // TODO implement
         throw new UnsupportedOperationException();
     }
@@ -344,17 +358,20 @@ public abstract class Nono implements Publisher<Void> {
     }
 
     public final Nono onErrorResumeNext(Function<? super Throwable, ? extends Nono> errorHandler) {
+        ObjectHelper.requireNonNull(errorHandler, "errorHandler is null");
         // TODO implement
         throw new UnsupportedOperationException();
     }
 
     public final Nono mapError(Function<? super Throwable, ? extends Throwable> mapper) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(mapper, "mapper is null");
+        return onAssembly(new NonoMapError(this, mapper));
     }
 
     public final <T> Flowable<T> flatMap(Function<? super Throwable, ? extends Publisher<? extends T>> onErrorMapper,
             Callable<? extends Publisher<? extends T>> onCompleteMapper) {
+        ObjectHelper.requireNonNull(onErrorMapper, "onErrorMapper is null");
+        ObjectHelper.requireNonNull(onCompleteMapper, "onCompleteMapper is null");
         // TODO implement
         throw new UnsupportedOperationException();
     }
@@ -401,47 +418,101 @@ public abstract class Nono implements Publisher<Void> {
     }
 
     public final Nono subscribeOn(Scheduler scheduler) {
+        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
         return onAssembly(new NonoSubscribeOn(this, scheduler));
     }
 
     public final Nono observeOn(Scheduler scheduler) {
+        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
         return onAssembly(new NonoObserveOn(this, scheduler));
     }
 
     public final Nono unsubscribeOn(Scheduler scheduler) {
+        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
         // TODO implement
         throw new UnsupportedOperationException();
     }
 
     public final Nono doOnComplete(Action action) {
+        ObjectHelper.requireNonNull(action, "action is null");
         // TODO implement
         throw new UnsupportedOperationException();
     }
 
     public final Nono doOnError(Consumer<? super Throwable> error) {
+        ObjectHelper.requireNonNull(error, "error is null");
         // TODO implement
         throw new UnsupportedOperationException();
     }
 
     public final Nono doAfterComplete(Action action) {
+        ObjectHelper.requireNonNull(action, "action is null");
         // TODO implement
         throw new UnsupportedOperationException();
     }
 
     public final Nono doAfterTerminate(Action action) {
+        ObjectHelper.requireNonNull(action, "action is null");
         // TODO implement
         throw new UnsupportedOperationException();
     }
 
     public final Nono doFinally(Action action) {
+        ObjectHelper.requireNonNull(action, "action is null");
         // TODO implement
         throw new UnsupportedOperationException();
     }
 
     public final Nono doOnCancel(Action action) {
+        ObjectHelper.requireNonNull(action, "action is null");
         // TODO implement
         throw new UnsupportedOperationException();
     }
+
+    public final Nono repeat() {
+        // TODO implement
+        throw new UnsupportedOperationException();
+    }
+
+    public final Nono repeat(long times) {
+        // TODO implement
+        throw new UnsupportedOperationException();
+    }
+
+    public final Nono repeat(BooleanSupplier stop) {
+        ObjectHelper.requireNonNull(stop, "stop is null");
+        // TODO implement
+        throw new UnsupportedOperationException();
+    }
+
+    public final Nono repeatWhen(Function<Flowable<Object>, Publisher<?>> handler) {
+        ObjectHelper.requireNonNull(handler, "handler is null");
+        // TODO implement
+        throw new UnsupportedOperationException();
+    }
+
+    public final Nono retry() {
+        // TODO implement
+        throw new UnsupportedOperationException();
+    }
+
+    public final Nono retry(long times) {
+        // TODO implement
+        throw new UnsupportedOperationException();
+    }
+
+    public final Nono retry(Predicate<? super Throwable> predicate) {
+        ObjectHelper.requireNonNull(predicate, "predicate is null");
+        // TODO implement
+        throw new UnsupportedOperationException();
+    }
+
+    public final Nono retryWhen(Function<Flowable<Throwable>, Publisher<?>> handler) {
+        ObjectHelper.requireNonNull(handler, "handler is null");
+        // TODO implement
+        throw new UnsupportedOperationException();
+    }
+
     // -----------------------------------------------------------
     // Consumers and subscribers (leave)
     // -----------------------------------------------------------
