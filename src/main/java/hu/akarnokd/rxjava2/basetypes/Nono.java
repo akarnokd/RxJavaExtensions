@@ -52,23 +52,26 @@ public abstract class Nono implements Publisher<Void> {
         return Flowable.bufferSize();
     }
     
+    protected static Nono onAssembly(Nono source) {
+        // TODO implement
+        return source;
+    }
     // -----------------------------------------------------------
     // Static factories (enter)
     // -----------------------------------------------------------
     
     public static Nono complete() {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return onAssembly(NonoComplete.INSTANCE);
     }
 
     public static Nono error(Throwable ex) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(ex, "ex is null");
+        return onAssembly(new NonoError(ex));
     }
 
     public static Nono error(Callable<? extends Throwable> errorSupplier) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(errorSupplier, "errorSupplier is null");
+        return onAssembly(new NonoErrorSupplier(errorSupplier));
     }
 
     public static Nono defer(Callable<? extends Nono> supplier) {
