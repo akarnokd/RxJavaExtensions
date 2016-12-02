@@ -21,12 +21,13 @@ import java.util.concurrent.*;
 import org.reactivestreams.*;
 
 import io.reactivex.*;
+import io.reactivex.annotations.SchedulerSupport;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.exceptions.Exceptions;
 import io.reactivex.functions.*;
 import io.reactivex.internal.functions.*;
 import io.reactivex.internal.fuseable.*;
-import io.reactivex.internal.util.ExceptionHelper;
+import io.reactivex.internal.util.*;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subscribers.TestSubscriber;
 
@@ -44,6 +45,8 @@ import io.reactivex.subscribers.TestSubscriber;
  */
 public abstract class Nono implements Publisher<Void> {
 
+    private static volatile Function<Nono, Nono> onAssemblyHandler;
+    
     /**
      * Returns the default buffer or prefetch size.
      * @return the buffer or prefetch size
@@ -52,10 +55,32 @@ public abstract class Nono implements Publisher<Void> {
         return Flowable.bufferSize();
     }
     
+    /**
+     * Optionally apply a function to the raw source and return a
+     * potentially modified Nono instance.
+     * @param source the source to apply to
+     * @return the possibly wrapped Nono instance
+     */
     protected static Nono onAssembly(Nono source) {
-        // TODO implement
+        Function<Nono, Nono> f = onAssemblyHandler;
+        if (f != null) {
+            try {
+                return ObjectHelper.requireNonNull(f.apply(source), "The onAssemblyHandler returned a null Nono");
+            } catch (Throwable ex) {
+                throw ExceptionHelper.wrapOrThrow(ex);
+            }
+        }
         return source;
     }
+
+    public static Function<Nono, Nono> getOnAssemblyHandler() {
+        return onAssemblyHandler;
+    }
+
+    public static void setOnAssemblyHandler(Function<Nono, Nono> handler) {
+        onAssemblyHandler = handler;
+    }
+    
     // -----------------------------------------------------------
     // Static factories (enter)
     // -----------------------------------------------------------
@@ -75,38 +100,39 @@ public abstract class Nono implements Publisher<Void> {
     }
 
     public static Nono defer(Callable<? extends Nono> supplier) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(supplier, "supplier is null");
+        return onAssembly(new NonoDefer(supplier));
     }
 
     public static Nono fromAction(Action action) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(action, "action is null");
+        return onAssembly(new NonoFromAction(action));
     }
     
     public static Nono fromFuture(Future<?> future) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(future, "future is null");
+        return onAssembly(new NonoFromFuture(future, 0L, TimeUnit.NANOSECONDS));
     }
 
     public static Nono fromFuture(Future<?> future, long timeout, TimeUnit unit) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(future, "future is null");
+        ObjectHelper.requireNonNull(unit, "unit is null");
+        return onAssembly(new NonoFromFuture(future, timeout, unit));
     }
     
     public static Nono amb(Iterable<? extends Nono> sources) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(sources, "sources is null");
+        return onAssembly(new NonoAmbIterable(sources));
     }
 
     public static Nono ambArray(Nono... sources) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(sources, "sources is null");
+        return onAssembly(new NonoAmbArray(sources));
     }
 
     public static Nono concat(Iterable<? extends Nono> sources) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(sources, "sources is null");
+        return onAssembly(new NonoConcatIterable(sources, false));
     }
 
     public static Nono concat(Publisher<? extends Nono> sources) {
@@ -114,18 +140,19 @@ public abstract class Nono implements Publisher<Void> {
     }
 
     public static Nono concat(Publisher<? extends Nono> sources, int prefetch) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(sources, "sources is null");
+        ObjectHelper.verifyPositive(prefetch, "prefetch");
+        return onAssembly(new NonoConcat(sources, prefetch, ErrorMode.IMMEDIATE));
     }
 
     public static Nono concatArray(Nono... sources) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(sources, "sources is null");
+        return onAssembly(new NonoConcatArray(sources, false));
     }
     
     public static Nono concatDelayError(Iterable<? extends Nono> sources) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(sources, "sources is null");
+        return onAssembly(new NonoConcatIterable(sources, true));
     }
 
     public static Nono concatDelayError(Publisher<? extends Nono> sources) {
@@ -133,13 +160,14 @@ public abstract class Nono implements Publisher<Void> {
     }
 
     public static Nono concatDelayError(Publisher<? extends Nono> sources, int prefetch, boolean tillTheEnd) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(sources, "sources is null");
+        ObjectHelper.verifyPositive(prefetch, "prefetch");
+        return onAssembly(new NonoConcat(sources, prefetch, tillTheEnd ? ErrorMode.END : ErrorMode.BOUNDARY));
     }
     
     public static Nono concatArrayDelayError(Nono... sources) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(sources, "sources is null");
+        return onAssembly(new NonoConcatArray(sources, true));
     }
 
     public static Nono merge(Iterable<? extends Nono> sources) {
@@ -197,21 +225,24 @@ public abstract class Nono implements Publisher<Void> {
         throw new UnsupportedOperationException();
     }
 
+    @SchedulerSupport(SchedulerSupport.COMPUTATION)
     public static Nono timer(long delay, TimeUnit unit) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return timer(delay, unit, Schedulers.computation());
     }
 
+    @SchedulerSupport(SchedulerSupport.CUSTOM)
     public static Nono timer(long delay, TimeUnit unit, Scheduler scheduler) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(unit, "unit is null");
+        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
+        return onAssembly(new NonoTimer(delay, unit, scheduler));
     }
     
-    public static <R> Nono using(Callable<R> resourceSupplier, Function<? super R, ? extends Nono> sourceSupplier, Consumer<? super R> disposer) {
+    public static <R> Nono using(Callable<R> resourceSupplier, Function<? super R, ? extends Nono> sourceSupplier,
+            Consumer<? super R> disposer) {
         return using(resourceSupplier, sourceSupplier, disposer, true);
     }
 
-    public static <R> Nono using(Callable<R> resourceSupplier, Function<? super R, ? extends Nono> sourceSupplier, 
+    public static <R> Nono using(Callable<R> resourceSupplier, Function<? super R, ? extends Nono> sourceSupplier,
             Consumer<? super R> disposer, boolean eager) {
         // TODO implement
         throw new UnsupportedOperationException();
@@ -364,13 +395,11 @@ public abstract class Nono implements Publisher<Void> {
     }
 
     public final Nono subscribeOn(Scheduler scheduler) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return onAssembly(new NonoSubscribeOn(this, scheduler));
     }
     
     public final Nono observeOn(Scheduler scheduler) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return onAssembly(new NonoObserveOn(this, scheduler));
     }
     
     public final Nono unsubscribeOn(Scheduler scheduler) {
@@ -463,11 +492,29 @@ public abstract class Nono implements Publisher<Void> {
     }
     
     public final Throwable blockingAwait() {
+        if (this instanceof Callable) {
+            try {
+                ((Callable<?>)this).call();
+                return null;
+            } catch (Throwable ex) {
+                Exceptions.throwIfFatal(ex);
+                return ex;
+            }
+        }
         // TODO implement
         throw new UnsupportedOperationException();
     }
     
     public final Throwable blockingAwait(long timeout, TimeUnit unit) {
+        if (this instanceof Callable) {
+            try {
+                ((Callable<?>)this).call();
+                return null;
+            } catch (Throwable ex) {
+                Exceptions.throwIfFatal(ex);
+                return ex;
+            }
+        }
         // TODO implement
         throw new UnsupportedOperationException();
     }
