@@ -56,7 +56,7 @@ final class NonoConcatArray extends Nono {
         final AtomicInteger wip;
 
         int index;
-        
+
         volatile boolean active;
 
         ConcatSubscriber(Subscriber<? super Void> actual, Nono[] sources, boolean delayError) {
@@ -98,17 +98,17 @@ final class NonoConcatArray extends Nono {
             active = false;
             drain();
         }
-        
+
         void drain() {
             if (wip.getAndIncrement() != 0) {
                 return;
             }
-            
+
             do {
                 if (SubscriptionHelper.isCancelled(this.get())) {
                     return;
                 }
-                
+
                 if (!active) {
                     int idx = index;
                     if (idx == sources.length) {
@@ -120,11 +120,11 @@ final class NonoConcatArray extends Nono {
                         }
                         return;
                     }
-                    
+
                     Nono np = sources[idx];
-                    
+
                     index = idx + 1;
-                    
+
                     if (np == null) {
                         NullPointerException npe = new NullPointerException("One of the sources is null");
                         if (errors != null) {
@@ -135,7 +135,7 @@ final class NonoConcatArray extends Nono {
                         }
                         return;
                     }
-                    
+
                     active = true;
                     np.subscribe(this);
                 }

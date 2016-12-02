@@ -38,7 +38,7 @@ final class NonoAmbIterable extends Nono {
     protected void subscribeActual(Subscriber<? super Void> s) {
         AmbSubscriber parent = new AmbSubscriber(s);
         s.onSubscribe(parent);
-        
+
         try {
             for (Nono np : sources) {
                 if (parent.get() != 0) {
@@ -57,24 +57,24 @@ final class NonoAmbIterable extends Nono {
         private static final long serialVersionUID = 3576466667528056758L;
 
         final Subscriber<? super Void> actual;
-        
+
         final CompositeSubscription set;
-        
+
         AmbSubscriber(Subscriber<? super Void> actual) {
             this.actual = actual;
             this.set = new CompositeSubscription();
         }
-        
+
         @Override
         public void onSubscribe(Subscription s) {
             set.add(s);
         }
-        
+
         @Override
         public void onNext(Void t) {
             // not called
         }
-        
+
         @Override
         public void onError(Throwable t) {
             if (compareAndSet(0, 1)) {
@@ -84,7 +84,7 @@ final class NonoAmbIterable extends Nono {
                 RxJavaPlugins.onError(t);
             }
         }
-        
+
         @Override
         public void onComplete() {
             if (compareAndSet(0, 1)) {
@@ -92,34 +92,34 @@ final class NonoAmbIterable extends Nono {
                 actual.onComplete();
             }
         }
-        
+
         @Override
         public void request(long n) {
             // no-op
         }
-        
+
         @Override
         public void cancel() {
             if (compareAndSet(0, 1)) {
                 set.cancel();
             }
         }
-        
+
         @Override
         public void clear() {
             // no-op
         }
-        
+
         @Override
         public boolean isEmpty() {
             return true;
         }
-        
+
         @Override
         public Void poll() throws Exception {
             return null;
         }
-        
+
         @Override
         public int requestFusion(int mode) {
             return mode & ASYNC;

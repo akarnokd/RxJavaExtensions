@@ -33,17 +33,17 @@ import io.reactivex.plugins.RxJavaPlugins;
 final class NonoConcat extends Nono {
 
     final Publisher<? extends Nono> sources;
-    
+
     final int prefetch;
-    
+
     final ErrorMode errorMode;
-    
+
     NonoConcat(Publisher<? extends Nono> sources, int prefetch, ErrorMode errorMode) {
         this.sources = sources;
         this.prefetch = prefetch;
         this.errorMode = errorMode;
     }
-    
+
     @Override
     protected void subscribeActual(Subscriber<? super Void> s) {
         if (errorMode == ErrorMode.IMMEDIATE) {
@@ -61,9 +61,9 @@ final class NonoConcat extends Nono {
         final Subscriber<? super Void> actual;
 
         final int prefetch;
-        
+
         final int limit;
-        
+
         final AtomicThrowable error;
 
         final InnerSubscriber inner;
@@ -71,15 +71,15 @@ final class NonoConcat extends Nono {
         Subscription s;
 
         SimpleQueue<Nono> queue;
-        
+
         int sourceMode;
-        
+
         int consumed;
-        
+
         volatile boolean active;
-        
+
         volatile boolean done;
-        
+
         volatile boolean cancelled;
 
         AbstractConcatSubscriber(Subscriber<? super Void> actual, int prefetch) {
@@ -94,22 +94,22 @@ final class NonoConcat extends Nono {
         public final void request(long n) {
             // no-op
         }
-        
+
         @Override
         public final int requestFusion(int mode) {
             return mode & ASYNC;
         }
-        
+
         @Override
         public final void clear() {
             // no-op
         }
-        
+
         @Override
         public final Void poll() throws Exception {
             return null;
         }
-        
+
         @Override
         public final boolean isEmpty() {
             return true;
@@ -119,43 +119,43 @@ final class NonoConcat extends Nono {
         public final void onSubscribe(Subscription s) {
             if (SubscriptionHelper.validate(this.s, s)) {
                 this.s = s;
-                
+
                 if (s instanceof QueueSubscription) {
                     @SuppressWarnings("unchecked")
                     QueueSubscription<Nono> qs = (QueueSubscription<Nono>) s;
-                    
+
                     int m = qs.requestFusion(ANY);
                     if (m == SYNC) {
                         queue = qs;
                         done = true;
-                        
+
                         actual.onSubscribe(this);
-                        
+
                         drain();
                         return;
                     }
                     if (m == ASYNC) {
                         queue = qs;
-                        
+
                         actual.onSubscribe(this);
-                        
+
                         s.request(prefetch == Integer.MAX_VALUE ? Long.MAX_VALUE : prefetch);
-                        
+
                         return;
                     }
                 }
 
                 if (prefetch == Integer.MAX_VALUE) {
                     queue = new SpscLinkedArrayQueue<Nono>(bufferSize());
-                    
+
                     actual.onSubscribe(this);
-                    
+
                     s.request(Long.MAX_VALUE);
                 } else {
                     queue = new SpscArrayQueue<Nono>(prefetch);
 
                     actual.onSubscribe(this);
-                    
+
                     s.request(prefetch);
                 }
             }
@@ -172,7 +172,7 @@ final class NonoConcat extends Nono {
                 }
             }
         }
-        
+
         @Override
         public final void onNext(Nono t) {
             if (sourceMode == NONE) {
@@ -185,12 +185,11 @@ final class NonoConcat extends Nono {
             drain();
         }
 
-        
         final void innerComplete() {
             active = false;
             drain();
         }
-        
+
         abstract void drain();
 
         abstract void innerError(Throwable t);
@@ -203,40 +202,40 @@ final class NonoConcat extends Nono {
             public void onSubscribe(Subscription s) {
                 SubscriptionHelper.replace(this, s);
             }
-            
+
             @Override
             public void onNext(Void t) {
                 // not called
             }
-            
+
             @Override
             public void onError(Throwable t) {
                 innerError(t);
             }
-            
+
             @Override
             public void onComplete() {
                 active = false;
                 drain();
             }
-            
+
             void dispose() {
                 SubscriptionHelper.cancel(this);
             }
         }
     }
-    
+
     static final class ConcatImmediateSubscriber extends AbstractConcatSubscriber {
 
         private static final long serialVersionUID = 6000895759062406410L;
-        
+
         final AtomicInteger wip;
-        
+
         ConcatImmediateSubscriber(Subscriber<? super Void> actual, int prefetch) {
             super(actual, prefetch);
             this.wip = new AtomicInteger();
         }
-        
+
         @Override
         public void onError(Throwable t) {
             cancel();
@@ -247,20 +246,19 @@ final class NonoConcat extends Nono {
             cancel();
             HalfSerializer.onError(actual, t, this, error);
         }
-        
+
         @Override
         public void onComplete() {
             done = true;
             drain();
         }
-        
-        
+
         @Override
         public void cancel() {
             cancelled = true;
             s.cancel();
             inner.dispose();
-            
+
             if (wip.getAndIncrement() == 0) {
                 queue.clear();
             }
@@ -270,17 +268,17 @@ final class NonoConcat extends Nono {
             if (wip.getAndIncrement() != 0) {
                 return;
             }
-            
+
             do {
                 if (cancelled) {
                     queue.clear();
                     return;
                 }
-                
+
                 if (!active) {
                     boolean d = done;
                     Nono np;
-                    
+
                     try {
                         np = queue.poll();
                     } catch (Throwable ex) {
@@ -292,15 +290,15 @@ final class NonoConcat extends Nono {
                     }
 
                     boolean empty = np == null;
-                    
+
                     if (d && empty) {
                         HalfSerializer.onComplete(actual, this, error);
                         return;
                     }
-                    
+
                     if (!empty) {
                         requestOne();
-                        
+
                         active = true;
                         np.subscribe(inner);
                     }
@@ -308,13 +306,13 @@ final class NonoConcat extends Nono {
             } while (wip.decrementAndGet() != 0);
         }
     }
-    
+
     static final class ConcatDelayedSubscriber extends AbstractConcatSubscriber {
 
         private static final long serialVersionUID = -3402839602492103389L;
-        
+
         final boolean tillTheEnd;
-        
+
         ConcatDelayedSubscriber(Subscriber<? super Void> actual, int prefetch, boolean tillTheEnd) {
             super(actual, prefetch);
             this.tillTheEnd = tillTheEnd;
@@ -341,7 +339,7 @@ final class NonoConcat extends Nono {
             cancelled = true;
             s.cancel();
             inner.dispose();
-            
+
             if (getAndIncrement() == 0) {
                 queue.clear();
             }
@@ -352,24 +350,24 @@ final class NonoConcat extends Nono {
             if (getAndIncrement() != 0) {
                 return;
             }
-            
+
             do {
                 if (cancelled) {
                     queue.clear();
                     return;
                 }
-                
+
                 if (!active) {
                     if (!tillTheEnd && error.get() != null) {
                         queue.clear();
                         actual.onError(error.terminate());
                         return;
                     }
-                    
+
                     boolean d = done;
-                    
+
                     Nono np;
-                    
+
                     try {
                         np = queue.poll();
                     } catch (Throwable ex) {
@@ -377,13 +375,13 @@ final class NonoConcat extends Nono {
                         s.cancel();
                         queue.clear();
                         error.addThrowable(ex);
-                        
+
                         actual.onError(error.terminate());
                         return;
                     }
-                    
+
                     boolean empty = np == null;
-                    
+
                     if (d && empty) {
                         Throwable ex = error.terminate();
                         if (ex != null) {
@@ -393,10 +391,10 @@ final class NonoConcat extends Nono {
                         }
                         return;
                     }
-                    
+
                     if (!empty) {
                         requestOne();
-                        
+
                         active = true;
                         np.subscribe(inner);
                     }

@@ -16,31 +16,38 @@
 
 package hu.akarnokd.rxjava2.basetypes;
 
-import java.util.concurrent.Callable;
-
-import org.reactivestreams.Subscriber;
-
-import hu.akarnokd.rxjava2.util.SneakyThrows;
-import io.reactivex.internal.subscriptions.EmptySubscription;
+import org.reactivestreams.*;
 
 /**
- * Signals a constant Throwable to the subscriber.
+ * Convert a Publisher into a Nono.
  */
-final class NonoError extends Nono implements Callable<Void> {
+final class NonoFromPublisher extends Nono {
 
-    final Throwable error;
+    final Publisher<?> source;
 
-    NonoError(Throwable error) {
-        this.error = error;
+    NonoFromPublisher(Publisher<?> source) {
+        this.source = source;
     }
 
     @Override
     protected void subscribeActual(Subscriber<? super Void> s) {
-        EmptySubscription.error(error, s);
+        source.subscribe(new FromPublisherSubscriber(s));
     }
 
-    @Override
-    public Void call() throws Exception {
-        throw SneakyThrows.<RuntimeException>justThrow(error);
+    static final class FromPublisherSubscriber extends BasicNonoSubscriber {
+
+        public FromPublisherSubscriber(Subscriber<? super Void> actual) {
+            super(actual);
+        }
+
+        @Override
+        public void onError(Throwable t) {
+            actual.onError(t);
+        }
+
+        @Override
+        public void onComplete() {
+            actual.onComplete();
+        }
     }
 }

@@ -41,7 +41,7 @@ final class NonoSubscribeOn extends Nono {
     protected void subscribeActual(Subscriber<? super Void> s) {
         SubscribeOnSubscriber parent = new SubscribeOnSubscriber(s, source);
         s.onSubscribe(parent);
-        
+
         parent.setTask(scheduler.scheduleDirect(parent));
     }
 
@@ -51,9 +51,9 @@ final class NonoSubscribeOn extends Nono {
         private static final long serialVersionUID = -6761773996344047676L;
 
         final Subscriber<? super Void> actual;
-        
+
         final SequentialDisposable task;
-        
+
         final Nono source;
 
         SubscribeOnSubscriber(Subscriber<? super Void> actual, Nono source) {
@@ -61,26 +61,26 @@ final class NonoSubscribeOn extends Nono {
             this.source = source;
             this.task = new SequentialDisposable();
         }
-        
+
         void setTask(Disposable d) {
             task.replace(d);
         }
-        
+
         @Override
         public void onSubscribe(Subscription s) {
             SubscriptionHelper.setOnce(this, s);
         }
-        
+
         @Override
         public void onNext(Void t) {
             // not present
         }
-        
+
         @Override
         public void onError(Throwable t) {
             actual.onError(t);
         }
-        
+
         @Override
         public void onComplete() {
             actual.onComplete();

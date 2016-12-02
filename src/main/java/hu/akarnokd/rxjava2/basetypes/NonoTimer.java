@@ -30,11 +30,11 @@ import io.reactivex.internal.disposables.DisposableHelper;
 final class NonoTimer extends Nono {
 
     final long delay;
-    
+
     final TimeUnit unit;
-    
+
     final Scheduler scheduler;
-    
+
     NonoTimer(long delay, TimeUnit unit, Scheduler scheduler) {
         this.delay = delay;
         this.unit = unit;
@@ -54,7 +54,7 @@ final class NonoTimer extends Nono {
         private static final long serialVersionUID = 3940118717227297027L;
 
         final Subscriber<? super Void> actual;
-        
+
         TimerSubscription(Subscriber<? super Void> actual) {
             this.actual = actual;
         }
@@ -93,7 +93,6 @@ final class NonoTimer extends Nono {
         public void run() {
             actual.onComplete();
         }
-        
-        
+
     }
 }

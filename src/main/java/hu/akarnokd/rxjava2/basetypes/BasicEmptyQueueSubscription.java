@@ -32,27 +32,27 @@ public abstract class BasicEmptyQueueSubscription implements QueueSubscription<V
     public final boolean offer(Void v1, Void v2) {
         throw new UnsupportedOperationException("Should not be called!");
     }
-    
+
     @Override
     public final void clear() {
         // no-op
     }
-    
+
     @Override
     public final boolean isEmpty() {
         return true;
     }
-    
+
     @Override
     public final Void poll() throws Exception {
         return null;
     }
-    
+
     @Override
     public final void request(long n) {
         // no-op
     }
-    
+
     @Override
     public final int requestFusion(int mode) {
         return mode & ASYNC;

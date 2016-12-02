@@ -31,11 +31,11 @@ import io.reactivex.internal.subscriptions.EmptySubscription;
 final class NonoErrorSupplier extends Nono implements Callable<Void> {
 
     final Callable<? extends Throwable> errorSupplier;
-    
+
     NonoErrorSupplier(Callable<? extends Throwable> errorSupplier) {
         this.errorSupplier = errorSupplier;
     }
-    
+
     @Override
     protected void subscribeActual(Subscriber<? super Void> s) {
         Throwable ex;
@@ -45,10 +45,10 @@ final class NonoErrorSupplier extends Nono implements Callable<Void> {
             Exceptions.throwIfFatal(e);
             ex = e;
         }
-        
+
         EmptySubscription.error(ex, s);
     }
-    
+
     @Override
     public Void call() throws Exception {
         Throwable ex;

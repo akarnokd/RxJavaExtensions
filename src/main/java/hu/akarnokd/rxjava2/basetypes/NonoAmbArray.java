@@ -36,7 +36,7 @@ final class NonoAmbArray extends Nono {
     protected void subscribeActual(Subscriber<? super Void> s) {
         AmbSubscriber parent = new AmbSubscriber(s);
         s.onSubscribe(parent);
-        
+
         try {
             for (Nono np : sources) {
                 if (parent.get() != 0) {

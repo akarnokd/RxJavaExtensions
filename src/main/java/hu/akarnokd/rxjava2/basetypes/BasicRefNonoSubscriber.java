@@ -55,27 +55,26 @@ public abstract class BasicRefNonoSubscriber<R> extends BasicRefQueueSubscriptio
         s.cancel();
     }
 
-    
     @Override
     public final void clear() {
         // no-op
     }
-    
+
     @Override
     public final boolean isEmpty() {
         return true;
     }
-    
+
     @Override
     public final Void poll() throws Exception {
         return null;
     }
-    
+
     @Override
     public final void request(long n) {
         // no-op
     }
-    
+
     @Override
     public final int requestFusion(int mode) {
         return mode & ASYNC;

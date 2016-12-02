@@ -30,11 +30,11 @@ import io.reactivex.internal.subscriptions.EmptySubscription;
 final class NonoFromAction extends Nono implements Callable<Void> {
 
     final Action action;
-    
+
     NonoFromAction(Action action) {
         this.action = action;
     }
-    
+
     @Override
     protected void subscribeActual(Subscriber<? super Void> s) {
         s.onSubscribe(EmptySubscription.INSTANCE);

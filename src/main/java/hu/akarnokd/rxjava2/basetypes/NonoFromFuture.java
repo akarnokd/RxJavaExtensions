@@ -29,11 +29,11 @@ import io.reactivex.internal.subscriptions.EmptySubscription;
 final class NonoFromFuture extends Nono implements Callable<Void> {
 
     final Future<?> future;
-    
+
     final long timeout;
-    
+
     final TimeUnit unit;
-    
+
     NonoFromFuture(Future<?> future, long timeout, TimeUnit unit) {
         this.future = future;
         this.timeout = timeout;
@@ -54,7 +54,7 @@ final class NonoFromFuture extends Nono implements Callable<Void> {
             s.onError(ex);
             return;
         }
-        
+
         s.onComplete();
     }
 

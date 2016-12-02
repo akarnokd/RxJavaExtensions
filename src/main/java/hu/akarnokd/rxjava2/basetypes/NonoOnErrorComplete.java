@@ -16,31 +16,38 @@
 
 package hu.akarnokd.rxjava2.basetypes;
 
-import java.util.concurrent.Callable;
-
 import org.reactivestreams.Subscriber;
 
-import hu.akarnokd.rxjava2.util.SneakyThrows;
-import io.reactivex.internal.subscriptions.EmptySubscription;
-
 /**
- * Signals a constant Throwable to the subscriber.
+ * If the upstream signals an error, turn it into an onComplete.
  */
-final class NonoError extends Nono implements Callable<Void> {
+final class NonoOnErrorComplete extends Nono {
 
-    final Throwable error;
+    final Nono source;
 
-    NonoError(Throwable error) {
-        this.error = error;
+    NonoOnErrorComplete(Nono source) {
+        this.source = source;
     }
 
     @Override
     protected void subscribeActual(Subscriber<? super Void> s) {
-        EmptySubscription.error(error, s);
+        source.subscribe(new OnErrorCompleteSubscriber(s));
     }
 
-    @Override
-    public Void call() throws Exception {
-        throw SneakyThrows.<RuntimeException>justThrow(error);
+    static final class OnErrorCompleteSubscriber extends BasicNonoSubscriber {
+
+        public OnErrorCompleteSubscriber(Subscriber<? super Void> actual) {
+            super(actual);
+        }
+
+        @Override
+        public void onError(Throwable t) {
+            actual.onComplete();
+        }
+
+        @Override
+        public void onComplete() {
+            actual.onComplete();
+        }
     }
 }

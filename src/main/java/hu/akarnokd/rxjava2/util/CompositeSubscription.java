@@ -26,9 +26,9 @@ import io.reactivex.internal.util.OpenHashSet;
 public final class CompositeSubscription implements Subscription {
 
     OpenHashSet<Subscription> set;
-    
+
     volatile boolean cancelled;
-    
+
     public boolean add(Subscription s) {
         if (!cancelled) {
             synchronized (this) {
@@ -46,7 +46,7 @@ public final class CompositeSubscription implements Subscription {
         s.cancel();
         return false;
     }
-    
+
     public void delete(Subscription s) {
         if (!cancelled) {
             synchronized (this) {
@@ -59,12 +59,12 @@ public final class CompositeSubscription implements Subscription {
             }
         }
     }
-    
+
     @Override
     public void request(long n) {
         // ignored
     }
-    
+
     @Override
     public void cancel() {
         if (!cancelled) {
@@ -77,7 +77,7 @@ public final class CompositeSubscription implements Subscription {
                 set = null;
                 cancelled = true;
             }
-            
+
             if (h != null) {
                 Object[] array = h.keys();
                 for (Object o : array) {
@@ -86,7 +86,6 @@ public final class CompositeSubscription implements Subscription {
                     }
                 }
             }
-            
         }
     }
 }

@@ -16,6 +16,8 @@
 
 package hu.akarnokd.rxjava2.basetypes;
 
+import java.util.concurrent.TimeUnit;
+
 import org.reactivestreams.Subscriber;
 
 import io.reactivex.Scheduler;
@@ -25,44 +27,56 @@ import io.reactivex.internal.disposables.DisposableHelper;
 /**
  * Emit the terminal events on the specified Scheduler.
  */
-final class NonoObserveOn extends Nono {
+final class NonoDelay extends Nono {
 
     final Nono source;
 
+    final long delay;
+
+    final TimeUnit unit;
+
     final Scheduler scheduler;
 
-    NonoObserveOn(Nono source, Scheduler scheduler) {
+    NonoDelay(Nono source, long delay, TimeUnit unit, Scheduler scheduler) {
         this.source = source;
+        this.delay = delay;
+        this.unit = unit;
         this.scheduler = scheduler;
     }
 
     @Override
     protected void subscribeActual(Subscriber<? super Void> s) {
-        source.subscribe(new ObserveOnSubscriber(s, scheduler));
+        source.subscribe(new ObserveOnSubscriber(s, delay, unit, scheduler));
     }
 
     static final class ObserveOnSubscriber extends BasicRefNonoSubscriber<Disposable> implements Runnable {
 
         private static final long serialVersionUID = -7575632829277450540L;
 
+        final long delay;
+
+        final TimeUnit unit;
+
         final Scheduler scheduler;
 
         Throwable error;
 
-        ObserveOnSubscriber(Subscriber<? super Void> actual, Scheduler scheduler) {
+        ObserveOnSubscriber(Subscriber<? super Void> actual, long delay, TimeUnit unit, Scheduler scheduler) {
             super(actual);
+            this.delay = delay;
+            this.unit = unit;
             this.scheduler = scheduler;
         }
 
         @Override
         public void onError(Throwable t) {
             error = t;
-            DisposableHelper.replace(this, scheduler.scheduleDirect(this));
+            DisposableHelper.replace(this, scheduler.scheduleDirect(this, delay, unit));
         }
 
         @Override
         public void onComplete() {
-            DisposableHelper.replace(this, scheduler.scheduleDirect(this));
+            DisposableHelper.replace(this, scheduler.scheduleDirect(this, delay, unit));
         }
 
         @Override

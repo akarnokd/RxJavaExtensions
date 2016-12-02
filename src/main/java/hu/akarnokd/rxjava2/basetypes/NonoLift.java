@@ -16,31 +16,40 @@
 
 package hu.akarnokd.rxjava2.basetypes;
 
-import java.util.concurrent.Callable;
-
 import org.reactivestreams.Subscriber;
 
-import hu.akarnokd.rxjava2.util.SneakyThrows;
+import io.reactivex.exceptions.Exceptions;
+import io.reactivex.functions.Function;
+import io.reactivex.internal.functions.ObjectHelper;
 import io.reactivex.internal.subscriptions.EmptySubscription;
 
 /**
- * Signals a constant Throwable to the subscriber.
+ * Transform the downstream Subscriber into an upstream Subscriber.
  */
-final class NonoError extends Nono implements Callable<Void> {
+final class NonoLift extends Nono {
 
-    final Throwable error;
+    final Nono source;
 
-    NonoError(Throwable error) {
-        this.error = error;
+    final Function<Subscriber<? super Void>, Subscriber<? super Void>> lifter;
+
+    NonoLift(Nono source, Function<Subscriber<? super Void>, Subscriber<? super Void>> lifter) {
+        this.source = source;
+        this.lifter = lifter;
     }
 
     @Override
     protected void subscribeActual(Subscriber<? super Void> s) {
-        EmptySubscription.error(error, s);
+        Subscriber<? super Void> z;
+
+        try {
+            z = ObjectHelper.requireNonNull(lifter.apply(s), "The lifter returned a null Subscriber");
+        } catch (Throwable ex) {
+            Exceptions.throwIfFatal(ex);
+            EmptySubscription.error(ex, s);
+            return;
+        }
+
+        source.subscribe(z);
     }
 
-    @Override
-    public Void call() throws Exception {
-        throw SneakyThrows.<RuntimeException>justThrow(error);
-    }
 }

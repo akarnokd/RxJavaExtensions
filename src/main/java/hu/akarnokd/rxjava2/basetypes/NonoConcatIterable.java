@@ -43,7 +43,7 @@ final class NonoConcatIterable extends Nono {
     @Override
     protected void subscribeActual(Subscriber<? super Void> s) {
         Iterator<? extends Nono> it;
-        
+
         try {
             it = ObjectHelper.requireNonNull(sources.iterator(), "The sources Iterable returned a null Iterator");
         } catch (Throwable ex) {
@@ -109,21 +109,21 @@ final class NonoConcatIterable extends Nono {
             active = false;
             drain();
         }
-        
+
         void drain() {
             if (wip.getAndIncrement() != 0) {
                 return;
             }
-            
+
             do {
                 if (SubscriptionHelper.isCancelled(this.get())) {
                     return;
                 }
-                
+
                 if (!active) {
                     boolean b;
                     Nono np = null;
-                    
+
                     try {
                         b = iterator.hasNext();
                         if (b) {

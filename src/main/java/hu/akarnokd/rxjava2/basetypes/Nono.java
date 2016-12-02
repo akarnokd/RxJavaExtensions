@@ -23,16 +23,17 @@ import org.reactivestreams.*;
 import io.reactivex.*;
 import io.reactivex.annotations.SchedulerSupport;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.Exceptions;
+import io.reactivex.exceptions.*;
 import io.reactivex.functions.*;
 import io.reactivex.internal.functions.*;
 import io.reactivex.internal.fuseable.*;
 import io.reactivex.internal.util.*;
+import io.reactivex.plugins.RxJavaPlugins;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subscribers.TestSubscriber;
 
 /**
- * Represents the base reactive class with fluent API for Publisher-based, 
+ * Represents the base reactive class with fluent API for Publisher-based,
  * no-item just onError or onComplete source.
  * <p>
  * Since this type never emits any value, the implementations ignore
@@ -46,7 +47,7 @@ import io.reactivex.subscribers.TestSubscriber;
 public abstract class Nono implements Publisher<Void> {
 
     private static volatile Function<Nono, Nono> onAssemblyHandler;
-    
+
     /**
      * Returns the default buffer or prefetch size.
      * @return the buffer or prefetch size
@@ -54,7 +55,7 @@ public abstract class Nono implements Publisher<Void> {
     public static int bufferSize() {
         return Flowable.bufferSize();
     }
-    
+
     /**
      * Optionally apply a function to the raw source and return a
      * potentially modified Nono instance.
@@ -80,11 +81,11 @@ public abstract class Nono implements Publisher<Void> {
     public static void setOnAssemblyHandler(Function<Nono, Nono> handler) {
         onAssemblyHandler = handler;
     }
-    
+
     // -----------------------------------------------------------
     // Static factories (enter)
     // -----------------------------------------------------------
-    
+
     public static Nono complete() {
         return onAssembly(NonoComplete.INSTANCE);
     }
@@ -108,7 +109,7 @@ public abstract class Nono implements Publisher<Void> {
         ObjectHelper.requireNonNull(action, "action is null");
         return onAssembly(new NonoFromAction(action));
     }
-    
+
     public static Nono fromFuture(Future<?> future) {
         ObjectHelper.requireNonNull(future, "future is null");
         return onAssembly(new NonoFromFuture(future, 0L, TimeUnit.NANOSECONDS));
@@ -119,7 +120,7 @@ public abstract class Nono implements Publisher<Void> {
         ObjectHelper.requireNonNull(unit, "unit is null");
         return onAssembly(new NonoFromFuture(future, timeout, unit));
     }
-    
+
     public static Nono amb(Iterable<? extends Nono> sources) {
         ObjectHelper.requireNonNull(sources, "sources is null");
         return onAssembly(new NonoAmbIterable(sources));
@@ -149,7 +150,7 @@ public abstract class Nono implements Publisher<Void> {
         ObjectHelper.requireNonNull(sources, "sources is null");
         return onAssembly(new NonoConcatArray(sources, false));
     }
-    
+
     public static Nono concatDelayError(Iterable<? extends Nono> sources) {
         ObjectHelper.requireNonNull(sources, "sources is null");
         return onAssembly(new NonoConcatIterable(sources, true));
@@ -164,7 +165,7 @@ public abstract class Nono implements Publisher<Void> {
         ObjectHelper.verifyPositive(prefetch, "prefetch");
         return onAssembly(new NonoConcat(sources, prefetch, tillTheEnd ? ErrorMode.END : ErrorMode.BOUNDARY));
     }
-    
+
     public static Nono concatArrayDelayError(Nono... sources) {
         ObjectHelper.requireNonNull(sources, "sources is null");
         return onAssembly(new NonoConcatArray(sources, true));
@@ -175,8 +176,9 @@ public abstract class Nono implements Publisher<Void> {
     }
 
     public static Nono merge(Iterable<? extends Nono> sources, int maxConcurrency) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(sources, "sources is null");
+        ObjectHelper.verifyPositive(maxConcurrency, "maxConcurrency");
+        return onAssembly(new NonoMergeIterable(sources, false, maxConcurrency));
     }
 
     public static Nono merge(Publisher<? extends Nono> sources) {
@@ -184,6 +186,8 @@ public abstract class Nono implements Publisher<Void> {
     }
 
     public static Nono merge(Publisher<? extends Nono> sources, int maxConcurrency) {
+        ObjectHelper.requireNonNull(sources, "sources is null");
+        ObjectHelper.verifyPositive(maxConcurrency, "maxConcurrency");
         // TODO implement
         throw new UnsupportedOperationException();
     }
@@ -193,8 +197,9 @@ public abstract class Nono implements Publisher<Void> {
     }
 
     public static Nono mergeArray(int maxConcurrency, Nono... sources) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.verifyPositive(maxConcurrency, "maxConcurrency");
+        ObjectHelper.requireNonNull(sources, "sources is null");
+        return onAssembly(new NonoMergeArray(sources, false, maxConcurrency));
     }
 
 
@@ -203,8 +208,9 @@ public abstract class Nono implements Publisher<Void> {
     }
 
     public static Nono mergeDelayError(Iterable<? extends Nono> sources, int maxConcurrency) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(sources, "sources is null");
+        ObjectHelper.verifyPositive(maxConcurrency, "maxConcurrency");
+        return onAssembly(new NonoMergeIterable(sources, true, maxConcurrency));
     }
 
     public static Nono mergeDelayError(Publisher<? extends Nono> sources) {
@@ -212,6 +218,8 @@ public abstract class Nono implements Publisher<Void> {
     }
 
     public static Nono mergeDelayError(Publisher<? extends Nono> sources, int maxConcurrency) {
+        ObjectHelper.requireNonNull(sources, "sources is null");
+        ObjectHelper.verifyPositive(maxConcurrency, "maxConcurrency");
         // TODO implement
         throw new UnsupportedOperationException();
     }
@@ -221,8 +229,9 @@ public abstract class Nono implements Publisher<Void> {
     }
 
     public static Nono mergeArrayDelayError(int maxConcurrency, Nono... sources) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.verifyPositive(maxConcurrency, "maxConcurrency");
+        ObjectHelper.requireNonNull(sources, "sources is null");
+        return onAssembly(new NonoMergeArray(sources, true, maxConcurrency));
     }
 
     @SchedulerSupport(SchedulerSupport.COMPUTATION)
@@ -236,7 +245,7 @@ public abstract class Nono implements Publisher<Void> {
         ObjectHelper.requireNonNull(scheduler, "scheduler is null");
         return onAssembly(new NonoTimer(delay, unit, scheduler));
     }
-    
+
     public static <R> Nono using(Callable<R> resourceSupplier, Function<? super R, ? extends Nono> sourceSupplier,
             Consumer<? super R> disposer) {
         return using(resourceSupplier, sourceSupplier, disposer, true);
@@ -247,53 +256,56 @@ public abstract class Nono implements Publisher<Void> {
         // TODO implement
         throw new UnsupportedOperationException();
     }
-    
+
     public static Nono fromPublisher(Publisher<?> source) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        if (source instanceof Nono) {
+            return (Nono)source;
+        }
+        ObjectHelper.requireNonNull(source, "source is null");
+        return onAssembly(new NonoFromPublisher(source));
     }
-    
+
     public static Nono fromSingle(SingleSource<?> source) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(source, "source is null");
+        return onAssembly(new NonoFromSingle(source));
     }
-    
+
     public static Nono fromMaybe(MaybeSource<?> source) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(source, "source is null");
+        return onAssembly(new NonoFromMaybe(source));
     }
-    
-    public static Nono fromCompletable(Completable source) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+
+    public static Nono fromCompletable(CompletableSource source) {
+        ObjectHelper.requireNonNull(source, "source is null");
+        return onAssembly(new NonoFromCompletable(source));
     }
-    
+
     public static Nono fromObservable(ObservableSource<?> source) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(source, "source is null");
+        return onAssembly(new NonoFromObservable(source));
     }
-    
+
     // -----------------------------------------------------------
     // Instance operators (stay)
     // -----------------------------------------------------------
-    
+
     public final <T> Flowable<T> andThen(Publisher<? extends T> other) {
         // TODO implement
         throw new UnsupportedOperationException();
     }
 
     public final Nono andThen(Nono other) {
-        // TODO implement
         throw new UnsupportedOperationException();
     }
 
+    @SchedulerSupport(SchedulerSupport.COMPUTATION)
     public final Nono delay(long delay, TimeUnit unit) {
         return delay(delay, unit, Schedulers.computation());
     }
 
+    @SchedulerSupport(SchedulerSupport.CUSTOM)
     public final Nono delay(long delay, TimeUnit unit, Scheduler scheduler) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return onAssembly(new NonoDelay(this, delay, unit, scheduler));
     }
 
     public final Nono delaySubscription(Publisher<?> other) {
@@ -308,11 +320,11 @@ public abstract class Nono implements Publisher<Void> {
     public final Nono delaySubscription(long delay, TimeUnit unit, Scheduler scheduler) {
         return delaySubscription(timer(delay, unit, scheduler));
     }
-    
+
     public final Nono timeout(long delay, TimeUnit unit) {
         return timeout(delay, unit, Schedulers.computation());
     }
-    
+
     public final Nono timeout(long delay, TimeUnit unit, Nono fallback) {
         return timeout(delay, unit, Schedulers.computation(), fallback);
     }
@@ -328,8 +340,7 @@ public abstract class Nono implements Publisher<Void> {
     }
 
     public final Nono onErrorComplete() {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return onAssembly(new NonoOnErrorComplete(this));
     }
 
     public final Nono onErrorResumeNext(Function<? super Throwable, ? extends Nono> errorHandler) {
@@ -349,8 +360,7 @@ public abstract class Nono implements Publisher<Void> {
     }
 
     public final Nono compose(Function<? super Nono, ? extends Nono> composer) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return to(composer);
     }
 
     public final <R> R to(Function<? super Nono, R> converter) {
@@ -360,48 +370,44 @@ public abstract class Nono implements Publisher<Void> {
             throw ExceptionHelper.wrapOrThrow(ex);
         }
     }
-    
+
     public final Nono lift(Function<Subscriber<? super Void>, Subscriber<? super Void>> lifter) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(lifter, "lifter is null");
+        return onAssembly(new NonoLift(this, lifter));
     }
-    
-    @SuppressWarnings("unchecked")
+
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public final <T> Flowable<T> toFlowable() {
         if (this instanceof FuseToFlowable) {
             return ((FuseToFlowable<T>)this).fuseToFlowable();
         }
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return (Flowable)Flowable.fromPublisher(this);
     }
-    
-    @SuppressWarnings("unchecked")
+
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public final <T> Observable<T> toObservable() {
         if (this instanceof FuseToObservable) {
             return ((FuseToObservable<T>)this).fuseToObservable();
         }
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return (Observable)Observable.fromPublisher(this);
     }
 
     public final Completable toCompletable() {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return Completable.fromPublisher(this);
     }
 
     public final <T> Maybe<T> toMaybe() {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return RxJavaPlugins.onAssembly(new NonoToMaybe<T>(this));
     }
 
     public final Nono subscribeOn(Scheduler scheduler) {
         return onAssembly(new NonoSubscribeOn(this, scheduler));
     }
-    
+
     public final Nono observeOn(Scheduler scheduler) {
         return onAssembly(new NonoObserveOn(this, scheduler));
     }
-    
+
     public final Nono unsubscribeOn(Scheduler scheduler) {
         // TODO implement
         throw new UnsupportedOperationException();
@@ -439,7 +445,7 @@ public abstract class Nono implements Publisher<Void> {
     // -----------------------------------------------------------
     // Consumers and subscribers (leave)
     // -----------------------------------------------------------
-    
+
     @Override
     public final void subscribe(Subscriber<? super Void> s) {
         ObjectHelper.requireNonNull(s, "s is null");
@@ -455,13 +461,13 @@ public abstract class Nono implements Publisher<Void> {
             throw npe;
         }
     }
-    
+
     /**
      * Implement this method to signal the terminal events to the given subscriber.
      * @param s the downstream subscriber, not null
      */
     protected abstract void subscribeActual(Subscriber<? super Void> s);
-    
+
     /**
      * Subscribe with the given subscriber and return the same subscriber, allowing
      * chaining methods on it or fluently reusing the instance.
@@ -470,18 +476,21 @@ public abstract class Nono implements Publisher<Void> {
      * @param subscriber the subscriber to subscribe with, not null
      * @return the subscriber
      */
+    @SchedulerSupport(SchedulerSupport.NONE)
     @SuppressWarnings("unchecked")
     public final <T, E extends Subscriber<T>> E subscribeWith(E subscriber) {
         subscribe((Subscriber<Object>)subscriber);
         return subscriber;
     }
-    
+
+    @SchedulerSupport(SchedulerSupport.NONE)
     public final TestSubscriber<Void> test() {
         TestSubscriber<Void> ts = new TestSubscriber<Void>();
         subscribe(ts);
         return ts;
     }
-    
+
+    @SchedulerSupport(SchedulerSupport.NONE)
     public final TestSubscriber<Void> test(boolean cancelled) {
         TestSubscriber<Void> ts = new TestSubscriber<Void>();
         if (cancelled) {
@@ -490,7 +499,8 @@ public abstract class Nono implements Publisher<Void> {
         subscribe(ts);
         return ts;
     }
-    
+
+    @SchedulerSupport(SchedulerSupport.NONE)
     public final Throwable blockingAwait() {
         if (this instanceof Callable) {
             try {
@@ -501,10 +511,12 @@ public abstract class Nono implements Publisher<Void> {
                 return ex;
             }
         }
-        // TODO implement
-        throw new UnsupportedOperationException();
+        NonoBlockingAwaitSubscriber s = new NonoBlockingAwaitSubscriber();
+        subscribe(s);
+        return s.blockingAwait();
     }
-    
+
+    @SchedulerSupport(SchedulerSupport.NONE)
     public final Throwable blockingAwait(long timeout, TimeUnit unit) {
         if (this instanceof Callable) {
             try {
@@ -515,17 +527,24 @@ public abstract class Nono implements Publisher<Void> {
                 return ex;
             }
         }
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(unit, "unit is null");
+        NonoBlockingAwaitSubscriber s = new NonoBlockingAwaitSubscriber();
+        subscribe(s);
+        return s.blockingAwait(timeout, unit);
     }
-    
+
+    @SchedulerSupport(SchedulerSupport.NONE)
     public final Disposable subscribe(Action onComplete) {
         return subscribe(onComplete, Functions.ERROR_CONSUMER);
     }
 
+    @SchedulerSupport(SchedulerSupport.NONE)
     public final Disposable subscribe(Action onComplete, Consumer<? super Throwable> onError) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(onComplete, "onComplete is null");
+        ObjectHelper.requireNonNull(onError, "onError is null");
+        NonoLambdaSubscriber s = new NonoLambdaSubscriber(onComplete, onError);
+        subscribe(s);
+        return s;
     }
 
     public final void blockingSubscribe(Action onComplete) {
@@ -533,7 +552,23 @@ public abstract class Nono implements Publisher<Void> {
     }
 
     public final void blockingSubscribe(Action onComplete, Consumer<? super Throwable> onError) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(onComplete, "onComplete is null");
+        ObjectHelper.requireNonNull(onError, "onError is null");
+        Throwable ex = blockingAwait();
+        if (ex != null) {
+            try {
+                onError.accept(ex);
+            } catch (Throwable exc) {
+                Exceptions.throwIfFatal(exc);
+                RxJavaPlugins.onError(new CompositeException(ex, exc));
+            }
+        } else {
+            try {
+                onComplete.run();
+            } catch (Throwable exc) {
+                Exceptions.throwIfFatal(ex);
+                RxJavaPlugins.onError(ex);
+            }
+        }
     }
 }
