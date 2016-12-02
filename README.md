@@ -20,6 +20,7 @@ Extra sources, operators and components and ports of many 1.x companion librarie
   - [FlowableProcessor utils](#flowableprocessor-utils)
   - [Custom Schedulers](#custom-schedulers)
   - [Custom operators and transformers](#custom-operators-and-transformers)
+  - [Special Publisher implementations](#special-publisher-implementations)
 
 ## Extra functional interfaces
 
@@ -593,13 +594,24 @@ Flowable.range(1, 10)
 .assertResult(4, 8);
 ```
 
+## Special Publisher implementations
+
+### Nono - 0-error publisher
+
+
+### Perhaps - 0-1-error publisher
+
+
+### Solo - 1-error publisher
+
+
 # Releases
 
 **gradle**
 
 ```
 dependencies {
-    compile "com.github.akarnokd:rxjava2-extensions:0.10.0"
+    compile "com.github.akarnokd:rxjava2-extensions:0.11.0"
 }
 ```
 
