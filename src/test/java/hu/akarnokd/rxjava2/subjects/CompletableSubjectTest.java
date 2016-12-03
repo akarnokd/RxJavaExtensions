@@ -34,7 +34,7 @@ public class CompletableSubjectTest {
 
     @Test
     public void once() {
-        CompletableSubject<Integer> ms = CompletableSubject.create();
+        CompletableSubject ms = CompletableSubject.create();
 
         TestObserver<Void> to = ms.test();
 
@@ -55,7 +55,7 @@ public class CompletableSubjectTest {
 
     @Test
     public void error() {
-        CompletableSubject<Integer> ms = CompletableSubject.create();
+        CompletableSubject ms = CompletableSubject.create();
 
         assertFalse(ms.hasComplete());
         assertFalse(ms.hasThrowable());
@@ -91,7 +91,7 @@ public class CompletableSubjectTest {
 
     @Test
     public void complete() {
-        CompletableSubject<Integer> ms = CompletableSubject.create();
+        CompletableSubject ms = CompletableSubject.create();
 
         assertFalse(ms.hasComplete());
         assertFalse(ms.hasThrowable());
@@ -127,7 +127,7 @@ public class CompletableSubjectTest {
 
     @Test
     public void nullThrowable() {
-        CompletableSubject<Integer> ms = CompletableSubject.create();
+        CompletableSubject ms = CompletableSubject.create();
 
         TestObserver<Void> to = ms.test();
 
@@ -145,7 +145,7 @@ public class CompletableSubjectTest {
 
     @Test
     public void cancelOnArrival2() {
-        CompletableSubject<Integer> ms = CompletableSubject.create();
+        CompletableSubject ms = CompletableSubject.create();
 
         ms.test();
 
@@ -187,7 +187,7 @@ public class CompletableSubjectTest {
 
     @Test
     public void onSubscribeDispose() {
-        CompletableSubject<Integer> ms = CompletableSubject.create();
+        CompletableSubject ms = CompletableSubject.create();
 
         Disposable d = Disposables.empty();
 
@@ -207,7 +207,7 @@ public class CompletableSubjectTest {
     @Test
     public void addRemoveRace() {
         for (int i = 0; i < 500; i++) {
-            final CompletableSubject<Integer> ms = CompletableSubject.create();
+            final CompletableSubject ms = CompletableSubject.create();
 
             final TestObserver<Void> to = ms.test();
 

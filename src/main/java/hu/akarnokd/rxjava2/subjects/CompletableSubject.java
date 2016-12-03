@@ -31,34 +31,29 @@ import io.reactivex.plugins.RxJavaPlugins;
  * <p>
  * The CompletableSubject doesn't store the Disposables coming through onSubscribe but
  * disposes them once the other onXXX methods were called (terminal state reached).
- * @param <T> the value type received and emitted
  */
-public final class CompletableSubject<T> extends Completable implements CompletableObserver {
+public final class CompletableSubject extends Completable implements CompletableObserver {
 
-    final AtomicReference<MaybeDisposable<T>[]> observers;
+    final AtomicReference<CompletableDisposable[]> observers;
 
-    @SuppressWarnings("rawtypes")
-    static final MaybeDisposable[] EMPTY = new MaybeDisposable[0];
+    static final CompletableDisposable[] EMPTY = new CompletableDisposable[0];
 
-    @SuppressWarnings("rawtypes")
-    static final MaybeDisposable[] TERMINATED = new MaybeDisposable[0];
+    static final CompletableDisposable[] TERMINATED = new CompletableDisposable[0];
 
     final AtomicBoolean once;
     Throwable error;
 
     /**
      * Creates a fresh CompletableSubject.
-     * @param <T> the value type received and emitted
      * @return the new CompletableSubject instance
      */
-    public static <T> CompletableSubject<T> create() {
-        return new CompletableSubject<T>();
+    public static CompletableSubject create() {
+        return new CompletableSubject();
     }
 
-    @SuppressWarnings("unchecked")
     CompletableSubject() {
         once = new AtomicBoolean();
-        observers = new AtomicReference<MaybeDisposable<T>[]>(EMPTY);
+        observers = new AtomicReference<CompletableDisposable[]>(EMPTY);
     }
 
     @Override
@@ -68,7 +63,6 @@ public final class CompletableSubject<T> extends Completable implements Completa
         }
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public void onError(Throwable e) {
         if (e == null) {
@@ -76,7 +70,7 @@ public final class CompletableSubject<T> extends Completable implements Completa
         }
         if (once.compareAndSet(false, true)) {
             this.error = e;
-            for (MaybeDisposable<T> md : observers.getAndSet(TERMINATED)) {
+            for (CompletableDisposable md : observers.getAndSet(TERMINATED)) {
                 md.actual.onError(e);
             }
         } else {
@@ -84,11 +78,10 @@ public final class CompletableSubject<T> extends Completable implements Completa
         }
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public void onComplete() {
         if (once.compareAndSet(false, true)) {
-            for (MaybeDisposable<T> md : observers.getAndSet(TERMINATED)) {
+            for (CompletableDisposable md : observers.getAndSet(TERMINATED)) {
                 md.actual.onComplete();
             }
         }
@@ -96,7 +89,7 @@ public final class CompletableSubject<T> extends Completable implements Completa
 
     @Override
     protected void subscribeActual(CompletableObserver observer) {
-        MaybeDisposable<T> md = new MaybeDisposable<T>(observer, this);
+        CompletableDisposable md = new CompletableDisposable(observer, this);
         observer.onSubscribe(md);
         if (add(md)) {
             if (md.isDisposed()) {
@@ -112,16 +105,16 @@ public final class CompletableSubject<T> extends Completable implements Completa
         }
     }
 
-    boolean add(MaybeDisposable<T> inner) {
+    boolean add(CompletableDisposable inner) {
         for (;;) {
-            MaybeDisposable<T>[] a = observers.get();
+            CompletableDisposable[] a = observers.get();
             if (a == TERMINATED) {
                 return false;
             }
 
             int n = a.length;
-            @SuppressWarnings("unchecked")
-            MaybeDisposable<T>[] b = new MaybeDisposable[n + 1];
+
+            CompletableDisposable[] b = new CompletableDisposable[n + 1];
             System.arraycopy(a, 0, b, 0, n);
             b[n] = inner;
             if (observers.compareAndSet(a, b)) {
@@ -130,10 +123,9 @@ public final class CompletableSubject<T> extends Completable implements Completa
         }
     }
 
-    @SuppressWarnings("unchecked")
-    void remove(MaybeDisposable<T> inner) {
+    void remove(CompletableDisposable inner) {
         for (;;) {
-            MaybeDisposable<T>[] a = observers.get();
+            CompletableDisposable[] a = observers.get();
             int n = a.length;
             if (n == 0) {
                 return;
@@ -151,11 +143,11 @@ public final class CompletableSubject<T> extends Completable implements Completa
             if (j < 0) {
                 return;
             }
-            MaybeDisposable<T>[] b;
+            CompletableDisposable[] b;
             if (n == 1) {
                 b = EMPTY;
             } else {
-                b = new MaybeDisposable[n - 1];
+                b = new CompletableDisposable[n - 1];
                 System.arraycopy(a, 0, b, 0, j);
                 System.arraycopy(a, j + 1, b, j, n - j - 1);
             }
@@ -209,20 +201,20 @@ public final class CompletableSubject<T> extends Completable implements Completa
         return observers.get().length;
     }
 
-    static final class MaybeDisposable<T>
-    extends AtomicReference<CompletableSubject<T>> implements Disposable {
+    static final class CompletableDisposable
+    extends AtomicReference<CompletableSubject> implements Disposable {
         private static final long serialVersionUID = -7650903191002190468L;
 
         final CompletableObserver actual;
 
-        MaybeDisposable(CompletableObserver actual, CompletableSubject<T> parent) {
+        CompletableDisposable(CompletableObserver actual, CompletableSubject parent) {
             this.actual = actual;
             lazySet(parent);
         }
 
         @Override
         public void dispose() {
-            CompletableSubject<T> parent = getAndSet(null);
+            CompletableSubject parent = getAndSet(null);
             if (parent != null) {
                 parent.remove(this);
             }
