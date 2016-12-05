@@ -50,7 +50,7 @@ final class FlowableMapFilter<T, R> extends Flowable<R> implements FlowableTrans
     @Override
     protected void subscribeActual(Subscriber<? super R> s) {
         if (s instanceof ConditionalSubscriber) {
-            source.subscribe(new MapFilterSubscriber<T, R>((ConditionalSubscriber<? super R>)s, consumer));
+            source.subscribe(new MapFilterConditionalSubscriber<T, R>((ConditionalSubscriber<? super R>)s, consumer));
         } else {
             source.subscribe(new MapFilterSubscriber<T, R>(s, consumer));
         }

@@ -242,7 +242,8 @@ final class NonoConcat extends Nono {
             HalfSerializer.onError(actual, t, this, error);
         }
 
-        void innerError(Throwable t) {
+        @Override
+        public void innerError(Throwable t) {
             cancel();
             HalfSerializer.onError(actual, t, this, error);
         }
@@ -264,7 +265,8 @@ final class NonoConcat extends Nono {
             }
         }
 
-        void drain() {
+        @Override
+        public void drain() {
             if (wip.getAndIncrement() != 0) {
                 return;
             }
