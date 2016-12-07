@@ -53,6 +53,7 @@ final class NonoConcatIterable extends Nono {
         }
 
         ConcatSubscriber parent = new ConcatSubscriber(s, it, delayError);
+        s.onSubscribe(parent);
         parent.drain();
     }
 

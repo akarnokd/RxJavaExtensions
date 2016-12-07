@@ -49,6 +49,9 @@ final class NonoFromFuture extends Nono implements Callable<Void> {
             } else {
                 future.get(timeout, unit);
             }
+        } catch (ExecutionException ex) {
+            s.onError(ex.getCause());
+            return;
         } catch (Throwable ex) {
             Exceptions.throwIfFatal(ex);
             s.onError(ex);

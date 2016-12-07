@@ -40,6 +40,7 @@ final class NonoConcatArray extends Nono {
     @Override
     protected void subscribeActual(Subscriber<? super Void> s) {
         ConcatSubscriber parent = new ConcatSubscriber(s, sources, delayError);
+        s.onSubscribe(parent);
         parent.drain();
     }
 

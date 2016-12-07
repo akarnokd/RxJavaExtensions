@@ -126,6 +126,7 @@ final class NonoConcat extends Nono {
 
                     int m = qs.requestFusion(ANY);
                     if (m == SYNC) {
+                        sourceMode = m;
                         queue = qs;
                         done = true;
 
@@ -135,6 +136,7 @@ final class NonoConcat extends Nono {
                         return;
                     }
                     if (m == ASYNC) {
+                        sourceMode = m;
                         queue = qs;
 
                         actual.onSubscribe(this);
