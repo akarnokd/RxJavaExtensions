@@ -53,7 +53,7 @@ final class NonoConcat extends Nono {
         }
     }
 
-    static abstract class AbstractConcatSubscriber extends BasicIntQueueSubscription<Void>
+    abstract static class AbstractConcatSubscriber extends BasicIntQueueSubscription<Void>
     implements Subscriber<Nono> {
 
         private static final long serialVersionUID = -2273338080908719181L;

@@ -32,7 +32,7 @@ import io.reactivex.internal.subscriptions.SubscriptionHelper;
  * a-b-c-d-e--f----g-|
  * spanout(---)
  * a---b---c---d---e---f----g-|
- * </code</pre>
+ * </code></pre>
  * @param <T> the upstream value type
  * @since 0.9.0
  */

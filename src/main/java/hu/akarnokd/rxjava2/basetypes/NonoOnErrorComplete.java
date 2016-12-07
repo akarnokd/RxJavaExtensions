@@ -36,7 +36,7 @@ final class NonoOnErrorComplete extends Nono {
 
     static final class OnErrorCompleteSubscriber extends BasicNonoSubscriber {
 
-        public OnErrorCompleteSubscriber(Subscriber<? super Void> actual) {
+        OnErrorCompleteSubscriber(Subscriber<? super Void> actual) {
             super(actual);
         }
 

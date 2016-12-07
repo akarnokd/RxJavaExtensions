@@ -188,8 +188,7 @@ public abstract class Nono implements Publisher<Void> {
     public static Nono merge(Publisher<? extends Nono> sources, int maxConcurrency) {
         ObjectHelper.requireNonNull(sources, "sources is null");
         ObjectHelper.verifyPositive(maxConcurrency, "maxConcurrency");
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return onAssembly(new NonoMerge(sources, false, maxConcurrency));
     }
 
     public static Nono mergeArray(Nono... sources) {
@@ -220,8 +219,7 @@ public abstract class Nono implements Publisher<Void> {
     public static Nono mergeDelayError(Publisher<? extends Nono> sources, int maxConcurrency) {
         ObjectHelper.requireNonNull(sources, "sources is null");
         ObjectHelper.verifyPositive(maxConcurrency, "maxConcurrency");
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return onAssembly(new NonoMerge(sources, true, maxConcurrency));
     }
 
     public static Nono mergeArrayDelayError(Nono... sources) {
@@ -256,8 +254,7 @@ public abstract class Nono implements Publisher<Void> {
         ObjectHelper.requireNonNull(resourceSupplier, "resourceSupplier is null");
         ObjectHelper.requireNonNull(sourceSupplier, "sourceSupplier is null");
         ObjectHelper.requireNonNull(disposer, "disposer is null");
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return onAssembly(new NonoUsing<R>(resourceSupplier, sourceSupplier, disposer, eager));
     }
 
     public static Nono fromPublisher(Publisher<?> source) {
@@ -294,14 +291,12 @@ public abstract class Nono implements Publisher<Void> {
 
     public final <T> Flowable<T> andThen(Publisher<? extends T> other) {
         ObjectHelper.requireNonNull(other, "other is null");
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return RxJavaPlugins.onAssembly(new NonoAndThenPublisher<T>(this, other));
     }
 
     public final Nono andThen(Nono other) {
         ObjectHelper.requireNonNull(other, "other is null");
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return onAssembly(new NonoAndThen(this, other));
     }
 
     @SchedulerSupport(SchedulerSupport.COMPUTATION)
@@ -318,8 +313,7 @@ public abstract class Nono implements Publisher<Void> {
 
     public final Nono delaySubscription(Publisher<?> other) {
         ObjectHelper.requireNonNull(other, "other is null");
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return onAssembly(new NonoDelaySubscription(this, other));
     }
 
     public final Nono delaySubscription(long delay, TimeUnit unit) {

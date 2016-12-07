@@ -18,6 +18,8 @@ package hu.akarnokd.rxjava2.basetypes;
 
 import org.reactivestreams.*;
 
+import io.reactivex.internal.subscriptions.SubscriptionHelper;
+
 /**
  * Convert a Publisher into a Nono.
  */
@@ -36,10 +38,20 @@ final class NonoFromPublisher extends Nono {
 
     static final class FromPublisherSubscriber extends BasicNonoSubscriber {
 
-        public FromPublisherSubscriber(Subscriber<? super Void> actual) {
+        FromPublisherSubscriber(Subscriber<? super Void> actual) {
             super(actual);
         }
 
+        @Override
+        public void onSubscribe(Subscription s) {
+            if (SubscriptionHelper.validate(this.s, s)) {
+                this.s = s;
+
+                actual.onSubscribe(this);
+
+                s.request(Long.MAX_VALUE);
+            }
+        }
         @Override
         public void onError(Throwable t) {
             actual.onError(t);

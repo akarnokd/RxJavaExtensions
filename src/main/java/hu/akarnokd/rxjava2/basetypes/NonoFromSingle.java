@@ -45,7 +45,7 @@ final class NonoFromSingle extends Nono {
 
         Disposable d;
 
-        public FromSingleObserver(Subscriber<? super Void> actual) {
+        FromSingleObserver(Subscriber<? super Void> actual) {
             this.actual = actual;
         }
 

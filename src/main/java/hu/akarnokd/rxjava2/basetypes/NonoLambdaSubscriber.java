@@ -27,7 +27,7 @@ import io.reactivex.internal.subscriptions.SubscriptionHelper;
 import io.reactivex.plugins.RxJavaPlugins;
 
 /**
- * Calls the appropriate function when this Subscriber terminates
+ * Calls the appropriate function when this Subscriber terminates.
  */
 final class NonoLambdaSubscriber extends AtomicReference<Subscription> implements Subscriber<Void>, Disposable {
 

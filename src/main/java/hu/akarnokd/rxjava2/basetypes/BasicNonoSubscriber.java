@@ -27,7 +27,7 @@ public abstract class BasicNonoSubscriber extends BasicEmptyQueueSubscription im
 
     protected final Subscriber<? super Void> actual;
 
-    Subscription s;
+    protected Subscription s;
 
     public BasicNonoSubscriber(Subscriber<? super Void> actual) {
         this.actual = actual;

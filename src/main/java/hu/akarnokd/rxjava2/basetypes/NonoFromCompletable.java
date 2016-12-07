@@ -45,7 +45,7 @@ final class NonoFromCompletable extends Nono {
 
         Disposable d;
 
-        public FromCompletableObserver(Subscriber<? super Void> actual) {
+        FromCompletableObserver(Subscriber<? super Void> actual) {
             this.actual = actual;
         }
 

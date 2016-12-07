@@ -45,7 +45,7 @@ final class NonoFromMaybe extends Nono {
 
         Disposable d;
 
-        public FromMaybeObserver(Subscriber<? super Void> actual) {
+        FromMaybeObserver(Subscriber<? super Void> actual) {
             this.actual = actual;
         }
 

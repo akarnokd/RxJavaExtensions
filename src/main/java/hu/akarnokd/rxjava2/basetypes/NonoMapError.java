@@ -45,7 +45,7 @@ final class NonoMapError extends Nono {
 
         final Function<? super Throwable, ? extends Throwable> mapper;
 
-        public MapErrorSubscriber(Subscriber<? super Void> actual, Function<? super Throwable, ? extends Throwable> mapper) {
+        MapErrorSubscriber(Subscriber<? super Void> actual, Function<? super Throwable, ? extends Throwable> mapper) {
             super(actual);
             this.mapper = mapper;
         }
