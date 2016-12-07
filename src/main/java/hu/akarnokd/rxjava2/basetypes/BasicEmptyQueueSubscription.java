@@ -49,7 +49,7 @@ public abstract class BasicEmptyQueueSubscription implements QueueSubscription<V
     }
 
     @Override
-    public final void request(long n) {
+    public void request(long n) {
         // no-op
     }
 
