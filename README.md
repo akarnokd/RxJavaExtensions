@@ -6,6 +6,21 @@
 
 Extra sources, operators and components and ports of many 1.x companion libraries for RxJava 2.x.
 
+# Releases
+
+**gradle**
+
+```
+dependencies {
+    compile "com.github.akarnokd:rxjava2-extensions:0.12.0"
+}
+```
+
+
+Maven search:
+
+[http://search.maven.org](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.github.akarnokd%22)
+
 # Features
 
   - [Extra functional interfaces](#extra-functional-interfaces)
@@ -605,17 +620,3 @@ Flowable.range(1, 10)
 ### Solo - 1-error publisher
 
 
-# Releases
-
-**gradle**
-
-```
-dependencies {
-    compile "com.github.akarnokd:rxjava2-extensions:0.11.0"
-}
-```
-
-
-Maven search:
-
-[http://search.maven.org](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.github.akarnokd%22)
