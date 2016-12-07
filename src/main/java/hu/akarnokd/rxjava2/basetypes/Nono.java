@@ -103,6 +103,14 @@ public abstract class Nono implements Publisher<Void> {
     }
 
     /**
+     * Returns a Nono that never terminates.
+     * @return the new Nono instance
+     */
+    public static Nono never() {
+        return onAssembly(NonoNever.INSTANCE);
+    }
+
+    /**
      * Returns a Nono that signals the given Throwable to all
      * subscribers.
      * @param ex the Throwable to signal, not null
@@ -802,48 +810,85 @@ public abstract class Nono implements Publisher<Void> {
                 ));
     }
 
+    /**
+     * Repeatedly run this Nono indefinitely.
+     * @return the new Nono instance
+     */
     public final Nono repeat() {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return onAssembly(new NonoRepeat(this, Long.MAX_VALUE));
     }
 
+    /**
+     * Repeatedly run this Nono at most the given number of times.
+     * @param times the repeat count
+     * @return the new Nono instance
+     */
     public final Nono repeat(long times) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return onAssembly(new NonoRepeat(this, times));
     }
 
+    /**
+     * Repeat until the given BooleanSupplier returns true.
+     * @param stop the boolean supplier to return null to stop repeating
+     * @return the new Nono instance
+     */
     public final Nono repeat(BooleanSupplier stop) {
         ObjectHelper.requireNonNull(stop, "stop is null");
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return onAssembly(new NonoRepeatUntil(this, stop));
     }
 
-    public final Nono repeatWhen(Function<Flowable<Object>, Publisher<?>> handler) {
+    /**
+     * Repeat when the Publisher returned by the handler function signals
+     * a value or terminate accordingly.
+     * @param handler the Function that receives a Flowable that emits an object
+     * when this Nono completes normally and should return a Publisher that if
+     * signals a normal item, it triggers a resubscription to this Nono.
+     * @return the new Nono instance
+     */
+    public final Nono repeatWhen(Function<? super Flowable<Object>, ? extends Publisher<?>> handler) {
         ObjectHelper.requireNonNull(handler, "handler is null");
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return onAssembly(new NonoRepeatWhen(this, handler));
     }
 
+    /**
+     * Repeatedly run this Nono indefinitely if it fails.
+     * @return the new Nono instance
+     */
     public final Nono retry() {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return onAssembly(new NonoRetry(this, Long.MAX_VALUE));
     }
 
+    /**
+     * Repeatedly run this Nono at most the given number of times if it fails.
+     * @param times the repeat count
+     * @return the new Nono instance
+     */
     public final Nono retry(long times) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return onAssembly(new NonoRetry(this, times));
     }
 
+    /**
+     * Retry a failed Nono if the predicate return true
+     * @param predicate the predicate receiving the failure Throwable and
+     * returns true to trigger a retry.
+     * @return the new Nono instance
+     */
     public final Nono retry(Predicate<? super Throwable> predicate) {
         ObjectHelper.requireNonNull(predicate, "predicate is null");
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return onAssembly(new NonoRetryWhile(this, predicate));
     }
 
-    public final Nono retryWhen(Function<Flowable<Throwable>, Publisher<?>> handler) {
+    /**
+     * Retry this Nono when the Publisher returned by the handler function
+     * signals a normal item or terminate if the Publisher terminates.
+     * @param handler the Function that receives a Flowable of the failure Throwable
+     * and returns a Publisher that if signals a normal item, it triggers a
+     * resubscription.
+     * @return the new Nono instance
+     */
+    public final Nono retryWhen(Function<? super Flowable<Throwable>, ? extends Publisher<?>> handler) {
         ObjectHelper.requireNonNull(handler, "handler is null");
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return onAssembly(new NonoRetryWhen(this, handler));
     }
 
     // -----------------------------------------------------------
