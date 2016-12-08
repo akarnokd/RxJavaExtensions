@@ -56,6 +56,8 @@ final class NonoRepeat extends Nono {
 
         protected volatile boolean active;
 
+        boolean once;
+
         RedoSubscriber(Subscriber<? super Void> actual, long times, Nono source) {
             this.actual = actual;
             this.times = times;
@@ -71,6 +73,10 @@ final class NonoRepeat extends Nono {
         @Override
         public void onSubscribe(Subscription s) {
             SubscriptionHelper.replace(this.s, s);
+            if (!once) {
+                once = true;
+                actual.onSubscribe(this);
+            }
         }
 
         @Override
@@ -78,10 +84,14 @@ final class NonoRepeat extends Nono {
             // never called
         }
 
-        protected final void subscribeNext() {
+        protected final void subscribeNext(Throwable ex) {
             long p = times;
             if (p == 1) {
-                actual.onComplete();
+                if (ex != null) {
+                    actual.onError(ex);
+                } else {
+                    actual.onComplete();
+                }
             } else {
                 if (p != Long.MAX_VALUE) {
                     times = p - 1;
@@ -118,7 +128,7 @@ final class NonoRepeat extends Nono {
         @Override
         public void onComplete() {
             active = false;
-            subscribeNext();
+            subscribeNext(null);
         }
     }
 }

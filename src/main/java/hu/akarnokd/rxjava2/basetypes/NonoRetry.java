@@ -50,7 +50,7 @@ final class NonoRetry extends Nono {
         @Override
         public void onError(Throwable t) {
             active = false;
-            subscribeNext();
+            subscribeNext(t);
         }
 
         @Override

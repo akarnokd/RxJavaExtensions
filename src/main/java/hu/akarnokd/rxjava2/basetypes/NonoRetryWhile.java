@@ -58,6 +58,8 @@ final class NonoRetryWhile extends Nono {
 
         volatile boolean active;
 
+        boolean once;
+
         RetryUntilSubscriber(Subscriber<? super Void> actual,
                 Predicate<? super Throwable> predicate, Nono source) {
             this.actual = actual;
@@ -74,6 +76,10 @@ final class NonoRetryWhile extends Nono {
         @Override
         public void onSubscribe(Subscription s) {
             SubscriptionHelper.replace(this.s, s);
+            if (!once) {
+                once = true;
+                actual.onSubscribe(this);
+            }
         }
 
         @Override
@@ -93,8 +99,8 @@ final class NonoRetryWhile extends Nono {
                 return;
             }
 
-            if (b) {
-                actual.onComplete();
+            if (!b) {
+                actual.onError(t);
             } else {
                 active = false;
                 if (getAndIncrement() == 0) {

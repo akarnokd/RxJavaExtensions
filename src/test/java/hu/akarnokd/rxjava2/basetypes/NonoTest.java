@@ -21,7 +21,7 @@ import java.util.*;
 import java.util.concurrent.*;
 
 import org.junit.*;
-import org.reactivestreams.Subscriber;
+import org.reactivestreams.*;
 
 import hu.akarnokd.rxjava2.test.TestHelper;
 import io.reactivex.*;
@@ -1739,5 +1739,274 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer {
         } finally {
             RxJavaPlugins.reset();
         }
+    }
+
+    @Test(timeout = 5000)
+    public void repeat() {
+        final int[] counter = { 0 };
+
+        Nono.fromAction(new Action() {
+            @Override
+            public void run() throws Exception {
+                if (counter[0]++ == 5) {
+                    throw new CancellationException();
+                }
+            }
+        }).repeat()
+        .test()
+        .assertFailure(CancellationException.class);
+
+        Assert.assertEquals(6, counter[0]);
+    }
+
+    @Test
+    public void repeatLimit() {
+        Nono.fromAction(this)
+        .repeat(5)
+        .test()
+        .assertResult();
+
+        Assert.assertEquals(5, count);
+    }
+
+    @Test
+    public void repeatBoolean() {
+        Nono.fromAction(this)
+        .repeat(new BooleanSupplier() {
+            @Override
+            public boolean getAsBoolean() throws Exception {
+                return count == 5;
+            }
+        })
+        .test()
+        .assertResult();
+
+        Assert.assertEquals(5, count);
+    }
+
+    @Test
+    public void repeatBooleanError() {
+        ioError
+        .repeat(new BooleanSupplier() {
+            @Override
+            public boolean getAsBoolean() throws Exception {
+                return count == 5;
+            }
+        })
+        .test()
+        .assertFailure(IOException.class);
+
+        Assert.assertEquals(0, count);
+    }
+
+    @Test
+    public void repeatBooleanThrows() {
+        Nono.fromAction(this)
+        .repeat(new BooleanSupplier() {
+            @Override
+            public boolean getAsBoolean() throws Exception {
+                throw new IOException();
+            }
+        })
+        .test()
+        .assertFailure(IOException.class);
+
+        Assert.assertEquals(1, count);
+    }
+
+    @Test
+    public void repeatWhen() {
+        Nono.fromAction(this)
+        .repeatWhen(new Function<Flowable<Object>, Publisher<Object>>() {
+            @Override
+            public Publisher<Object> apply(Flowable<Object> f) throws Exception {
+                return f.takeWhile(new Predicate<Object>() {
+                    @Override
+                    public boolean test(Object v) throws Exception {
+                        return count == 5;
+                    }
+                });
+            }
+        })
+        .test()
+        .assertResult();
+    }
+
+    @Test
+    public void repeatWhenError() {
+        ioError
+        .repeatWhen(new Function<Flowable<Object>, Publisher<Object>>() {
+            @Override
+            public Publisher<Object> apply(Flowable<Object> f) throws Exception {
+                return f.takeWhile(new Predicate<Object>() {
+                    @Override
+                    public boolean test(Object v) throws Exception {
+                        return count == 5;
+                    }
+                });
+            }
+        })
+        .test()
+        .assertFailure(IOException.class);
+    }
+
+    @Test
+    public void repeatWhenThrows() {
+        Nono.fromAction(this)
+        .repeatWhen(new Function<Flowable<Object>, Publisher<Object>>() {
+            @Override
+            public Publisher<Object> apply(Flowable<Object> f) throws Exception {
+                throw new IOException();
+            }
+        })
+        .test()
+        .assertFailure(IOException.class);
+    }
+
+    @Test
+    public void repeatWhenSignalError() {
+        Nono.fromAction(this)
+        .repeatWhen(new Function<Flowable<Object>, Publisher<Object>>() {
+            @Override
+            public Publisher<Object> apply(Flowable<Object> f) throws Exception {
+                return f.map(new Function<Object, Object>() {
+                    @Override
+                    public Object apply(Object v) throws Exception {
+                        throw new IOException();
+                    }
+                });
+            }
+        })
+        .test()
+        .assertFailure(IOException.class);
+    }
+
+    @Test(timeout = 5000)
+    public void retry() {
+        Nono.fromAction(new Action() {
+            @Override
+            public void run() throws Exception {
+                if (count++ != 5) {
+                    throw new IOException();
+                }
+            }
+        }).retry()
+        .test()
+        .assertResult();
+    }
+
+    @Test(timeout = 5000)
+    public void retryNoError() {
+        Nono.fromAction(this)
+        .retry()
+        .test()
+        .assertResult();
+
+        Assert.assertEquals(1, count);
+    }
+
+    @Test
+    public void retryLimit() {
+        Nono.fromAction(new Action() {
+            @Override
+            public void run() throws Exception {
+                throw new IOException();
+            }
+        }).retry(5)
+        .test()
+        .assertFailure(IOException.class);
+    }
+
+    @Test
+    public void retryLimit2() {
+        Nono.fromAction(new Action() {
+            @Override
+            public void run() throws Exception {
+                if (count++ != 4) {
+                    throw new IOException();
+                }
+            }
+        }).retry(5)
+        .test()
+        .assertResult();
+    }
+
+    @Test(timeout = 5000)
+    public void retryLimitNoError() {
+        Nono.fromAction(this)
+        .retry(5)
+        .test()
+        .assertResult();
+
+        Assert.assertEquals(1, count);
+    }
+
+    @Test
+    public void retryPredicateNoError() {
+        Nono.fromAction(this)
+        .retry(Functions.alwaysTrue())
+        .test()
+        .assertResult();
+    }
+
+    @Test(timeout = 5000)
+    public void retryPredicateNoRetry() {
+        ioError
+        .retry(Functions.alwaysFalse())
+        .test()
+        .assertFailure(IOException.class);
+    }
+
+    @Test
+    public void retryPredicate() {
+        Nono.fromAction(new Action() {
+            @Override
+            public void run() throws Exception {
+                if (count++ != 4) {
+                    throw new IOException();
+                }
+            }
+        }).retry(Functions.alwaysTrue())
+        .test()
+        .assertResult();
+    }
+
+    @Test
+    public void retryPredicateLimit() {
+        Nono.fromAction(new Action() {
+            @Override
+            public void run() throws Exception {
+                count++;
+                throw new IOException();
+            }
+        }).retry(new Predicate<Throwable>() {
+            @Override
+            public boolean test(Throwable e) throws Exception {
+                return count != 5;
+            }
+        })
+        .test()
+        .assertFailure(IOException.class);
+    }
+
+    @Test
+    public void retryPredicateThrows() {
+        ioError
+        .retry(new Predicate<Throwable>() {
+            @Override
+            public boolean test(Throwable e) throws Exception {
+                throw new IllegalArgumentException();
+            }
+        })
+        .test()
+        .assertFailure(CompositeException.class)
+        .assertOf(new Consumer<TestSubscriber<Void>>() {
+            @Override
+            public void accept(TestSubscriber<Void> ts) throws Exception {
+                List<Throwable> errors = TestHelper.compositeList(ts.errors().get(0));
+                TestHelper.assertError(errors, 0, IOException.class);
+                TestHelper.assertError(errors, 1, IllegalArgumentException.class);
+            }
+        });
     }
 }

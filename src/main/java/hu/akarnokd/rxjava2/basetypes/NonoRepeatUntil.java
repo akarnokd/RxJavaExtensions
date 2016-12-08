@@ -58,6 +58,8 @@ final class NonoRepeatUntil extends Nono {
 
         volatile boolean active;
 
+        boolean once;
+
         RepeatUntilSubscriber(Subscriber<? super Void> actual,
                 BooleanSupplier stop, Nono source) {
             this.actual = actual;
@@ -74,6 +76,10 @@ final class NonoRepeatUntil extends Nono {
         @Override
         public void onSubscribe(Subscription s) {
             SubscriptionHelper.replace(this.s, s);
+            if (!once) {
+                once = true;
+                actual.onSubscribe(this);
+            }
         }
 
         @Override
