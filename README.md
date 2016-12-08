@@ -619,11 +619,11 @@ Examples:
 
 ```java
 Nono.fromAction(() -> System.out.println("Hello world!"))
-    .subscribe();
+    .subscribe(() -> { });
 
 Nono.fromAction(() -> System.out.println("Hello world!"))
     .delay(1, TimeUnit.SECONDS)
-    .blockingSubscribe();
+    .blockingSubscribe(() -> { });
 
 Nono.complete()
     .test()

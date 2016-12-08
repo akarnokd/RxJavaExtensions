@@ -1023,6 +1023,15 @@ public abstract class Nono implements Publisher<Void> {
     }
 
     /**
+     * Subscribe to this Nono and ignore the events it produces.
+     * @return the Disposable to cancel the subscription
+     * @since 0.13.0
+     */
+    public final Disposable subscribe() {
+        return subscribe(Functions.EMPTY_ACTION, Functions.ERROR_CONSUMER);
+    }
+
+    /**
      * Subscribe to this Nono and execute the given action if this Nono
      * completes.
      * @param onComplete the callback Action to be called when this Nono
@@ -1050,6 +1059,14 @@ public abstract class Nono implements Publisher<Void> {
         NonoLambdaSubscriber s = new NonoLambdaSubscriber(onComplete, onError);
         subscribe(s);
         return s;
+    }
+
+    /**
+     * Block until this Nono terminates and ignore the actual events.
+     * @since 0.13.0
+     */
+    public final void blockingSubscribe() {
+        blockingSubscribe(Functions.EMPTY_ACTION, Functions.ERROR_CONSUMER);
     }
 
     /**

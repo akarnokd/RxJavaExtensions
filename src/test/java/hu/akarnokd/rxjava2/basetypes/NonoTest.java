@@ -2653,4 +2653,44 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer {
         .assertEmpty()
         .cancel();
     }
+
+    @Test
+    public void subscribe() {
+        Nono.fromAction(this).subscribe();
+
+        Assert.assertEquals(1, count);
+    }
+
+    @Test
+    public void subscribeError() {
+        List<Throwable> errors = TestHelper.trackPluginErrors();
+        try {
+            ioError.subscribe();
+
+            TestHelper.assertError(errors, 0, IOException.class);
+        } finally {
+            RxJavaPlugins.reset();
+        }
+    }
+
+    @Test
+    public void blockingSubscribe() {
+        Nono.fromAction(this)
+        .delay(100, TimeUnit.MILLISECONDS)
+        .blockingSubscribe();
+    }
+
+    @Test
+    public void blockingSubscribeError() {
+        List<Throwable> errors = TestHelper.trackPluginErrors();
+        try {
+            ioError
+            .delay(100, TimeUnit.MILLISECONDS)
+            .blockingSubscribe();
+
+            TestHelper.assertError(errors, 0, IOException.class);
+        } finally {
+            RxJavaPlugins.reset();
+        }
+    }
 }
