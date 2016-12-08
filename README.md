@@ -613,6 +613,45 @@ Flowable.range(1, 10)
 
 ### Nono - 0-error publisher
 
+The `Publisher`-based sibling of the `Completable` type. The usage is practically the same as `Completable` with the exception that because `Nono` implements the Reactive-Streams `Publisher`, you can use it directly with operators of `Flowable` that accept `Publisher` in some form.
+
+Examples:
+
+```java
+Nono.fromAction(() -> System.out.println("Hello world!"))
+    .subscribe();
+
+Nono.fromAction(() -> System.out.println("Hello world!"))
+    .delay(1, TimeUnit.SECONDS)
+    .blockingSubscribe();
+
+Nono.complete()
+    .test()
+    .assertResult();
+
+Nono.error(new IOException())
+    .test()
+    .assertFailure(IOException.class);
+
+Flowable.range(1, 10)
+    .to(Nono::fromPublisher)
+    .test()
+    .assertResult();
+```
+
+#### NonoProcessor
+
+A hot, Reactive-Streams `Processor` implementation of `Nono`.
+
+```java
+NonoProcessor np = NonoProcessor.create();
+
+TestSubscriber<Void> ts = np.test();
+
+np.onComplete();
+
+ts.assertResult();
+```
 
 ### Perhaps - 0-1-error publisher
 

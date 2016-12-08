@@ -81,7 +81,7 @@ final class NonoUsing<R> extends Nono {
                     disposer.accept(resource);
                 } catch (Throwable exc) {
                     Exceptions.throwIfFatal(exc);
-                    RxJavaPlugins.onError(new CompositeException(ex, exc));
+                    RxJavaPlugins.onError(exc);
                 }
             }
             return;

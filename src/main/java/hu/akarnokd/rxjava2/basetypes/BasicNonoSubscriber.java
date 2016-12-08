@@ -23,13 +23,13 @@ import io.reactivex.internal.subscriptions.SubscriptionHelper;
 /**
  * Basic subscriber that supports queue fusion and defaults onSubscribe, onNext and cancel.
  */
-public abstract class BasicNonoSubscriber extends BasicEmptyQueueSubscription implements Subscriber<Object> {
+abstract class BasicNonoSubscriber extends BasicEmptyQueueSubscription implements Subscriber<Object> {
 
     protected final Subscriber<? super Void> actual;
 
     protected Subscription s;
 
-    public BasicNonoSubscriber(Subscriber<? super Void> actual) {
+    BasicNonoSubscriber(Subscriber<? super Void> actual) {
         this.actual = actual;
     }
 

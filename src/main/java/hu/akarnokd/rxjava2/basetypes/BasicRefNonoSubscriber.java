@@ -25,14 +25,14 @@ import io.reactivex.internal.subscriptions.SubscriptionHelper;
  * 
  * @param <R> the reference type
  */
-public abstract class BasicRefNonoSubscriber<R> extends BasicRefQueueSubscription<Void, R> implements Subscriber<Void> {
+abstract class BasicRefNonoSubscriber<R> extends BasicRefQueueSubscription<Void, R> implements Subscriber<Void> {
     private static final long serialVersionUID = -3157015053656142804L;
 
     protected final Subscriber<? super Void> actual;
 
     Subscription s;
 
-    public BasicRefNonoSubscriber(Subscriber<? super Void> actual) {
+    BasicRefNonoSubscriber(Subscriber<? super Void> actual) {
         this.actual = actual;
     }
 

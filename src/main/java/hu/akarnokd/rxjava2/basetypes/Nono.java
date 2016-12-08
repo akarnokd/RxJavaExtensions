@@ -884,6 +884,28 @@ public abstract class Nono implements Publisher<Void> {
         return onAssembly(new NonoRetryWhen(this, handler));
     }
 
+    /**
+     * Hides the identity of this Nono.
+     * <p>
+     * This also breaks optimizations such as operator fusion - useful
+     * when diagnosing issues.
+     * @return the new Nono instance
+     */
+    public final Nono hide() {
+        return onAssembly(new NonoHide(this));
+    }
+
+    /**
+     * Run this Nono and cancel it when the other Publisher signals
+     * an item or completes.
+     * @param other the other Publisher
+     * @return the new Nono instance
+     */
+    public final Nono takeUntil(Publisher<?> other) {
+        ObjectHelper.requireNonNull(other, "other is null");
+        return onAssembly(new NonoTakeUntil(this, other));
+    }
+
     // -----------------------------------------------------------
     // Consumers and subscribers (leave)
     // -----------------------------------------------------------
@@ -1062,8 +1084,8 @@ public abstract class Nono implements Publisher<Void> {
             try {
                 onComplete.run();
             } catch (Throwable exc) {
-                Exceptions.throwIfFatal(ex);
-                RxJavaPlugins.onError(ex);
+                Exceptions.throwIfFatal(exc);
+                RxJavaPlugins.onError(exc);
             }
         }
     }

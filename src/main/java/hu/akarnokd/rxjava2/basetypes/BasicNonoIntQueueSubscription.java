@@ -23,7 +23,7 @@ import io.reactivex.internal.fuseable.QueueSubscription;
 /**
  * Base class for atomic integer, async-fuseable intermediate operators.
  */
-public abstract class BasicNonoIntQueueSubscription extends AtomicInteger implements QueueSubscription<Void> {
+abstract class BasicNonoIntQueueSubscription extends AtomicInteger implements QueueSubscription<Void> {
 
     private static final long serialVersionUID = -4226314340037668732L;
 

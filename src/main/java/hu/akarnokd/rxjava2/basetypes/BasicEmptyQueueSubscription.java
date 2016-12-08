@@ -21,7 +21,7 @@ import io.reactivex.internal.fuseable.QueueSubscription;
 /**
  * Base class for empty, async-fuseable intermediate operators.
  */
-public abstract class BasicEmptyQueueSubscription implements QueueSubscription<Void> {
+abstract class BasicEmptyQueueSubscription implements QueueSubscription<Void> {
 
     @Override
     public final boolean offer(Void e) {
