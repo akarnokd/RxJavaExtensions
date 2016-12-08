@@ -172,6 +172,7 @@ final class NonoMergeIterable extends Nono {
                         e++;
                     } else {
                         complete();
+                        return;
                     }
                 }
 

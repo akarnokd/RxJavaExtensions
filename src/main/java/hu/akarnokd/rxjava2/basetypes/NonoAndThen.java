@@ -55,7 +55,9 @@ final class NonoAndThen extends Nono {
 
         @Override
         public void onSubscribe(Subscription s) {
-            SubscriptionHelper.setOnce(this, s);
+            if (SubscriptionHelper.setOnce(this, s)) {
+                actual.onSubscribe(this);
+            }
         }
 
         @Override

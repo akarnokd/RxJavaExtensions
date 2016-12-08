@@ -65,6 +65,9 @@ final class NonoDelaySubscription extends Nono {
         @Override
         public void onSubscribe(Subscription s) {
             if (SubscriptionHelper.setOnce(this, s)) {
+
+                actual.onSubscribe(this);
+
                 s.request(Long.MAX_VALUE);
             }
         }
@@ -88,7 +91,8 @@ final class NonoDelaySubscription extends Nono {
 
         @Override
         public void onComplete() {
-            if (done) {
+            if (!done) {
+                done = true;
                 source.subscribe(new MainSubscriber());
             }
         }

@@ -17,21 +17,41 @@
 package hu.akarnokd.rxjava2.basetypes;
 
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.*;
 import java.util.concurrent.*;
 
 import org.junit.*;
+import org.reactivestreams.Subscriber;
 
-import io.reactivex.Flowable;
-import io.reactivex.functions.Action;
+import hu.akarnokd.rxjava2.test.TestHelper;
+import io.reactivex.*;
+import io.reactivex.Observable;
+import io.reactivex.exceptions.CompositeException;
+import io.reactivex.functions.*;
+import io.reactivex.internal.functions.Functions;
+import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.processors.PublishProcessor;
 import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subscribers.TestSubscriber;
 
-public class NonoTest implements Action {
+public class NonoTest implements Action, Consumer<Object>, LongConsumer {
 
     volatile int count;
 
+    final Nono ioError = Nono.error(new IOException());
+
     @Override
     public void run() throws Exception {
+        count++;
+    }
+
+    @Override
+    public void accept(Object t) throws Exception {
+        count++;
+    }
+
+    @Override
+    public void accept(long t) throws Exception {
         count++;
     }
 
@@ -449,5 +469,1275 @@ public class NonoTest implements Action {
         .assertFailure(IOException.class);
 
         Assert.assertEquals(2, count);
+    }
+
+    @Test
+    public void mergeIterable() {
+        Nono.merge(Arrays.asList(
+                Nono.complete().delay(50, TimeUnit.MILLISECONDS),
+                Nono.complete().delay(50, TimeUnit.MILLISECONDS),
+                Nono.complete().delay(100, TimeUnit.MILLISECONDS)
+        ))
+        .test()
+        .awaitDone(5, TimeUnit.SECONDS)
+        .assertResult();
+    }
+
+    @Test
+    public void mergeIterableMaxConcurrent() {
+        Nono.merge(Arrays.asList(
+                Nono.complete().delay(50, TimeUnit.MILLISECONDS),
+                Nono.complete().delay(50, TimeUnit.MILLISECONDS),
+                Nono.complete().delay(100, TimeUnit.MILLISECONDS)
+        ), 1)
+        .test()
+        .awaitDone(5, TimeUnit.SECONDS)
+        .assertResult();
+    }
+
+    @Test
+    public void mergeIterablePublisher() {
+        Nono.merge(Flowable.range(1, 3)
+                .map(new Function<Integer, Nono>() {
+                    @Override
+                    public Nono apply(Integer v) throws Exception {
+                        return Nono.complete().delay(50, TimeUnit.MILLISECONDS);
+                    }
+                }))
+        .test()
+        .awaitDone(5, TimeUnit.SECONDS)
+        .assertResult();
+    }
+
+    @Test
+    public void mergeIterablePublisherMaxConcurrent() {
+        Nono.merge(Flowable.range(1, 3)
+                .map(new Function<Integer, Nono>() {
+                    @Override
+                    public Nono apply(Integer v) throws Exception {
+                        return Nono.complete().delay(50, TimeUnit.MILLISECONDS);
+                    }
+                }), 1)
+        .test()
+        .awaitDone(5, TimeUnit.SECONDS)
+        .assertResult();
+    }
+
+
+    @Test
+    public void mergeArray() {
+        Nono.mergeArray(
+                Nono.complete().delay(50, TimeUnit.MILLISECONDS),
+                Nono.complete().delay(50, TimeUnit.MILLISECONDS),
+                Nono.complete().delay(100, TimeUnit.MILLISECONDS)
+        )
+        .test()
+        .awaitDone(5, TimeUnit.SECONDS)
+        .assertResult();
+    }
+
+    @Test
+    public void mergeArrayMaxConcurrent() {
+        Nono.mergeArray(1,
+                Nono.complete().delay(50, TimeUnit.MILLISECONDS),
+                Nono.complete().delay(50, TimeUnit.MILLISECONDS),
+                Nono.complete().delay(100, TimeUnit.MILLISECONDS)
+        )
+        .test()
+        .awaitDone(5, TimeUnit.SECONDS)
+        .assertResult();
+    }
+
+    @Test
+    public void mergeIterableDelayError() {
+        Nono.mergeDelayError(Arrays.asList(
+                Nono.complete().delay(50, TimeUnit.MILLISECONDS),
+                Nono.complete().delay(50, TimeUnit.MILLISECONDS),
+                Nono.complete().delay(100, TimeUnit.MILLISECONDS)
+        ))
+        .test()
+        .awaitDone(5, TimeUnit.SECONDS)
+        .assertResult();
+    }
+
+    @Test
+    public void mergeIterableMaxConcurrentDelayError() {
+        Nono.mergeDelayError(Arrays.asList(
+                Nono.complete().delay(50, TimeUnit.MILLISECONDS),
+                Nono.complete().delay(50, TimeUnit.MILLISECONDS),
+                Nono.complete().delay(100, TimeUnit.MILLISECONDS)
+        ), 1)
+        .test()
+        .awaitDone(5, TimeUnit.SECONDS)
+        .assertResult();
+    }
+
+    @Test
+    public void mergeIterablePublisherDelayError() {
+        Nono.mergeDelayError(Flowable.range(1, 3)
+                .map(new Function<Integer, Nono>() {
+                    @Override
+                    public Nono apply(Integer v) throws Exception {
+                        return Nono.complete().delay(50, TimeUnit.MILLISECONDS);
+                    }
+                }))
+        .test()
+        .awaitDone(5, TimeUnit.SECONDS)
+        .assertResult();
+    }
+
+    @Test
+    public void mergeIterablePublisherMaxConcurrentDelayError() {
+        Nono.mergeDelayError(Flowable.range(1, 3)
+                .map(new Function<Integer, Nono>() {
+                    @Override
+                    public Nono apply(Integer v) throws Exception {
+                        return Nono.complete().delay(50, TimeUnit.MILLISECONDS);
+                    }
+                }), 1)
+        .test()
+        .awaitDone(5, TimeUnit.SECONDS)
+        .assertResult();
+    }
+
+
+    @Test
+    public void mergeArrayDelayError() {
+        Nono.mergeArrayDelayError(
+                Nono.complete().delay(50, TimeUnit.MILLISECONDS),
+                Nono.complete().delay(50, TimeUnit.MILLISECONDS),
+                Nono.complete().delay(100, TimeUnit.MILLISECONDS)
+        )
+        .test()
+        .awaitDone(5, TimeUnit.SECONDS)
+        .assertResult();
+    }
+
+    @Test
+    public void mergeArrayMaxConcurrentDelayError() {
+        Nono.mergeArrayDelayError(1,
+                Nono.complete().delay(50, TimeUnit.MILLISECONDS),
+                Nono.complete().delay(50, TimeUnit.MILLISECONDS),
+                Nono.complete().delay(100, TimeUnit.MILLISECONDS)
+        )
+        .test()
+        .awaitDone(5, TimeUnit.SECONDS)
+        .assertResult();
+    }
+
+    @Test
+    public void mergeIterableDelayErrorError() {
+        Nono.mergeDelayError(Arrays.asList(
+                Nono.complete().delay(50, TimeUnit.MILLISECONDS),
+                ioError.delay(50, TimeUnit.MILLISECONDS),
+                Nono.complete().delay(100, TimeUnit.MILLISECONDS)
+        ))
+        .test()
+        .awaitDone(5, TimeUnit.SECONDS)
+        .assertFailure(IOException.class);
+    }
+
+    @Test
+    public void mergeIterableMaxConcurrentDelayErrorError() {
+        Nono.mergeDelayError(Arrays.asList(
+                Nono.complete().delay(50, TimeUnit.MILLISECONDS),
+                ioError.delay(50, TimeUnit.MILLISECONDS),
+                Nono.complete().delay(100, TimeUnit.MILLISECONDS)
+        ), 1)
+        .test()
+        .awaitDone(5, TimeUnit.SECONDS)
+        .assertFailure(IOException.class);
+    }
+
+    @Test
+    public void mergeIterablePublisherDelayErrorError() {
+        Nono.mergeDelayError(Flowable.range(1, 3)
+                .map(new Function<Integer, Nono>() {
+                    @Override
+                    public Nono apply(Integer v) throws Exception {
+                        if (v == 2) {
+                            return ioError;
+                        }
+                        return Nono.complete().delay(50, TimeUnit.MILLISECONDS);
+                    }
+                }))
+        .test()
+        .awaitDone(5, TimeUnit.SECONDS)
+        .assertFailure(IOException.class);
+    }
+
+    @Test
+    public void mergeIterablePublisherMaxConcurrentDelayErrorError() {
+        Nono.mergeDelayError(Flowable.range(1, 3)
+                .map(new Function<Integer, Nono>() {
+                    @Override
+                    public Nono apply(Integer v) throws Exception {
+                        if (v == 2) {
+                            return ioError;
+                        }
+                        return Nono.complete().delay(50, TimeUnit.MILLISECONDS);
+                    }
+                }), 1)
+        .test()
+        .awaitDone(5, TimeUnit.SECONDS)
+        .assertFailure(IOException.class);
+    }
+
+
+    @Test
+    public void mergeArrayDelayErrorError() {
+        Nono.mergeArrayDelayError(
+                Nono.complete().delay(50, TimeUnit.MILLISECONDS),
+                ioError.delay(50, TimeUnit.MILLISECONDS),
+                Nono.complete().delay(100, TimeUnit.MILLISECONDS)
+        )
+        .test()
+        .awaitDone(5, TimeUnit.SECONDS)
+        .assertFailure(IOException.class);
+    }
+
+    @Test
+    public void mergeArrayMaxConcurrentDelayErrorError() {
+        Nono.mergeArrayDelayError(1,
+                Nono.complete().delay(50, TimeUnit.MILLISECONDS),
+                ioError.delay(50, TimeUnit.MILLISECONDS),
+                Nono.complete().delay(100, TimeUnit.MILLISECONDS)
+        )
+        .test()
+        .awaitDone(5, TimeUnit.SECONDS)
+        .assertFailure(IOException.class);
+    }
+
+    @Test
+    public void timer() {
+        Nono.timer(100, TimeUnit.MILLISECONDS)
+        .test()
+        .awaitDone(5, TimeUnit.SECONDS)
+        .assertResult();
+    }
+
+    @Test
+    public void timerScheduler() {
+        Nono.timer(100, TimeUnit.MILLISECONDS, Schedulers.single())
+        .test()
+        .awaitDone(5, TimeUnit.SECONDS)
+        .assertResult();
+    }
+
+    @Test
+    public void using() {
+        Nono.using(
+                Functions.justCallable(1),
+                Functions.justFunction(Nono.complete()),
+                this
+        )
+        .test()
+        .assertResult();
+
+        Assert.assertEquals(1, count);
+    }
+
+    @Test
+    public void usingError() {
+        Nono.using(
+                Functions.justCallable(1),
+                Functions.justFunction(ioError),
+                this
+        )
+        .test()
+        .assertFailure(IOException.class);
+
+        Assert.assertEquals(1, count);
+    }
+
+    @Test
+    public void usingNonEager() {
+        Nono.using(
+                Functions.justCallable(1),
+                Functions.justFunction(Nono.complete()),
+                this, false
+        )
+        .test()
+        .assertResult();
+
+        Assert.assertEquals(1, count);
+    }
+
+    @Test
+    public void usingNonEagerError() {
+        Nono.using(
+                Functions.justCallable(1),
+                Functions.justFunction(ioError),
+                this, false
+        )
+        .test()
+        .assertFailure(IOException.class);
+
+        Assert.assertEquals(1, count);
+    }
+
+    @Test
+    public void fromPublisher1() {
+        Nono.fromPublisher(Flowable.empty())
+        .test()
+        .assertResult();
+    }
+
+    @Test
+    public void fromPublisher2() {
+        Nono.fromPublisher(Flowable.just(1))
+        .test()
+        .assertResult();
+    }
+
+    @Test
+    public void fromPublisher3() {
+        Nono.fromPublisher(Flowable.range(1, 3))
+        .test()
+        .assertResult();
+    }
+
+    @Test
+    public void fromPublisher4() {
+        Nono.fromPublisher(Flowable.never())
+        .test()
+        .assertEmpty();
+    }
+
+    @Test
+    public void fromPublisher5() {
+        Nono.fromPublisher(Flowable.error(new IOException()))
+        .test()
+        .assertFailure(IOException.class);
+    }
+
+    @Test
+    public void fromPublisher6() {
+        Nono np = Nono.fromPublisher(Nono.complete());
+        np
+        .test()
+        .assertResult();
+
+        Assert.assertSame(np, Nono.complete());
+    }
+
+    @Test
+    public void fromSingle1() {
+        Nono.fromSingle(Single.just(1))
+        .test()
+        .assertResult();
+    }
+
+    @Test
+    public void fromSingle2() {
+        Nono.fromSingle(Single.error(new IOException()))
+        .test()
+        .assertFailure(IOException.class);
+    }
+
+    @Test
+    public void fromMaybe1() {
+        Nono.fromMaybe(Maybe.just(1))
+        .test()
+        .assertResult();
+    }
+
+    @Test
+    public void fromMaybe2() {
+        Nono.fromMaybe(Maybe.error(new IOException()))
+        .test()
+        .assertFailure(IOException.class);
+    }
+
+    @Test
+    public void fromMaybe3() {
+        Nono.fromMaybe(Maybe.empty())
+        .test()
+        .assertResult();
+    }
+
+    @Test
+    public void fromCompletable1() {
+        Nono.fromCompletable(Completable.complete())
+        .test()
+        .assertResult();
+    }
+
+    @Test
+    public void fromCompletable2() {
+        Nono.fromCompletable(Completable.error(new IOException()))
+        .test()
+        .assertFailure(IOException.class);
+    }
+
+    @Test
+    public void fromObservable1() {
+        Nono.fromObservable(Observable.empty())
+        .test()
+        .assertResult();
+    }
+
+    @Test
+    public void fromObservable2() {
+        Nono.fromObservable(Observable.just(1))
+        .test()
+        .assertResult();
+    }
+
+    @Test
+    public void fromObservable3() {
+        Nono.fromObservable(Observable.range(1, 3))
+        .test()
+        .assertResult();
+    }
+
+    @Test
+    public void fromObservable4() {
+        Nono.fromObservable(Observable.never())
+        .test()
+        .assertEmpty();
+    }
+
+    @Test
+    public void fromObservable5() {
+        Nono.fromObservable(Observable.error(new IOException()))
+        .test()
+        .assertFailure(IOException.class);
+    }
+
+    @Test
+    public void andThen() {
+        Nono.complete().andThen(Flowable.range(1, 5))
+        .test()
+        .assertResult(1, 2, 3, 4, 5);
+    }
+
+    @Test
+    public void andThenError() {
+        ioError.andThen(Flowable.range(1, 5))
+        .test()
+        .assertFailure(IOException.class);
+    }
+
+    @Test
+    public void andThenBackpressure() {
+        Nono.complete().andThen(Flowable.range(1, 5))
+        .rebatchRequests(1)
+        .test()
+        .assertResult(1, 2, 3, 4, 5);
+    }
+
+    @Test
+    public void andThenNono1() {
+        Nono.fromAction(this).andThen(Nono.fromAction(this))
+        .test()
+        .assertResult();
+
+        Assert.assertEquals(2, count);
+    }
+
+    @Test
+    public void andThenNono2() {
+        Nono.fromAction(this).andThen(ioError)
+        .test()
+        .assertFailure(IOException.class);
+
+        Assert.assertEquals(1, count);
+    }
+
+    @Test
+    public void andThenNono3() {
+        ioError.andThen(Nono.fromAction(this))
+        .test()
+        .assertFailure(IOException.class);
+
+        Assert.assertEquals(0, count);
+    }
+
+    @Test
+    public void delaySubscription1() {
+        Nono.fromAction(this).delaySubscription(Nono.complete())
+        .test()
+        .assertResult();
+
+        Assert.assertEquals(1, count);
+    }
+
+    @Test
+    public void delaySubscription2() {
+        Nono.fromAction(this).delaySubscription(Flowable.range(1, 2))
+        .test()
+        .assertResult();
+
+        Assert.assertEquals(1, count);
+    }
+
+    @Test
+    public void delaySubscription3() {
+        Nono.fromAction(this).delaySubscription(Flowable.just(1))
+        .test()
+        .assertResult();
+
+        Assert.assertEquals(1, count);
+    }
+
+    @Test
+    public void delaySubscription4() {
+        Nono.fromAction(this).delaySubscription(Flowable.error(new IOException()))
+        .test()
+        .assertFailure(IOException.class);
+
+        Assert.assertEquals(0, count);
+    }
+
+    @Test
+    public void delaySubscription5() {
+        ioError.delaySubscription(Flowable.just(1))
+        .test()
+        .assertFailure(IOException.class);
+
+        Assert.assertEquals(0, count);
+    }
+
+    @Test
+    public void delaySubscriptionTime1() {
+        Nono.fromAction(this).delaySubscription(100, TimeUnit.MILLISECONDS)
+        .test()
+        .awaitDone(5, TimeUnit.SECONDS)
+        .assertResult();
+
+        Assert.assertEquals(1, count);
+    }
+
+    @Test
+    public void delaySubscriptionTime2() {
+        Nono.fromAction(this).delaySubscription(100, TimeUnit.MILLISECONDS, Schedulers.single())
+        .test()
+        .awaitDone(5, TimeUnit.SECONDS)
+        .assertResult();
+
+        Assert.assertEquals(1, count);
+    }
+
+    @Test
+    public void delaySubscriptionTime3() {
+        ioError.delaySubscription(100, TimeUnit.MILLISECONDS)
+        .test()
+        .awaitDone(5, TimeUnit.SECONDS)
+        .assertFailure(IOException.class);
+    }
+
+    @Test
+    public void timeout1() {
+        Nono.fromAction(this).timeout(Flowable.never())
+        .test()
+        .assertResult();
+
+        Assert.assertEquals(1, count);
+    }
+
+    @Test
+    public void timeout2() {
+        Nono.fromAction(this).timeout(Flowable.empty(), Nono.fromAction(this))
+        .test()
+        .assertResult();
+
+        Assert.assertEquals(2, count);
+    }
+
+    @Test
+    public void timeout3() {
+        Nono.fromAction(this).timeout(Flowable.error(new IOException()))
+        .test()
+        .assertFailure(IOException.class);
+
+        Assert.assertEquals(1, count);
+    }
+
+    @Test
+    public void timeout4() {
+        Nono.fromAction(this).timeout(Flowable.empty())
+        .test()
+        .assertFailure(TimeoutException.class);
+
+        Assert.assertEquals(1, count);
+    }
+
+    @Test
+    public void timeout5() {
+        Nono.fromAction(this)
+        .delay(10, TimeUnit.MILLISECONDS)
+        .timeout(1, TimeUnit.SECONDS)
+        .test()
+        .awaitDone(5, TimeUnit.SECONDS)
+        .assertResult();
+
+        Assert.assertEquals(1, count);
+    }
+
+    @Test
+    public void timeout6() {
+        Nono.fromAction(this)
+        .delay(1, TimeUnit.SECONDS)
+        .timeout(10, TimeUnit.MILLISECONDS)
+        .test()
+        .awaitDone(5, TimeUnit.SECONDS)
+        .assertFailure(TimeoutException.class);
+
+        Assert.assertEquals(1, count);
+    }
+
+    @Test
+    public void timeout7() {
+        Nono.fromAction(this)
+        .delay(1, TimeUnit.SECONDS)
+        .timeout(10, TimeUnit.MILLISECONDS, Nono.fromAction(this))
+        .test()
+        .awaitDone(5, TimeUnit.SECONDS)
+        .assertResult();
+
+        Assert.assertEquals(2, count);
+    }
+
+    @Test
+    public void timeout8() {
+        Nono.fromAction(this)
+        .delay(1, TimeUnit.SECONDS)
+        .timeout(10, TimeUnit.MILLISECONDS, Schedulers.single(),
+                Nono.fromAction(this))
+        .test()
+        .awaitDone(5, TimeUnit.SECONDS)
+        .assertResult();
+
+        Assert.assertEquals(2, count);
+    }
+
+    @Test
+    public void timeout9() {
+        Nono.fromAction(this)
+        .delay(10, TimeUnit.MILLISECONDS)
+        .timeout(1, TimeUnit.SECONDS, Schedulers.single())
+        .test()
+        .awaitDone(5, TimeUnit.SECONDS)
+        .assertResult();
+
+        Assert.assertEquals(1, count);
+    }
+
+    @Test
+    public void timeout10() {
+        Nono.fromAction(this)
+        .delay(1, TimeUnit.SECONDS)
+        .timeout(10, TimeUnit.MILLISECONDS, ioError)
+        .test()
+        .awaitDone(5, TimeUnit.SECONDS)
+        .assertFailure(IOException.class);
+
+        Assert.assertEquals(1, count);
+    }
+
+    @Test
+    public void timeout11() {
+        PublishProcessor<Integer> pp = PublishProcessor.create();
+        ioError.timeout(pp)
+        .test()
+        .assertFailure(IOException.class);
+
+        Assert.assertFalse(pp.hasSubscribers());
+    }
+
+    @Test
+    public void timeout12() {
+        ioError.timeout(1, TimeUnit.SECONDS)
+        .test()
+        .assertFailure(IOException.class);
+    }
+
+    @Test
+    public void onErrorComplete() {
+        Nono.fromAction(this).onErrorComplete()
+        .test()
+        .assertResult();
+
+        Assert.assertEquals(1, count);
+    }
+
+    @Test
+    public void onErrorCompleteError() {
+        ioError.onErrorComplete()
+        .test()
+        .assertResult();
+    }
+
+    @Test
+    public void mapError() {
+        Nono.fromAction(this).mapError(Functions.justFunction(new IllegalArgumentException()))
+        .test()
+        .assertResult();
+
+        Assert.assertEquals(1, count);
+    }
+
+    @Test
+    public void mapErrorError() {
+        ioError.mapError(Functions.justFunction(new IllegalArgumentException()))
+        .test()
+        .assertFailure(IllegalArgumentException.class);
+    }
+
+    @Test
+    public void onErrorResumeNext() {
+        Nono.fromAction(this).onErrorResumeNext(Functions.justFunction(Nono.fromAction(this)))
+        .test()
+        .assertResult();
+
+        Assert.assertEquals(1, count);
+    }
+
+    @Test
+    public void onErrorResumeNextError1() {
+        ioError.onErrorResumeNext(Functions.justFunction(Nono.fromAction(this)))
+        .test()
+        .assertResult();
+
+        Assert.assertEquals(1, count);
+    }
+
+    @Test
+    public void onErrorResumeNextError2() {
+        ioError.onErrorResumeNext(Functions.justFunction(Nono.error(new IllegalArgumentException())))
+        .test()
+        .assertFailure(IllegalArgumentException.class);
+    }
+
+    @Test
+    public void flatMap1() {
+        Nono.fromAction(this).flatMap(Functions.justFunction(Flowable.just(1)), Functions.justCallable(Flowable.just(2)))
+        .test()
+        .assertResult(2);
+    }
+
+    @Test
+    public void flatMap2() {
+        Nono.fromAction(this).flatMap(Functions.justFunction(Flowable.just(1)), Functions.justCallable(Flowable.range(10, 5)))
+        .rebatchRequests(1)
+        .test()
+        .assertResult(10, 11, 12, 13, 14);
+
+        Assert.assertEquals(1, count);
+    }
+
+    @Test
+    public void flatMap3() {
+        ioError.flatMap(Functions.justFunction(Flowable.just(1)), Functions.justCallable(Flowable.just(2)))
+        .test()
+        .assertResult(1);
+    }
+
+    @Test
+    public void flatMap4() {
+        ioError.flatMap(
+                Functions.justFunction(Flowable.error(new IllegalArgumentException())),
+                Functions.justCallable(Flowable.just(2)))
+        .test()
+        .assertFailure(IllegalArgumentException.class);
+    }
+
+    @Test
+    public void flatMap5() {
+        Nono.fromAction(this).flatMap(
+                Functions.justFunction(Flowable.just(1)),
+                Functions.justCallable(Flowable.error(new IllegalArgumentException()))
+        )
+        .test()
+        .assertFailure(IllegalArgumentException.class);
+
+        Assert.assertEquals(1, count);
+    }
+
+    @Test
+    public void compose() {
+        Nono.fromAction(this).compose(Functions.justFunction(Nono.complete()))
+        .test()
+        .assertResult();
+
+        Assert.assertEquals(0, count);
+    }
+
+    @Test
+    public void toError() {
+        try {
+            Nono.fromAction(this).to(new Function<Nono, Object>() {
+                @Override
+                public Object apply(Nono np) throws Exception {
+                    throw new IOException();
+                }
+            });
+        } catch (RuntimeException ex) {
+            Assert.assertTrue(ex.toString(), ex.getCause() instanceof IOException);
+        }
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void toError2() {
+        Nono.fromAction(this).to(new Function<Nono, Object>() {
+            @Override
+            public Object apply(Nono np) throws Exception {
+                throw new IllegalArgumentException();
+            }
+        });
+    }
+
+    @Test
+    public void lift() {
+        Nono.fromAction(this).lift(Functions.<Subscriber<? super Void>>identity())
+        .test()
+        .assertResult();
+
+        Assert.assertEquals(1, count);
+    }
+
+    @Test
+    public void toFlowable() {
+        Nono.fromAction(this).toFlowable()
+        .test()
+        .assertResult();
+
+        Assert.assertEquals(1, count);
+    }
+
+    @Test
+    public void toFlowableError() {
+        ioError.toFlowable()
+        .test()
+        .assertFailure(IOException.class);
+    }
+
+    @Test
+    public void toObservable() {
+        Nono.fromAction(this).toObservable()
+        .test()
+        .assertResult();
+
+        Assert.assertEquals(1, count);
+    }
+
+    @Test
+    public void toObservableError() {
+        ioError.toObservable()
+        .test()
+        .assertFailure(IOException.class);
+    }
+
+    @Test
+    public void toMaybe() {
+        Nono.fromAction(this).toMaybe()
+        .test()
+        .assertResult();
+
+        Assert.assertEquals(1, count);
+    }
+
+    @Test
+    public void toMaybeError() {
+        ioError.toMaybe()
+        .test()
+        .assertFailure(IOException.class);
+    }
+
+    @Test
+    public void toCompletable() {
+        Nono.fromAction(this).toCompletable()
+        .test()
+        .assertResult();
+
+        Assert.assertEquals(1, count);
+    }
+
+    @Test
+    public void toCompletableError() {
+        ioError.toCompletable()
+        .test()
+        .assertFailure(IOException.class);
+    }
+
+    @Test
+    public void subscribeOn() {
+        String main = Thread.currentThread().getName();
+        final String[] on = { null };
+
+        Nono.fromAction(new Action() {
+            @Override
+            public void run() throws Exception {
+                on[0] = Thread.currentThread().getName();
+            }
+        }).subscribeOn(Schedulers.single())
+        .test()
+        .awaitDone(5, TimeUnit.SECONDS)
+        .assertResult();
+
+        Assert.assertNotNull(on[0]);
+        Assert.assertNotEquals(main, on[0]);
+    }
+
+    @Test
+    public void subscribeOnError() {
+        String main = Thread.currentThread().getName();
+        final String[] on = { null };
+
+        Nono.fromAction(new Action() {
+            @Override
+            public void run() throws Exception {
+                on[0] = Thread.currentThread().getName();
+                throw new IOException();
+            }
+        }).subscribeOn(Schedulers.single())
+        .test()
+        .awaitDone(5, TimeUnit.SECONDS)
+        .assertFailure(IOException.class);
+
+        Assert.assertNotNull(on[0]);
+        Assert.assertNotEquals(main, on[0]);
+    }
+
+    @Test
+    public void observeOn() {
+        String main = Thread.currentThread().getName();
+        final String[] on = { null };
+
+        Nono.fromAction(new Action() {
+            @Override
+            public void run() throws Exception {
+                on[0] = Thread.currentThread().getName();
+            }
+        }).observeOn(Schedulers.single())
+        .test()
+        .awaitDone(5, TimeUnit.SECONDS)
+        .assertResult();
+
+        Assert.assertNotNull(on[0]);
+        Assert.assertEquals(main, on[0]);
+    }
+
+    @Test
+    public void observeOnError() {
+        String main = Thread.currentThread().getName();
+        final String[] on = { null };
+
+        Nono.fromAction(new Action() {
+            @Override
+            public void run() throws Exception {
+                on[0] = Thread.currentThread().getName();
+                throw new IOException();
+            }
+        }).observeOn(Schedulers.single())
+        .test()
+        .awaitDone(5, TimeUnit.SECONDS)
+        .assertFailure(IOException.class);
+
+        Assert.assertNotNull(on[0]);
+        Assert.assertEquals(main, on[0]);
+    }
+
+    @Test
+    public void unsubscribeOn() throws Exception {
+        String main = Thread.currentThread().getName();
+        final String[] on = { null };
+
+        final CountDownLatch cdl = new CountDownLatch(1);
+
+        Nono.never()
+        .doOnCancel(new Action() {
+            @Override
+            public void run() throws Exception {
+                on[0] = Thread.currentThread().getName();
+                cdl.countDown();
+            }
+        })
+        .unsubscribeOn(Schedulers.single())
+        .test(true);
+
+        cdl.await();
+
+        Assert.assertNotNull(on[0]);
+        Assert.assertNotEquals(main, on[0]);
+    }
+
+    @Test
+    public void doOnComplete1() {
+        Nono.complete()
+        .doOnComplete(this)
+        .test()
+        .assertResult();
+
+        Assert.assertEquals(1, count);
+    }
+
+    @Test
+    public void doOnComplete2() {
+        ioError
+        .doOnComplete(this)
+        .test()
+        .assertFailure(IOException.class);
+
+        Assert.assertEquals(0, count);
+    }
+
+    @Test
+    public void doOnComplete3() {
+        Nono.complete()
+        .doOnComplete(new Action() {
+            @Override
+            public void run() throws Exception {
+                throw new IOException();
+            }
+        })
+        .test()
+        .assertFailure(IOException.class);
+
+        Assert.assertEquals(0, count);
+    }
+
+    @Test
+    public void doOnError1() {
+        Nono.complete()
+        .doOnError(this)
+        .test()
+        .assertResult();
+
+        Assert.assertEquals(0, count);
+    }
+
+    @Test
+    public void doOnError2() {
+        ioError
+        .doOnError(this)
+        .test()
+        .assertFailure(IOException.class);
+
+        Assert.assertEquals(1, count);
+    }
+
+    @Test
+    public void doOnError3() {
+        ioError
+        .doOnError(new Consumer<Throwable>() {
+            @Override
+            public void accept(Throwable t) throws Exception {
+                count++;
+                throw new IllegalArgumentException();
+            }
+        })
+        .test()
+        .assertFailure(CompositeException.class)
+        .assertOf(new Consumer<TestSubscriber<Void>>() {
+            @Override
+            public void accept(TestSubscriber<Void> ts) throws Exception {
+                List<Throwable> list = TestHelper.compositeList(ts.errors().get(0));
+                TestHelper.assertError(list, 0, IOException.class);
+                TestHelper.assertError(list, 1, IllegalArgumentException.class);
+            }
+        });
+
+        Assert.assertEquals(1, count);
+    }
+
+    @Test
+    public void doOnSubscribe() {
+        Nono.complete()
+        .doOnSubscribe(this)
+        .test()
+        .assertResult();
+
+        Assert.assertEquals(1, count);
+    }
+
+    @Test
+    public void doOnSubscribeError() {
+        ioError
+        .doOnSubscribe(this)
+        .test()
+        .assertFailure(IOException.class);
+
+        Assert.assertEquals(1, count);
+    }
+
+    @Test
+    public void doOnSubscribeThrows() {
+        Nono.complete()
+        .doOnSubscribe(new Consumer<Object>() {
+            @Override
+            public void accept(Object t) throws Exception {
+                throw new IOException();
+            }
+        })
+        .test()
+        .assertFailure(IOException.class);
+    }
+
+    @Test
+    public void doOnRequest() {
+        Nono.complete()
+        .doOnRequest(this)
+        .test()
+        .assertResult();
+
+        Assert.assertEquals(1, count);
+    }
+
+    @Test
+    public void doOnRequestError() {
+        ioError
+        .doOnRequest(this)
+        .test()
+        .assertFailure(IOException.class);
+
+        Assert.assertEquals(1, count);
+    }
+
+    @Test
+    public void doOnRequestThrows() {
+        List<Throwable> errors = TestHelper.trackPluginErrors();
+        try {
+            Nono.complete()
+            .doOnRequest(new LongConsumer() {
+                @Override
+                public void accept(long t) throws Exception {
+                    count++;
+                    throw new IOException();
+                }
+            })
+            .test()
+            .assertResult();
+
+            Assert.assertEquals(1, count);
+
+            TestHelper.assertError(errors, 0, IOException.class);
+        } finally {
+            RxJavaPlugins.reset();
+        }
+    }
+
+    @Test
+    public void doAfterTerminate() {
+        Nono.complete()
+        .doAfterTerminate(this)
+        .test()
+        .assertResult();
+    }
+
+    @Test
+    public void doAfterTerminateError() {
+        ioError
+        .doAfterTerminate(this)
+        .test()
+        .assertFailure(IOException.class);
+
+        Assert.assertEquals(1, count);
+    }
+
+    @Test
+    public void doAfterTerminateThrows() {
+        List<Throwable> errors = TestHelper.trackPluginErrors();
+        try {
+            Nono.complete()
+            .doAfterTerminate(new Action() {
+                @Override
+                public void run() throws Exception {
+                    count++;
+                    throw new IOException();
+                }
+            })
+            .test()
+            .assertResult();
+
+            Assert.assertEquals(1, count);
+
+            TestHelper.assertError(errors, 0, IOException.class);
+        } finally {
+            RxJavaPlugins.reset();
+        }
+    }
+
+    @Test
+    public void doAfterTerminateThrowsError() {
+        List<Throwable> errors = TestHelper.trackPluginErrors();
+        try {
+            ioError
+            .doAfterTerminate(new Action() {
+                @Override
+                public void run() throws Exception {
+                    count++;
+                    throw new IllegalArgumentException();
+                }
+            })
+            .test()
+            .assertFailure(IOException.class);
+
+            Assert.assertEquals(1, count);
+
+            TestHelper.assertError(errors, 0, IllegalArgumentException.class);
+        } finally {
+            RxJavaPlugins.reset();
+        }
+    }
+
+    @Test
+    public void doFinally1() {
+        Nono.complete()
+        .doFinally(this)
+        .test()
+        .assertResult();
+
+        Assert.assertEquals(1, count);
+    }
+
+    @Test
+    public void doFinally2() {
+        ioError
+        .doFinally(this)
+        .test()
+        .assertFailure(IOException.class);
+
+        Assert.assertEquals(1, count);
+    }
+
+    @Test
+    public void doFinally3() {
+        Nono.never()
+        .doFinally(this)
+        .test()
+        .assertOf(new Consumer<TestSubscriber<Void>>() {
+            @Override
+            public void accept(TestSubscriber<Void> ts) throws Exception {
+                ts.cancel();
+            }
+        })
+        .assertEmpty();
+
+        Assert.assertEquals(1, count);
+    }
+
+    @Test
+    public void doFinally4() {
+        List<Throwable> errors = TestHelper.trackPluginErrors();
+        try {
+            ioError
+            .doFinally(new Action() {
+                @Override
+                public void run() throws Exception {
+                    count++;
+                    throw new IllegalArgumentException();
+                }
+            })
+            .test()
+            .assertFailure(IOException.class);
+
+            Assert.assertEquals(1, count);
+
+            TestHelper.assertError(errors, 0, IllegalArgumentException.class);
+        } finally {
+            RxJavaPlugins.reset();
+        }
     }
 }

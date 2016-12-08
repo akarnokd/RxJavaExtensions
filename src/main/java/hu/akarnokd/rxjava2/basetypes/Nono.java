@@ -26,7 +26,6 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.exceptions.*;
 import io.reactivex.functions.*;
 import io.reactivex.internal.functions.*;
-import io.reactivex.internal.fuseable.*;
 import io.reactivex.internal.util.*;
 import io.reactivex.plugins.RxJavaPlugins;
 import io.reactivex.schedulers.Schedulers;
@@ -679,17 +678,11 @@ public abstract class Nono implements Publisher<Void> {
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public final <T> Flowable<T> toFlowable() {
-        if (this instanceof FuseToFlowable) {
-            return ((FuseToFlowable<T>)this).fuseToFlowable();
-        }
         return (Flowable)Flowable.fromPublisher(this);
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public final <T> Observable<T> toObservable() {
-        if (this instanceof FuseToObservable) {
-            return ((FuseToObservable<T>)this).fuseToObservable();
-        }
         return (Observable)Observable.fromPublisher(this);
     }
 

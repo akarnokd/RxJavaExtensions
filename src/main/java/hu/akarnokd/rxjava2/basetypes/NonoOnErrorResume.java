@@ -67,6 +67,9 @@ final class NonoOnErrorResume extends Nono {
         @Override
         public void onSubscribe(Subscription s) {
             SubscriptionHelper.replace(this, s);
+            if (!once) {
+                actual.onSubscribe(this);
+            }
         }
 
         @Override

@@ -42,6 +42,8 @@ final class NonoDoOnLifecycle extends Nono {
 
     final Action onCancel;
 
+    boolean done;
+
     NonoDoOnLifecycle(
             Nono source,
             Consumer<? super Throwable> onError,
@@ -79,7 +81,9 @@ final class NonoDoOnLifecycle extends Nono {
                     onSubscribe.accept(s);
                 } catch (Throwable ex) {
                     Exceptions.throwIfFatal(ex);
-                    EmptySubscription.error(ex, actual);
+                    s.cancel();
+                    actual.onSubscribe(EmptySubscription.INSTANCE);
+                    onError(ex);
                     return;
                 }
 
@@ -89,6 +93,11 @@ final class NonoDoOnLifecycle extends Nono {
 
         @Override
         public void onError(Throwable t) {
+            if (done) {
+                RxJavaPlugins.onError(t);
+                return;
+            }
+            done = true;
             try {
                 onError.accept(t);
             } catch (Throwable ex) {
@@ -103,17 +112,20 @@ final class NonoDoOnLifecycle extends Nono {
 
         @Override
         public void onComplete() {
-            try {
-                onComplete.run();
-            } catch (Throwable ex) {
-                Exceptions.throwIfFatal(ex);
-                actual.onError(ex);
-                return;
+            if (!done) {
+                done = true;
+                try {
+                    onComplete.run();
+                } catch (Throwable ex) {
+                    Exceptions.throwIfFatal(ex);
+                    actual.onError(ex);
+                    return;
+                }
+
+                actual.onComplete();
+
+                doAfter();
             }
-
-            actual.onComplete();
-
-            doAfter();
         }
 
         void doAfter() {
