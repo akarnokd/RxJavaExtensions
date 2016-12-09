@@ -466,54 +466,182 @@ public abstract class Solo<T> implements Publisher<T> {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Executes a callback when the upstream calls onSubscribe.
+     * @param onSubscribe the consumer called with the upstream Subscription
+     * @return the new Solo instance
+     */
     public final Solo<T> doOnSubscribe(Consumer<? super Subscription> onSubscribe) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(onSubscribe, "onSubscribe is null");
+        return onAssembly(new SoloDoOnLifecycle<T>(this,
+                Functions.emptyConsumer(),
+                Functions.emptyConsumer(),
+                Functions.ERROR_CONSUMER,
+                Functions.EMPTY_ACTION,
+                Functions.EMPTY_ACTION,
+                onSubscribe,
+                Functions.EMPTY_LONG_CONSUMER,
+                Functions.EMPTY_ACTION
+        ));
     }
 
+    /**
+     * Executes the callback when the downstream requests from this Solo.
+     * @param onRequest the callback called with the request amount
+     * @return the new Solo instance
+     */
     public final Solo<T> doOnRequest(LongConsumer onRequest) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(onRequest, "onRequest is null");
+        return onAssembly(new SoloDoOnLifecycle<T>(this,
+                Functions.emptyConsumer(),
+                Functions.emptyConsumer(),
+                Functions.ERROR_CONSUMER,
+                Functions.EMPTY_ACTION,
+                Functions.EMPTY_ACTION,
+                Functions.emptyConsumer(),
+                onRequest,
+                Functions.EMPTY_ACTION
+        ));
     }
 
+    /**
+     * Executes the callback if the downstream cancels the sequence.
+     * @param onCancel the action to call
+     * @return the new Nono instance
+     */
     public final Solo<T> doOnCancel(Action onCancel) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(onCancel, "onCancel is null");
+        return onAssembly(new SoloDoOnLifecycle<T>(this,
+                Functions.emptyConsumer(),
+                Functions.emptyConsumer(),
+                Functions.ERROR_CONSUMER,
+                Functions.EMPTY_ACTION,
+                Functions.EMPTY_ACTION,
+                Functions.emptyConsumer(),
+                Functions.EMPTY_LONG_CONSUMER,
+                onCancel
+        ));
     }
 
+    /**
+     * Executes a callback before the value is emitted to downstream.
+     * @param onNext the consumer called with the current value before it is
+     * is emitted to downstream.
+     * @return the new Solo instance
+     */
     public final Solo<T> doOnNext(Consumer<? super T> onNext) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(onNext, "onNext is null");
+        return onAssembly(new SoloDoOnLifecycle<T>(this,
+                onNext,
+                Functions.emptyConsumer(),
+                Functions.ERROR_CONSUMER,
+                Functions.EMPTY_ACTION,
+                Functions.EMPTY_ACTION,
+                Functions.emptyConsumer(),
+                Functions.EMPTY_LONG_CONSUMER,
+                Functions.EMPTY_ACTION
+        ));
     }
 
+    /**
+     * Executes a callback after the value is emitted to downstream.
+     * @param onAfterNext the consumer called with the current value after it is
+     * is emitted to downstream.
+     * @return the new Solo instance
+     */
     public final Solo<T> doAfterNext(Consumer<? super T> onAfterNext) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(onAfterNext, "onAfterNext is null");
+        return onAssembly(new SoloDoOnLifecycle<T>(this,
+                Functions.emptyConsumer(),
+                onAfterNext,
+                Functions.ERROR_CONSUMER,
+                Functions.EMPTY_ACTION,
+                Functions.EMPTY_ACTION,
+                Functions.emptyConsumer(),
+                Functions.EMPTY_LONG_CONSUMER,
+                Functions.EMPTY_ACTION
+        ));
     }
 
+    /**
+     * Executes a callback when the upstream signals an error.
+     * @param onError the consumer called before the error is emitted to
+     * the downstream
+     * @return the new Solo instance
+     */
     public final Solo<T> doOnError(Consumer<? super Throwable> onError) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(onError, "onError is null");
+        return onAssembly(new SoloDoOnLifecycle<T>(this,
+                Functions.emptyConsumer(),
+                Functions.emptyConsumer(),
+                onError,
+                Functions.EMPTY_ACTION,
+                Functions.EMPTY_ACTION,
+                Functions.emptyConsumer(),
+                Functions.EMPTY_LONG_CONSUMER,
+                Functions.EMPTY_ACTION
+        ));
     }
 
+    /**
+     * Executes a callback when the upstream completes normally.
+     * @param onComplete the consumer called before the completion event
+     * is emitted to the downstream.
+     * @return the new Solo instance
+     */
     public final Solo<T> doOnComplete(Action onComplete) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(onComplete, "onComplete is null");
+        return onAssembly(new SoloDoOnLifecycle<T>(this,
+                Functions.emptyConsumer(),
+                Functions.emptyConsumer(),
+                Functions.ERROR_CONSUMER,
+                onComplete,
+                Functions.EMPTY_ACTION,
+                Functions.emptyConsumer(),
+                Functions.EMPTY_LONG_CONSUMER,
+                Functions.EMPTY_ACTION
+        ));
     }
 
+
+    /**
+     * Executes the callback after this Nono terminates and the downstream
+     * is notified.
+     * @param onAfterTerminate the callback to call after the downstream is notified
+     * @return the new Sono instance
+     */
     public final Solo<T> doAfterTerminate(Action onAfterTerminate) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(onAfterTerminate, "onAfterTerminate is null");
+        return onAssembly(new SoloDoOnLifecycle<T>(this,
+                Functions.emptyConsumer(),
+                Functions.emptyConsumer(),
+                Functions.ERROR_CONSUMER,
+                Functions.EMPTY_ACTION,
+                onAfterTerminate,
+                Functions.emptyConsumer(),
+                Functions.EMPTY_LONG_CONSUMER,
+                Functions.EMPTY_ACTION
+        ));
     }
 
+
+    /**
+     * Executes the callback exactly if the upstream terminates or
+     * the downstream cancels the sequence.
+     * @param onFinally the action to call
+     * @return the new Sono instance
+     */
     public final Solo<T> doFinally(Action onFinally) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(onFinally, "onFinally is null");
+        return onAssembly(new SoloDoFinally<T>(this, onFinally));
     }
 
+    /**
+     * Ignore the solo value of this Solo and only signal the terminal events.
+     * @return the new Nono instance
+     */
     public final Nono ignoreElement() {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return Nono.onAssembly(new NonoFromPublisher(this));
     }
 
     /**

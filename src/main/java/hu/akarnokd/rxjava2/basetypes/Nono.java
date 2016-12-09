@@ -679,6 +679,11 @@ public abstract class Nono implements Publisher<Void> {
         return onAssembly(new NonoLift(this, lifter));
     }
 
+    /**
+     * Convert this Nono instance into a Flowable that only terminates.
+     * @param <T> the value type
+     * @return the new Flowable instance
+     */
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public final <T> Flowable<T> toFlowable() {
         return (Flowable)Flowable.fromPublisher(this);
@@ -712,6 +717,12 @@ public abstract class Nono implements Publisher<Void> {
         return onAssembly(new NonoUnsubscribeOn(this, scheduler));
     }
 
+    /**
+     * Executes a callback when the upstream completes normally.
+     * @param onComplete the consumer called before the completion event
+     * is emitted to the downstream.
+     * @return the new Nolo instance
+     */
     public final Nono doOnComplete(Action onComplete) {
         ObjectHelper.requireNonNull(onComplete, "onComplete is null");
         return onAssembly(new NonoDoOnLifecycle(this,
@@ -724,6 +735,12 @@ public abstract class Nono implements Publisher<Void> {
             ));
     }
 
+    /**
+     * Executes a callback when the upstream signals an error.
+     * @param onError the consumer called before the error is emitted to
+     * the downstream
+     * @return the new Nolo instance
+     */
     public final Nono doOnError(Consumer<? super Throwable> onError) {
         ObjectHelper.requireNonNull(onError, "onError is null");
         return onAssembly(new NonoDoOnLifecycle(this,
@@ -736,6 +753,11 @@ public abstract class Nono implements Publisher<Void> {
             ));
     }
 
+    /**
+     * Executes a callback when the upstream calls onSubscribe.
+     * @param onSubscribe the consumer called with the upstream Subscription
+     * @return the new Nolo instance
+     */
     public final Nono doOnSubscribe(Consumer<? super Subscription> onSubscribe) {
         ObjectHelper.requireNonNull(onSubscribe, "onSubscribe is null");
         return onAssembly(new NonoDoOnLifecycle(this,
@@ -748,6 +770,11 @@ public abstract class Nono implements Publisher<Void> {
             ));
     }
 
+    /**
+     * Executes the callback when the downstream requests from this Nolo.
+     * @param onRequest the callback called with the request amount
+     * @return the new Nolo instance
+     */
     public final Nono doOnRequest(LongConsumer onRequest) {
         ObjectHelper.requireNonNull(onRequest, "onRequest is null");
         return onAssembly(new NonoDoOnLifecycle(this,
@@ -763,15 +790,15 @@ public abstract class Nono implements Publisher<Void> {
     /**
      * Executes the callback after this Nono terminates and the downstream
      * is notified.
-     * @param onTerminate the callback to call after the downstream is notified
+     * @param onAfterTerminate the callback to call after the downstream is notified
      * @return the new Nono instance
      */
-    public final Nono doAfterTerminate(Action onTerminate) {
-        ObjectHelper.requireNonNull(onTerminate, "onTerminate is null");
+    public final Nono doAfterTerminate(Action onAfterTerminate) {
+        ObjectHelper.requireNonNull(onAfterTerminate, "onAfterTerminate is null");
         return onAssembly(new NonoDoOnLifecycle(this,
                 Functions.emptyConsumer(),
                 Functions.EMPTY_ACTION,
-                onTerminate,
+                onAfterTerminate,
                 Functions.emptyConsumer(),
                 Functions.EMPTY_LONG_CONSUMER,
                 Functions.EMPTY_ACTION
