@@ -45,6 +45,9 @@ import io.reactivex.subscribers.TestSubscriber;
  */
 public abstract class Nono implements Publisher<Void> {
 
+    /**
+     * Hook called when assembling Nono sequences.
+     */
     private static volatile Function<Nono, Nono> onAssemblyHandler;
 
     /**
