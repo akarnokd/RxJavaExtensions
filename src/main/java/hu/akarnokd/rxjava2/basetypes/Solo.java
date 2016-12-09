@@ -25,6 +25,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.exceptions.Exceptions;
 import io.reactivex.functions.*;
 import io.reactivex.internal.functions.*;
+import io.reactivex.internal.subscribers.LambdaSubscriber;
 import io.reactivex.internal.util.ExceptionHelper;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subscribers.TestSubscriber;
@@ -82,44 +83,95 @@ public abstract class Solo<T> implements Publisher<T> {
     // Factory methods (enter)
     // ----------------------------------------------------
 
+    /**
+     * Returns a Solo that signals the given item and completes.
+     * @param <T> the value type
+     * @param item the item, not null
+     * @return the new Solo instance
+     */
     public static <T> Solo<T> just(T item) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(item, "item is null");
+        return onAssembly(new SoloJust<T>(item));
     }
 
+    /**
+     * Returns a Solo that signals the given error to Subscribers.
+     * @param <T> the value type
+     * @param error the error to signal, not null
+     * @return the new Solo instance
+     */
     public static <T> Solo<T> error(Throwable error) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(error, "error is null");
+        return onAssembly(new SoloError<T>(error));
     }
 
+    /**
+     * Returns a Solo that signals the error returned from
+     * the errorSupplier to each individual Subscriber.
+     * @param <T> the value type
+     * @param errorSupplier the supplier called for each Subscriber to
+     * return a Throwable to be signalled
+     * @return the new Solo instance
+     */
     public static <T> Solo<T> error(Callable<? extends Throwable> errorSupplier) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(errorSupplier, "errorSupplier is null");
+        return onAssembly(new SoloErrorSupplier<T>(errorSupplier));
     }
 
-    public static <T> Solo<T> fromCallable(Callable<? extends T> callable) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+    /**
+     * Returns a Solo that calls the callable and emits its value or error.
+     * @param <T> the value type
+     * @param callable the callable to call
+     * @return the new Solo instance
+     */
+    public static <T> Solo<T> fromCallable(Callable<T> callable) {
+        ObjectHelper.requireNonNull(callable, "callable is null");
+        return onAssembly(new SoloCallable<T>(callable));
     }
 
+    /**
+     * Returns a Solo that never signals an item or terminal event.
+     * @param <T> the value type
+     * @return the new Solo instance
+     */
     public static <T> Solo<T> never() {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return onAssembly(SoloNever.<T>instance());
     }
 
+    /**
+     * Defers the creation of the actual Solo to the time when a Subscriber
+     * subscribes to the returned Solo.
+     * @param <T> the value type
+     * @param supplier the supplier of the actual Solo
+     * @return the new Solo instance
+     */
     public static <T> Solo<T> defer(Callable<? extends Solo<T>> supplier) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(supplier, "supplier is null");
+        return onAssembly(new SoloDefer<T>(supplier));
     }
 
+    /**
+     * Wraps a Publisher into a Solo and signals its only value,
+     * NoSuchElementException if empty or IndexOutOfBoundsException if it has
+     * more than one element.
+     * @param <T> the value type
+     * @param source the source Publisher
+     * @return the new Solo instance
+     */
     public static <T> Solo<T> fromPublisher(Publisher<T> source) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(source, "source is null");
+        return onAssembly(new SoloFromPublisher<T>(source));
     }
 
-    public static <T> Solo<T> fromSingle(Single<T> source) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+    /**
+     * Wraps a Single into a Solo and signals its events.
+     * @param <T> the value type
+     * @param source the source Single
+     * @return the new Solo instance
+     */
+    public static <T> Solo<T> fromSingle(SingleSource<T> source) {
+        ObjectHelper.requireNonNull(source, "source is null");
+        return onAssembly(new SoloFromSingle<T>(source));
     }
 
     public static <T> Solo<T> amb(Iterable<? extends Solo<? extends T>> sources) {
@@ -464,9 +516,14 @@ public abstract class Solo<T> implements Publisher<T> {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Hides the identity of this Solo, including its Subscription and
+     * allows preventing fusion and other optimizations for diagnostic
+     * purposes.
+     * @return the new Solo instance
+     */
     public final Solo<T> hide() {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return onAssembly(new SoloHide<T>(this));
     }
 
     /**
@@ -543,19 +600,37 @@ public abstract class Solo<T> implements Publisher<T> {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Returns a Solo that subscribes to this Solo on the specified scheduler
+     * and makes sure downstream requests are forwarded there as well.
+     * @param scheduler the scheduler to subscribe on
+     * @return the new Solo instance
+     */
     public final Solo<T> subscribeOn(Scheduler scheduler) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
+        return onAssembly(new SoloSubscribeOn<T>(this, scheduler));
     }
 
+    /**
+     * Returns a Solo that delivers the onNext, onError and onComplete signals
+     * from this Solo on the specified scheduler.
+     * @param scheduler the scheduler to emit the events on
+     * @return the new Solo instance
+     */
     public final Solo<T> observeOn(Scheduler scheduler) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
+        return onAssembly(new SoloObserveOn<T>(this, scheduler));
     }
 
+    /**
+     * Returns a Solo which when cancelled, cancels this Solo on the
+     * specified scheduler.
+     * @param scheduler the scheduler to cancel this Solo
+     * @return the new Solo instance
+     */
     public final Solo<T> unsubscribeOn(Scheduler scheduler) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
+        return onAssembly(new SoloUnsubscribeOn<T>(this, scheduler));
     }
 
     // ----------------------------------------------------
@@ -594,62 +669,149 @@ public abstract class Solo<T> implements Publisher<T> {
         return s;
     }
 
+    /**
+     * Subscribe to this Solo and ignore any signal it produces.
+     * @return the Disposable that allows cancelling the subscription
+     */
     public final Disposable subscribe() {
         return subscribe(Functions.emptyConsumer(), Functions.ERROR_CONSUMER, Functions.EMPTY_ACTION);
     }
 
+    /**
+     * Subscribes to this Solo and calls the onNext if this Solo succeeds.
+     * @param onNext called when this Solo succeeds
+     * @return the Disposable that allows cancelling the subscription
+     */
     public final Disposable subscribe(Consumer<? super T> onNext) {
         return subscribe(onNext, Functions.ERROR_CONSUMER, Functions.EMPTY_ACTION);
     }
 
+    /**
+     * Subscribes to this Solo and calls the appropriate callback for the resulting signal.
+     * @param onNext called when this Solo succeeds
+     * @param onError called when this Solo fails
+     * @return the Disposable that allows cancelling the subscription
+     */
     public final Disposable subscribe(Consumer<? super T> onNext, Consumer<? super Throwable> onError) {
         return subscribe(onNext, onError, Functions.EMPTY_ACTION);
     }
 
+    /**
+     * Subscribes to this Solo and calls the appropriate callback for the resulting signal.
+     * @param onNext called when this Solo succeeds
+     * @param onError called when this Solo fails
+     * @param onComplete called when this Solo succeeds after the call to onNext
+     * @return the Disposable that allows cancelling the subscription
+     */
     public final Disposable subscribe(Consumer<? super T> onNext, Consumer<? super Throwable> onError, Action onComplete) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        LambdaSubscriber<T> s = new LambdaSubscriber<T>(onNext, onError, onComplete, Functions.<Subscription>emptyConsumer());
+        subscribe(s);
+        return s;
     }
 
+    /**
+     * Blocks until this Solo terminates and ignores the signals it produced.
+     */
     public final void blockingSubscribe() {
         blockingSubscribe(Functions.emptyConsumer(), Functions.ERROR_CONSUMER, Functions.EMPTY_ACTION);
     }
 
+    /**
+     * Blocks until this Solo terminates and calls the onNext with the success value.
+     * @param onNext the callback to call when this Solo completes with a success value
+     */
     public final void blockingSubscribe(Consumer<? super T> onNext) {
         blockingSubscribe(onNext, Functions.ERROR_CONSUMER, Functions.EMPTY_ACTION);
     }
 
+    /**
+     * Blocks until this solo terminates and calls the onNext with the success value
+     * or calls the onError with the error Throwable.
+     * @param onNext the callback to call when this Solo completes with a success value
+     * @param onError the callback to call when this Solo fails with an error
+     */
     public final void blockingSubscribe(Consumer<? super T> onNext, Consumer<? super Throwable> onError) {
         blockingSubscribe(onNext, onError, Functions.EMPTY_ACTION);
     }
 
+    /**
+     * Blocks until this Solo produces its terminal signal and calls the
+     * appropriate callback(s) based on the signal type.
+     * @param onNext called when the Solo succeeds
+     * @param onError called when the Solo fails
+     * @param onComplete called when the Solo succeeds after the call to onNext.
+     */
     public final void blockingSubscribe(Consumer<? super T> onNext, Consumer<? super Throwable> onError, Action onComplete) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(onNext, "onNext is null");
+        ObjectHelper.requireNonNull(onError, "onError is null");
+        ObjectHelper.requireNonNull(onComplete, "onComplete is null");
+        BlockingGetSubscriber<T> s = new BlockingGetSubscriber<T>();
+        subscribe(s);
+        s.blockingCall(onNext, onError, onComplete);
     }
 
+    /**
+     * Blockingly awaits indefinitely the success value of this Solo or rethrows
+     * its error (wrapped into a RuntimeException if necessary).
+     * @return the success value of this Solo
+     */
     public final T blockingGet() {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        BlockingGetSubscriber<T> s = new BlockingGetSubscriber<T>();
+        subscribe(s);
+        return s.blockingGet();
     }
 
+    /**
+     * Blockingly awaits at most the given timeout for the success
+     * value of this Solo or rethrows
+     * its error (wrapped into a RuntimeException if necessary).
+     * @param timeout the time to wait for a success value
+     * @param unit the time unit of the timeout
+     * @return the success value of this Solo
+     */
     public final T blockingGet(long timeout, TimeUnit unit) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        BlockingGetSubscriber<T> s = new BlockingGetSubscriber<T>();
+        subscribe(s);
+        return s.blockingGet(timeout, unit);
     }
 
+    /**
+     * Creates a TestSubscriber and subscribes it to this Solo.
+     * @return the new TestSubscriber instance
+     */
     public final TestSubscriber<T> test() {
         return test(Long.MAX_VALUE, false);
     }
 
+    /**
+     * Creates a TestSubscriber, optionally cancels it, and subscribes
+     * it to this Solo.
+     * @param cancel if true, the TestSubscriber will be cancelled before
+     * subscribing to this Solo
+     * @return the new TestSubscriber instance
+     */
     public final TestSubscriber<T> test(boolean cancel) {
         return test(Long.MAX_VALUE, cancel);
     }
 
+    /**
+     * Creates a TestSubscriber with the given initial request and
+     * subscribes it to this Solo.
+     * @param initialRequest the initial request amount, non-negative
+     * @return the new TestSubscriber
+     */
     public final TestSubscriber<T> test(long initialRequest) {
         return test(initialRequest, false);
     }
 
+    /**
+     * Creates a TestSubscriber with the given initial request,
+     * optionally cancels it, and subscribes it to this Solo.
+     * @param initialRequest the initial request amount, non-negative
+     * @param cancel if true, the TestSubscriber will be cancelled before
+     * subscribing to this Solo
+     * @return the new TestSubscriber
+     */
     public final TestSubscriber<T> test(long initialRequest, boolean cancel) {
         TestSubscriber<T> ts = new TestSubscriber<T>(initialRequest);
         if (cancel) {
