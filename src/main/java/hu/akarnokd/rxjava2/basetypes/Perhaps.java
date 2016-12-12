@@ -19,7 +19,9 @@ package hu.akarnokd.rxjava2.basetypes;
 import org.reactivestreams.*;
 
 import io.reactivex.exceptions.Exceptions;
+import io.reactivex.functions.Function;
 import io.reactivex.internal.functions.ObjectHelper;
+import io.reactivex.internal.util.ExceptionHelper;
 
 /**
  * A 0-1-error base reactive type, similar to Maybe, implementing the Reactive-Streams Publisher
@@ -30,6 +32,49 @@ import io.reactivex.internal.functions.ObjectHelper;
  * @since 0.14.0
  */
 public abstract class Perhaps<T> implements Publisher<T> {
+
+    /**
+     * Hook called when assembling Solo sequences.
+     */
+    @SuppressWarnings("rawtypes")
+    private static volatile Function<Perhaps, Perhaps> onAssembly;
+
+    /**
+     * Returns the current onAssembly handler.
+     * @param <T> the target value type
+     * @return the current handler, maybe null
+     */
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    public static <T> Function<Perhaps<T>, Perhaps<T>> getOnAssemblyHandler() {
+        return (Function)onAssembly;
+    }
+
+    /**
+     * Set the onAssembly handler.
+     * @param <T> the target value type
+     * @param handler the handler, null clears the handler
+     */
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    public static <T> void setOnAssemblyHandler(Function<Perhaps<T>, Perhaps<T>> handler) {
+        onAssembly = (Function)handler;
+    }
+
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    protected static <T> Perhaps<T> onAssembly(Perhaps<T> source) {
+        Function<Perhaps, Perhaps> f = onAssembly;
+        if (f == null) {
+            return source;
+        }
+        try {
+            return f.apply(source);
+        } catch (Throwable ex) {
+            throw ExceptionHelper.wrapOrThrow(ex);
+        }
+    }
+
+    // ----------------------------------------------------
+    // Factory methods (enter)
+    // ----------------------------------------------------
 
     @Override
     public final void subscribe(Subscriber<? super T> s) {

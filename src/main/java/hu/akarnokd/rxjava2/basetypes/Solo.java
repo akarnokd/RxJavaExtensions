@@ -281,13 +281,30 @@ public abstract class Solo<T> implements Publisher<T> {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Signals a 0L after the specified amount of time has passed since
+     * subscription.
+     * @param delay the delay time
+     * @param unit the time unit
+     * @return the new Solo instance
+     */
     public static Solo<Long> timer(long delay, TimeUnit unit) {
         return timer(delay, unit, Schedulers.computation());
     }
 
+
+    /**
+     * Signals a 0L after the specified amount of time has passed since
+     * subscription on the specified scheduler.
+     * @param delay the delay time
+     * @param unit the time unit
+     * @param scheduler the scheduler to wait on
+     * @return the new Solo instance
+     */
     public static Solo<Long> timer(long delay, TimeUnit unit, Scheduler scheduler) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(unit, "unit is null");
+        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
+        return onAssembly(new SoloTimer(delay, unit, scheduler));
     }
 
     public static <T, R> Solo<T> using(
@@ -358,32 +375,117 @@ public abstract class Solo<T> implements Publisher<T> {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Maps the value of this Solo into another value via function.
+     * @param <R> the output value type
+     * @param mapper the function that receives the success value of this Solo
+     * and returns a replacement value.
+     * @return the new Solo instance
+     */
     public final <R> Solo<R> map(Function<? super T, ? extends R> mapper) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(mapper, "mapper is null");
+        return onAssembly(new SoloMap<T, R>(this, mapper));
     }
 
+    /**
+     * Maps the Throwable error of this Solo into another Throwable error type.
+     * @param errorMapper the function that receives the Throwable and should
+     * return a Throwable to be emitted.
+     * @return the new Solo instance
+     */
+    public final Solo<T> mapError(Function<? super Throwable, ? extends Throwable> errorMapper) {
+        ObjectHelper.requireNonNull(errorMapper, "errorMapper is null");
+        return onAssembly(new SoloMapError<T>(this, errorMapper));
+    }
+
+    /**
+     * Applies a predicate to the value and emits it if the predicate
+     * returns true, completes otherwise.
+     * @param predicate the predicate called with the solo value
+     * @return the new Perhaps instance
+     */
     public final Perhaps<T> filter(Predicate<? super T> predicate) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(predicate, "predicate is null");
+        return Perhaps.onAssembly(new SoloFilter<T>(this, predicate));
     }
 
+    /**
+     * Signal a TimeoutException if there is no item from this Solo within
+     * the given timeout time.
+     * @param timeout the timeout value
+     * @param unit the time unit
+     * @return the new Solo instance
+     */
     public final Solo<T> timeout(long timeout, TimeUnit unit) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return timeout(timer(timeout, unit));
     }
 
+    /**
+     * Signal a TimeoutException if there is no item from this Solo within
+     * the given timeout time, running on the specified scheduler.
+     * @param timeout the timeout value
+     * @param unit the time unit
+     * @param scheduler the scheduler to wait on
+     * @return the new Solo instance
+     */
     public final Solo<T> timeout(long timeout, TimeUnit unit, Scheduler scheduler) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return timeout(timer(timeout, unit, scheduler));
     }
 
+    /**
+     * Fall back to another Solo if this Solo doesn't signal within the given
+     * time period.
+     * @param timeout the timeout value
+     * @param unit the time unit
+     * @param fallback the other Solo to subscribe to
+     * @return the new Solo instance
+     */
     public final Solo<T> timeout(long timeout, TimeUnit unit, Solo<T> fallback) {
+        return timeout(timer(timeout, unit), fallback);
+    }
+
+    /**
+     * Fall back to another Solo if this Solo doesn't signal within the given
+     * time period, waiting on the specified scheduler.
+     * @param timeout the timeout value
+     * @param unit the time unit
+     * @param scheduler the scheduler to wait on
+     * @param fallback the fallback Solo to subscribe to
+     * @return the new Solo instance
+     */
+    public final Solo<T> timeout(long timeout, TimeUnit unit, Scheduler scheduler, Solo<T> fallback) {
+        return timeout(timer(timeout, unit, scheduler), fallback);
+    }
+
+    /**
+     * Signal a TimeoutException if the other Publisher signals or completes
+     * before this Solo signals a value.
+     * @param other the other Publisher triggers the TimeoutException when
+     * it signals its first item or completes.
+     * @return the new Solo instance
+     */
+    public final Solo<T> timeout(Publisher<?> other) {
+        ObjectHelper.requireNonNull(other, "other is null");
         // TODO implement
         throw new UnsupportedOperationException();
     }
 
-    public final Solo<T> timeout(long timeout, TimeUnit unit, Scheduler scheduler, Solo<T> fallback) {
+    /**
+     * Fall back to another Solo if the other Publisher signals or completes
+     * before this Solo signals a value.
+     * @param other the other Publisher triggers the TimeoutException when
+     * it signals its first item or completes.
+     * @param fallback the fallback Solo to subscribe to in case of a timeout
+     * @return the new Solo instance
+     */
+    public final Solo<T> timeout(Publisher<?> other, Solo<T> fallback) {
+        ObjectHelper.requireNonNull(other, "other is null");
+        ObjectHelper.requireNonNull(fallback, "fallback is null");
+        // TODO implement
+        throw new UnsupportedOperationException();
+    }
+
+    public final Solo<T> onErrorReturnItem(T item) {
         // TODO implement
         throw new UnsupportedOperationException();
     }
@@ -425,14 +527,38 @@ public abstract class Solo<T> implements Publisher<T> {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Delay the emission of the signal of this Solo with the specified
+     * time amount.
+     * @param delay the delay time
+     * @param unit the delay time unit
+     * @return the new Solo instance
+     */
     public final Solo<T> delay(long delay, TimeUnit unit) {
-        return delay(timer(delay, unit));
+        return delay(delay, unit, Schedulers.computation());
     }
 
+    /**
+     * Delay the emission of the signal of this Solo with the specified
+     * time amount on the specified scheduler.
+     * @param delay the delay time
+     * @param unit the delay time unit
+     * @param scheduler the scheduler to wait on
+     * @return the new Solo instance
+     */
     public final Solo<T> delay(long delay, TimeUnit unit, Scheduler scheduler) {
+        ObjectHelper.requireNonNull(unit, "unit is null");
+        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
         return delay(timer(delay, unit, scheduler));
     }
 
+    /**
+     * Delay the emission of the signal until the other Publisher signals
+     * an item or completes.
+     * @param other the other Publisher that has to signal to emit the origina
+     * signal from this Solo
+     * @return the new Solo instance
+     */
     public final Solo<T> delay(Publisher<?> other) {
         // TODO implement
         throw new UnsupportedOperationException();
@@ -678,9 +804,16 @@ public abstract class Solo<T> implements Publisher<T> {
         return to(composer);
     }
 
+    /**
+     * Map the downstream Subscriber into an upstream Subscriber.
+     * @param <R> the downstream value type
+     * @param onLift the function called with the downstream's Subscriber and
+     * should return a Subscriber to be subscribed to this Solo.
+     * @return the new Solo type
+     */
     public final <R> Solo<R> lift(Function<Subscriber<? super R>, Subscriber<? super T>> onLift) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(onLift, "onLift is null");
+        return onAssembly(new SoloLift<T, R>(this, onLift));
     }
 
     public final Flowable<T> repeat() {
@@ -719,11 +852,6 @@ public abstract class Solo<T> implements Publisher<T> {
     }
 
     public final Solo<T> retryWhen(Function<? super Flowable<Throwable>, ? extends Publisher<?>> handler) {
-        // TODO implement
-        throw new UnsupportedOperationException();
-    }
-
-    public final Solo<T> mapError(Function<? super Throwable, ? extends Throwable> errorMapper) {
         // TODO implement
         throw new UnsupportedOperationException();
     }

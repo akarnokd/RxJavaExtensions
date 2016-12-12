@@ -5,7 +5,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import io.reactivex.internal.fuseable.QueueSubscription;
 
 /**
- * Base class extending AtomicInteger (wip or request accounting) and QueueSubscription (fusion).
+ * Base class extending AtomicReference (resource tracking) and QueueSubscription (fusion).
  *
  * @param <T> the value type
  * @param <R> the reference type
