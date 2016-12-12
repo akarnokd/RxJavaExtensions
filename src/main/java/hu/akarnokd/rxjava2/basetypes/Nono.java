@@ -97,6 +97,19 @@ public abstract class Nono implements Publisher<Void> {
     // -----------------------------------------------------------
 
     /**
+     * Creates a Nono instance that when subscribed to, the given onCreate is
+     * called for each individual subscriber to generate a terminal event
+     * synchronously and synchronously in a cancellation-safe manner.
+     * @param onCreate called for each individual subscriber with the abstraction
+     * of the incoming Subscriber
+     * @return the new Nono instance
+     */
+    public static Nono create(CompletableOnSubscribe onCreate) {
+        ObjectHelper.requireNonNull(onCreate, "onCreate is null");
+        return onAssembly(new NonoCreate(onCreate));
+    }
+
+    /**
      * Returns a Nono that completes normally.
      * @return the new Nono instance
      */

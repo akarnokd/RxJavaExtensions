@@ -85,6 +85,20 @@ public abstract class Solo<T> implements Publisher<T> {
     // ----------------------------------------------------
 
     /**
+     * Create a Solo that for each incoming Subscriber calls a callback to
+     * emit a sync or async events in a thread-safe, backpressure-aware and
+     * cancellation-safe manner.
+     * @param <T> the value type emitted
+     * @param onCreate the callback called for each individual subscriber with an
+     * abstraction of the incoming Subscriber.
+     * @return th new Solo instance
+     */
+    public static <T> Solo<T> create(SingleOnSubscribe<T> onCreate) {
+        ObjectHelper.requireNonNull(onCreate, "onCreate is null");
+        return onAssembly(new SoloCreate<T>(onCreate));
+    }
+
+    /**
      * Returns a Solo that signals the given item and completes.
      * @param <T> the value type
      * @param item the item, not null
