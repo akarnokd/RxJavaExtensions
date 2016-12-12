@@ -94,6 +94,8 @@ final class FlowableSplit extends Flowable<String> implements FlowableTransforme
         volatile boolean done;
         Throwable error;
 
+        int empty;
+
         SplitSubscriber(Subscriber<? super String> actual, Pattern pattern, int bufferSize) {
             this.actual = actual;
             this.pattern = pattern;
@@ -146,9 +148,9 @@ final class FlowableSplit extends Flowable<String> implements FlowableTransforme
             String[] a;
             try {
                 if (lo == null || lo.isEmpty()) {
-                    a = pattern.split(t);
+                    a = pattern.split(t, -1);
                 } else {
-                    a = pattern.split(lo + t);
+                    a = pattern.split(lo + t, -1);
                 }
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
@@ -211,6 +213,7 @@ final class FlowableSplit extends Flowable<String> implements FlowableTransforme
             int consumed = produced;
             String[] array = current;
             int idx = index;
+            int emptyCount = empty;
 
             Subscriber<? super String> a = actual;
 
@@ -241,6 +244,7 @@ final class FlowableSplit extends Flowable<String> implements FlowableTransforme
                     boolean empty = array == null;
 
                     if (d && empty) {
+                        current = null;
                         Throwable ex = error;
                         if (ex != null) {
                             a.onError(ex);
@@ -261,10 +265,30 @@ final class FlowableSplit extends Flowable<String> implements FlowableTransforme
                         continue;
                     }
 
-                    a.onNext(array[idx]);
+                    String v = array[idx];
 
-                    e++;
-                    idx++;
+                    if (v.isEmpty()) {
+                        emptyCount++;
+                        idx++;
+                    } else {
+                        while (emptyCount != 0 && e != r) {
+                            if (cancelled) {
+                                current = null;
+                                q.clear();
+                                return;
+                            }
+                            a.onNext("");
+                            e++;
+                            emptyCount--;
+                        }
+
+                        if (e != r && emptyCount == 0) {
+                            a.onNext(v);
+
+                            e++;
+                            idx++;
+                        }
+                    }
                 }
 
                 if (e == r) {
@@ -290,6 +314,7 @@ final class FlowableSplit extends Flowable<String> implements FlowableTransforme
                     boolean empty = array == null;
 
                     if (d && empty) {
+                        current = null;
                         Throwable ex = error;
                         if (ex != null) {
                             a.onError(ex);
@@ -304,6 +329,7 @@ final class FlowableSplit extends Flowable<String> implements FlowableTransforme
                     BackpressureHelper.produced(requested, e);
                 }
 
+                empty = emptyCount;
                 produced = consumed;
                 missed = addAndGet(-missed);
                 if (missed == 0) {

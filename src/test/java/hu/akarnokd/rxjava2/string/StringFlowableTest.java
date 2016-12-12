@@ -178,4 +178,37 @@ public class StringFlowableTest extends BaseTest {
         .test()
         .assertResult("ab", "cd", "ef");
     }
+
+    @Test
+    public void split4() {
+        Flowable.just("ab", ":", "", "", "c:d", "", "e:")
+        .compose(StringFlowable.split(":", 1))
+        .test()
+        .assertResult("ab", "c", "de");
+    }
+
+    @Test
+    public void split5() {
+        Flowable.just("ab", ":cd:", "ef")
+        .compose(StringFlowable.split(":"))
+        .test()
+        .assertResult("ab", "cd", "ef");
+    }
+
+    @Test
+    public void split5Buffer1() {
+        Flowable.just("ab", ":cd:", "ef")
+        .compose(StringFlowable.split(":", 1))
+        .test()
+        .assertResult("ab", "cd", "ef");
+    }
+
+    @Test
+    public void split5Buffer1Request1() {
+        Flowable.just("ab", ":cd:", "ef")
+        .compose(StringFlowable.split(":", 1))
+        .rebatchRequests(1)
+        .test()
+        .assertResult("ab", "cd", "ef");
+    }
 }

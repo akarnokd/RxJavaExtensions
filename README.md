@@ -12,7 +12,7 @@ Extra sources, operators and components and ports of many 1.x companion librarie
 
 ```
 dependencies {
-    compile "com.github.akarnokd:rxjava2-extensions:0.12.0"
+    compile "com.github.akarnokd:rxjava2-extensions:0.13.0"
 }
 ```
 
@@ -133,12 +133,29 @@ ParallelFlowable.from(Flowable.range(1, 1000))
 
 ## String operations
 
-Currently, only the `StringFlowable` and `StringObservable` support streaming the characters of a `CharSequence`:
+### characters
+The `StringFlowable` and `StringObservable` support streaming the characters of a `CharSequence`:
 
 ```java
 StringFlowable.characters("Hello world")
 .map(v -> Characters.toLower((char)v))
 .subscribe(System.out::print, Throwable::printStackTrace, System.out::println);
+```
+
+### split
+
+Splits an incoming sequence of Strings based on a Regex pattern within and between subsequent elements if necessary.
+
+```java
+Flowable.just("abqw", "ercdqw", "eref")
+.compose(StringFlowable.split("qwer"))
+.test()
+.assertResult("ab", "cd", "ef");
+
+Flowable.just("ab", ":cde:" "fg")
+.compose(StringFlowable.split(":"))
+.test()
+.assertResult("ab", "cde", "fg");
 ```
 
 ## Asynchronous jumpstarting a sequence
