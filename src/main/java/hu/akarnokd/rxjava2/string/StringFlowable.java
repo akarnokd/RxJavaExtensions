@@ -46,6 +46,8 @@ public final class StringFlowable {
      * elements if needed.
      * @param pattern the Rexexp pattern to split along
      * @return the new FlowableTransformer instance
+     *
+     * @since 0.13.0
      */
     public static FlowableTransformer<String, String> split(Pattern pattern) {
         return split(pattern, Flowable.bufferSize());
@@ -57,6 +59,8 @@ public final class StringFlowable {
      * @param pattern the Rexexp pattern to split along
      * @param bufferSize the number of items to prefetch from the upstream
      * @return the new FlowableTransformer instance
+     *
+     * @since 0.13.0
      */
     public static FlowableTransformer<String, String> split(Pattern pattern, int bufferSize) {
         ObjectHelper.requireNonNull(pattern, "pattern is null");
@@ -69,6 +73,8 @@ public final class StringFlowable {
      * elements if needed.
      * @param pattern the Rexexp pattern to split along
      * @return the new FlowableTransformer instance
+     *
+     * @since 0.13.0
      */
     public static FlowableTransformer<String, String> split(String pattern) {
         return split(pattern, Flowable.bufferSize());
@@ -80,6 +86,8 @@ public final class StringFlowable {
      * @param pattern the Rexexp pattern to split along
      * @param bufferSize the number of items to prefetch from the upstream
      * @return the new FlowableTransformer instance
+     *
+     * @since 0.13.0
      */
     public static FlowableTransformer<String, String> split(String pattern, int bufferSize) {
         return split(Pattern.compile(pattern), bufferSize);

@@ -175,14 +175,26 @@ public abstract class Solo<T> implements Publisher<T> {
         return onAssembly(new SoloFromSingle<T>(source));
     }
 
+    /**
+     * Emit the events of the Solo that reacts first.
+     * @param <T> the common value type
+     * @param sources the Iterable sequence of Solo sources
+     * @return the new Solo instance
+     */
     public static <T> Solo<T> amb(Iterable<? extends Solo<? extends T>> sources) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(sources, "sources is null");
+        return onAssembly(new SoloAmbIterable<T>(sources));
     }
 
-    public static <T> Solo<T> ambArray(Solo<T>... sources) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+    /**
+     * Emit the events of the Solo that reacts first.
+     * @param <T> the common value type
+     * @param sources the array of Solo sources
+     * @return the new Solo instance
+     */
+    public static <T> Solo<T> ambArray(Solo<? extends T>... sources) {
+        ObjectHelper.requireNonNull(sources, "sources is null");
+        return onAssembly(new SoloAmbArray<T>(sources));
     }
 
     public static <T> Flowable<T> concat(Iterable<? extends Solo<? extends T>> sources) {
@@ -346,14 +358,26 @@ public abstract class Solo<T> implements Publisher<T> {
     // Instance operators (stay)
     // ----------------------------------------------------
 
-    public final Solo<T> ambWith(Solo<T> other) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+    /**
+     * Signal the events of this or the other Solo whichever
+     * signals first.
+     * @param other the other Solo
+     * @return the new Solo instance
+     */
+    @SuppressWarnings("unchecked")
+    public final Solo<T> ambWith(Solo<? extends T> other) {
+        return ambArray(this, other);
     }
 
+    /**
+     * Run the given Nono after this Solo completes successfully and
+     * emit that original success value only if the Nono completes normally.
+     * @param other the other Nono to execute
+     * @return the new Solo instance
+     */
     public final Solo<T> andThen(Nono other) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(other, "other is null");
+        return onAssembly(new SoloAndThen<T>(this, other));
     }
 
     public final Flowable<T> andThen(Publisher<? extends T> other) {
