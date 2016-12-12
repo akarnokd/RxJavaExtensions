@@ -16,14 +16,141 @@
 
 package hu.akarnokd.rxjava2.string;
 
+import java.io.IOException;
+
 import org.junit.Test;
 
 import hu.akarnokd.rxjava2.test.BaseTest;
+import io.reactivex.Flowable;
 
 public class StringFlowableTest extends BaseTest {
 
     @Test
     public void characters() {
         assertResult(StringFlowable.characters("abcdef"), 97, 98, 99, 100, 101, 102);
+    }
+
+    @Test
+    public void split1() {
+        Flowable.just("ab", ":cd", "e:fgh")
+        .compose(StringFlowable.split(":"))
+        .test()
+        .assertResult("ab", "cde", "fgh");
+    }
+
+    @Test
+    public void split1Request1() {
+        Flowable.just("ab", ":cd", "e:fgh")
+        .compose(StringFlowable.split(":"))
+        .rebatchRequests(1)
+        .test()
+        .assertResult("ab", "cde", "fgh");
+    }
+
+    @Test
+    public void split2() {
+        Flowable.just("abcdefgh")
+        .compose(StringFlowable.split(":"))
+        .test()
+        .assertResult("abcdefgh");
+    }
+
+    @Test
+    public void split2Request1() {
+        Flowable.just("abcdefgh")
+        .compose(StringFlowable.split(":"))
+        .rebatchRequests(1)
+        .test()
+        .assertResult("abcdefgh");
+    }
+
+    @Test
+    public void split1Buffer1() {
+        Flowable.just("ab", ":cd", "e:fgh")
+        .compose(StringFlowable.split(":", 1))
+        .test()
+        .assertResult("ab", "cde", "fgh");
+    }
+
+    @Test
+    public void split2Buffer1() {
+        Flowable.just("abcdefgh")
+        .compose(StringFlowable.split(":", 1))
+        .test()
+        .assertResult("abcdefgh");
+    }
+
+    @Test
+    public void splitEmpty() {
+        Flowable.<String>empty()
+        .compose(StringFlowable.split(":"))
+        .test()
+        .assertResult();
+    }
+
+    @Test
+    public void splitError() {
+        Flowable.just("abcdefgh").concatWith(Flowable.<String>error(new IOException()))
+        .compose(StringFlowable.split(":"))
+        .test()
+        .assertFailure(IOException.class, "abcdefgh");
+    }
+
+    @Test
+    public void splitErrorBuffer1() {
+        Flowable.just("abcdefgh").concatWith(Flowable.<String>error(new IOException()))
+        .compose(StringFlowable.split(":", 1))
+        .test()
+        .assertFailure(IOException.class, "abcdefgh");
+    }
+
+    @Test
+    public void splitExample1() {
+        Flowable.just("boo:and:foo")
+        .compose(StringFlowable.split(":"))
+        .test()
+        .assertResult("boo", "and", "foo");
+    }
+
+    @Test
+    public void splitExample1Buffer1() {
+        Flowable.just("boo:and:foo")
+        .compose(StringFlowable.split(":", 1))
+        .test()
+        .assertResult("boo", "and", "foo");
+    }
+
+    @Test
+    public void splitExample1Buffer1Request1() {
+        Flowable.just("boo:and:foo")
+        .compose(StringFlowable.split(":", 1))
+        .rebatchRequests(1)
+        .test()
+        .assertResult("boo", "and", "foo");
+    }
+
+    @Test
+    public void splitExample2() {
+        Flowable.just("boo:and:foo")
+        .compose(StringFlowable.split("o"))
+        .test()
+        .assertResult("b", "", ":and:f");
+    }
+
+    @Test
+    public void splitExample2Buffer1() {
+        Flowable.just("boo:and:foo")
+        .compose(StringFlowable.split("o", 1))
+        .test()
+        .assertResult("b", "", ":and:f");
+    }
+
+    @Test
+    public void splitExample2Buffer1Request1() {
+        Flowable.just("boo:and:foo")
+        .compose(StringFlowable.split("o", 1))
+        .rebatchRequests(1)
+        .test()
+        .assertResult("b", "", ":and:f");
     }
 }

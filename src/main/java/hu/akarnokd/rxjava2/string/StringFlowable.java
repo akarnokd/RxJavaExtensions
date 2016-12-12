@@ -16,7 +16,10 @@
 
 package hu.akarnokd.rxjava2.string;
 
-import io.reactivex.Flowable;
+import java.util.regex.Pattern;
+
+import io.reactivex.*;
+import io.reactivex.internal.functions.ObjectHelper;
 import io.reactivex.plugins.RxJavaPlugins;
 
 /**
@@ -34,6 +37,26 @@ public final class StringFlowable {
      * @return the new Flowable instance
      */
     public static Flowable<Integer> characters(CharSequence string) {
+        ObjectHelper.requireNonNull(string, "string is null");
         return RxJavaPlugins.onAssembly(new FlowableCharSequence(string));
     }
+
+    public static FlowableTransformer<String, String> split(Pattern pattern) {
+        return split(pattern, Flowable.bufferSize());
+    }
+
+    public static FlowableTransformer<String, String> split(Pattern pattern, int bufferSize) {
+        ObjectHelper.requireNonNull(pattern, "pattern is null");
+        ObjectHelper.verifyPositive(bufferSize, "bufferSize");
+        return new FlowableSplit(null, pattern, bufferSize);
+    }
+
+    public static FlowableTransformer<String, String> split(String pattern) {
+        return split(pattern, Flowable.bufferSize());
+    }
+
+    public static FlowableTransformer<String, String> split(String pattern, int bufferSize) {
+        return split(Pattern.compile(pattern), bufferSize);
+    }
+
 }
