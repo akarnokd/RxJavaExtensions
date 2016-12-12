@@ -16,56 +16,44 @@
 
 package hu.akarnokd.rxjava2.basetypes;
 
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.reactivestreams.*;
 
-import io.reactivex.Scheduler;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.internal.disposables.DisposableHelper;
+import io.reactivex.exceptions.CompositeException;
 import io.reactivex.internal.fuseable.QueueSubscription;
 import io.reactivex.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.plugins.RxJavaPlugins;
 
 /**
- * Delay signals by the given time amount.
+ * Delay signals till the other signals an item or completes.
  *
  * @param <T> the value type
  */
-final class SoloDelay<T> extends Solo<T> {
+final class SoloDelayPublisher<T> extends Solo<T> {
 
     final Solo<T> source;
 
-    final long delay;
+    final Publisher<?> other;
 
-    final TimeUnit unit;
-
-    final Scheduler scheduler;
-
-    SoloDelay(Solo<T> source, long delay, TimeUnit unit, Scheduler scheduler) {
+    SoloDelayPublisher(Solo<T> source, Publisher<?> other) {
         this.source = source;
-        this.delay = delay;
-        this.unit = unit;
-        this.scheduler = scheduler;
+        this.other = other;
     }
 
     @Override
     protected void subscribeActual(Subscriber<? super T> s) {
-        source.subscribe(new DelaySubscriber<T>(s, delay, unit, scheduler));
+        source.subscribe(new DelaySubscriber<T>(s, other));
     }
 
-    static final class DelaySubscriber<T> extends AtomicReference<Disposable>
-    implements QueueSubscription<T>, Subscriber<T>, Runnable {
+    static final class DelaySubscriber<T> extends AtomicReference<Subscription>
+    implements QueueSubscription<T>, Subscriber<T> {
 
         private static final long serialVersionUID = 511073038536312798L;
 
         final Subscriber<? super T> actual;
 
-        final long delay;
-
-        final TimeUnit unit;
-
-        final Scheduler scheduler;
+        final Publisher<?> other;
 
         Subscription s;
 
@@ -75,11 +63,9 @@ final class SoloDelay<T> extends Solo<T> {
 
         boolean outputFused;
 
-        DelaySubscriber(Subscriber<? super T> actual, long delay, TimeUnit unit, Scheduler scheduler) {
+        DelaySubscriber(Subscriber<? super T> actual, Publisher<?> other) {
             this.actual = actual;
-            this.delay = delay;
-            this.unit = unit;
-            this.scheduler = scheduler;
+            this.other = other;
         }
 
         @Override
@@ -119,7 +105,7 @@ final class SoloDelay<T> extends Solo<T> {
         @Override
         public void cancel() {
             s.cancel();
-            DisposableHelper.dispose(this);
+            SubscriptionHelper.cancel(this);
         }
 
         @Override
@@ -139,29 +125,30 @@ final class SoloDelay<T> extends Solo<T> {
         @Override
         public void onError(Throwable t) {
             this.error = t;
-            DisposableHelper.replace(this, scheduler.scheduleDirect(this, delay, unit));
+            onComplete();
         }
 
         @Override
         public void onComplete() {
-            DisposableHelper.replace(this, scheduler.scheduleDirect(this, delay, unit));
         }
 
-        @Override
-        public void run() {
+        void run() {
+            Subscriber<? super T> a = actual;
             Throwable ex = error;
             if (ex != null) {
-                actual.onError(ex);
+                a.onError(ex);
             } else {
                 if (outputFused) {
                     available = true;
-                    actual.onNext(null);
+                    a.onNext(null);
                 } else {
                     T v = value;
                     value = null;
-                    actual.onNext(v);
+                    if (v != null) {
+                        a.onNext(v);
+                    }
                 }
-                actual.onComplete();
+                a.onComplete();
             }
         }
 
@@ -173,6 +160,59 @@ final class SoloDelay<T> extends Solo<T> {
         @Override
         public boolean offer(T v1, T v2) {
             throw new UnsupportedOperationException();
+        }
+
+        boolean innerSubscribe(Subscription s) {
+            return SubscriptionHelper.setOnce(this, s);
+        }
+
+        void innerCancel() {
+            SubscriptionHelper.cancel(this);
+        }
+
+        void innerError(Throwable ex) {
+            Throwable e = error;
+            if (e == null) {
+                error = ex;
+            } else {
+                error = new CompositeException(e, ex);
+            }
+            run();
+        }
+
+        final class OtherSubscriber implements Subscriber<Object> {
+
+            boolean done;
+
+            @Override
+            public void onSubscribe(Subscription s) {
+                if (innerSubscribe(s)) {
+                    s.request(Long.MAX_VALUE);
+                }
+            }
+
+            @Override
+            public void onNext(Object t) {
+                s.cancel();
+                onComplete();
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                if (done) {
+                    RxJavaPlugins.onError(t);
+                } else {
+                    innerError(t);
+                }
+            }
+
+            @Override
+            public void onComplete() {
+                if (!done) {
+                    done = true;
+                    run();
+                }
+            }
         }
     }
 }

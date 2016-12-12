@@ -27,6 +27,7 @@ import io.reactivex.functions.*;
 import io.reactivex.internal.functions.*;
 import io.reactivex.internal.subscribers.LambdaSubscriber;
 import io.reactivex.internal.util.ExceptionHelper;
+import io.reactivex.plugins.RxJavaPlugins;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subscribers.TestSubscriber;
 
@@ -560,8 +561,8 @@ public abstract class Solo<T> implements Publisher<T> {
      * @return the new Solo instance
      */
     public final Solo<T> delay(Publisher<?> other) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(other, "other is null");
+        return onAssembly(new SoloDelayPublisher<T>(this, other));
     }
 
     public final Solo<T> delaySubscription(Publisher<?> other) {
@@ -577,19 +578,28 @@ public abstract class Solo<T> implements Publisher<T> {
         return delaySubscription(timer(delay, unit, scheduler));
     }
 
+    /**
+     * Converts this Solo into a Flowable.
+     * @return the new Flowable instance
+     */
     public final Flowable<T> toFlowable() {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return RxJavaPlugins.onAssembly(new SoloToFlowable<T>(this));
     }
 
-    public final Flowable<T> toObservabe() {
-        // TODO implement
-        throw new UnsupportedOperationException();
+    /**
+     * Converts this Solo into an Observable.
+     * @return the new Observable instance
+     */
+    public final Observable<T> toObservabe() {
+        return RxJavaPlugins.onAssembly(new SoloToObservable<T>(this));
     }
 
+    /**
+     * Converts this Soli into a Single.
+     * @return the new Single instance
+     */
     public final Single<T> toSingle() {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return RxJavaPlugins.onAssembly(new SoloToSingle<T>(this));
     }
 
     /**
