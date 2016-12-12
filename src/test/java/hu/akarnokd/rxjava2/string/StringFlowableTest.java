@@ -153,4 +153,29 @@ public class StringFlowableTest extends BaseTest {
         .test()
         .assertResult("b", "", ":and:f");
     }
+
+    @Test
+    public void split3() {
+        Flowable.just("abqw", "ercdqw", "eref")
+        .compose(StringFlowable.split("qwer"))
+        .test()
+        .assertResult("ab", "cd", "ef");
+    }
+
+    @Test
+    public void split3Buffer1() {
+        Flowable.just("abqw", "ercdqw", "eref")
+        .compose(StringFlowable.split("qwer", 1))
+        .test()
+        .assertResult("ab", "cd", "ef");
+    }
+
+    @Test
+    public void split3Buffer1Request1() {
+        Flowable.just("abqw", "ercdqw", "eref")
+        .compose(StringFlowable.split("qwer", 1))
+        .rebatchRequests(1)
+        .test()
+        .assertResult("ab", "cd", "ef");
+    }
 }

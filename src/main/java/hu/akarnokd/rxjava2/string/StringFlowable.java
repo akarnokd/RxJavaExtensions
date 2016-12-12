@@ -41,20 +41,46 @@ public final class StringFlowable {
         return RxJavaPlugins.onAssembly(new FlowableCharSequence(string));
     }
 
+    /**
+     * Splits the input sequence of strings based on a pattern even across subsequent
+     * elements if needed.
+     * @param pattern the Rexexp pattern to split along
+     * @return the new FlowableTransformer instance
+     */
     public static FlowableTransformer<String, String> split(Pattern pattern) {
         return split(pattern, Flowable.bufferSize());
     }
 
+    /**
+     * Splits the input sequence of strings based on a pattern even across subsequent
+     * elements if needed.
+     * @param pattern the Rexexp pattern to split along
+     * @param bufferSize the number of items to prefetch from the upstream
+     * @return the new FlowableTransformer instance
+     */
     public static FlowableTransformer<String, String> split(Pattern pattern, int bufferSize) {
         ObjectHelper.requireNonNull(pattern, "pattern is null");
         ObjectHelper.verifyPositive(bufferSize, "bufferSize");
         return new FlowableSplit(null, pattern, bufferSize);
     }
 
+    /**
+     * Splits the input sequence of strings based on a pattern even across subsequent
+     * elements if needed.
+     * @param pattern the Rexexp pattern to split along
+     * @return the new FlowableTransformer instance
+     */
     public static FlowableTransformer<String, String> split(String pattern) {
         return split(pattern, Flowable.bufferSize());
     }
 
+    /**
+     * Splits the input sequence of strings based on a pattern even across subsequent
+     * elements if needed.
+     * @param pattern the Rexexp pattern to split along
+     * @param bufferSize the number of items to prefetch from the upstream
+     * @return the new FlowableTransformer instance
+     */
     public static FlowableTransformer<String, String> split(String pattern, int bufferSize) {
         return split(Pattern.compile(pattern), bufferSize);
     }
