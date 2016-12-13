@@ -577,24 +577,49 @@ public abstract class Solo<T> implements Publisher<T> {
         return onAssembly(new SoloAndThen<T>(this, other));
     }
 
+    /**
+     * Emits the success value of this Solo and then continues with
+     * the events of the other Publisher.
+     * @param other the other Publisher instance
+     * @return the new Flowable instance
+     */
     public final Flowable<T> andThen(Publisher<? extends T> other) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return Flowable.concat(this, other);
     }
 
+    /**
+     * Emits the success value of this Solo followed by the event of
+     * the other Solo.
+     * @param other the other Solo instance
+     * @return the new Flowable instance
+     */
     public final Flowable<T> concatWith(Solo<T> other) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return Flowable.concat(this, other);
     }
 
+
+    /**
+     * Merges the values of this Solo and the other Solo into a
+     * Flowable sequence.
+     * @param other the other Solo instance
+     * @return the new Flowable instance
+     */
     public final Flowable<T> mergeWith(Solo<T> other) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return Flowable.merge(this, other);
     }
 
+    /**
+     * Combines the values of this and the other Solo via a BiFunction.
+     * @param <U> the other value type
+     * @param <R> the result value type
+     * @param other the other Solo source
+     * @param zipper the bi-function taking the success value from this and
+     * the other Solo and returns a solo value to be emitted.
+     * @return the new Solo instance
+     */
+    @SuppressWarnings("unchecked")
     public final <U, R> Solo<R> zipWith(Solo<U> other, BiFunction<? super T, ? super U, ? extends R> zipper) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return Solo.zipArray(Functions.toFunction(zipper), this, other);
     }
 
     /**

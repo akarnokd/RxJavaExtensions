@@ -32,6 +32,7 @@ Maven search:
   - [Join patterns](#join-patterns)
   - [Debug support](#debug-support)
   - [SingleSubject, MaybeSubject and CompletableSubject](#singlesubject-maybesubject-and-completablesubject)
+  - [SoloProcessor, PerhapsProcessor and NonoProcessor](#soloprocessor-perhapsprocessor-and-nonoprocessor)
   - [FlowableProcessor utils](#flowableprocessor-utils)
   - [Custom Schedulers](#custom-schedulers)
   - [Custom operators and transformers](#custom-operators-and-transformers)
@@ -460,6 +461,51 @@ ss.onSuccess(1);
 to3.assertResult(1);
 ```
 
+## SoloProcessor, PerhapsProcessor and NonoProcessor
+
+These are the backpressure-aware, Reactive-Streams Processor-based implementations of the `SingleSubject`, `MaybeSubject` and CompletableSubject respectively. Their usage is quite similar.
+
+
+```java
+PerhapsProcessor<Integer> ms = PerhapsProcessor.create();
+
+TestSubscriber<Integer> to = ms.test();
+
+ms.onNext(1);
+ms.onComplete();
+
+to.assertResult(1);
+```
+
+Similarly with NonoProcessor, although calling `onNext(null)` will throw a `NullPointerException` to the caller.
+
+```java
+NonoProcessor cs = NonoProcessor.create();
+
+TestSubscriber<Void> to2 = cs.test();
+
+cs.onComplete();
+
+to2.assertResult();
+```
+
+Finally
+
+
+```java
+SoloProcessor<Integer> ss = SoloProcessor.create();
+
+TestSubscriber<Integer> to3 = ss.test();
+
+ss.onNext(1);
+ss.onComplete();
+
+to3.assertResult(1);
+```
+
+Note that calling `onComplete` after `onNext` is optional with `SoloProcessor` but calling `onComplete` without calling `onNext` terminates the `SoloProcessor` with a `NoSuchElementException`.
+
+
 ## FlowableProcessor utils
 
 ### FlowableProcessors
@@ -636,11 +682,11 @@ Examples:
 
 ```java
 Nono.fromAction(() -> System.out.println("Hello world!"))
-    .subscribe(() -> { });
+    .subscribe();
 
 Nono.fromAction(() -> System.out.println("Hello world!"))
     .delay(1, TimeUnit.SECONDS)
-    .blockingSubscribe(() -> { });
+    .blockingSubscribe();
 
 Nono.complete()
     .test()
@@ -675,4 +721,39 @@ ts.assertResult();
 
 ### Solo - 1-error publisher
 
+The `Publisher`-based sibling of the `Single` type. The usage is practically the same as `Single` with the exception that because `Solo` implements the Reactive-Streams `Publisher`, you can use it directly with operators of `Flowable` that accept `Publisher` in some form.
+
+`Solo`'s emission protocol is a restriction over the general `Publisher` protocol: one either calls `onNext` followed by `onComplete` or just `onError`. Operators will and should never call `onNext` followed by `onError` or `onComplete` on its own. Note that some operators may react to `onNext` immediately not waiting for an `onComplete` but on their emission side, `onComplete` is always called.
+
+Examples:
+
+```java
+Solo.fromCallable(() -> {
+    System.out.println("Hello world!");
+    return 1;
+}).subscribe();
+
+Solo.fromCallable(() -> "Hello world!")
+    .delay(1, TimeUnit.SECONDS)
+    .blockingSubscribe(System.out::println);
+
+Flowable.concat(Solo.just(1), Solo.just(2))
+.test()
+.assertResult(1, 2);
+```
+
+#### SoloProcessor
+
+A hot, Reactive-Streams `Processor` implementation of `Solo`.
+
+```java
+SoloProcessor<Integer> np = NonoProcessor.create();
+
+TestSubscriber<Integer> ts = np.test();
+
+np.onNext(1);
+np.onComplete();
+
+ts.assertResult(1);
+```
 
