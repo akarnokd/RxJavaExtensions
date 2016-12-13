@@ -30,12 +30,12 @@ import io.reactivex.processors.PublishProcessor;
 import io.reactivex.schedulers.*;
 import io.reactivex.subscribers.TestSubscriber;
 
-public class FlowableOnBackpressureTimeoutTest implements Consumer<Integer> {
+public class FlowableOnBackpressureTimeoutTest implements Consumer<Object> {
 
-    final List<Integer> evicted = Collections.synchronizedList(new ArrayList<Integer>());
+    final List<Object> evicted = Collections.synchronizedList(new ArrayList<Object>());
 
     @Override
-    public void accept(Integer t) throws Exception {
+    public void accept(Object t) throws Exception {
         evicted.add(t);
     }
 
@@ -306,14 +306,11 @@ public class FlowableOnBackpressureTimeoutTest implements Consumer<Integer> {
         Flowable.intervalRange(1, 5, 100, 100, TimeUnit.MILLISECONDS)
         .compose(FlowableTransformers
             .<Long>onBackpressureTimeout(2, 100, TimeUnit.MILLISECONDS,
-                 Schedulers.single(), new Consumer<Long>() {
-                    @Override
-                    public void accept(Long e) throws Exception {
-                        System.out.println(e);
-                    }
-                }))
+                 Schedulers.single(), this))
         .test(0)
         .awaitDone(5, TimeUnit.SECONDS)
         .assertResult();
+
+        Assert.assertEquals(Arrays.asList(1L, 2L, 3L, 4L, 5L), evicted);
     }
 }

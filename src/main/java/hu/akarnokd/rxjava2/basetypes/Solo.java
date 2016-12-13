@@ -713,8 +713,7 @@ public abstract class Solo<T> implements Publisher<T> {
      */
     public final Solo<T> timeout(Publisher<?> other) {
         ObjectHelper.requireNonNull(other, "other is null");
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return onAssembly(new SoloTimeout<T>(this, other, null));
     }
 
     /**
@@ -728,8 +727,7 @@ public abstract class Solo<T> implements Publisher<T> {
     public final Solo<T> timeout(Publisher<?> other, Solo<T> fallback) {
         ObjectHelper.requireNonNull(other, "other is null");
         ObjectHelper.requireNonNull(fallback, "fallback is null");
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return onAssembly(new SoloTimeout<T>(this, other, fallback));
     }
 
     public final Solo<T> onErrorReturnItem(T item) {
@@ -811,15 +809,34 @@ public abstract class Solo<T> implements Publisher<T> {
         return onAssembly(new SoloDelayPublisher<T>(this, other));
     }
 
+    /**
+     * Delay the subscription to this Solo until the other Publisher
+     * signals a value or completes.
+     * @param other the other Publisher to trigger the actual subscription
+     * @return the new Solo type
+     */
     public final Solo<T> delaySubscription(Publisher<?> other) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(other, "other is null");
+        return onAssembly(new SoloDelaySubscription<T>(this, other));
     }
 
+    /**
+     * Delay the subscription to this Solo until the specified delay elapses.
+     * @param delay the delay time
+     * @param unit the delay unit
+     * @return the new Solo type
+     */
     public final Solo<T> delaySubscription(long delay, TimeUnit unit) {
         return delaySubscription(timer(delay, unit));
     }
 
+    /**
+     * Delay the subscription to this Solo until the specified delay elapses.
+     * @param delay the delay time
+     * @param unit the delay unit
+     * @param scheduler the scheduler to wait on
+     * @return the new Solo type
+     */
     public final Solo<T> delaySubscription(long delay, TimeUnit unit, Scheduler scheduler) {
         return delaySubscription(timer(delay, unit, scheduler));
     }
