@@ -762,12 +762,12 @@ Flowable.concat(Solo.just(1), Solo.just(2))
 A hot, Reactive-Streams `Processor` implementation of `Solo`.
 
 ```java
-SoloProcessor<Integer> np = NonoProcessor.create();
+SoloProcessor<Integer> sp = SoloProcessor.create();
 
-TestSubscriber<Integer> ts = np.test();
+TestSubscriber<Integer> ts = sp.test();
 
-np.onNext(1);
-np.onComplete();
+sp.onNext(1);
+sp.onComplete();
 
 ts.assertResult(1);
 ```
