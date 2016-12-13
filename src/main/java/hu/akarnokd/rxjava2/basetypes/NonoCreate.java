@@ -27,7 +27,7 @@ import io.reactivex.plugins.RxJavaPlugins;
 
 /**
  * Call a create action with an abstraction of the incoming subscriber to allow
- * thread-safe and cancellation-safe terminal event emission
+ * thread-safe and cancellation-safe terminal event emission.
  */
 final class NonoCreate extends Nono {
 

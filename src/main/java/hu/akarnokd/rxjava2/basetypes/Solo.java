@@ -211,101 +211,236 @@ public abstract class Solo<T> implements Publisher<T> {
         return onAssembly(new SoloAmbArray<T>(sources));
     }
 
+    /**
+     * Concatenate the values in order from a sequence of Solo sources.
+     * @param <T> the common base value type
+     * @param sources the sequence of sources
+     * @return the new Flowable instance
+     */
     public static <T> Flowable<T> concat(Iterable<? extends Solo<? extends T>> sources) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return Flowable.concat(sources);
     }
 
+    /**
+     * Concatenate the values in order from a sequence of Solo sources.
+     * @param <T> the common base value type
+     * @param sources the sequence of sources
+     * @return the new Flowable instance
+     */
     public static <T> Flowable<T> concat(Publisher<? extends Solo<? extends T>> sources) {
         return concat(sources, 2);
     }
 
+    /**
+     * Concatenate the values in order from a sequence of Solo sources.
+     * @param <T> the common base value type
+     * @param sources the sequence of sources
+     * @param prefetch the number of sources to prefetch from upstream
+     * @return the new Flowable instance
+     */
     public static <T> Flowable<T> concat(Publisher<? extends Solo<? extends T>> sources, int prefetch) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return Flowable.concat(sources, prefetch);
     }
 
+    /**
+     * Concatenate the values in order from a sequence of Solo sources.
+     * @param <T> the common base value type
+     * @param sources the sequence of sources
+     * @return the new Flowable instance
+     */
     public static <T> Flowable<T> concatArray(Solo<? extends T>... sources) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return Flowable.concatArray(sources);
     }
 
+    /**
+     * Concatenate the values in order from a sequence of Solo sources, delaying
+     * errors till all sources terminate.
+     * @param <T> the common base value type
+     * @param sources the sequence of sources
+     * @return the new Flowable instance
+     */
     public static <T> Flowable<T> concatDelayError(Iterable<? extends Solo<? extends T>> sources) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return Flowable.concatDelayError(sources);
     }
 
+    /**
+     * Concatenate the values in order from a sequence of Solo sources, delaying
+     * errors till all sources terminate.
+     * @param <T> the common base value type
+     * @param sources the sequence of sources
+     * @return the new Flowable instance
+     */
     public static <T> Flowable<T> concatDelayError(Publisher<? extends Solo<? extends T>> sources) {
         return concatDelayError(sources, 2, true);
     }
 
+    /**
+     * Concatenate the values in order from a sequence of Solo sources, delaying
+     * errors till all sources terminate.
+     * @param <T> the common base value type
+     * @param sources the sequence of sources
+     * @param prefetch the number of sources to prefetch from upstream
+     * @return the new Flowable instance
+     */
     public static <T> Flowable<T> concatDelayError(Publisher<? extends Solo<? extends T>> sources, int prefetch) {
         return concatDelayError(sources, prefetch, true);
     }
 
+    /**
+     * Concatenate the values in order from a sequence of Solo sources, delaying
+     * errors till a source terminates or the whole sequence terminates.
+     * @param <T> the common base value type
+     * @param sources the sequence of sources
+     * @param prefetch the number of sources to prefetch from upstream
+     * @param tillTheEnd if true, errors are delayed to the very end;
+     * if false, an error will be signalled at the end of one source
+     * @return the new Flowable instance
+     */
     public static <T> Flowable<T> concatDelayError(Publisher<? extends Solo<? extends T>> sources, int prefetch, boolean tillTheEnd) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return Flowable.concatDelayError(sources, prefetch, tillTheEnd);
     }
 
+    /**
+     * Concatenate the values in order from a sequence of Solo sources, delaying
+     * errors till all sources terminate.
+     * @param <T> the common base value type
+     * @param sources the sequence of sources
+     * @return the new Flowable instance
+     */
     public static <T> Flowable<T> concatArrayDelayError(Solo<T>... sources) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return Flowable.concatArrayDelayError(sources);
     }
 
+    /**
+     * Merge the values in arbitrary order from a sequence of Solo sources.
+     * @param <T> the common base value type
+     * @param sources the sequence of sources
+     * @return the new Flowable instance
+     */
     public static <T> Flowable<T> merge(Iterable<? extends Solo<? extends T>> sources) {
         return merge(sources, Integer.MAX_VALUE);
     }
 
+    /**
+     * Merge the values in arbitrary order from a sequence of Solo sources.
+     * @param <T> the common base value type
+     * @param sources the sequence of sources
+     * @param maxConcurrency the maximum number of active subscriptions
+     * @return the new Flowable instance
+     */
     public static <T> Flowable<T> merge(Iterable<? extends Solo<? extends T>> sources, int maxConcurrency) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return Flowable.merge(sources, maxConcurrency);
     }
 
+    /**
+     * Merge the values in arbitrary order from a sequence of Solo sources.
+     * @param <T> the common base value type
+     * @param sources the sequence of sources
+     * @return the new Flowable instance
+     */
     public static <T> Flowable<T> merge(Publisher<? extends Solo<? extends T>> sources) {
         return merge(sources, Integer.MAX_VALUE);
     }
 
+    /**
+     * Merge the values in arbitrary order from a sequence of Solo sources.
+     * @param <T> the common base value type
+     * @param sources the sequence of sources
+     * @param maxConcurrency the maximum number of active subscriptions
+     * @return the new Flowable instance
+     */
     public static <T> Flowable<T> merge(Publisher<? extends Solo<? extends T>> sources, int maxConcurrency) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return Flowable.merge(sources, maxConcurrency);
     }
 
+    /**
+     * Merge the values in arbitrary order from a sequence of Solo sources.
+     * @param <T> the common base value type
+     * @param sources the sequence of sources
+     * @return the new Flowable instance
+     */
     public static <T> Flowable<T> mergeArray(Solo<? extends T>... sources) {
         return mergeArray(Integer.MAX_VALUE, sources);
     }
 
+    /**
+     * Merge the values in arbitrary order from a sequence of Solo sources.
+     * @param <T> the common base value type
+     * @param sources the sequence of sources
+     * @param maxConcurrency the maximum number of active subscriptions
+     * @return the new Flowable instance
+     */
     public static <T> Flowable<T> mergeArray(int maxConcurrency, Solo<? extends T>... sources) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return Flowable.mergeArray(maxConcurrency, 1, sources);
     }
 
-
+    /**
+     * Merge the values in arbitrary order from a sequence of Solo sources,
+     * delaying errors till all sources terminate.
+     * @param <T> the common base value type
+     * @param sources the sequence of sources
+     * @return the new Flowable instance
+     */
     public static <T> Flowable<T> mergeDelayError(Iterable<? extends Solo<? extends T>> sources) {
         return mergeDelayError(sources, Integer.MAX_VALUE);
     }
 
+    /**
+     * Merge the values in arbitrary order from a sequence of Solo sources,
+     * delaying errors till all sources terminate.
+     * @param <T> the common base value type
+     * @param sources the sequence of sources
+     * @param maxConcurrency the maximum number of active subscriptions
+     * @return the new Flowable instance
+     */
     public static <T> Flowable<T> mergeDelayError(Iterable<? extends Solo<? extends T>> sources, int maxConcurrency) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return Flowable.mergeDelayError(sources, maxConcurrency);
     }
 
+    /**
+     * Merge the values in arbitrary order from a sequence of Solo sources,
+     * delaying errors till all sources terminate.
+     * @param <T> the common base value type
+     * @param sources the sequence of sources
+     * @return the new Flowable instance
+     */
     public static <T> Flowable<T> mergeDelayError(Publisher<? extends Solo<? extends T>> sources) {
         return mergeDelayError(sources, Integer.MAX_VALUE);
     }
 
+    /**
+     * Merge the values in arbitrary order from a sequence of Solo sources,
+     * delaying errors till all sources terminate.
+     * @param <T> the common base value type
+     * @param sources the sequence of sources
+     * @param maxConcurrency the maximum number of active subscriptions
+     * @return the new Flowable instance
+     */
     public static <T> Flowable<T> mergeDelayError(Publisher<? extends Solo<? extends T>> sources, int maxConcurrency) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return mergeDelayError(sources, maxConcurrency);
     }
 
+    /**
+     * Merge the values in arbitrary order from a sequence of Solo sources,
+     * delaying errors till all sources terminate.
+     * @param <T> the common base value type
+     * @param sources the sequence of sources
+     * @return the new Flowable instance
+     */
     public static <T> Flowable<T> mergeArrayDelayError(Solo<? extends T>... sources) {
         return mergeArrayDelayError(Integer.MAX_VALUE, sources);
     }
 
+    /**
+     * Merge the values in arbitrary order from a sequence of Solo sources,
+     * delaying errors till all sources terminate.
+     * @param <T> the common base value type
+     * @param sources the sequence of sources
+     * @param maxConcurrency the maximum number of active subscriptions
+     * @return the new Flowable instance
+     */
     public static <T> Flowable<T> mergeArrayDelayError(int maxConcurrency, Solo<? extends T>... sources) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return Flowable.mergeArrayDelayError(maxConcurrency, 1, sources);
     }
 
     /**
@@ -318,7 +453,6 @@ public abstract class Solo<T> implements Publisher<T> {
     public static Solo<Long> timer(long delay, TimeUnit unit) {
         return timer(delay, unit, Schedulers.computation());
     }
-
 
     /**
      * Signals a 0L after the specified amount of time has passed since
@@ -334,6 +468,18 @@ public abstract class Solo<T> implements Publisher<T> {
         return onAssembly(new SoloTimer(delay, unit, scheduler));
     }
 
+    /**
+     * Generate a resource and a Solo based on that resource and then
+     * dispose that resource eagerly when the Solo terminates or the
+     * downstream cancels the sequence.
+     * @param <T> the value type
+     * @param <R> the resource type
+     * @param resourceSupplier the callback to get a resource for each subscriber
+     * @param sourceSupplier the function that returns a Solo for the generated resource
+     * @param disposer the consumer of the resource once the upstream terminates or the
+     * downstream cancels
+     * @return the new Solo instance
+     */
     public static <T, R> Solo<T> using(
             Callable<R> resourceSupplier,
             Function<? super R, ? extends Solo<T>> sourceSupplier,
@@ -342,30 +488,67 @@ public abstract class Solo<T> implements Publisher<T> {
         return using(resourceSupplier, sourceSupplier, disposer, true);
     }
 
+    /**
+     * Generate a resource and a Solo based on that resource and then
+     * dispose that resource eagerly when the Solo terminates or the
+     * downstream cancels the sequence.
+     * @param <T> the value type
+     * @param <R> the resource type
+     * @param resourceSupplier the callback to get a resource for each subscriber
+     * @param sourceSupplier the function that returns a Solo for the generated resource
+     * @param disposer the consumer of the resource once the upstream terminates or the
+     * downstream cancels
+     * @param eager if true, the resource is disposed before the terminal event is emitted
+     *              if false, the resource is disposed after the terminal event has been emitted
+     * @return the new Solo instance
+     */
     public static <T, R> Solo<T> using(
             Callable<R> resourceSupplier,
             Function<? super R, ? extends Solo<T>> sourceSupplier,
             Consumer<? super R> disposer,
             boolean eager
     ) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(resourceSupplier, "resourceSupplier is null");
+        ObjectHelper.requireNonNull(sourceSupplier, "sourceSupplier is null");
+        ObjectHelper.requireNonNull(disposer, "disposer is null");
+        return onAssembly(new SoloUsing<T, R>(resourceSupplier, sourceSupplier, disposer, eager));
     }
 
+    /**
+     * Combines the solo values of all the sources via a zipper function into a
+     * single resulting value.
+     * @param <T> the common input base type
+     * @param <R> the result type
+     * @param sources the sequence of Solo sources
+     * @param zipper the function takin in an array of values and returns a solo value
+     * @return the new Solo instance
+     */
     public static <T, R> Solo<R> zip(
             Iterable<? extends Solo<? extends T>> sources,
             Function<? super Object[], ? extends R> zipper
     ) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(sources, "sources is null");
+        ObjectHelper.requireNonNull(zipper, "zipper is null");
+        return onAssembly(new SoloZipIterable<T, R>(sources, zipper));
     }
 
+
+    /**
+     * Combines the solo values of all the sources via a zipper function into a
+     * single resulting value.
+     * @param <T> the common input base type
+     * @param <R> the result type
+     * @param sources the sequence of Solo sources
+     * @param zipper the function takin in an array of values and returns a solo value
+     * @return the new Solo instance
+     */
     public static <T, R> Solo<R> zipArray(
             Function<? super Object[], ? extends R> zipper,
             Solo<? extends T>... sources
     ) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(sources, "sources is null");
+        ObjectHelper.requireNonNull(zipper, "zipper is null");
+        return onAssembly(new SoloZipArray<T, R>(sources, zipper));
     }
 
     // ----------------------------------------------------
@@ -681,7 +864,7 @@ public abstract class Solo<T> implements Publisher<T> {
     /**
      * Executes the callback if the downstream cancels the sequence.
      * @param onCancel the action to call
-     * @return the new Nono instance
+     * @return the new Solo instance
      */
     public final Solo<T> doOnCancel(Action onCancel) {
         ObjectHelper.requireNonNull(onCancel, "onCancel is null");
@@ -777,12 +960,11 @@ public abstract class Solo<T> implements Publisher<T> {
         ));
     }
 
-
     /**
-     * Executes the callback after this Nono terminates and the downstream
+     * Executes the callback after this Solo terminates and the downstream
      * is notified.
      * @param onAfterTerminate the callback to call after the downstream is notified
-     * @return the new Sono instance
+     * @return the new Solo instance
      */
     public final Solo<T> doAfterTerminate(Action onAfterTerminate) {
         ObjectHelper.requireNonNull(onAfterTerminate, "onAfterTerminate is null");
@@ -798,12 +980,11 @@ public abstract class Solo<T> implements Publisher<T> {
         ));
     }
 
-
     /**
      * Executes the callback exactly if the upstream terminates or
      * the downstream cancels the sequence.
      * @param onFinally the action to call
-     * @return the new Sono instance
+     * @return the new Solo instance
      */
     public final Solo<T> doFinally(Action onFinally) {
         ObjectHelper.requireNonNull(onFinally, "onFinally is null");

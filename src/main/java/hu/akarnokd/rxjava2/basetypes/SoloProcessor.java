@@ -235,7 +235,7 @@ public final class SoloProcessor<T> extends Solo<T> implements Processor<T, T> {
 
         private static final long serialVersionUID = -8241863418761502064L;
 
-        public InnerSubscription(Subscriber<? super T> actual, SoloProcessor<T> parent) {
+        InnerSubscription(Subscriber<? super T> actual, SoloProcessor<T> parent) {
             super(actual);
             this.parent = parent;
         }
