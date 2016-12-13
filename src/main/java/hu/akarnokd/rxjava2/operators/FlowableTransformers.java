@@ -396,4 +396,86 @@ public final class FlowableTransformers {
         ObjectHelper.requireNonNull(consumer, "consumer is null");
         return new FlowableMapFilter<T, R>(null, consumer);
     }
+
+    /**
+     * Buffers the incoming values from upstream up to a maximum timeout if
+     * the downstream can't keep up.
+     * @param <T> the value type
+     * @param timeout the maximum age of an element in the buffer
+     * @param unit the time unit of the timeout
+     * @return the new FlowableTransformer instance
+     * @see #onBackpressureTimeout(int, long, TimeUnit, Scheduler, Consumer) for more options
+     *
+     * @since 0.13.0
+     */
+    @BackpressureSupport(BackpressureKind.UNBOUNDED_IN)
+    @SchedulerSupport(SchedulerSupport.COMPUTATION)
+    public static <T> FlowableTransformer<T, T> onBackpressureTimeout(long timeout, TimeUnit unit) {
+        return onBackpressureTimeout(timeout, unit, Schedulers.computation());
+    }
+
+    /**
+     * Buffers the incoming values from upstream up to a maximum size or timeout if
+     * the downstream can't keep up.
+     * @param <T> the value type
+     * @param timeout the maximum age of an element in the buffer
+     * @param unit the time unit of the timeout
+     * @param scheduler the scheduler to be used as time source and to trigger the timeout & eviction
+     * @param onEvict called when an element is evicted, maybe concurrently
+     * @return the new FlowableTransformer instance
+     *
+     * @since 0.13.0
+     */
+    @BackpressureSupport(BackpressureKind.UNBOUNDED_IN)
+    @SchedulerSupport(SchedulerSupport.CUSTOM)
+    public static <T> FlowableTransformer<T, T> onBackpressureTimeout(long timeout, TimeUnit unit, Scheduler scheduler, Consumer<? super T> onEvict) {
+        ObjectHelper.requireNonNull(unit, "unit is null");
+        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
+        ObjectHelper.requireNonNull(onEvict, "onEvict is null");
+
+        return new FlowableOnBackpressureTimeout<T>(null, Integer.MAX_VALUE, timeout, unit, scheduler, onEvict);
+    }
+
+    /**
+     * Buffers the incoming values from upstream up to a maximum timeout if
+     * the downstream can't keep up, running on a custom scheduler.
+     * @param <T> the value type
+     * @param timeout the maximum age of an element in the buffer
+     * @param unit the time unit of the timeout
+     * @param scheduler the scheduler to be used as time source and to trigger the timeout & eviction
+     * @return the new FlowableTransformer instance
+     * @see #onBackpressureTimeout(int, long, TimeUnit, Scheduler, Consumer) for more options
+     *
+     * @since 0.13.0
+     */
+    @BackpressureSupport(BackpressureKind.UNBOUNDED_IN)
+    @SchedulerSupport(SchedulerSupport.CUSTOM)
+    public static <T> FlowableTransformer<T, T> onBackpressureTimeout(long timeout, TimeUnit unit, Scheduler scheduler) {
+        return onBackpressureTimeout(Integer.MAX_VALUE, timeout, unit, scheduler, Functions.emptyConsumer());
+    }
+
+    /**
+     * Buffers the incoming values from upstream up to a maximum size or timeout if
+     * the downstream can't keep up.
+     * @param <T> the value type
+     * @param maxSize the maximum number of elements in the buffer, beyond that,
+     *                the oldest element is evicted
+     * @param timeout the maximum age of an element in the buffer
+     * @param unit the time unit of the timeout
+     * @param scheduler the scheduler to be used as time source and to trigger the timeout & eviction
+     * @param onEvict called when an element is evicted, maybe concurrently
+     * @return the new FlowableTransformer instance
+     *
+     * @since 0.13.0
+     */
+    @BackpressureSupport(BackpressureKind.UNBOUNDED_IN)
+    @SchedulerSupport(SchedulerSupport.CUSTOM)
+    public static <T> FlowableTransformer<T, T> onBackpressureTimeout(int maxSize, long timeout, TimeUnit unit, Scheduler scheduler, Consumer<? super T> onEvict) {
+        ObjectHelper.verifyPositive(maxSize, "maxSize");
+        ObjectHelper.requireNonNull(unit, "unit is null");
+        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
+        ObjectHelper.requireNonNull(onEvict, "onEvict is null");
+
+        return new FlowableOnBackpressureTimeout<T>(null, maxSize, timeout, unit, scheduler, onEvict);
+    }
 }

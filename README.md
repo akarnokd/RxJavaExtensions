@@ -672,6 +672,21 @@ Flowable.range(1, 10)
 .assertResult(4, 8);
 ```
 
+### FlowableTransformers.onBackpressureTimeout
+
+Consumes the upstream in an unbounded manner and buffers elements until the downstream requests but each buffered element has an associated timeout after which it becomes unavailable. Note that this may create discontinuities in the stream. In addition, an overload allows specifying the maximum buffer size and an eviction action which gets triggered when the buffer reaches its
+capacity or elements time out.
+
+```java
+Flowable.intervalRange(1, 5, 100, 100, TimeUnit.MILLISECONDS)
+        .compose(FlowableTransformers
+            .onBackpressureTimeout(2, 100, TimeUnit.MILLISECONDS,
+                 Schedulers.single(), System.out::println))
+        .test(0)
+        .awaitDone(5, TimeUnit.SECONDS)
+        .assertResult();
+```
+
 ## Special Publisher implementations
 
 ### Nono - 0-error publisher
