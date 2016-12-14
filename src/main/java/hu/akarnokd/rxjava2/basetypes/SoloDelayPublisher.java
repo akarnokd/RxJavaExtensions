@@ -130,6 +130,7 @@ final class SoloDelayPublisher<T> extends Solo<T> {
 
         @Override
         public void onComplete() {
+            other.subscribe(new OtherSubscriber());
         }
 
         void run() {
@@ -193,7 +194,7 @@ final class SoloDelayPublisher<T> extends Solo<T> {
 
             @Override
             public void onNext(Object t) {
-                s.cancel();
+                SubscriptionHelper.cancel(DelaySubscriber.this);
                 onComplete();
             }
 

@@ -60,7 +60,7 @@ final class SoloMap<T, R> extends Solo<R> {
                     R v;
 
                     try {
-                        v = mapper.apply(t);
+                        v = ObjectHelper.requireNonNull(mapper.apply(t), "The mapper returned a null value");
                     } catch (Throwable ex) {
                         fail(ex);
                         return;

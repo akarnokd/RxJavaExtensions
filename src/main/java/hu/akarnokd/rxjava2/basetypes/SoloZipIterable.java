@@ -60,7 +60,7 @@ final class SoloZipIterable<T, R> extends Solo<R> implements Function<T, R> {
                 if (n == array.length) {
                     array = Arrays.copyOf(array, n + (n >> 1));
                 }
-                array[n] = ObjectHelper.requireNonNull(inner, "One of the source Solo is null");
+                array[n++] = ObjectHelper.requireNonNull(inner, "One of the source Solo is null");
             }
         } catch (Throwable ex) {
             Exceptions.throwIfFatal(ex);

@@ -22,6 +22,7 @@ import io.reactivex.exceptions.Exceptions;
 import io.reactivex.functions.Function;
 import io.reactivex.internal.functions.ObjectHelper;
 import io.reactivex.internal.util.ExceptionHelper;
+import io.reactivex.subscribers.TestSubscriber;
 
 /**
  * A 0-1-error base reactive type, similar to Maybe, implementing the Reactive-Streams Publisher
@@ -34,7 +35,7 @@ import io.reactivex.internal.util.ExceptionHelper;
 public abstract class Perhaps<T> implements Publisher<T> {
 
     /**
-     * Hook called when assembling Solo sequences.
+     * Hook called when assembling Perhaps sequences.
      */
     @SuppressWarnings("rawtypes")
     private static volatile Function<Perhaps, Perhaps> onAssembly;
@@ -92,9 +93,55 @@ public abstract class Perhaps<T> implements Publisher<T> {
     }
 
     /**
-     * Implement this method to react to a Subscriber subscribing to this Solo.
+     * Implement this method to react to a Subscriber subscribing to this Perhaps.
      * @param s the downstream Subscriber, never null
      */
     protected abstract void subscribeActual(Subscriber<? super T> s);
+
+    /**
+     * Creates a TestSubscriber and subscribes it to this Perhaps.
+     * @return the new TestSubscriber instance
+     */
+    public final TestSubscriber<T> test() {
+        return test(Long.MAX_VALUE, false);
+    }
+
+    /**
+     * Creates a TestSubscriber, optionally cancels it, and subscribes
+     * it to this Perhaps.
+     * @param cancel if true, the TestSubscriber will be cancelled before
+     * subscribing to this Perhaps
+     * @return the new TestSubscriber instance
+     */
+    public final TestSubscriber<T> test(boolean cancel) {
+        return test(Long.MAX_VALUE, cancel);
+    }
+
+    /**
+     * Creates a TestSubscriber with the given initial request and
+     * subscribes it to this Perhaps.
+     * @param initialRequest the initial request amount, non-negative
+     * @return the new TestSubscriber
+     */
+    public final TestSubscriber<T> test(long initialRequest) {
+        return test(initialRequest, false);
+    }
+
+    /**
+     * Creates a TestSubscriber with the given initial request,
+     * optionally cancels it, and subscribes it to this Perhaps.
+     * @param initialRequest the initial request amount, non-negative
+     * @param cancel if true, the TestSubscriber will be cancelled before
+     * subscribing to this Perhaps
+     * @return the new TestSubscriber
+     */
+    public final TestSubscriber<T> test(long initialRequest, boolean cancel) {
+        TestSubscriber<T> ts = new TestSubscriber<T>(initialRequest);
+        if (cancel) {
+            ts.cancel();
+        }
+        subscribe(ts);
+        return ts;
+    }
 
 }

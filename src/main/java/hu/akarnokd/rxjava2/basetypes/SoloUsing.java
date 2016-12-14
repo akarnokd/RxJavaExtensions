@@ -17,6 +17,7 @@
 package hu.akarnokd.rxjava2.basetypes;
 
 import java.util.concurrent.Callable;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.reactivestreams.*;
 
@@ -98,6 +99,8 @@ final class SoloUsing<T, R> extends Solo<T> {
 
         final boolean eager;
 
+        final AtomicBoolean once;
+
         Subscription s;
 
         R resource;
@@ -107,11 +110,12 @@ final class SoloUsing<T, R> extends Solo<T> {
             this.resource = resource;
             this.disposer = disposer;
             this.eager = eager;
+            this.once = new AtomicBoolean();
         }
 
         @Override
         public void cancel() {
-            if (compareAndSet(0, 1)) {
+            if (once.compareAndSet(false, true)) {
                 disposeFinally();
             }
         }
@@ -131,6 +135,8 @@ final class SoloUsing<T, R> extends Solo<T> {
                 this.s = s;
 
                 actual.onSubscribe(this);
+
+                s.request(Long.MAX_VALUE);
             }
         }
 
@@ -142,7 +148,7 @@ final class SoloUsing<T, R> extends Solo<T> {
         @Override
         public void onError(Throwable t) {
             if (eager) {
-                if (compareAndSet(0, 1)) {
+                if (once.compareAndSet(false, true)) {
                     try {
                         disposer.accept(resource);
                     } catch (Throwable ex) {
@@ -155,7 +161,7 @@ final class SoloUsing<T, R> extends Solo<T> {
             actual.onError(t);
 
             if (!eager) {
-                if (compareAndSet(0, 1)) {
+                if (once.compareAndSet(false, true)) {
                     disposeFinally();
                 }
             }
@@ -164,7 +170,7 @@ final class SoloUsing<T, R> extends Solo<T> {
         @Override
         public void onComplete() {
             if (eager) {
-                if (compareAndSet(0, 1)) {
+                if (once.compareAndSet(false, true)) {
                     try {
                         disposer.accept(resource);
                     } catch (Throwable ex) {
@@ -183,7 +189,7 @@ final class SoloUsing<T, R> extends Solo<T> {
             }
 
             if (!eager) {
-                if (compareAndSet(0, 1)) {
+                if (once.compareAndSet(false, true)) {
                     disposeFinally();
                 }
             }

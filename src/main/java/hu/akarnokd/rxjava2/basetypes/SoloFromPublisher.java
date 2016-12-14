@@ -56,7 +56,6 @@ final class SoloFromPublisher<T> extends Solo<T> {
             if (!done) {
                 if (hasValue) {
                     s.cancel();
-                    done = true;
                     onError(new IndexOutOfBoundsException());
                 } else {
                     hasValue = true;
@@ -71,6 +70,7 @@ final class SoloFromPublisher<T> extends Solo<T> {
                 RxJavaPlugins.onError(t);
             } else {
                 value = null;
+                done = true;
                 actual.onError(t);
             }
         }
@@ -79,6 +79,7 @@ final class SoloFromPublisher<T> extends Solo<T> {
         public void onComplete() {
             if (!done) {
                 if (hasValue) {
+                    done = true;
                     complete(value);
                 } else {
                     onError(new NoSuchElementException());

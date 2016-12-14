@@ -76,7 +76,7 @@ final class SoloZipArray<T, R> extends Solo<R> {
                 a[i] = new ZipSubscriber<T, R>(i, this);
             }
             this.subscribers = a;
-            this.wip = new AtomicInteger();
+            this.wip = new AtomicInteger(n);
         }
 
         void subscribe(Solo<? extends T>[] sources, int n) {
@@ -103,6 +103,7 @@ final class SoloZipArray<T, R> extends Solo<R> {
                     v = ObjectHelper.requireNonNull(zipper.apply(values), "The zipper returned a null value");
                 } catch (Throwable ex) {
                     Exceptions.throwIfFatal(ex);
+                    Arrays.fill(values, null);
                     actual.onError(ex);
                     return;
                 }

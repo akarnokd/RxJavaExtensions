@@ -135,17 +135,11 @@ final class SoloTimeout<T> extends Solo<T> {
         }
 
         void fallbackComplete(T v) {
-            if (once.compareAndSet(false, true)) {
-                complete(v);
-            }
+            complete(v);
         }
 
         void fallbackError(Throwable ex) {
-            if (once.compareAndSet(false, true)) {
-                actual.onError(ex);
-            } else {
-                RxJavaPlugins.onError(ex);
-            }
+            actual.onError(ex);
         }
 
         final class OtherSubscriber extends AtomicReference<Subscription>

@@ -174,6 +174,9 @@ public abstract class Solo<T> implements Publisher<T> {
      * @return the new Solo instance
      */
     public static <T> Solo<T> fromPublisher(Publisher<T> source) {
+        if (source instanceof Solo) {
+            return (Solo<T>)source;
+        }
         ObjectHelper.requireNonNull(source, "source is null");
         return onAssembly(new SoloFromPublisher<T>(source));
     }
@@ -307,7 +310,7 @@ public abstract class Solo<T> implements Publisher<T> {
      * @param sources the sequence of sources
      * @return the new Flowable instance
      */
-    public static <T> Flowable<T> concatArrayDelayError(Solo<T>... sources) {
+    public static <T> Flowable<T> concatArrayDelayError(Solo<? extends T>... sources) {
         return Flowable.concatArrayDelayError(sources);
     }
 
@@ -417,7 +420,7 @@ public abstract class Solo<T> implements Publisher<T> {
      * @return the new Flowable instance
      */
     public static <T> Flowable<T> mergeDelayError(Publisher<? extends Solo<? extends T>> sources, int maxConcurrency) {
-        return mergeDelayError(sources, maxConcurrency);
+        return Flowable.mergeDelayError(sources, maxConcurrency);
     }
 
     /**
@@ -730,46 +733,96 @@ public abstract class Solo<T> implements Publisher<T> {
         return onAssembly(new SoloTimeout<T>(this, other, fallback));
     }
 
+    /**
+     * If the upstream signals an error, signal an item instead.
+     * @param item the item to signal if the upstream fails
+     * @return the new Solo instance
+     */
     public final Solo<T> onErrorReturnItem(T item) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(item, "item is null");
+        return onAssembly(new SoloOnErrorReturnItem<T>(this, item));
     }
 
+    /**
+     * If the upstream signals an error, switch over to the next Solo
+     * and emits its signal instead.
+     * @param next the other Solo to switch to in case of an upstream error
+     * @return the new Solo instance
+     */
     public final Solo<T> onErrorResumeWith(Solo<T> next) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(next, "next is null");
+        return onAssembly(new SoloOnErrorResumeWith<T>(this, next));
     }
 
+    /**
+     * If the upstream signals an error, call a function and subscribe to
+     * the Solo it returns.
+     * @param errorHandler the function receiving the upstream error and
+     * returns a Solo to resume with.
+     * @return the new Solo instance
+     */
     public final Solo<T> onErrorResumeNext(Function<? super Throwable, ? extends Solo<T>> errorHandler) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(errorHandler, "errorHandler is null");
+        return onAssembly(new SoloOnErrorResumeNext<T>(this, errorHandler));
     }
 
-    public final <R> Solo<T> flatMap(
+    /**
+     * Maps the success value of this Solo into another Solo and
+     * emits its signals.
+     * @param <R> the result type
+     * @param mapper the function that receives the success value and returns
+     * another Solo to subscribe to
+     * @return the new Solo instance
+     */
+    public final <R> Solo<R> flatMap(
             Function<? super T, ? extends Solo<? extends R>> mapper) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(mapper, "mapper is null");
+        return onAssembly(new SoloFlatMap<T, R>(this, mapper));
     }
 
-    public final <R> Solo<T> flatMap(
-            Function<? super T, ? extends Solo<? extends R>> onNextMapper,
-            Function<? super Throwable, ? extends Solo<? extends R>> onErrorMapper,
-            Callable<? extends Solo<? extends R>> onCompleteMapper
-                    ) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+    /**
+     * Maps the success value or the failure of this Solo into another
+     * Solo and emits its signal.
+     * @param <R> the result type
+     * @param onSuccessMapper the function that receives the success value and return
+     * another Solo to subscribe to
+     * @param onErrorMapper the function that receives the Throwable error and
+     * return another Solo to subscribe to
+     * @return th new Solo instance
+     */
+    public final <R> Solo<R> flatMap(
+            Function<? super T, ? extends Solo<? extends R>> onSuccessMapper,
+            Function<? super Throwable, ? extends Solo<? extends R>> onErrorMapper
+    ) {
+        ObjectHelper.requireNonNull(onSuccessMapper, "onSuccessMapper is null");
+        ObjectHelper.requireNonNull(onErrorMapper, "onErrorMapper is null");
+        return onAssembly(new SoloFlatMapSignal<T, R>(this, onSuccessMapper, onErrorMapper));
     }
 
+    /**
+     * Maps the success value of this Solo into a Publisher and
+     * emits its signals.
+     * @param <R> the result type
+     * @param mapper the function that takes the success value of this Solo
+     * and returns a Publisher
+     * @return the new Flowable instance
+     */
     public final <R> Flowable<R> flatMapPublisher(
             Function<? super T, ? extends Publisher<? extends R>> mapper
     ) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(mapper, "mapper is null");
+        return RxJavaPlugins.onAssembly(new SoloFlatMapPublisher<T, R>(this, mapper));
     }
 
+    /**
+     * Signal a NoSuchElementException if the other signals before this
+     * Solo signals.
+     * @param other the other Publisher
+     * @return the new Solo instance
+     */
     public final Solo<T> takeUntil(Publisher<?> other) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(other, "other is null");
+        return onAssembly(new SoloTakeUntil<T>(this, other));
     }
 
     /**
