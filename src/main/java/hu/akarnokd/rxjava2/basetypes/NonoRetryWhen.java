@@ -55,7 +55,7 @@ final class NonoRetryWhen extends Nono {
             return;
         }
 
-        RepeatWhenMainSubscriber parent = new RepeatWhenMainSubscriber(s, processor, source);
+        RetryWhenMainSubscriber parent = new RetryWhenMainSubscriber(s, processor, source);
         s.onSubscribe(parent);
 
         p.subscribe(parent.inner);
@@ -63,7 +63,7 @@ final class NonoRetryWhen extends Nono {
         source.subscribe(parent);
     }
 
-    static final class RepeatWhenMainSubscriber extends BasicNonoIntQueueSubscription
+    static final class RetryWhenMainSubscriber extends BasicNonoIntQueueSubscription
     implements Subscriber<Void>, RedoSupport {
 
         private static final long serialVersionUID = 6463015514357680572L;
@@ -82,7 +82,7 @@ final class NonoRetryWhen extends Nono {
 
         volatile boolean active;
 
-        RepeatWhenMainSubscriber(Subscriber<? super Void> actual, FlowableProcessor<Throwable> processor, Nono source) {
+        RetryWhenMainSubscriber(Subscriber<? super Void> actual, FlowableProcessor<Throwable> processor, Nono source) {
             this.actual = actual;
             this.s = new AtomicReference<Subscription>();
             this.inner = new RedoInnerSubscriber(this);
@@ -99,7 +99,7 @@ final class NonoRetryWhen extends Nono {
 
         @Override
         public void onSubscribe(Subscription s) {
-            SubscriptionHelper.setOnce(this.s, s);
+            SubscriptionHelper.replace(this.s, s);
         }
 
         @Override
