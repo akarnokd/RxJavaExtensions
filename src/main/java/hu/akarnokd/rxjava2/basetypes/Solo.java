@@ -907,7 +907,7 @@ public abstract class Solo<T> implements Publisher<T> {
      * Converts this Solo into an Observable.
      * @return the new Observable instance
      */
-    public final Observable<T> toObservabe() {
+    public final Observable<T> toObservable() {
         return RxJavaPlugins.onAssembly(new SoloToObservable<T>(this));
     }
 
@@ -1155,6 +1155,9 @@ public abstract class Solo<T> implements Publisher<T> {
      * @return the new Flowable instance
      */
     public final Flowable<T> repeat(long times) {
+        if (times < 0L) {
+            throw new IllegalArgumentException("times >= 0 required but it was " + times);
+        }
         return RxJavaPlugins.onAssembly(new FlowableRepeat<T>(this, times));
     }
 
@@ -1332,7 +1335,7 @@ public abstract class Solo<T> implements Publisher<T> {
      * @return the Disposable that allows cancelling the subscription
      */
     public final Disposable subscribe(Consumer<? super T> onNext, Consumer<? super Throwable> onError, Action onComplete) {
-        LambdaSubscriber<T> s = new LambdaSubscriber<T>(onNext, onError, onComplete, Functions.<Subscription>emptyConsumer());
+        LambdaSubscriber<T> s = new LambdaSubscriber<T>(onNext, onError, onComplete, Functions.REQUEST_MAX);
         subscribe(s);
         return s;
     }

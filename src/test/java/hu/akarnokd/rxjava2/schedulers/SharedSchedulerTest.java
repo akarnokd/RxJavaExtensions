@@ -125,7 +125,7 @@ public class SharedSchedulerTest implements Runnable {
 
                 System.out.printf("Usage: %.1f -> %.1f -> %.1f%n", before / 1024.0 / 1024.0, middle / 1024.0 / 1024.0, after / 1024.0 / 1024.0);
 
-                if (middle > after * 2) {
+                if (middle < after * 2) {
                     break;
                 }
 

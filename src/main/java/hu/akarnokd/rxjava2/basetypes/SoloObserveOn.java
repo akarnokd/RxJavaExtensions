@@ -102,6 +102,7 @@ final class SoloObserveOn<T> extends Solo<T> {
                         actual.onSubscribe(this);
 
                         s.request(Long.MAX_VALUE);
+                        return;
                     }
                 }
 
@@ -115,7 +116,7 @@ final class SoloObserveOn<T> extends Solo<T> {
 
         @Override
         public void onNext(T t) {
-            if (sourceMode != NONE) {
+            if (sourceMode == NONE) {
                 queue.offer(t);
             }
             trySchedule();

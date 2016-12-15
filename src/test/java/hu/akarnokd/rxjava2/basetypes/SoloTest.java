@@ -23,15 +23,17 @@ import java.util.*;
 import java.util.concurrent.*;
 
 import org.junit.Test;
+import org.reactivestreams.*;
 
 import hu.akarnokd.rxjava2.test.TestHelper;
 import io.reactivex.*;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.exceptions.CompositeException;
 import io.reactivex.functions.*;
 import io.reactivex.internal.functions.Functions;
 import io.reactivex.plugins.RxJavaPlugins;
 import io.reactivex.processors.PublishProcessor;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.schedulers.*;
 import io.reactivex.subscribers.TestSubscriber;
 
 public class SoloTest implements Consumer<Object>, Action, LongConsumer, Cancellable {
@@ -1678,6 +1680,804 @@ public class SoloTest implements Consumer<Object>, Action, LongConsumer, Cancell
         ts.assertFailure(CompositeException.class);
 
         assertFalse(pp.hasSubscribers());
+    }
+
+    @Test
+    public void delaySubscription() {
+        Solo.just(1)
+        .delaySubscription(100, TimeUnit.MILLISECONDS)
+        .test()
+        .awaitDone(5, TimeUnit.SECONDS)
+        .assertResult(1);
+    }
+
+    @Test
+    public void delaySubscriptionScheduler() {
+        SoloProcessor<Integer> sp = SoloProcessor.create();
+        TestScheduler scheduler = new TestScheduler();
+
+        TestSubscriber<Integer> ts = sp.delaySubscription(1, TimeUnit.SECONDS, scheduler)
+        .test();
+
+        assertFalse(sp.hasSubscribers());
+
+        ts.assertEmpty();
+
+        scheduler.advanceTimeBy(1, TimeUnit.SECONDS);
+
+        assertTrue(sp.hasSubscribers());
+
+        sp.onNext(1);
+
+        ts.assertResult(1);
+
+        assertFalse(sp.hasSubscribers());
+    }
+
+    @Test
+    public void delaySubscriptionPublisher() {
+        SoloProcessor<Integer> sp = SoloProcessor.create();
+        PublishProcessor<Integer> pp = PublishProcessor.create();
+
+        TestSubscriber<Integer> ts = sp.delaySubscription(pp)
+        .test();
+
+        assertFalse(sp.hasSubscribers());
+        assertTrue(pp.hasSubscribers());
+
+        ts.assertEmpty();
+
+        pp.onNext(1);
+
+        assertTrue(sp.hasSubscribers());
+        assertFalse(pp.hasSubscribers());
+
+        sp.onNext(1);
+
+        ts.assertResult(1);
+
+        assertFalse(sp.hasSubscribers());
+    }
+
+    @Test
+    public void toFlowable() {
+        Solo.just(1)
+        .toFlowable()
+        .test()
+        .assertResult(1);
+    }
+
+    @Test
+    public void toFlowableError() {
+        Solo.error(new IOException())
+        .toFlowable()
+        .test()
+        .assertFailure(IOException.class);
+    }
+
+    @Test
+    public void toObservable() {
+        Solo.just(1)
+        .toObservable()
+        .test()
+        .assertResult(1);
+    }
+
+    @Test
+    public void toObservableError() {
+        Solo.error(new IOException())
+        .toObservable()
+        .test()
+        .assertFailure(IOException.class);
+    }
+
+    @Test
+    public void toSingle() {
+        Solo.just(1)
+        .toSingle()
+        .test()
+        .assertResult(1);
+    }
+
+    @Test
+    public void toSingleError() {
+        Solo.error(new IOException())
+        .toSingle()
+        .test()
+        .assertFailure(IOException.class);
+    }
+
+    @Test
+    public void doOnSubscribe() {
+        Solo.just(1)
+        .doOnSubscribe(this)
+        .test()
+        .assertResult(1);
+
+        assertEquals(1, count);
+    }
+
+    @Test
+    public void doOnRequest() {
+        Solo.just(1)
+        .doOnRequest(this)
+        .test()
+        .assertResult(1);
+
+        assertEquals(1, count);
+    }
+
+    @Test
+    public void doOnCancel() {
+        SoloProcessor<Integer> sp = SoloProcessor.create();
+
+        TestSubscriber<Integer> ts = sp.doOnCancel(this)
+        .test()
+        .assertEmpty();
+
+        assertEquals(0, count);
+
+        assertTrue(sp.hasSubscribers());
+
+        ts.cancel();
+
+        assertFalse(sp.hasSubscribers());
+
+        assertEquals(1, count);
+    }
+
+    @Test
+    public void doOnNext() {
+        Solo.just(1)
+        .doOnNext(this)
+        .test()
+        .assertResult(1);
+
+        assertEquals(1, count);
+    }
+
+    @Test
+    public void doOnAfterNext() {
+        Solo.just(1)
+        .doAfterNext(this)
+        .test()
+        .assertResult(1);
+
+        assertEquals(1, count);
+    }
+
+    @Test
+    public void doOnError() {
+        Solo.error(new IOException())
+        .doOnError(this)
+        .test()
+        .assertFailure(IOException.class);
+
+        assertEquals(1, count);
+    }
+
+    @Test
+    public void doOnComplete() {
+        Solo.just(1)
+        .doOnComplete(this)
+        .test()
+        .assertResult(1);
+
+        assertEquals(1, count);
+    }
+
+    @Test
+    public void doAfterTerminate() {
+        Solo.just(1)
+        .doAfterTerminate(this)
+        .test()
+        .assertResult(1);
+
+        assertEquals(1, count);
+    }
+
+    @Test
+    public void doAfterTerminateError() {
+        Solo.error(new IOException())
+        .doAfterTerminate(this)
+        .test()
+        .assertFailure(IOException.class);
+
+        assertEquals(1, count);
+    }
+
+    @Test
+    public void doFinally() {
+        Solo.just(1)
+        .doFinally(this)
+        .test()
+        .assertResult(1);
+
+        assertEquals(1, count);
+    }
+
+    @Test
+    public void doFinallyError() {
+        Solo.error(new IOException())
+        .doFinally(this)
+        .test()
+        .assertFailure(IOException.class);
+
+        assertEquals(1, count);
+    }
+
+    @Test
+    public void doFinallyCancel() {
+        TestSubscriber<Object> ts = Solo.never()
+        .doFinally(this)
+        .test();
+
+        assertEquals(0, count);
+
+        ts.cancel();
+
+        assertEquals(1, count);
+    }
+
+    @Test
+    public void ignoreElement() {
+        Solo.just(1)
+        .ignoreElement()
+        .test()
+        .assertResult();
+    }
+
+    @Test
+    public void ignoreElementError() {
+        Solo.error(new IOException())
+        .ignoreElement()
+        .test()
+        .assertFailure(IOException.class);
+    }
+
+    @Test
+    public void hide() {
+        assertFalse(Solo.just(1).hide() instanceof SoloJust);
+    }
+
+    @Test
+    public void hideNormal() {
+        Solo.just(1).hide()
+        .test()
+        .assertResult(1);
+    }
+
+    @Test
+    public void hideError() {
+        Solo.error(new IOException())
+        .hide()
+        .test()
+        .assertFailure(IOException.class);
+    }
+
+    @Test
+    public void hideCancel() {
+        SoloProcessor<Object> sp = SoloProcessor.create();
+
+        TestSubscriber<Object> ts = sp
+        .hide()
+        .test();
+
+        assertTrue(sp.hasSubscribers());
+
+        ts.cancel();
+
+        assertFalse(sp.hasSubscribers());
+
+        ts.assertEmpty();
+    }
+
+    @Test
+    public void to() {
+        Solo.just(1)
+        .to(Functions.<Solo<Integer>>identity())
+        .test()
+        .assertResult(1);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void toThrows() {
+        Solo.just(1)
+        .to(new Function<Solo<Integer>, Object>() {
+            @Override
+            public Object apply(Solo<Integer> sp) throws Exception {
+                throw new IllegalArgumentException();
+            }
+        });
+    }
+
+    @Test
+    public void compose() {
+        Solo.just(1)
+        .compose(new Function<Solo<Integer>, Solo<Object>>() {
+            @Override
+            public Solo<Object> apply(Solo<Integer> v) throws Exception {
+                return v.map(new Function<Integer, Object>() {
+                    @Override
+                    public Object apply(Integer w) throws Exception {
+                        return w + 1;
+                    }
+                });
+            }
+        })
+        .test()
+        .assertResult(2);
+    }
+
+    @Test
+    public void lift() {
+        Solo.just(1)
+        .lift(new Function<Subscriber<? super Integer>, Subscriber<? super Integer>>() {
+            @Override
+            public Subscriber<? super Integer> apply(Subscriber<? super Integer> v) throws Exception {
+                return v;
+            }
+        })
+        .test()
+        .assertResult(1);
+    }
+
+    @Test
+    public void repeat() {
+        Solo.just(1)
+        .repeat()
+        .take(5)
+        .test()
+        .assertResult(1, 1, 1, 1, 1);
+    }
+
+    @Test
+    public void repeatError() {
+        Solo.error(new IOException())
+        .repeat()
+        .test()
+        .assertFailure(IOException.class);
+    }
+
+    @Test
+    public void repeatTimes() {
+        Solo.just(1)
+        .repeat(5)
+        .test()
+        .assertResult(1, 1, 1, 1, 1);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void repeatTimesNegative() {
+        Solo.just(1)
+        .repeat(-5);
+    }
+
+    @Test
+    public void repeatStop() {
+        final int[] counts = { 0 };
+
+        Solo.just(1)
+        .repeat(new BooleanSupplier() {
+            @Override
+            public boolean getAsBoolean() throws Exception {
+                return ++counts[0] == 5;
+            }
+        })
+        .test()
+        .assertResult(1, 1, 1, 1, 1);
+    }
+
+    @Test
+    public void repeatStopThrows() {
+        Solo.just(1)
+        .repeat(new BooleanSupplier() {
+            @Override
+            public boolean getAsBoolean() throws Exception {
+                throw new IOException();
+            }
+        })
+        .test()
+        .assertFailure(IOException.class, 1);
+    }
+
+    @Test
+    public void repeatWhen() {
+        Solo.just(1)
+        .repeatWhen(new Function<Flowable<Object>, Publisher<Integer>>() {
+            @Override
+            public Publisher<Integer> apply(Flowable<Object> f) throws Exception {
+                return Flowable.range(1, 5);
+            }
+        })
+        .test()
+        .assertResult(1, 1, 1, 1, 1);
+    }
+
+    @Test
+    public void repeatWhenErrors() {
+        Solo.just(1)
+        .repeatWhen(new Function<Flowable<Object>, Publisher<Integer>>() {
+            @Override
+            public Publisher<Integer> apply(Flowable<Object> f) throws Exception {
+                return f.map(new Function<Object, Integer>() {
+                    @Override
+                    public Integer apply(Object v) throws Exception {
+                        throw new IllegalArgumentException();
+                    }
+                });
+            }
+        })
+        .test()
+        .assertFailure(IllegalArgumentException.class, 1);
+    }
+
+    @Test
+    public void retryNormal() {
+        Solo.just(1)
+        .retry()
+        .test()
+        .assertResult(1);
+    }
+
+    @Test
+    public void retryTimes() {
+        Solo.error(new IOException())
+        .retry(5)
+        .test()
+        .assertFailure(IOException.class);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void retryTimesNegative() {
+        Solo.just(1)
+        .retry(-5);
+    }
+
+    @Test
+    public void retryInfinite() {
+        final int[] counter = { 0 };
+
+        Solo.defer(new Callable<Solo<Integer>>() {
+            @Override
+            public Solo<Integer> call() throws Exception {
+                if (++counter[0] == 5) {
+                    return Solo.just(1);
+                }
+                return Solo.<Integer>error(new IOException());
+            }
+        })
+        .retry()
+        .test()
+        .assertResult(1);
+    }
+
+    @Test
+    public void retryPredicate() {
+        final int[] counter = { 0 };
+
+        Solo.defer(new Callable<Solo<Integer>>() {
+            @Override
+            public Solo<Integer> call() throws Exception {
+                if (++counter[0] == 5) {
+                    return Solo.<Integer>error(new IllegalArgumentException());
+                }
+                return Solo.<Integer>error(new IOException());
+            }
+        })
+        .retry(new Predicate<Throwable>() {
+            @Override
+            public boolean test(Throwable e) throws Exception {
+                return e instanceof IOException;
+            }
+        })
+        .test()
+        .assertFailure(IllegalArgumentException.class);
+    }
+
+    @Test
+    public void retryPredicateThrows() {
+        Solo.error(new IOException())
+        .retry(new Predicate<Throwable>() {
+            @Override
+            public boolean test(Throwable e) throws Exception {
+                throw new IllegalArgumentException();
+            }
+        })
+        .test()
+        .assertFailure(CompositeException.class);
+    }
+
+    @Test
+    public void retryWhenNormal() {
+        Solo.just(1)
+        .retryWhen(Functions.<Flowable<Throwable>>identity())
+        .test()
+        .assertResult(1);
+    }
+
+    @Test
+    public void retryWhen() {
+        Solo.error(new IOException())
+        .retryWhen(new Function<Flowable<Throwable>, Publisher<Throwable>>() {
+            @Override
+            public Publisher<Throwable> apply(Flowable<Throwable> f) throws Exception {
+                return f.take(5);
+            }
+        })
+        .test()
+        .assertFailure(NoSuchElementException.class);
+    }
+
+    @Test
+    public void subscribeOn() {
+        String main = Thread.currentThread().getName();
+
+        String other = Solo.fromCallable(new Callable<String>() {
+            @Override
+            public String call() throws Exception {
+                return Thread.currentThread().getName();
+            }
+        })
+        .subscribeOn(Schedulers.single())
+        .blockingGet();
+
+        assertNotNull(other);
+        assertNotEquals(main, other);
+    }
+
+    @Test
+    public void subscribeOnError() {
+        String main = Thread.currentThread().getName();
+        final String[] other = { null };
+
+        Solo.error(new IOException())
+        .subscribeOn(Schedulers.single())
+        .mapError(new Function<Throwable, Throwable>() {
+            @Override
+            public Throwable apply(Throwable e) throws Exception {
+                other[0] = Thread.currentThread().getName();
+                return e;
+            }
+        })
+        .onErrorReturnItem(0)
+        .blockingGet(5, TimeUnit.SECONDS);
+
+        assertNotNull(other);
+        assertNotEquals(main, other);
+    }
+
+    @Test
+    public void observeOn() {
+        String main = Thread.currentThread().getName();
+
+        String other = Solo.just(1)
+        .observeOn(Schedulers.single())
+        .map(new Function<Integer, String>() {
+            @Override
+            public String apply(Integer v) throws Exception {
+                return Thread.currentThread().getName();
+            }
+        })
+        .blockingGet(5, TimeUnit.SECONDS);
+
+        assertNotNull(other);
+        assertNotEquals(main, other);
+    }
+
+    @Test
+    public void observeOnHidden() {
+        String main = Thread.currentThread().getName();
+
+        String other = Solo.just(1).hide()
+        .observeOn(Schedulers.single())
+        .map(new Function<Integer, String>() {
+            @Override
+            public String apply(Integer v) throws Exception {
+                return Thread.currentThread().getName();
+            }
+        })
+        .blockingGet(5, TimeUnit.SECONDS);
+
+        assertNotNull(other);
+        assertNotEquals(main, other);
+    }
+
+    @Test
+    public void observeOnError() {
+        String main = Thread.currentThread().getName();
+        final String[] other = { null };
+
+        Solo.error(new IOException())
+        .observeOn(Schedulers.single())
+        .mapError(new Function<Throwable, Throwable>() {
+            @Override
+            public Throwable apply(Throwable e) throws Exception {
+                other[0] = Thread.currentThread().getName();
+                return e;
+            }
+        })
+        .onErrorReturnItem(0)
+        .blockingGet(5, TimeUnit.SECONDS);
+
+        assertNotNull(other);
+        assertNotEquals(main, other);
+    }
+
+    @Test
+    public void unsubscribeOn() throws Exception {
+        String main = Thread.currentThread().getName();
+
+        final String[] other = { null };
+        final CountDownLatch cdl = new CountDownLatch(1);
+
+        Solo.never()
+        .doOnCancel(new Action() {
+            @Override
+            public void run() throws Exception {
+                other[0] = Thread.currentThread().getName();
+                cdl.countDown();
+            }
+        })
+        .unsubscribeOn(Schedulers.single())
+        .test(true)
+        ;
+
+        assertTrue(cdl.await(5, TimeUnit.SECONDS));
+
+        assertNotNull(other);
+        assertNotEquals(main, other);
+    }
+
+    @Test
+    public void unsubscribeOnNormal() {
+        Solo.just(1)
+        .unsubscribeOn(Schedulers.single())
+        .test(false)
+        .assertResult(1);
+    }
+
+    @Test
+    public void unsubscribeOnError() {
+        Solo.error(new IOException())
+        .unsubscribeOn(Schedulers.single())
+        .test()
+        .assertFailure(IOException.class);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void subscribeActualError() {
+        new Solo<Integer>() {
+            @Override
+            protected void subscribeActual(Subscriber<? super Integer> s) {
+                throw new NullPointerException();
+            }
+        }
+        .subscribe();
+    }
+
+    @Test
+    public void subscribeActualError2() {
+        try {
+            new Solo<Integer>() {
+                @Override
+                protected void subscribeActual(Subscriber<? super Integer> s) {
+                    throw new IllegalArgumentException();
+                }
+            }
+            .subscribe();
+        } catch (NullPointerException ex) {
+            assertTrue(ex.toString(), ex.getCause() instanceof IllegalArgumentException);
+        }
+    }
+
+    @Test
+    public void subscribeWith() {
+        TestSubscriber<Integer> ts = Solo.just(1)
+                .subscribeWith(new TestSubscriber<Integer>());
+
+        ts.assertResult(1);
+    }
+
+    @Test
+    public void subscribeZeroArg() {
+        Solo.just(1)
+        .doOnNext(this)
+        .subscribe();
+
+        assertEquals(1, count);
+    }
+
+    @Test
+    public void subscribeDispose() {
+        SoloProcessor<Integer> sp = SoloProcessor.create();
+
+        Disposable d = sp.subscribe();
+
+        assertTrue(sp.hasSubscribers());
+
+        d.dispose();
+
+        assertFalse(sp.hasSubscribers());
+    }
+
+    @Test
+    public void subscribeOneArg() {
+        Solo.just(1).subscribe(this);
+
+        assertEquals(1, count);
+    }
+
+    @Test
+    public void subscribeTwoArg() {
+        Solo.just(1).subscribe(this, this);
+
+        assertEquals(1, count);
+    }
+
+    @Test
+    public void subscribeTwoArgError() {
+        Solo.error(new IOException()).subscribe(this, this);
+
+        assertEquals(1, count);
+    }
+
+    @Test
+    public void subscribeThreeArg() {
+        Solo.just(1).subscribe(this, this, this);
+
+        assertEquals(2, count);
+    }
+
+    @Test
+    public void subscribeThreeArgError() {
+        Solo.error(new IOException()).subscribe(this, this, this);
+
+        assertEquals(1, count);
+    }
+
+    @Test
+    public void blockingSubscribeZeroArg() {
+        Solo.just(1)
+        .doOnNext(this)
+        .blockingSubscribe();
+
+        assertEquals(1, count);
+    }
+
+    @Test
+    public void blockingSubscribeOneArg() {
+        Solo.just(1).blockingSubscribe(this);
+
+        assertEquals(1, count);
+    }
+
+    @Test
+    public void blockingSubscribeTwoArg() {
+        Solo.just(1).blockingSubscribe(this, this);
+
+        assertEquals(1, count);
+    }
+
+    @Test
+    public void blockingSubscribeTwoArgError() {
+        Solo.error(new IOException()).blockingSubscribe(this, this);
+
+        assertEquals(1, count);
+    }
+
+    @Test
+    public void blockingSubscribeThreeArg() {
+        Solo.just(1).blockingSubscribe(this, this, this);
+
+        assertEquals(2, count);
+    }
+
+    @Test
+    public void blockingSubscribeThreeArgError() {
+        Solo.error(new IOException()).blockingSubscribe(this, this, this);
+
+        assertEquals(1, count);
     }
 }
 

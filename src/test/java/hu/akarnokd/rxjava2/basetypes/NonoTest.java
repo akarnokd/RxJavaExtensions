@@ -16,6 +16,8 @@
 
 package hu.akarnokd.rxjava2.basetypes;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.*;
@@ -37,7 +39,7 @@ import io.reactivex.processors.PublishProcessor;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subscribers.TestSubscriber;
 
-public class NonoTest implements Action, Consumer<Object>, LongConsumer {
+public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancellable {
 
     volatile int count;
 
@@ -50,6 +52,11 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer {
 
     @Override
     public void accept(Object t) throws Exception {
+        count++;
+    }
+
+    @Override
+    public void cancel() throws Exception {
         count++;
     }
 
@@ -2687,6 +2694,95 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer {
             ioError
             .delay(100, TimeUnit.MILLISECONDS)
             .blockingSubscribe();
+
+            TestHelper.assertError(errors, 0, IOException.class);
+        } finally {
+            RxJavaPlugins.reset();
+        }
+    }
+
+    @Test
+    public void createSuccess() {
+        List<Throwable> errors = TestHelper.trackPluginErrors();
+        try {
+            Nono.create(new CompletableOnSubscribe() {
+                @Override
+                public void subscribe(CompletableEmitter e) throws Exception {
+                    e.setCancellable(NonoTest.this);
+                    e.onComplete();
+                    e.onError(new IOException());
+                    e.onComplete();
+                }
+            })
+            .test()
+            .assertResult();
+
+            assertEquals(1, count);
+
+            TestHelper.assertError(errors, 0, IOException.class);
+        } finally {
+            RxJavaPlugins.reset();
+        }
+    }
+
+    @Test
+    public void createSuccessNoResource() {
+        List<Throwable> errors = TestHelper.trackPluginErrors();
+        try {
+            Nono.create(new CompletableOnSubscribe() {
+                @Override
+                public void subscribe(CompletableEmitter e) throws Exception {
+                    e.onComplete();
+                    e.onError(new IOException());
+                    e.onComplete();
+                }
+            })
+            .test()
+            .assertResult();
+
+            TestHelper.assertError(errors, 0, IOException.class);
+        } finally {
+            RxJavaPlugins.reset();
+        }
+    }
+
+    @Test
+    public void createError() {
+        List<Throwable> errors = TestHelper.trackPluginErrors();
+        try {
+            Nono.create(new CompletableOnSubscribe() {
+                @Override
+                public void subscribe(CompletableEmitter e) throws Exception {
+                    e.setCancellable(NonoTest.this);
+                    e.onError(new IOException());
+                    e.onComplete();
+                    e.onError(new IOException());
+                }
+            })
+            .test()
+            .assertFailure(IOException.class);
+
+            assertEquals(1, count);
+            TestHelper.assertError(errors, 0, IOException.class);
+        } finally {
+            RxJavaPlugins.reset();
+        }
+    }
+
+    @Test
+    public void createErrorNoResource() {
+        List<Throwable> errors = TestHelper.trackPluginErrors();
+        try {
+            Nono.create(new CompletableOnSubscribe() {
+                @Override
+                public void subscribe(CompletableEmitter e) throws Exception {
+                    e.onError(new IOException());
+                    e.onComplete();
+                    e.onError(new IOException());
+                }
+            })
+            .test()
+            .assertFailure(IOException.class);
 
             TestHelper.assertError(errors, 0, IOException.class);
         } finally {
