@@ -106,7 +106,7 @@ public class SharedSchedulerTest implements Runnable {
             long before = memoryUsage();
             System.out.printf("Start: %.1f%n", before / 1024.0 / 1024.0);
 
-            for (int i = 0; i < 300 * 1000; i++) {
+            for (int i = 0; i < 200 * 1000; i++) {
                 worker.schedule(Functions.EMPTY_RUNNABLE, 1, TimeUnit.DAYS);
             }
 
@@ -127,7 +127,7 @@ public class SharedSchedulerTest implements Runnable {
             while (wait-- > 0) {
                 System.out.printf("Usage: %.1f -> %.1f -> %.1f%n", before / 1024.0 / 1024.0, middle / 1024.0 / 1024.0, after / 1024.0 / 1024.0);
 
-                if (middle < after * 2) {
+                if (middle > after * 2) {
                     return;
                 }
 
