@@ -106,7 +106,7 @@ public class SharedSchedulerTest implements Runnable {
             long before = memoryUsage();
             System.out.printf("Start: %.1f%n", before / 1024.0 / 1024.0);
 
-            for (int i = 0; i < 200 * 1000; i++) {
+            for (int i = 0; i < 300 * 1000; i++) {
                 worker.schedule(Functions.EMPTY_RUNNABLE, 1, TimeUnit.DAYS);
             }
 
@@ -118,26 +118,29 @@ public class SharedSchedulerTest implements Runnable {
 
             System.gc();
 
-            int wait = 300;
+            Thread.sleep(100);
 
-            while (wait-- > 0) {
-                long after = memoryUsage();
-
-                System.out.printf("Usage: %.1f -> %.1f -> %.1f%n", before / 1024.0 / 1024.0, middle / 1024.0 / 1024.0, after / 1024.0 / 1024.0);
-
-                if (middle < after * 2) {
-                    break;
-                }
-
-                Thread.sleep(100);
-                System.gc();
-            }
+            int wait = 400;
 
             long after = memoryUsage();
 
-            if (middle < after * 2) {
-                fail(String.format("Looks like there is a memory leak: %.1f -> %.1f -> %.1f", before / 1024.0 / 1024.0, middle / 1024.0 / 1024.0, after / 1024.0 / 1024.0));
+            while (wait-- > 0) {
+                System.out.printf("Usage: %.1f -> %.1f -> %.1f%n", before / 1024.0 / 1024.0, middle / 1024.0 / 1024.0, after / 1024.0 / 1024.0);
+
+                if (middle < after * 2) {
+                    return;
+                }
+
+                Thread.sleep(100);
+
+                System.gc();
+
+                Thread.sleep(100);
+
+                after = memoryUsage();
             }
+
+            fail(String.format("Looks like there is a memory leak: %.1f -> %.1f -> %.1f", before / 1024.0 / 1024.0, middle / 1024.0 / 1024.0, after / 1024.0 / 1024.0));
 
         } finally {
             scheduler.shutdown();
