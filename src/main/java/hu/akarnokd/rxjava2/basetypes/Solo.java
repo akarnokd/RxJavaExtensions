@@ -25,6 +25,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.exceptions.Exceptions;
 import io.reactivex.functions.*;
 import io.reactivex.internal.functions.*;
+import io.reactivex.internal.operators.flowable.*;
 import io.reactivex.internal.subscribers.LambdaSubscriber;
 import io.reactivex.internal.util.ExceptionHelper;
 import io.reactivex.plugins.RxJavaPlugins;
@@ -1140,44 +1141,91 @@ public abstract class Solo<T> implements Publisher<T> {
         return onAssembly(new SoloLift<T, R>(this, onLift));
     }
 
+    /**
+     * Repeats this Solo indefinitely.
+     * @return the new Flowable instance
+     */
     public final Flowable<T> repeat() {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return RxJavaPlugins.onAssembly(new FlowableRepeat<T>(this, Long.MAX_VALUE));
     }
 
+    /**
+     * Repeats this Solo at most the given number of times.
+     * @param times the number of times to repeat
+     * @return the new Flowable instance
+     */
     public final Flowable<T> repeat(long times) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return RxJavaPlugins.onAssembly(new FlowableRepeat<T>(this, times));
     }
 
+    /**
+     * Repeats this Solo until the given boolean supplier returns true when an
+     * repeat iteration of this Solo completes.
+     * @param stop the supplier of a boolean value that should return true to
+     * stop repeating.
+     * @return the new Flowable instance
+     */
     public final Flowable<T> repeat(BooleanSupplier stop) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(stop, "stop is null");
+        return RxJavaPlugins.onAssembly(new FlowableRepeatUntil<T>(this, stop));
     }
 
+    /**
+     * Repeats this Solo when the Publisher returned by the handler function emits
+     * an item or terminates if this Publisher terminates.
+     * @param handler the function that receives Flowable that emits an item
+     * when this Solo completes and returns a Publisher that should emit an item
+     * to trigger a repeat or terminate to trigger a termination.
+     * @return the new Flowable instance
+     */
     public final Flowable<T> repeatWhen(Function<? super Flowable<Object>, ? extends Publisher<?>> handler) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(handler, "handler is null");
+        return RxJavaPlugins.onAssembly(new FlowableRepeatWhen<T>(this, handler));
     }
 
+    /**
+     * Retry this Solo indefinitely if it fails.
+     * @return the new Solo instance
+     */
     public final Solo<T> retry() {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return onAssembly(new SoloRetry<T>(this, Long.MAX_VALUE));
     }
 
+    /**
+     * Retry this Solo at most the given number of times if it fails.
+     * @param times the number of times, Long.MAX_VALUE means indefinitely
+     * @return the new Solo instance
+     */
     public final Solo<T> retry(long times) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        if (times < 0L) {
+            throw new IllegalArgumentException("times >= 0 required but it was " + times);
+        }
+        return onAssembly(new SoloRetry<T>(this, times));
     }
 
+    /**
+     * Retry this Solo if the predicate returns true for the latest failure
+     * Throwable.
+     * @param predicate the predicate receiving the latest Throwable and
+     * if returns true, the Solo is retried.
+     * @return the new Solo instance
+     */
     public final Solo<T> retry(Predicate<? super Throwable> predicate) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(predicate, "predicate is null");
+        return onAssembly(new SoloRetryWhile<T>(this, predicate));
     }
 
+    /**
+     * Retry this solo if the Publisher returned by the handler signals an item
+     * in response to the failure Throwable.
+     * @param handler the function that receives a Flowable that signals the
+     * failure Throwable of this Solo and returns a Publisher which triggers a retry
+     * or termination.
+     * @return the new Solo instance
+     */
     public final Solo<T> retryWhen(Function<? super Flowable<Throwable>, ? extends Publisher<?>> handler) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(handler, "handler is null");
+        return onAssembly(new SoloRetryWhen<T>(this, handler));
     }
 
     /**
