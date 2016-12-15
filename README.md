@@ -731,8 +731,6 @@ np.onComplete();
 ts.assertResult();
 ```
 
-### Perhaps - 0-1-error publisher
-
 
 ### Solo - 1-error publisher
 
@@ -771,4 +769,9 @@ sp.onComplete();
 
 ts.assertResult(1);
 ```
+
+### Perhaps - 0-1-error publisher
+
+In progress...
+
 
