@@ -110,14 +110,29 @@ public abstract class Perhaps<T> implements Publisher<T> {
         return onAssembly(PerhapsEmpty.<T>instance());
     }
 
+
+    /**
+     * Returns a Perhaps that signals the given error to Subscribers.
+     * @param <T> the value type
+     * @param error the error to signal, not null
+     * @return the new Perhaps instance
+     */
     public static <T> Perhaps<T> error(Throwable error) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(error, "error is null");
+        return onAssembly(new PerhapsError<T>(error));
     }
 
+    /**
+     * Returns a Perhaps that signals the error returned from
+     * the errorSupplier to each individual Subscriber.
+     * @param <T> the value type
+     * @param errorSupplier the supplier called for each Subscriber to
+     * return a Throwable to be signalled
+     * @return the new Perhaps instance
+     */
     public static <T> Perhaps<T> error(Callable<? extends Throwable> errorSupplier) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(errorSupplier, "errorSupplier is null");
+        return onAssembly(new PerhapsErrorSupplier<T>(errorSupplier));
     }
 
     /**

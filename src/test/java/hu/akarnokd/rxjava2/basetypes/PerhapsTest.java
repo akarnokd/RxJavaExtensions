@@ -19,7 +19,6 @@ package hu.akarnokd.rxjava2.basetypes;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
-import java.util.NoSuchElementException;
 import java.util.concurrent.*;
 
 import org.junit.Test;
@@ -45,7 +44,7 @@ public class PerhapsTest {
 
         Perhaps.fromFuture(ft)
         .test()
-        .assertFailure(NoSuchElementException.class);
+        .assertResult();
     }
 
     @Test
