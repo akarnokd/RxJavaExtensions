@@ -21,42 +21,40 @@ import java.util.concurrent.Callable;
 import org.reactivestreams.Subscriber;
 
 import io.reactivex.exceptions.Exceptions;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.subscriptions.DeferredScalarSubscription;
+import io.reactivex.functions.Action;
+import io.reactivex.internal.subscriptions.EmptySubscription;
 
 /**
- * Executes a callable and signals its resulting value.
+ * Executes an Action and terminates.
  *
  * @param <T> the value type
  */
-final class SoloCallable<T> extends Solo<T> implements Callable<T> {
+final class PerhapsFromAction<T> extends Perhaps<T> implements Callable<T> {
 
-    final Callable<T> callable;
+    final Action action;
 
-    SoloCallable(Callable<T> callable) {
-        this.callable = callable;
+    PerhapsFromAction(Action action) {
+        this.action = action;
     }
 
     @Override
     protected void subscribeActual(Subscriber<? super T> s) {
-        DeferredScalarSubscription<T> dss = new DeferredScalarSubscription<T>(s);
-        s.onSubscribe(dss);
-
-        T v;
+        s.onSubscribe(EmptySubscription.INSTANCE);
 
         try {
-            v = call();
+            call();
         } catch (Throwable ex) {
             Exceptions.throwIfFatal(ex);
             s.onError(ex);
             return;
         }
 
-        dss.complete(v);
+        s.onComplete();
     }
 
     @Override
     public T call() throws Exception {
-        return ObjectHelper.requireNonNull(callable.call(), "The callable returned a null value");
+        action.run();
+        return null;
     }
 }

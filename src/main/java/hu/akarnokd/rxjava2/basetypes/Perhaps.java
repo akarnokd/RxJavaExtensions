@@ -85,9 +85,18 @@ public abstract class Perhaps<T> implements Publisher<T> {
     // Factory methods (enter)
     // ----------------------------------------------------
 
-    public static <T> Perhaps<T> create(MaybeOnSubscribe<T> onSubscribe) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+    /**
+     * Create a Perhaps that for each incoming Subscriber calls a callback to
+     * emit a sync or async events in a thread-safe, backpressure-aware and
+     * cancellation-safe manner.
+     * @param <T> the value type emitted
+     * @param onCreate the callback called for each individual subscriber with an
+     * abstraction of the incoming Subscriber.
+     * @return th new Perhaps instance
+     */
+    public static <T> Perhaps<T> create(MaybeOnSubscribe<T> onCreate) {
+        ObjectHelper.requireNonNull(onCreate, "onCreate is null");
+        return onAssembly(new PerhapsCreate<T>(onCreate));
     }
 
     /**
@@ -144,14 +153,27 @@ public abstract class Perhaps<T> implements Publisher<T> {
         return onAssembly(PerhapsNever.<T>instance());
     }
 
-    public static <T> Perhaps<T> fromCallable(Callable<? extends T> callable) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+    /**
+     * Runs a Callable and emits its resulting value or its
+     * exception; null is considered to be an indication for an empty Perhaps.
+     * @param <T> the value type
+     * @param callable the callable to call for each individual Subscriber
+     * @return the new Perhaps instance
+     */
+    public static <T> Perhaps<T> fromCallable(Callable<T> callable) {
+        ObjectHelper.requireNonNull(callable, "callable is null");
+        return onAssembly(new PerhapsFromCallable<T>(callable));
     }
 
+    /**
+     * Run an action for each individual Subscriber and terminate.
+     * @param <T> the value type
+     * @param action the action to call for each individual Subscriber
+     * @return the new Perhaps instance
+     */
     public static <T> Perhaps<T> fromAction(Action action) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(action, "action is null");
+        return onAssembly(new PerhapsFromAction<T>(action));
     }
 
     /**
@@ -184,29 +206,49 @@ public abstract class Perhaps<T> implements Publisher<T> {
         return onAssembly(new PerhapsFromFuture<T>(future, timeout, unit));
     }
 
-    public static <T> Perhaps<T> fromPublisher(Publisher<? extends T> source) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+    /**
+     * Wraps a Publisher and signals its single value or completion signal or
+     * signals IndexOutOfBoundsException if the Publisher has more than one element.
+     * @param <T> the value type
+     * @param source the source Publisher
+     * @return the new Perhaps instance
+     */
+    public static <T> Perhaps<T> fromPublisher(Publisher<T> source) {
+        ObjectHelper.requireNonNull(source, "source is null");
+        return onAssembly(new PerhapsFromPublisher<T>(source));
     }
 
-    public static <T> Perhaps<T> fromObservable(ObservableSource<? extends T> source) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+    /**
+     * Wraps a Single and signals its events.
+     * @param <T> the value type
+     * @param source the source
+     * @return the new Perhaps instance
+     */
+    public static <T> Perhaps<T> fromSingle(SingleSource<T> source) {
+        ObjectHelper.requireNonNull(source, "source is null");
+        return onAssembly(new PerhapsFromSingle<T>(source));
     }
 
-    public static <T> Perhaps<T> fromSingle(SingleSource<? extends T> source) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+    /**
+     * Wraps a Maybe and signals its events.
+     * @param <T> the value type
+     * @param source the source
+     * @return the new Perhaps instance
+     */
+    public static <T> Perhaps<T> fromMaybe(MaybeSource<T> source) {
+        ObjectHelper.requireNonNull(source, "source is null");
+        return onAssembly(new PerhapsFromMaybe<T>(source));
     }
 
-    public static <T> Perhaps<T> fromMaybe(MaybeSource<? extends T> source) {
-        // TODO implement
-        throw new UnsupportedOperationException();
-    }
-
+    /**
+     * Wraps a Completable and signals its terminal events.
+     * @param <T> the value type
+     * @param source the source
+     * @return the new Perhaps instance
+     */
     public static <T> Perhaps<T> fromCompletable(CompletableSource source) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(source, "source is null");
+        return onAssembly(new PerhapsFromCompletable<T>(source));
     }
 
     public static <T> Perhaps<T> defer(Callable<? extends Perhaps<? extends T>> onDefer) {

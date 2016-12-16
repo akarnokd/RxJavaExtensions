@@ -142,7 +142,7 @@ public abstract class Solo<T> implements Publisher<T> {
      */
     public static <T> Solo<T> fromCallable(Callable<T> callable) {
         ObjectHelper.requireNonNull(callable, "callable is null");
-        return onAssembly(new SoloCallable<T>(callable));
+        return onAssembly(new SoloFromCallable<T>(callable));
     }
 
     /**
