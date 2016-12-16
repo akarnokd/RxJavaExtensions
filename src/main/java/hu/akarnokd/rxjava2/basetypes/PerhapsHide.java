@@ -21,19 +21,20 @@ import org.reactivestreams.Subscriber;
 import hu.akarnokd.rxjava2.basetypes.SoloHide.HideSubscriber;
 
 /**
- * Hides the identity of the upstream and downstream including
- * breaking fusion.
+ * Hides the identity of the upstream Solo and its Subscription.
+ *
+ * @param <T> the value type
  */
-final class NonoHide extends Nono {
+final class PerhapsHide<T> extends Perhaps<T> {
 
-    final Nono source;
+    final Perhaps<T> source;
 
-    NonoHide(Nono source) {
+    PerhapsHide(Perhaps<T> source) {
         this.source = source;
     }
 
     @Override
-    protected void subscribeActual(Subscriber<? super Void> s) {
-        source.subscribe(new HideSubscriber<Void>(s));
+    protected void subscribeActual(Subscriber<? super T> s) {
+        source.subscribe(new HideSubscriber<T>(s));
     }
 }

@@ -18,22 +18,26 @@ package hu.akarnokd.rxjava2.basetypes;
 
 import org.reactivestreams.Subscriber;
 
-import hu.akarnokd.rxjava2.basetypes.SoloHide.HideSubscriber;
+import hu.akarnokd.rxjava2.basetypes.SoloDoFinally.DoFinallySubscriber;
+import io.reactivex.functions.Action;
 
 /**
- * Hides the identity of the upstream and downstream including
- * breaking fusion.
+ * Execute an action exactly once after the upstream terminates or the
+ * downstream cancels.
  */
-final class NonoHide extends Nono {
+final class PerhapsDoFinally<T> extends Perhaps<T> {
 
-    final Nono source;
+    final Perhaps<T> source;
 
-    NonoHide(Nono source) {
+    final Action onFinally;
+
+    PerhapsDoFinally(Perhaps<T> source, Action onFinally) {
         this.source = source;
+        this.onFinally = onFinally;
     }
 
     @Override
-    protected void subscribeActual(Subscriber<? super Void> s) {
-        source.subscribe(new HideSubscriber<Void>(s));
+    protected void subscribeActual(Subscriber<? super T> s) {
+        source.subscribe(new DoFinallySubscriber<T>(s, onFinally));
     }
 }

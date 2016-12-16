@@ -194,6 +194,40 @@ public abstract class Solo<T> implements Publisher<T> {
     }
 
     /**
+     * When subscribed, the future is awaited blockingly and
+     * indefinitely for its result value; null result
+     * will yield a NoSuchElementException.
+     * @param <T> the value type
+     * @param future the future to await
+     * @return the new Solo instance
+     *
+     * @since 0.14.0
+     */
+    public static <T> Solo<T> fromFuture(Future<? extends T> future) {
+        ObjectHelper.requireNonNull(future, "future is null");
+        return onAssembly(new SoloFromFuture<T>(future, 0, null));
+    }
+
+    /**
+     * When subscribed, the future is awaited blockingly for
+     * a given amount of time for its result value; null result
+     * will yield a NoSuchElementException and a timeout
+     * will yield a TimeoutException.
+     * @param <T> the value type
+     * @param future the future to await
+     * @param timeout the timeout value
+     * @param unit the time unit
+     * @return the new Solo instance
+     *
+     * @since 0.14.0
+     */
+    public static <T> Solo<T> fromFuture(Future<? extends T> future, long timeout, TimeUnit unit) {
+        ObjectHelper.requireNonNull(future, "future is null");
+        ObjectHelper.requireNonNull(unit, "unit is null");
+        return onAssembly(new SoloFromFuture<T>(future, timeout, unit));
+    }
+
+    /**
      * Emit the events of the Solo that reacts first.
      * @param <T> the common value type
      * @param sources the Iterable sequence of Solo sources
@@ -1450,5 +1484,16 @@ public abstract class Solo<T> implements Publisher<T> {
         }
         subscribe(ts);
         return ts;
+    }
+
+    /**
+     * Converts this Solo into a Future and signals its single
+     * value.
+     * @return the new Future instance
+     */
+    public final Future<T> toFuture() {
+        FuturePerhapsSubscriber<T> fs = new FuturePerhapsSubscriber<T>();
+        subscribe(fs);
+        return fs;
     }
 }

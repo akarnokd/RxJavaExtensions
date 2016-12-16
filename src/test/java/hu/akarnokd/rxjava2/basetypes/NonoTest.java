@@ -16,7 +16,7 @@
 
 package hu.akarnokd.rxjava2.basetypes;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.util.*;
@@ -2789,4 +2789,15 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
             RxJavaPlugins.reset();
         }
     }
+
+    @Test
+    public void toFutureEmpty() throws Exception {
+        assertNull(Nono.complete().toFuture().get());
+    }
+
+    @Test(expected = ExecutionException.class)
+    public void toFutureError() throws Exception {
+        Nono.error(new IOException()).toFuture().get();
+    }
+
 }

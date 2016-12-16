@@ -2479,5 +2479,59 @@ public class SoloTest implements Consumer<Object>, Action, LongConsumer, Cancell
 
         assertEquals(1, count);
     }
+
+    @Test
+    public void fromFuture() {
+        FutureTask<Integer> ft = new FutureTask<Integer>(Functions.EMPTY_RUNNABLE, 1);
+        ft.run();
+
+        Solo.fromFuture(ft)
+        .test()
+        .assertResult(1);
+    }
+
+    @Test
+    public void fromFutureNull() {
+        FutureTask<Integer> ft = new FutureTask<Integer>(Functions.EMPTY_RUNNABLE, null);
+        ft.run();
+
+        Solo.fromFuture(ft)
+        .test()
+        .assertFailure(NoSuchElementException.class);
+    }
+
+    @Test
+    public void fromFutureTimeout() {
+        FutureTask<Integer> ft = new FutureTask<Integer>(Functions.EMPTY_RUNNABLE, 1);
+
+        Solo.fromFuture(ft, 1, TimeUnit.MILLISECONDS)
+        .test()
+        .assertFailure(TimeoutException.class);
+    }
+
+    @Test
+    public void fromFutureCrash() {
+        FutureTask<Integer> ft = new FutureTask<Integer>(new Callable<Integer>() {
+            @Override
+            public Integer call() throws Exception {
+                throw new IOException();
+            }
+        });
+        ft.run();
+
+        Solo.fromFuture(ft)
+        .test()
+        .assertFailure(IOException.class);
+    }
+
+    @Test
+    public void toFuture() throws Exception {
+        assertEquals(1, Solo.just(1).toFuture().get().intValue());
+    }
+
+    @Test(expected = ExecutionException.class)
+    public void toFutureError() throws Exception {
+        Solo.error(new IOException()).toFuture().get();
+    }
 }
 

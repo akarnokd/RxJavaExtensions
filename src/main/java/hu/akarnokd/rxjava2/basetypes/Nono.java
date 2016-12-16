@@ -1149,4 +1149,15 @@ public abstract class Nono implements Publisher<Void> {
             }
         }
     }
+
+    /**
+     * Converts this Nono into a Future and signals its single
+     * value.
+     * @return the new Future instance
+     */
+    public final Future<Void> toFuture() {
+        FuturePerhapsSubscriber<Void> fs = new FuturePerhapsSubscriber<Void>();
+        subscribe(fs);
+        return fs;
+    }
 }

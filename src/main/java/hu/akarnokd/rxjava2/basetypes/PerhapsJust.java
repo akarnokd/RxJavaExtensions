@@ -18,22 +18,29 @@ package hu.akarnokd.rxjava2.basetypes;
 
 import org.reactivestreams.Subscriber;
 
-import hu.akarnokd.rxjava2.basetypes.SoloHide.HideSubscriber;
+import io.reactivex.internal.fuseable.ScalarCallable;
+import io.reactivex.internal.subscriptions.ScalarSubscription;
 
 /**
- * Hides the identity of the upstream and downstream including
- * breaking fusion.
+ * Signals exactly one value.
+ *
+ * @param <T> the value type
  */
-final class NonoHide extends Nono {
+final class PerhapsJust<T> extends Perhaps<T> implements ScalarCallable<T> {
 
-    final Nono source;
+    final T value;
 
-    NonoHide(Nono source) {
-        this.source = source;
+    PerhapsJust(T value) {
+        this.value = value;
     }
 
     @Override
-    protected void subscribeActual(Subscriber<? super Void> s) {
-        source.subscribe(new HideSubscriber<Void>(s));
+    protected void subscribeActual(Subscriber<? super T> s) {
+        s.onSubscribe(new ScalarSubscription<T>(s, value));
+    }
+
+    @Override
+    public T call() {
+        return value;
     }
 }

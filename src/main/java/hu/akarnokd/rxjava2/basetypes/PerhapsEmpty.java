@@ -16,24 +16,31 @@
 
 package hu.akarnokd.rxjava2.basetypes;
 
+import java.util.concurrent.Callable;
+
 import org.reactivestreams.Subscriber;
 
-import hu.akarnokd.rxjava2.basetypes.SoloHide.HideSubscriber;
+import io.reactivex.internal.subscriptions.EmptySubscription;
 
 /**
- * Hides the identity of the upstream and downstream including
- * breaking fusion.
+ * Completes the subscriber immediately.
  */
-final class NonoHide extends Nono {
+final class PerhapsEmpty extends Perhaps<Object> implements Callable<Object> {
 
-    final Nono source;
+    static final PerhapsEmpty INSTANCE = new PerhapsEmpty();
 
-    NonoHide(Nono source) {
-        this.source = source;
+    @SuppressWarnings("unchecked")
+    static <T> Perhaps<T> instance() {
+        return (Perhaps<T>)INSTANCE;
     }
 
     @Override
-    protected void subscribeActual(Subscriber<? super Void> s) {
-        source.subscribe(new HideSubscriber<Void>(s));
+    protected void subscribeActual(Subscriber<? super Object> s) {
+        EmptySubscription.complete(s);
+    }
+
+    @Override
+    public Object call() throws Exception {
+        return null;
     }
 }
