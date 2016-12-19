@@ -251,201 +251,469 @@ public abstract class Perhaps<T> implements Publisher<T> {
         return onAssembly(new PerhapsFromCompletable<T>(source));
     }
 
-    public static <T> Perhaps<T> defer(Callable<? extends Perhaps<? extends T>> onDefer) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+    /**
+     * Defers the creation of the actual Perhaps instance until
+     * subscription time and for each downstream Subscriber the given
+     * callable is called.
+     * @param <T> the value type
+     * @param supplier the Callable called for each individual Subscriber
+     * to return a Perhaps to be subscribe to.
+     * @return the new Perhaps instance
+     */
+    public static <T> Perhaps<T> defer(Callable<? extends Perhaps<? extends T>> supplier) {
+        ObjectHelper.requireNonNull(supplier, "supplier is null");
+        return onAssembly(new PerhapsDefer<T>(supplier));
     }
 
+    /**
+     * Emit the events of the Perhaps that reacts first.
+     * @param <T> the common value type
+     * @param sources the Iterable sequence of Perhaps sources
+     * @return the new Perhaps instance
+     */
     public static <T> Perhaps<T> amb(Iterable<? extends Perhaps<? extends T>> sources) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(sources, "sources is null");
+        return onAssembly(new PerhapsAmbIterable<T>(sources));
     }
 
+    /**
+     * Emit the events of the Perhaps that reacts first.
+     * @param <T> the common value type
+     * @param sources the array of Perhaps sources
+     * @return the new Perhaps instance
+     */
     public static <T> Perhaps<T> ambArray(Perhaps<? extends T>... sources) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(sources, "sources is null");
+        return onAssembly(new PerhapsAmbArray<T>(sources));
     }
 
-    // TODO javadoc
+    /**
+     * Concatenate the values in order from a sequence of Perhaps sources.
+     * @param <T> the common base value type
+     * @param sources the sequence of sources
+     * @return the new Flowable instance
+     */
     public static <T> Flowable<T> concat(Iterable<? extends Perhaps<? extends T>> sources) {
         return Flowable.concat(sources);
     }
 
-    // TODO javadoc
+    /**
+     * Concatenate the values in order from a sequence of Perhaps sources.
+     * @param <T> the common base value type
+     * @param sources the sequence of sources
+     * @return the new Flowable instance
+     */
     public static <T> Flowable<T> concat(Publisher<? extends Perhaps<? extends T>> sources) {
         return Flowable.concat(sources);
     }
 
-    // TODO javadoc
+    /**
+     * Concatenate the values in order from a sequence of Perhaps sources.
+     * @param <T> the common base value type
+     * @param sources the sequence of sources
+     * @param prefetch the number of sources to prefetch from upstream
+     * @return the new Flowable instance
+     */
     public static <T> Flowable<T> concat(Publisher<? extends Perhaps<? extends T>> sources, int prefetch) {
         return Flowable.concat(sources, prefetch);
     }
 
-    // TODO javadoc
+    /**
+     * Concatenate the values in order from a sequence of Perhaps sources.
+     * @param <T> the common base value type
+     * @param sources the sequence of sources
+     * @return the new Flowable instance
+     */
     public static <T> Flowable<T> concatArray(Perhaps<? extends T>... sources) {
         return Flowable.concatArray(sources);
     }
 
-    // TODO javadoc
+    /**
+     * Concatenate the values in order from a sequence of Perhaps sources, delaying
+     * errors till all sources terminate.
+     * @param <T> the common base value type
+     * @param sources the sequence of sources
+     * @return the new Flowable instance
+     */
     public static <T> Flowable<T> concatDelayError(Iterable<? extends Perhaps<? extends T>> sources) {
         return Flowable.concatDelayError(sources);
     }
 
-    // TODO javadoc
+    /**
+     * Concatenate the values in order from a sequence of Perhaps sources, delaying
+     * errors till all sources terminate.
+     * @param <T> the common base value type
+     * @param sources the sequence of sources
+     * @return the new Flowable instance
+     */
     public static <T> Flowable<T> concatDelayError(Publisher<? extends Perhaps<? extends T>> sources) {
         return Flowable.concatDelayError(sources);
     }
 
-    // TODO javadoc
+    /**
+     * Concatenate the values in order from a sequence of Perhaps sources, delaying
+     * errors till all sources terminate.
+     * @param <T> the common base value type
+     * @param sources the sequence of sources
+     * @param prefetch the number of sources to prefetch from upstream
+     * @return the new Flowable instance
+     */
     public static <T> Flowable<T> concatDelayError(Publisher<? extends Perhaps<? extends T>> sources, int prefetch) {
         return Flowable.concatDelayError(sources, prefetch, false);
     }
 
-    // TODO javadoc
+    /**
+     * Concatenate the values in order from a sequence of Perhaps sources, delaying
+     * errors till a source terminates or the whole sequence terminates.
+     * @param <T> the common base value type
+     * @param sources the sequence of sources
+     * @param prefetch the number of sources to prefetch from upstream
+     * @param tillTheEnd if true, errors are delayed to the very end;
+     * if false, an error will be signalled at the end of one source
+     * @return the new Flowable instance
+     */
     public static <T> Flowable<T> concatDelayError(Publisher<? extends Perhaps<? extends T>> sources, int prefetch, boolean tillTheEnd) {
         return Flowable.concatDelayError(sources, prefetch, tillTheEnd);
     }
 
-    // TODO javadoc
+    /**
+     * Concatenate the values in order from a sequence of Perhaps sources, delaying
+     * errors till all sources terminate.
+     * @param <T> the common base value type
+     * @param sources the sequence of sources
+     * @return the new Flowable instance
+     */
     public static <T> Flowable<T> concatArrayDelayError(Perhaps<? extends T>... sources) {
         return Flowable.concatArrayDelayError(sources);
     }
 
-    // TODO javadoc
+    /**
+     * Merge the values in arbitrary order from a sequence of Perhaps sources.
+     * @param <T> the common base value type
+     * @param sources the sequence of sources
+     * @return the new Flowable instance
+     */
     public static <T> Flowable<T> merge(Iterable<? extends Perhaps<? extends T>> sources) {
         return Flowable.merge(sources);
     }
 
-    // TODO javadoc
+    /**
+     * Merge the values in arbitrary order from a sequence of Perhaps sources.
+     * @param <T> the common base value type
+     * @param sources the sequence of sources
+     * @param maxConcurrency the maximum number of active subscriptions
+     * @return the new Flowable instance
+     */
     public static <T> Flowable<T> merge(Iterable<? extends Perhaps<? extends T>> sources, int maxConcurrency) {
         return Flowable.merge(sources, maxConcurrency);
     }
 
-    // TODO javadoc
+    /**
+     * Merge the values in arbitrary order from a sequence of Perhaps sources.
+     * @param <T> the common base value type
+     * @param sources the sequence of sources
+     * @return the new Flowable instance
+     */
     public static <T> Flowable<T> merge(Publisher<? extends Perhaps<? extends T>> sources) {
         return Flowable.merge(sources);
     }
 
-    // TODO javadoc
+    /**
+     * Merge the values in arbitrary order from a sequence of Perhaps sources.
+     * @param <T> the common base value type
+     * @param sources the sequence of sources
+     * @param maxConcurrency the maximum number of active subscriptions
+     * @return the new Flowable instance
+     */
     public static <T> Flowable<T> merge(Publisher<? extends Perhaps<? extends T>> sources, int maxConcurrency) {
         return Flowable.merge(sources, maxConcurrency);
     }
 
-    // TODO javadoc
+    /**
+     * Merge the values in arbitrary order from a sequence of Perhaps sources.
+     * @param <T> the common base value type
+     * @param sources the sequence of sources
+     * @return the new Flowable instance
+     */
     public static <T> Flowable<T> mergeArray(Perhaps<? extends T>... sources) {
         return Flowable.mergeArray(sources);
     }
 
-    // TODO javadoc
+    /**
+     * Merge the values in arbitrary order from a sequence of Perhaps sources.
+     * @param <T> the common base value type
+     * @param sources the sequence of sources
+     * @param maxConcurrency the maximum number of active subscriptions
+     * @return the new Flowable instance
+     */
     public static <T> Flowable<T> mergeArray(int maxConcurrency, Perhaps<? extends T>... sources) {
         return Flowable.mergeArray(maxConcurrency, 1, sources);
     }
 
-    // TODO javadoc
+    /**
+     * Merge the values in arbitrary order from a sequence of Perhaps sources,
+     * delaying errors till all sources terminate.
+     * @param <T> the common base value type
+     * @param sources the sequence of sources
+     * @return the new Flowable instance
+     */
     public static <T> Flowable<T> mergeDelayError(Iterable<? extends Perhaps<? extends T>> sources) {
         return Flowable.mergeDelayError(sources);
     }
 
-    // TODO javadoc
+    /**
+     * Merge the values in arbitrary order from a sequence of Perhaps sources,
+     * delaying errors till all sources terminate.
+     * @param <T> the common base value type
+     * @param sources the sequence of sources
+     * @param maxConcurrency the maximum number of active subscriptions
+     * @return the new Flowable instance
+     */
     public static <T> Flowable<T> mergeDelayError(Iterable<? extends Perhaps<? extends T>> sources, int maxConcurrency) {
         return Flowable.mergeDelayError(sources, maxConcurrency);
     }
 
-    // TODO javadoc
+    /**
+     * Merge the values in arbitrary order from a sequence of Perhaps sources,
+     * delaying errors till all sources terminate.
+     * @param <T> the common base value type
+     * @param sources the sequence of sources
+     * @return the new Flowable instance
+     */
     public static <T> Flowable<T> mergeDelayError(Publisher<? extends Perhaps<? extends T>> sources) {
         return Flowable.mergeDelayError(sources);
     }
 
-    // TODO javadoc
+    /**
+     * Merge the values in arbitrary order from a sequence of Perhaps sources,
+     * delaying errors till all sources terminate.
+     * @param <T> the common base value type
+     * @param sources the sequence of sources
+     * @param maxConcurrency the maximum number of active subscriptions
+     * @return the new Flowable instance
+     */
     public static <T> Flowable<T> mergeDelayError(Publisher<? extends Perhaps<? extends T>> sources, int maxConcurrency) {
         return Flowable.mergeDelayError(sources, maxConcurrency);
     }
 
-    // TODO javadoc
+    /**
+     * Merge the values in arbitrary order from a sequence of Perhaps sources,
+     * delaying errors till all sources terminate.
+     * @param <T> the common base value type
+     * @param sources the sequence of sources
+     * @return the new Flowable instance
+     */
     public static <T> Flowable<T> mergeArrayDelayError(Perhaps<? extends T>... sources) {
         return Flowable.mergeArrayDelayError(sources);
     }
 
-    // TODO javadoc
+    /**
+     * Merge the values in arbitrary order from a sequence of Perhaps sources,
+     * delaying errors till all sources terminate.
+     * @param <T> the common base value type
+     * @param sources the sequence of sources
+     * @param maxConcurrency the maximum number of active subscriptions
+     * @return the new Flowable instance
+     */
     public static <T> Flowable<T> mergeArrayDelayError(int maxConcurrency, Perhaps<? extends T>... sources) {
         return Flowable.mergeArrayDelayError(maxConcurrency, 1, sources);
     }
 
+    /**
+     * Signals a 0L after the specified amount of time has passed since
+     * subscription.
+     * @param delay the delay time
+     * @param unit the time unit
+     * @return the new Perhaps instance
+     */
     public static Perhaps<Long> timer(long delay, TimeUnit unit) {
         return timer(delay, unit, Schedulers.computation());
     }
 
+    /**
+     * Signals a 0L after the specified amount of time has passed since
+     * subscription on the specified scheduler.
+     * @param delay the delay time
+     * @param unit the time unit
+     * @param scheduler the scheduler to wait on
+     * @return the new Perhaps instance
+     */
     public static Perhaps<Long> timer(long delay, TimeUnit unit, Scheduler scheduler) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(unit, "unit is null");
+        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
+        return onAssembly(new PerhapsTimer(delay, unit, scheduler));
     }
 
-    // TODO javadoc
+    /**
+     * Generate a resource and a Perhaps based on that resource and then
+     * dispose that resource eagerly when the Perhaps terminates or the
+     * downstream cancels the sequence.
+     * @param <T> the value type
+     * @param <R> the resource type
+     * @param resourceSupplier the callback to get a resource for each subscriber
+     * @param sourceSupplier the function that returns a Perhaps for the generated resource
+     * @param disposer the consumer of the resource once the upstream terminates or the
+     * downstream cancels
+     * @return the new Perhaps instance
+     */
     public static <T, R> Perhaps<T> using(Callable<R> resourceSupplier,
             Function<? super R, ? extends Perhaps<? extends T>> sourceSupplier,
             Consumer<? super R> disposer) {
         return using(resourceSupplier, sourceSupplier, disposer, true);
     }
 
+    /**
+     * Generate a resource and a Perhaps based on that resource and then
+     * dispose that resource eagerly when the Perhaps terminates or the
+     * downstream cancels the sequence.
+     * @param <T> the value type
+     * @param <R> the resource type
+     * @param resourceSupplier the callback to get a resource for each subscriber
+     * @param sourceSupplier the function that returns a Perhaps for the generated resource
+     * @param disposer the consumer of the resource once the upstream terminates or the
+     * downstream cancels
+     * @param eager if true, the resource is disposed before the terminal event is emitted
+     *              if false, the resource is disposed after the terminal event has been emitted
+     * @return the new Perhaps instance
+     */
     public static <T, R> Perhaps<T> using(Callable<R> resourceSupplier,
             Function<? super R, ? extends Perhaps<? extends T>> sourceSupplier,
             Consumer<? super R> disposer, boolean eager) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(resourceSupplier, "resourceSupplier is null");
+        ObjectHelper.requireNonNull(sourceSupplier, "sourceSupplier is null");
+        ObjectHelper.requireNonNull(disposer, "disposer is null");
+        return onAssembly(new PerhapsUsing<T, R>(resourceSupplier, sourceSupplier, disposer, eager));
     }
 
-    public static <T, R> Perhaps<R> zip(Iterable<? extends Perhaps<? extends T>> sources, Function<? extends Object[], ? extends R> zipper) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+    /**
+     * Combines the Perhaps values of all the sources via a zipper function into a
+     * single resulting value.
+     * @param <T> the common input base type
+     * @param <R> the result type
+     * @param sources the sequence of Perhaps sources
+     * @param zipper the function takin in an array of values and returns a Perhaps value
+     * @return the new Perhaps instance
+     */
+    public static <T, R> Perhaps<R> zip(Iterable<? extends Perhaps<? extends T>> sources, Function<? super Object[], ? extends R> zipper) {
+        ObjectHelper.requireNonNull(sources, "sources is null");
+        ObjectHelper.requireNonNull(zipper, "zipper is null");
+        return onAssembly(new PerhapsZipIterable<T, R>(sources, zipper));
     }
 
-    public static <T, R> Perhaps<R> zipArray(Function<? extends Object[], ? extends R> zipper, Perhaps<? extends T>... sources) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+    /**
+     * Combines the Perhaps values of all the sources via a zipper function into a
+     * single resulting value.
+     * @param <T> the common input base type
+     * @param <R> the result type
+     * @param sources the sequence of Perhaps sources
+     * @param zipper the function takin in an array of values and returns a Perhaps value
+     * @return the new Perhaps instance
+     */
+    public static <T, R> Perhaps<R> zipArray(Function<? super Object[], ? extends R> zipper, Perhaps<? extends T>... sources) {
+        ObjectHelper.requireNonNull(sources, "sources is null");
+        ObjectHelper.requireNonNull(zipper, "zipper is null");
+        return onAssembly(new PerhapsZipArray<T, R>(sources, zipper));
     }
 
     // ----------------------------------------------------
     // Operators (stay)
     // ----------------------------------------------------
 
+    /**
+     * Signals the events of this or the other Perhaps whichever
+     * signals first.
+     * @param other the other Perhaps instance
+     * @return the new Perhaps instance
+     */
+    @SuppressWarnings("unchecked")
     public final Perhaps<T> ambWith(Perhaps<? extends T> other) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return ambArray(this, other);
     }
 
+    /**
+     * Runs this Perhaps and then runs the other Nono source, only
+     * emitting this Perhaps' success value if the other Nono source
+     * completes normally.
+     * @param other the other Nono source to run after this
+     * @return the new Perhaps instance
+     */
     public final Perhaps<T> andThen(Nono other) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(other, "other is null");
+        return onAssembly(new PerhapsAndThenNono<T>(this, other));
     }
 
+    /**
+     * Runs this Perhaps and emits its value followed by running
+     * the other Publisher and emitting its values.
+     * @param other the other Publisher to run after this
+     * @return the new Flowable instance
+     */
     public final Flowable<T> andThen(Publisher<? extends T> other) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(other, "other is null");
+        return Flowable.concat(this, other);
     }
 
+    /**
+     * Runs this Perhaps and emits its value followed by running
+     * the other Publisher and emitting its values.
+     * @param other the other Publisher to run after this
+     * @return the new Flowable instance
+     */
     public final Flowable<T> concatWith(Publisher<? extends T> other) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(other, "other is null");
+        return Flowable.concat(this, other);
     }
 
+    /**
+     * Merges this Perhaps with another Publisher and emits all their
+     * values.
+     * @param other the other Publisher source instance
+     * @return the new Flowable instance
+     */
     public final Flowable<T> mergeWith(Publisher<? extends T> other) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(other, "other is null");
+        return Flowable.merge(this, other);
     }
 
+    /**
+     * Zips the value of this Perhaps with the other Perhaps through
+     * a BiFunction.
+     * @param <U> the value type of the other source
+     * @param <R> the result type
+     * @param other the other Perhaps source
+     * @param zipper the function receiving each source value and should
+     * return a value to be emitted
+     * @return the new Perhaps instance
+     */
+    @SuppressWarnings("unchecked")
     public final <U, R> Perhaps<R> zipWith(Perhaps<? extends U> other, BiFunction<? super T, ? super U, ? extends R> zipper) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(other, "other is null");
+        ObjectHelper.requireNonNull(zipper, "zipper is null");
+        return zipArray(Functions.toFunction(zipper), this, other);
     }
 
+    /**
+     * Maps the value of this Perhaps into another value (of possibly different
+     * type).
+     * @param <R> the result value type
+     * @param mapper the function that receives the onNext value from this Perhaps
+     * and returns another value
+     * @return the new Perhaps instance
+     */
     public final <R> Perhaps<R> map(Function<? super T, ? extends R> mapper) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(mapper, "mapper is null");
+        return onAssembly(new PerhapsMap<T, R>(this, mapper));
     }
 
+    /**
+     * Maps the error from upstream into another Throwable error.
+     * @param errorMapper the function that receives the upstream error and
+     * returns a Throwable
+     * @return the new Perhaps instance
+     */
     public final Perhaps<T> mapError(Function<? super Throwable, ? extends Throwable> errorMapper) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(errorMapper, "errorMapper is null");
+        return onAssembly(new PerhapsMapError<T>(this, errorMapper));
     }
 
     public final Perhaps<T> filter(Predicate<? super T> predicate) {
@@ -636,19 +904,37 @@ public abstract class Perhaps<T> implements Publisher<T> {
         return onAssembly(new PerhapsRetryWhen<T>(this, handler));
     }
 
+    /**
+     * Subscribes to the upstream Perhaps and requests on the
+     * specified Scheduler.
+     * @param scheduler the scheduler to subscribe on
+     * @return the new Perhaps instance
+     */
     public final Perhaps<T> subscribeOn(Scheduler scheduler) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
+        return onAssembly(new PerhapsSubscribeOn<T>(this, scheduler));
     }
 
+    /**
+     * Observe the events of this Perhaps on the specified scheduler.
+     * @param scheduler the scheduler to observe events on
+     * @return the new Perhaps instance
+     */
     public final Perhaps<T> observeOn(Scheduler scheduler) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
+        return onAssembly(new PerhapsObserveOn<T>(this, scheduler));
     }
 
+    /**
+     * If the downstream cancels, the upstream is cancelled on
+     * the specified scheduler.
+     * <p>Note that normal termination don't trigger cancellation.
+     * @param scheduler the scheduler to unsubscribe on
+     * @return the new Perhaps instance
+     */
     public final Perhaps<T> unsubscribeOn(Scheduler scheduler) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
+        return onAssembly(new PerhapsUnsubscribeOn<T>(this, scheduler));
     }
 
     /**

@@ -570,7 +570,6 @@ public abstract class Solo<T> implements Publisher<T> {
         return onAssembly(new SoloZipIterable<T, R>(sources, zipper));
     }
 
-
     /**
      * Combines the solo values of all the sources via a zipper function into a
      * single resulting value.

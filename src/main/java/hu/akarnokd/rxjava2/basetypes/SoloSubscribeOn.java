@@ -64,11 +64,11 @@ final class SoloSubscribeOn<T> extends Solo<T> {
 
         final AtomicReference<Disposable> task;
 
-        final Solo<T> source;
+        final Publisher<T> source;
 
         final AtomicBoolean requested;
 
-        SubscribeOnSubscriber(Subscriber<? super T> actual, Worker worker, Solo<T> source) {
+        SubscribeOnSubscriber(Subscriber<? super T> actual, Worker worker, Publisher<T> source) {
             this.actual = actual;
             this.worker = worker;
             this.source = source;
