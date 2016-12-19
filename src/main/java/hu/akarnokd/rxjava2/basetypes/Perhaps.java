@@ -802,57 +802,143 @@ public abstract class Perhaps<T> implements Publisher<T> {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * If the upstream signals an error, it is replaced by a signal
+     * of the given item and normal completion.
+     * @param item the item to signal in case of an error
+     * @return the new Perhaps instance
+     */
     public final Perhaps<T> onErrorReturnItem(T item) {
+        ObjectHelper.requireNonNull(item, "item is null");
         // TODO implement
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * If the upstream signals an error, switch to the given fallback
+     * Perhaps.
+     * @param fallback the fallback to switch to in case of an error
+     * @return the new Perhaps instance
+     */
     public final Perhaps<T> onErrorResumeWith(Perhaps<? extends T> fallback) {
+        ObjectHelper.requireNonNull(fallback, "fallback is null");
         // TODO implement
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * If the upstream signals an error, apply the given function to that
+     * Throwable error and resume with the returned Perhaps.
+     * @param fallbackSupplier the function that receives the upstream Throwable
+     * and should return the fallback Perhaps that will be subscribed to as
+     * a resumptions
+     * @return the new Perhaps instance
+     */
     public final Perhaps<T> onErrorResumeNext(Function<? super Throwable, ? extends Perhaps<? extends T>> fallbackSupplier) {
+        ObjectHelper.requireNonNull(fallbackSupplier, "fallbackSupplier is null");
         // TODO implement
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Signals a TimeoutException if the Perhaps doesn't signal an item
+     * within the specified time.
+     * @param timeout the time to wait for an item
+     * @param unit the unit of time
+     * @return the new Perhaps instance
+     */
     public final Perhaps<T> timeout(long timeout, TimeUnit unit) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return timeout(timeout, unit, Schedulers.computation());
     }
 
+    /**
+     * Signals a TimeoutException if the Perhaps doesn't signal an item
+     * or (terminates) within the specified time.
+     * @param timeout the time to wait for an item
+     * @param unit the unit of time
+     * @param scheduler the scheduler to wait on
+     * @return the new Perhaps instance
+     */
     public final Perhaps<T> timeout(long timeout, TimeUnit unit, Scheduler scheduler) {
+        ObjectHelper.requireNonNull(unit, "unit is null");
+        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
         // TODO implement
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Switch to the fallback Perhaps if this Perhaps doesn't signal an
+     * item (or terminates) within the specified time.
+     * @param timeout the time to wait for an item
+     * @param unit the unit of time
+     * @param fallback the Perhaps to switch to if this Perhaps times out
+     * @return the new Perhaps instance
+     */
     public final Perhaps<T> timeout(long timeout, TimeUnit unit, Perhaps<? extends T> fallback) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return timeout(timeout, unit, Schedulers.computation(), fallback);
     }
 
+    /**
+     * Switch to the fallback Perhaps if this Perhaps doesn't signal an
+     * item (or terminates) within the specified time.
+     * @param timeout the time to wait for an item
+     * @param unit the unit of time
+     * @param scheduler the scheduler to wait on
+     * @param fallback the Perhaps to switch to if this Perhaps times out
+     * @return the new Perhaps instance
+     */
     public final Perhaps<T> timeout(long timeout, TimeUnit unit, Scheduler scheduler, Perhaps<? extends T> fallback) {
+        ObjectHelper.requireNonNull(unit, "unit is null");
+        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
+        ObjectHelper.requireNonNull(fallback, "fallback is null");
         // TODO implement
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Signal a TimeoutException if the other Publisher signals an item or
+     * completes before this Perhaps does.
+     * @param other the other Publisher that signals the timeout
+     * @return the new Perhaps instance
+     */
     public final Perhaps<T> timeout(Publisher<?> other) {
+        ObjectHelper.requireNonNull(other, "other is null");
         // TODO implement
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Switch to the fallback Perhaps if the other Publisher signals an item or
+     * completes before this Perhaps does.
+     * @param other the other Publisher that signals the timeout
+     * @param fallback the Perhaps to switch to in case of a timeout
+     * @return the new Perhaps instance
+     */
     public final Perhaps<T> timeout(Publisher<?> other, Perhaps<? extends T> fallback) {
+        ObjectHelper.requireNonNull(other, "other is null");
+        ObjectHelper.requireNonNull(fallback, "fallback is null");
         // TODO implement
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Signal the given item if this Perhaps is empty.
+     * @param item the item to signal
+     * @return the new Perhaps instance
+     */
     public final Perhaps<T> defaultIfEmpty(T item) {
+        ObjectHelper.requireNonNull(item, "item is null");
         // TODO implement
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Switch to the other Perhaps if this Perhaps is empty.
+     * @param other the other Perhaps to switch to
+     * @return the new Perhaps instance
+     */
     public final Perhaps<T> switchIfEmpty(Perhaps<? extends T> other) {
+        ObjectHelper.requireNonNull(other, "other is null");
         // TODO implement
         throw new UnsupportedOperationException();
     }
@@ -1148,35 +1234,86 @@ public abstract class Perhaps<T> implements Publisher<T> {
         return onAssembly(new PerhapsDoFinally<T>(this, onFinally));
     }
 
+    /**
+     * Delay the emission of the signals of this Perhaps by the
+     * given amount of time.
+     * @param delay the delay amount
+     * @param unit the time unit of the delay
+     * @return the new Perhaps instance
+     */
     public final Perhaps<T> delay(long delay, TimeUnit unit) {
         return delay(delay, unit, Schedulers.computation());
     }
 
+    /**
+     * Delay the emission of the signals of this Perhaps by the
+     * given amount of time.
+     * @param delay the delay amount
+     * @param unit the time unit of the delay
+     * @param scheduler the scheduler to delay on
+     * @return the new Perhaps instance
+     */
     public final Perhaps<T> delay(long delay, TimeUnit unit, Scheduler scheduler) {
         return delay(timer(delay, unit, scheduler));
     }
 
+    /**
+     * Delay the emission of the signals of this Perhaps till
+     * the other Publisher signals an item or completes.
+     * @param other the other Publisher to delay with
+     * @return the new Perhaps instance
+     */
     public final Perhaps<T> delay(Publisher<?> other) {
+        ObjectHelper.requireNonNull(other, "other is null");
         // TODO implement
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Delay the subscription to this Perhaps by the given time amount.
+     * @param delay the subscription delay amount
+     * @param unit the delay time unit
+     * @return the new Perhaps instance
+     */
     public final Perhaps<T> delaySubscription(long delay, TimeUnit unit) {
         return delaySubscription(timer(delay, unit));
     }
 
+
+    /**
+     * Delay the subscription to this Perhaps by the given time amount,
+     * running on the specified Scheduler.
+     * @param delay the subscription delay amount
+     * @param unit the delay time unit
+     * @param scheduler the scheduler to wait on
+     * @return the new Perhaps instance
+     */
     public final Perhaps<T> delaySubscription(long delay, TimeUnit unit, Scheduler scheduler) {
         return delaySubscription(timer(delay, unit, scheduler));
     }
 
+    /**
+     * Delay the subscription to this Perhaps until the other Publisher
+     * signals an item or completes.
+     * @param other the other Publisher that will trigger the actual
+     * subscription to this Perhaps.
+     * @return the new Perhaps instance
+     */
     public final Perhaps<T> delaySubscription(Publisher<?> other) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(other, "other is null");
+        return onAssembly(new PerhapsDelay<T>(this, other));
     }
 
+    /**
+     * Map the downstream Subscriber into an upstream Subscriber.
+     * @param <R> the downstream value type
+     * @param onLift the function called with the downstream's Subscriber and
+     * should return a Subscriber to be subscribed to this Perhaps.
+     * @return the new Perhaps type
+     */
     public final <R> Perhaps<R> lift(Function<Subscriber<? super R>, Subscriber<? super T>> onLift) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(onLift, "onLift is null");
+        return onAssembly(new PerhapsLift<T, R>(this, onLift));
     }
 
     /**
@@ -1203,24 +1340,40 @@ public abstract class Perhaps<T> implements Publisher<T> {
         return to(composer);
     }
 
+    /**
+     * Try consuming this Perhaps until the other Publisher signals an item
+     * or completes which then completes the Perhaps.
+     * @param other the other Publisher instance
+     * @return the new Perhaps instance
+     */
     public final Perhaps<T> takeUnit(Publisher<?> other) {
+        ObjectHelper.requireNonNull(other, "other is null");
         // TODO implement
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Convert this Perhaps into a Flowable.
+     * @return the new Flowable instance
+     */
     public final Flowable<T> toFlowable() {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return RxJavaPlugins.onAssembly(new PerhapsToFlowable<T>(this));
     }
 
+    /**
+     * Convert this Perhaps into an Observable.
+     * @return the new Observable instance
+     */
     public final Observable<T> toObservable() {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return RxJavaPlugins.onAssembly(new PerhapsToObservable<T>(this));
     }
 
+    /**
+     * Convert this Perhaps into a Maybe.
+     * @return the new Maybe instance
+     */
     public final Maybe<T> toMaybe() {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return RxJavaPlugins.onAssembly(new PerhapsToMaybe<T>(this));
     }
 
     // ----------------------------------------------------

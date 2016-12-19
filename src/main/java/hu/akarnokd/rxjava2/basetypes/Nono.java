@@ -568,21 +568,48 @@ public abstract class Nono implements Publisher<Void> {
     // Instance operators (stay)
     // -----------------------------------------------------------
 
+    /**
+     * When this Nono completes, it is continued by the events of
+     * the other Publisher.
+     * @param <T> the value type of the other Publisher
+     * @param other the other Publisher to continue with
+     * @return the new Flowable instance
+     */
     public final <T> Flowable<T> andThen(Publisher<? extends T> other) {
         ObjectHelper.requireNonNull(other, "other is null");
         return RxJavaPlugins.onAssembly(new NonoAndThenPublisher<T>(this, other));
     }
 
+    /**
+     * Run the other Nono when this Nono completes.
+     * @param other the other Nono to continue with.
+     * @return the new Nono instance
+     */
     public final Nono andThen(Nono other) {
         ObjectHelper.requireNonNull(other, "other is null");
         return onAssembly(new NonoAndThen(this, other));
     }
 
+    /**
+     * Delay the emission of the terminal events of this Nono
+     * by the given time amount.
+     * @param delay the delay amount
+     * @param unit the time unit
+     * @return the new Nono instance
+     */
     @SchedulerSupport(SchedulerSupport.COMPUTATION)
     public final Nono delay(long delay, TimeUnit unit) {
         return delay(delay, unit, Schedulers.computation());
     }
 
+    /**
+     * Delay the emission of the terminal events of this Nono
+     * by the given time amount.
+     * @param delay the delay amount
+     * @param unit the time unit
+     * @param scheduler the scheduler to wait on
+     * @return the new Nono instance
+     */
     @SchedulerSupport(SchedulerSupport.CUSTOM)
     public final Nono delay(long delay, TimeUnit unit, Scheduler scheduler) {
         ObjectHelper.requireNonNull(unit, "unit is null");
@@ -590,65 +617,156 @@ public abstract class Nono implements Publisher<Void> {
         return onAssembly(new NonoDelay(this, delay, unit, scheduler));
     }
 
+    /**
+     * Delays the actual subscription to this Nono until the other
+     * Publisher signals an item or completes.
+     * @param other the other Publisher to await a signal from
+     * @return the new Nono instance
+     */
     public final Nono delaySubscription(Publisher<?> other) {
         ObjectHelper.requireNonNull(other, "other is null");
         return onAssembly(new NonoDelaySubscription(this, other));
     }
 
+    /**
+     * Delays the actual subscription to this Nono until the given
+     * time passes.
+     * @param delay the delay amount
+     * @param unit the time unit
+     * @return the new Nono instance
+     */
     public final Nono delaySubscription(long delay, TimeUnit unit) {
         return delaySubscription(timer(delay, unit));
     }
 
+    /**
+     * Delays the actual subscription to this Nono until the given
+     * time passes.
+     * @param delay the delay amount
+     * @param unit the time unit
+     * @param scheduler the scheduler to wait on
+     * @return the new Nono instance
+     */
     public final Nono delaySubscription(long delay, TimeUnit unit, Scheduler scheduler) {
         return delaySubscription(timer(delay, unit, scheduler));
     }
 
-    public final Nono timeout(long delay, TimeUnit unit) {
-        return timeout(delay, unit, Schedulers.computation());
+    /**
+     * Signals a TimeoutException if this Nono doesn't complete
+     * within the specified timeout.
+     * @param timeout the timeout amount
+     * @param unit the time unit
+     * @return the new Nono instance
+     */
+    public final Nono timeout(long timeout, TimeUnit unit) {
+        return timeout(timeout, unit, Schedulers.computation());
     }
 
-    public final Nono timeout(long delay, TimeUnit unit, Nono fallback) {
-        return timeout(delay, unit, Schedulers.computation(), fallback);
+    /**
+     * Switches to the fallback Nono if this Nono doesn't complete
+     * within the specified timeout.
+     * @param timeout the timeout amount
+     * @param unit the time unit
+     * @param fallback the Nono to switch to if this Nono times out
+     * @return the new Nono instance
+     */
+    public final Nono timeout(long timeout, TimeUnit unit, Nono fallback) {
+        return timeout(timeout, unit, Schedulers.computation(), fallback);
     }
 
-    public final Nono timeout(long delay, TimeUnit unit, Scheduler scheduler) {
-        ObjectHelper.requireNonNull(unit, "unit is null");
-        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
-        return timeout(timer(delay, unit, scheduler));
+    /**
+     * Signals a TimeoutException if this Nono doesn't complete
+     * within the specified timeout.
+     * @param timeout the timeout amount
+     * @param unit the time unit
+     * @param scheduler the scheduler to wait on
+     * @return the new Nono instance
+     */
+    public final Nono timeout(long timeout, TimeUnit unit, Scheduler scheduler) {
+        return timeout(timer(timeout, unit, scheduler));
     }
 
-    public final Nono timeout(long delay, TimeUnit unit, Scheduler scheduler, Nono fallback) {
+    /**
+     * Switches to the fallback Nono if this Nono doesn't complete
+     * within the specified timeout.
+     * @param timeout the timeout amount
+     * @param unit the time unit
+     * @param scheduler the scheduler to wait on
+     * @param fallback the Nono to switch to if this Nono times out
+     * @return the new Nono instance
+     */
+    public final Nono timeout(long timeout, TimeUnit unit, Scheduler scheduler, Nono fallback) {
         ObjectHelper.requireNonNull(unit, "unit is null");
         ObjectHelper.requireNonNull(scheduler, "scheduler is null");
         ObjectHelper.requireNonNull(fallback, "fallback is null");
-        return timeout(timer(delay, unit, scheduler), fallback);
+        return timeout(timer(timeout, unit, scheduler), fallback);
     }
 
+    /**
+     * Signal a TimeoutException if the other Publisher signals an item
+     * or completes before this Nono completes.
+     * @param other the other Publisher instance
+     * @return the new Nono instance
+     */
     public final Nono timeout(Publisher<?> other) {
         ObjectHelper.requireNonNull(other, "other is null");
         return onAssembly(new NonoTimeout(this, other, null));
     }
 
+    /**
+     * Switch to the fallback Nono if the other Publisher signals an
+     * item or completes before this Nono completes.
+     * @param other the other Publisher instance
+     * @param fallback the fallback Nono instance
+     * @return the new Nono instance
+     */
     public final Nono timeout(Publisher<?> other, Nono fallback) {
         ObjectHelper.requireNonNull(other, "other is null");
         ObjectHelper.requireNonNull(fallback, "fallback is null");
         return onAssembly(new NonoTimeout(this, other, fallback));
     }
 
+    /**
+     * If this Nono signals an error, signal an onComplete instead.
+     * @return the new Nono instance
+     */
     public final Nono onErrorComplete() {
         return onAssembly(new NonoOnErrorComplete(this));
     }
 
+    /**
+     * If this Nono signals an error, subscribe to the fallback Nono
+     * returned by the error handler function.
+     * @param errorHandler the function called with the error and should
+     * return a Nono to resume with.
+     * @return the new Nono instance
+     */
     public final Nono onErrorResumeNext(Function<? super Throwable, ? extends Nono> errorHandler) {
         ObjectHelper.requireNonNull(errorHandler, "errorHandler is null");
         return onAssembly(new NonoOnErrorResume(this, errorHandler));
     }
 
+    /**
+     * Maps the upstream error into another Throwable via a function.
+     * @param mapper the function that receives the upstream Throwable
+     * and should return another Throwable to be emitted to downstream
+     * @return the new Nono instance
+     */
     public final Nono mapError(Function<? super Throwable, ? extends Throwable> mapper) {
         ObjectHelper.requireNonNull(mapper, "mapper is null");
         return onAssembly(new NonoMapError(this, mapper));
     }
 
+    /**
+     * Maps the upstream completion or error into a Publisher and emit
+     * its events as a Flowable.
+     * @param <T> the value type
+     * @param onErrorMapper the function that receives the upstream error and
+     * returns a Publisher to emit events of
+     * @param onCompleteMapper the callable that returns a Publisher to emit
+     * events of
+     * @return the new Flowable instance
+     */
     public final <T> Flowable<T> flatMap(Function<? super Throwable, ? extends Publisher<? extends T>> onErrorMapper,
             Callable<? extends Publisher<? extends T>> onCompleteMapper) {
         ObjectHelper.requireNonNull(onErrorMapper, "onErrorMapper is null");
@@ -738,16 +856,33 @@ public abstract class Nono implements Publisher<Void> {
         return Perhaps.onAssembly(new NonoToPerhaps<T>(this));
     }
 
+    /**
+     * Subscribes to the upstream on the specified Scheduler.
+     * @param scheduler the Scheduler to subscribe on
+     * @return the new Nono instance
+     */
     public final Nono subscribeOn(Scheduler scheduler) {
         ObjectHelper.requireNonNull(scheduler, "scheduler is null");
         return onAssembly(new NonoSubscribeOn(this, scheduler));
     }
 
+    /**
+     * Observes the onError and onComplete events on the specified
+     * Scheduler.
+     * @param scheduler the Scheduler to emit terminal events on
+     * @return the new Nono instance
+     */
     public final Nono observeOn(Scheduler scheduler) {
         ObjectHelper.requireNonNull(scheduler, "scheduler is null");
         return onAssembly(new NonoObserveOn(this, scheduler));
     }
 
+    /**
+     * If the downstream cancels the sequence, the cancellation towards
+     * the upstream will happen on the specified Scheduler.
+     * @param scheduler the Scheduler to cancel on
+     * @return the new Nono instance
+     */
     public final Nono unsubscribeOn(Scheduler scheduler) {
         ObjectHelper.requireNonNull(scheduler, "scheduler is null");
         return onAssembly(new NonoUnsubscribeOn(this, scheduler));

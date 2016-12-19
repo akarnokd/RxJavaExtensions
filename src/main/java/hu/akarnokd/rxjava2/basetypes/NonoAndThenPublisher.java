@@ -35,7 +35,6 @@ final class NonoAndThenPublisher<T> extends Flowable<T> {
     final Publisher<? extends T> after;
 
     NonoAndThenPublisher(Nono before, Publisher<? extends T> after) {
-        super();
         this.before = before;
         this.after = after;
     }

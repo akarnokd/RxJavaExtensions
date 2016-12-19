@@ -33,7 +33,6 @@ final class SoloTimeout<T> extends Solo<T> {
     final Solo<T> fallback;
 
     SoloTimeout(Solo<T> source, Publisher<?> other, Solo<T> fallback) {
-        super();
         this.source = source;
         this.other = other;
         this.fallback = fallback;
