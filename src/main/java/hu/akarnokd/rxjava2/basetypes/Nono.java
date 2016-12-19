@@ -702,17 +702,40 @@ public abstract class Nono implements Publisher<Void> {
         return (Flowable)Flowable.fromPublisher(this);
     }
 
+    /**
+     * Convert this Nono instance into an Observable that only terminates.
+     * @param <T> the value type
+     * @return the new Observable instance
+     */
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public final <T> Observable<T> toObservable() {
         return (Observable)Observable.fromPublisher(this);
     }
 
+    /**
+     * Convert this Nono instance into a Completable.
+     * @return the new Completable instance
+     */
     public final Completable toCompletable() {
         return Completable.fromPublisher(this);
     }
 
+    /**
+     * Convert this Nono instance into a Maybe that only terminates.
+     * @param <T> the value type
+     * @return the new Maybe instance
+     */
     public final <T> Maybe<T> toMaybe() {
         return RxJavaPlugins.onAssembly(new NonoToMaybe<T>(this));
+    }
+
+    /**
+     * Convert this Nono instance into a Perhaps that only terminates.
+     * @param <T> the value type
+     * @return the new Perhap instance
+     */
+    public final <T> Perhaps<T> toPerhaps() {
+        return Perhaps.onAssembly(new NonoToPerhaps<T>(this));
     }
 
     public final Nono subscribeOn(Scheduler scheduler) {

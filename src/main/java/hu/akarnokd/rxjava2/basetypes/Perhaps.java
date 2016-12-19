@@ -716,14 +716,24 @@ public abstract class Perhaps<T> implements Publisher<T> {
         return onAssembly(new PerhapsMapError<T>(this, errorMapper));
     }
 
+    /**
+     * Filters the value from upstream with a predicate and completes
+     * if the filter didn't match it.
+     * @param predicate the predicate receiving the upstream value and
+     * returns true if it should be passed along.
+     * @return the new Perhaps instance
+     */
     public final Perhaps<T> filter(Predicate<? super T> predicate) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(predicate, "predicate is null");
+        return onAssembly(new PerhapsFilter<T>(this, predicate));
     }
 
+    /**
+     * Ignore the element of this Perhaps.
+     * @return the new Nono instance.
+     */
     public final Nono ignoreElement() {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return Nono.fromPublisher(this);
     }
 
     /**
@@ -737,23 +747,56 @@ public abstract class Perhaps<T> implements Publisher<T> {
         return onAssembly(new PerhapsHide<T>(this));
     }
 
+    /**
+     * Maps the upstream's value into another Perhaps and emits its
+     * resulting events.
+     * @param <R> the output value type
+     * @param mapper the function that receives the upstream's value
+     * and returns a Perhaps to be consumed.
+     * @return the new Perhaps instance
+     */
     public final <R> Perhaps<R> flatMap(Function<? super T, ? extends Perhaps<? extends R>> mapper) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(mapper, "mapper is null");
+        return onAssembly(new PerhapsFlatMap<T, R>(this, mapper));
     }
 
+    /**
+     * Maps the upstream events into other Perhaps instances and emits
+     * its resulting events.
+     * <p>Note that only one of the onXXXMapper is called based on what
+     * the upstream signals, i.e., the usual onNext + onComplete will pick the
+     * Perhaps of the onSuccessMapper only and never the onCompleteMapper.
+     * @param <R> the result value type
+     * @param onSuccessMapper the function called for the upstream value
+     * @param onErrorMapper the function called for the upstream error
+     * @param onCompleteMapper the function called when the upstream is empty
+     * @return the new Perhaps instance
+     */
     public final <R> Perhaps<R> flatMap(Function<? super T, ? extends Perhaps<? extends R>> onSuccessMapper,
             Function<? super Throwable, ? extends Perhaps<? extends R>> onErrorMapper,
             Callable<? extends Perhaps<? extends R>> onCompleteMapper) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(onSuccessMapper, "onSuccessMapper is null");
+        ObjectHelper.requireNonNull(onErrorMapper, "onErrorMapper is null");
+        ObjectHelper.requireNonNull(onCompleteMapper, "onCompleteMapper is null");
+        return onAssembly(new PerhapsFlatMapSignal<T, R>(this, onSuccessMapper, onErrorMapper, onCompleteMapper));
     }
 
+    /**
+     * Maps the upstream value into a Publisher and emits all of its events.
+     * @param <R> the result value type
+     * @param mapper the function that maps the success value into a Publisher that
+     * gets subscribed to and streamed further
+     * @return the new Flowable type
+     */
     public final <R> Flowable<R> flatMapPublisher(Function<? super T, ? extends Publisher<? extends R>> mapper) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ObjectHelper.requireNonNull(mapper, "mapper is null");
+        return RxJavaPlugins.onAssembly(new PerhapsFlatMapPublisher<T, R>(this, mapper));
     }
 
+    /**
+     * Completes in case the upstream signals an error.
+     * @return the new Perhaps instance
+     */
     public final Perhaps<T> onErrorComplete() {
         // TODO implement
         throw new UnsupportedOperationException();
