@@ -3,8 +3,9 @@
 <a href='https://travis-ci.org/akarnokd/RxJava2Extensions/builds'><img src='https://travis-ci.org/akarnokd/RxJava2Extensions.svg?branch=master'></a>
 [![codecov.io](http://codecov.io/github/akarnokd/RxJava2Extensions/coverage.svg?branch=master)](http://codecov.io/github/akarnokd/RxJava2Extensions?branch=master)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.akarnokd/rxjava2-extensions/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.akarnokd/rxjava2-extensions)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.reactivex.rxjava2/rxjava/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.reactivex.rxjava2/rxjava)
 
-Extra sources, operators and components and ports of many 1.x companion libraries for RxJava 2.x.
+RxJava 2.x implementation of extra sources, operators and components and ports of many 1.x companion libraries.
 
 # Releases
 
@@ -12,7 +13,7 @@ Extra sources, operators and components and ports of many 1.x companion librarie
 
 ```
 dependencies {
-    compile "com.github.akarnokd:rxjava2-extensions:0.13.0"
+    compile "com.github.akarnokd:rxjava2-extensions:0.14.0"
 }
 ```
 
@@ -736,7 +737,7 @@ ts.assertResult();
 
 The `Publisher`-based sibling of the `Single` type. The usage is practically the same as `Single` with the exception that because `Solo` implements the Reactive-Streams `Publisher`, you can use it directly with operators of `Flowable` that accept `Publisher` in some form.
 
-`Solo`'s emission protocol is a restriction over the general `Publisher` protocol: one either calls `onNext` followed by `onComplete` or just `onError`. Operators will and should never call `onNext` followed by `onError` or `onComplete` on its own. Note that some operators may react to `onNext` immediately not waiting for an `onComplete` but on their emission side, `onComplete` is always called.
+`Solo`'s emission protocol is a restriction over the general `Publisher` protocol: one either calls `onNext` followed by `onComplete` or just `onError`. Operators will and should never call `onNext` followed by `onError` or `onComplete` on its own. Note that some operators may react to `onNext` immediately not waiting for an `onComplete` but on their emission side, `onComplete` is always called after an `onNext`.
 
 Examples:
 
@@ -772,6 +773,46 @@ ts.assertResult(1);
 
 ### Perhaps - 0-1-error publisher
 
-In progress...
+The `Publisher`-based sibling of the `Maybe` type. The usage is practically the same as `Maybe` with the exception that because `Perhaps` implements the Reactive-Streams `Publisher`, you can use it directly with operators of `Flowable` that accept `Publisher` in some form.
 
+`Perhaps`'s emission protocol is a restriction over the general `Publisher` protocol: one either calls `onNext` followed by `onComplete`, `onComplete` only or just `onError`. Operators will and should never call `onNext` followed by `onError` on its own. Note that some operators may react to `onNext` immediately not waiting for an `onComplete` but on their emission side, `onComplete` is always called after an `onNext`.
+
+Examples:
+
+```java
+Perhaps.fromCallable(() -> {
+    System.out.println("Hello world!");
+    return 1;
+}).subscribe();
+
+Perhaps.fromCallable(() -> "Hello world!")
+    .delay(1, TimeUnit.SECONDS)
+    .blockingSubscribe(System.out::println);
+
+Flowable.concat(Perhaps.just(1), Perhaps.just(2))
+.test()
+.assertResult(1, 2);
+
+Perhaps.fromCallable(() -> {
+    System.out.println("Hello world!");
+    return null;  // null is considered to indicate an empty Perhaps
+})
+.test()
+.assertResult();
+```
+
+#### PerhapsProcessor
+
+A hot, Reactive-Streams `Processor` implementation of `Perhaps`.
+
+```java
+PerhapsProcessor<Integer> ph = PerhapsProcessor.create();
+
+TestSubscriber<Integer> ts = ph.test();
+
+ph.onNext(1);
+ph.onComplete();
+
+ts.assertResult(1);
+```
 
