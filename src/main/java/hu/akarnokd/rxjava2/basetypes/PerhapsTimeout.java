@@ -24,15 +24,21 @@ import org.reactivestreams.*;
 import io.reactivex.internal.subscriptions.*;
 import io.reactivex.plugins.RxJavaPlugins;
 
-final class SoloTimeout<T> extends Solo<T> {
+/**
+ * Switch to another Perhaps if this doesn't signal events before the other
+ * Publisher does.
+ *
+ * @param <T> the value type
+ */
+final class PerhapsTimeout<T> extends Perhaps<T> {
 
-    final Solo<T> source;
+    final Perhaps<T> source;
 
     final Publisher<?> other;
 
-    final Solo<T> fallback;
+    final Perhaps<? extends T> fallback;
 
-    SoloTimeout(Solo<T> source, Publisher<?> other, Solo<T> fallback) {
+    PerhapsTimeout(Perhaps<T> source, Publisher<?> other, Perhaps<? extends T> fallback) {
         this.source = source;
         this.other = other;
         this.fallback = fallback;
@@ -54,7 +60,7 @@ final class SoloTimeout<T> extends Solo<T> {
 
         final AtomicReference<Subscription> s;
 
-        final Solo<T> fallback;
+        final Perhaps<? extends T> fallback;
 
         final OtherSubscriber other;
 
@@ -62,7 +68,7 @@ final class SoloTimeout<T> extends Solo<T> {
 
         final AtomicBoolean once;
 
-        TimeoutSubscriber(Subscriber<? super T> actual, Solo<T> fallback) {
+        TimeoutSubscriber(Subscriber<? super T> actual, Perhaps<? extends T> fallback) {
             super(actual);
             this.s = new AtomicReference<Subscription>();
             this.fallback = fallback;
@@ -85,8 +91,9 @@ final class SoloTimeout<T> extends Solo<T> {
 
         @Override
         public void onError(Throwable t) {
-            SubscriptionHelper.cancel(other);
             if (once.compareAndSet(false, true)) {
+                SubscriptionHelper.cancel(other);
+
                 actual.onError(t);
             } else {
                 RxJavaPlugins.onError(t);
@@ -95,16 +102,22 @@ final class SoloTimeout<T> extends Solo<T> {
 
         @Override
         public void onComplete() {
-            SubscriptionHelper.cancel(other);
             if (once.compareAndSet(false, true)) {
-                complete(value);
+                SubscriptionHelper.cancel(other);
+
+                T v = value;
+                if (v != null) {
+                    complete(value);
+                } else {
+                    actual.onComplete();
+                }
             }
         }
 
         void otherComplete() {
             SubscriptionHelper.cancel(s);
             if (once.compareAndSet(false, true)) {
-                Solo<T> f = fallback;
+                Perhaps<? extends T> f = fallback;
                 if (f != null) {
                     f.subscribe(fallbackSubscriber);
                 } else {
@@ -114,8 +127,9 @@ final class SoloTimeout<T> extends Solo<T> {
         }
 
         void otherError(Throwable ex) {
-            SubscriptionHelper.cancel(s);
             if (once.compareAndSet(false, true)) {
+                SubscriptionHelper.cancel(s);
+
                 actual.onError(ex);
             } else {
                 RxJavaPlugins.onError(ex);
@@ -133,12 +147,16 @@ final class SoloTimeout<T> extends Solo<T> {
             }
         }
 
-        void fallbackComplete(T v) {
-            complete(v);
-        }
-
         void fallbackError(Throwable ex) {
             actual.onError(ex);
+        }
+
+        void fallbackComplete(T v) {
+            if (v != null) {
+                complete(v);
+            } else {
+                actual.onComplete();
+            }
         }
 
         final class OtherSubscriber extends AtomicReference<Subscription>

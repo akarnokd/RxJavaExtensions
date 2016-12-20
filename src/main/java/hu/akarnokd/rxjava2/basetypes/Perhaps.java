@@ -798,8 +798,7 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new Perhaps instance
      */
     public final Perhaps<T> onErrorComplete() {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return onAssembly(new PerhapsOnErrorReturnItem<T>(this, null));
     }
 
     /**
@@ -810,8 +809,7 @@ public abstract class Perhaps<T> implements Publisher<T> {
      */
     public final Perhaps<T> onErrorReturnItem(T item) {
         ObjectHelper.requireNonNull(item, "item is null");
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return onAssembly(new PerhapsOnErrorReturnItem<T>(this, null));
     }
 
     /**
@@ -822,8 +820,7 @@ public abstract class Perhaps<T> implements Publisher<T> {
      */
     public final Perhaps<T> onErrorResumeWith(Perhaps<? extends T> fallback) {
         ObjectHelper.requireNonNull(fallback, "fallback is null");
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return onAssembly(new PerhapsOnErrorResumeWith<T>(this, fallback));
     }
 
     /**
@@ -836,8 +833,7 @@ public abstract class Perhaps<T> implements Publisher<T> {
      */
     public final Perhaps<T> onErrorResumeNext(Function<? super Throwable, ? extends Perhaps<? extends T>> fallbackSupplier) {
         ObjectHelper.requireNonNull(fallbackSupplier, "fallbackSupplier is null");
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return onAssembly(new PerhapsOnErrorResumeNext<T>(this, fallbackSupplier));
     }
 
     /**
@@ -860,10 +856,7 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new Perhaps instance
      */
     public final Perhaps<T> timeout(long timeout, TimeUnit unit, Scheduler scheduler) {
-        ObjectHelper.requireNonNull(unit, "unit is null");
-        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return timeout(timer(timeout, unit, scheduler));
     }
 
     /**
@@ -888,11 +881,7 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new Perhaps instance
      */
     public final Perhaps<T> timeout(long timeout, TimeUnit unit, Scheduler scheduler, Perhaps<? extends T> fallback) {
-        ObjectHelper.requireNonNull(unit, "unit is null");
-        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
-        ObjectHelper.requireNonNull(fallback, "fallback is null");
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return timeout(timer(timeout, unit, scheduler), fallback);
     }
 
     /**
@@ -903,8 +892,7 @@ public abstract class Perhaps<T> implements Publisher<T> {
      */
     public final Perhaps<T> timeout(Publisher<?> other) {
         ObjectHelper.requireNonNull(other, "other is null");
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return onAssembly(new PerhapsTimeout<T>(this, other, null));
     }
 
     /**
@@ -917,8 +905,7 @@ public abstract class Perhaps<T> implements Publisher<T> {
     public final Perhaps<T> timeout(Publisher<?> other, Perhaps<? extends T> fallback) {
         ObjectHelper.requireNonNull(other, "other is null");
         ObjectHelper.requireNonNull(fallback, "fallback is null");
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return onAssembly(new PerhapsTimeout<T>(this, other, fallback));
     }
 
     /**
@@ -928,8 +915,7 @@ public abstract class Perhaps<T> implements Publisher<T> {
      */
     public final Perhaps<T> defaultIfEmpty(T item) {
         ObjectHelper.requireNonNull(item, "item is null");
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return onAssembly(new PerhapsDefaultIfEmpty<T>(this, item));
     }
 
     /**
@@ -939,8 +925,7 @@ public abstract class Perhaps<T> implements Publisher<T> {
      */
     public final Perhaps<T> switchIfEmpty(Perhaps<? extends T> other) {
         ObjectHelper.requireNonNull(other, "other is null");
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return onAssembly(new PerhapsSwitchIfEmpty<T>(this, other));
     }
 
     /**
@@ -1265,8 +1250,7 @@ public abstract class Perhaps<T> implements Publisher<T> {
      */
     public final Perhaps<T> delay(Publisher<?> other) {
         ObjectHelper.requireNonNull(other, "other is null");
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return onAssembly(new PerhapsDelayPublisher<T>(this, other));
     }
 
     /**
@@ -1348,8 +1332,7 @@ public abstract class Perhaps<T> implements Publisher<T> {
      */
     public final Perhaps<T> takeUnit(Publisher<?> other) {
         ObjectHelper.requireNonNull(other, "other is null");
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return onAssembly(new PerhapsTakeUntil<T>(this, other));
     }
 
     /**
