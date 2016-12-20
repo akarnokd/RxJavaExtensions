@@ -77,6 +77,8 @@ final class PerhapsFlatMapPublisher<T, R> extends Flowable<R> {
                 this.s = s;
 
                 actual.onSubscribe(this);
+
+                s.request(Long.MAX_VALUE);
             }
         }
 

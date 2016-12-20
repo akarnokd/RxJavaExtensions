@@ -809,7 +809,7 @@ public abstract class Perhaps<T> implements Publisher<T> {
      */
     public final Perhaps<T> onErrorReturnItem(T item) {
         ObjectHelper.requireNonNull(item, "item is null");
-        return onAssembly(new PerhapsOnErrorReturnItem<T>(this, null));
+        return onAssembly(new PerhapsOnErrorReturnItem<T>(this, item));
     }
 
     /**
@@ -1285,7 +1285,7 @@ public abstract class Perhaps<T> implements Publisher<T> {
      */
     public final Perhaps<T> delaySubscription(Publisher<?> other) {
         ObjectHelper.requireNonNull(other, "other is null");
-        return onAssembly(new PerhapsDelay<T>(this, other));
+        return onAssembly(new PerhapsDelaySubscription<T>(this, other));
     }
 
     /**
@@ -1330,7 +1330,7 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @param other the other Publisher instance
      * @return the new Perhaps instance
      */
-    public final Perhaps<T> takeUnit(Publisher<?> other) {
+    public final Perhaps<T> takeUntil(Publisher<?> other) {
         ObjectHelper.requireNonNull(other, "other is null");
         return onAssembly(new PerhapsTakeUntil<T>(this, other));
     }

@@ -93,6 +93,8 @@ final class PerhapsFlatMapSignal<T, R> extends Perhaps<R> {
                 this.s = s;
 
                 actual.onSubscribe(this);
+
+                s.request(Long.MAX_VALUE);
             }
         }
 
