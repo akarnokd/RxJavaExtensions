@@ -420,7 +420,7 @@ public final class FlowableTransformers {
      * @param <T> the value type
      * @param timeout the maximum age of an element in the buffer
      * @param unit the time unit of the timeout
-     * @param scheduler the scheduler to be used as time source and to trigger the timeout & eviction
+     * @param scheduler the scheduler to be used as time source and to trigger the timeout &amp; eviction
      * @param onEvict called when an element is evicted, maybe concurrently
      * @return the new FlowableTransformer instance
      *
@@ -442,7 +442,7 @@ public final class FlowableTransformers {
      * @param <T> the value type
      * @param timeout the maximum age of an element in the buffer
      * @param unit the time unit of the timeout
-     * @param scheduler the scheduler to be used as time source and to trigger the timeout & eviction
+     * @param scheduler the scheduler to be used as time source and to trigger the timeout &amp; eviction
      * @return the new FlowableTransformer instance
      * @see #onBackpressureTimeout(int, long, TimeUnit, Scheduler, Consumer) for more options
      *
@@ -462,7 +462,7 @@ public final class FlowableTransformers {
      *                the oldest element is evicted
      * @param timeout the maximum age of an element in the buffer
      * @param unit the time unit of the timeout
-     * @param scheduler the scheduler to be used as time source and to trigger the timeout & eviction
+     * @param scheduler the scheduler to be used as time source and to trigger the timeout &amp; eviction
      * @param onEvict called when an element is evicted, maybe concurrently
      * @return the new FlowableTransformer instance
      *

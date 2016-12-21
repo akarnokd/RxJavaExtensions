@@ -51,6 +51,7 @@ public abstract class Plan<R> {
      * method in the form of an {@link Consumer}.
      * <p>Java 8: observer::onError</p>
      *
+     * @param <T> the value type
      * @param observer
      *            the {@link Observer} to use
      * @return an action which calls observer's {@code onError} method.

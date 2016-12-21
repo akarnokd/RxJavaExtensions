@@ -92,7 +92,6 @@ public final class AsyncObservable {
      * Convert a synchronous action call into an asynchronous function call through a Observable.
      * <p>
      * <img width="640" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toAsync.an.png" alt="">
-     * <p>
      * <dl>
      *  <dt><b>Scheduler:</b></dt>
      *  <dd>{@code toAsync} by default operates on the {@code computation} {@link Scheduler}.</dd>
@@ -587,7 +586,6 @@ public final class AsyncObservable {
      * Convert a synchronous action call into an asynchronous function call through a Observable.
      * <p>
      * <img width="640" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toAsync.an.png" alt="">
-     * <p>
      * <dl>
      *  <dt><b>Scheduler:</b></dt>
      *  <dd>You specify the {@link Scheduler} {@code toAsync} works on.</dd>

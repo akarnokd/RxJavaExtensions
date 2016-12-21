@@ -98,7 +98,6 @@ public final class AsyncFlowable {
      * Convert a synchronous action call into an asynchronous function call through a Flowable.
      * <p>
      * <img width="640" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toAsync.an.png" alt="">
-     * <p>
      * <dl>
      *  <dt><b>Backpressure:</b></dt>
      *  <dd>The Flowable returned by the Callable honors downstream backpressure.</dd>
@@ -637,7 +636,6 @@ public final class AsyncFlowable {
      * Convert a synchronous action call into an asynchronous function call through a Flowable.
      * <p>
      * <img width="640" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toAsync.an.png" alt="">
-     * <p>
      * <dl>
      *  <dt><b>Backpressure:</b></dt>
      *  <dd>The Flowable returned by the Supplier honors downstream backpressure.</dd>
