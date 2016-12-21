@@ -2533,5 +2533,47 @@ public class SoloTest implements Consumer<Object>, Action, LongConsumer, Cancell
     public void toFutureError() throws Exception {
         Solo.error(new IOException()).toFuture().get();
     }
+
+    @Test
+    public void cache() {
+        Solo<Integer> np = Solo.just(1)
+        .doOnSubscribe(this)
+        .cache();
+
+        assertEquals(0, count);
+
+        np.test().assertResult(1);
+
+        assertEquals(1, count);
+
+        np.test().assertResult(1);
+
+        assertEquals(1, count);
+
+        np.test().assertResult(1);
+
+        assertEquals(1, count);
+    }
+
+    @Test
+    public void cacheError() {
+        Solo<Integer> np = Solo.<Integer>error(new IOException())
+        .doOnSubscribe(this)
+        .cache();
+
+        assertEquals(0, count);
+
+        np.test().assertFailure(IOException.class);
+
+        assertEquals(1, count);
+
+        np.test().assertFailure(IOException.class);
+
+        assertEquals(1, count);
+
+        np.test().assertFailure(IOException.class);
+
+        assertEquals(1, count);
+    }
 }
 

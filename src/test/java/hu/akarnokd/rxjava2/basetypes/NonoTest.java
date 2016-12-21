@@ -2800,4 +2800,45 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         Nono.error(new IOException()).toFuture().get();
     }
 
+    @Test
+    public void cache() {
+        Nono np = Nono.complete()
+        .doOnSubscribe(this)
+        .cache();
+
+        assertEquals(0, count);
+
+        np.test().assertResult();
+
+        assertEquals(1, count);
+
+        np.test().assertResult();
+
+        assertEquals(1, count);
+
+        np.test().assertResult();
+
+        assertEquals(1, count);
+    }
+
+    @Test
+    public void cacheError() {
+        Nono np = Nono.error(new IOException())
+        .doOnSubscribe(this)
+        .cache();
+
+        assertEquals(0, count);
+
+        np.test().assertFailure(IOException.class);
+
+        assertEquals(1, count);
+
+        np.test().assertFailure(IOException.class);
+
+        assertEquals(1, count);
+
+        np.test().assertFailure(IOException.class);
+
+        assertEquals(1, count);
+    }
 }

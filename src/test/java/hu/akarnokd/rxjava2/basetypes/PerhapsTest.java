@@ -2697,4 +2697,67 @@ public class PerhapsTest implements Consumer<Object>, Action, LongConsumer, Canc
         .test()
         .assertResult(1);
     }
+
+    @Test
+    public void cache() {
+        Perhaps<Integer> np = Perhaps.just(1)
+        .doOnSubscribe(this)
+        .cache();
+
+        assertEquals(0, count);
+
+        np.test().assertResult(1);
+
+        assertEquals(1, count);
+
+        np.test().assertResult(1);
+
+        assertEquals(1, count);
+
+        np.test().assertResult(1);
+
+        assertEquals(1, count);
+    }
+
+    @Test
+    public void cacheError() {
+        Perhaps<Integer> np = Perhaps.<Integer>error(new IOException())
+        .doOnSubscribe(this)
+        .cache();
+
+        assertEquals(0, count);
+
+        np.test().assertFailure(IOException.class);
+
+        assertEquals(1, count);
+
+        np.test().assertFailure(IOException.class);
+
+        assertEquals(1, count);
+
+        np.test().assertFailure(IOException.class);
+
+        assertEquals(1, count);
+    }
+
+    @Test
+    public void cacheEmpty() {
+        Perhaps<Integer> np = Perhaps.<Integer>empty()
+        .doOnSubscribe(this)
+        .cache();
+
+        assertEquals(0, count);
+
+        np.test().assertResult();
+
+        assertEquals(1, count);
+
+        np.test().assertResult();
+
+        assertEquals(1, count);
+
+        np.test().assertResult();
+
+        assertEquals(1, count);
+    }
 }

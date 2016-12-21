@@ -1297,6 +1297,17 @@ public abstract class Solo<T> implements Publisher<T> {
         return onAssembly(new SoloUnsubscribeOn<T>(this, scheduler));
     }
 
+    /**
+     * Caches the value or error event of the upstream Solo
+     * and relays/replays it to Subscribers.
+     * @return the new Solo instance
+     *
+     * @since 0.14.1
+     */
+    public final Solo<T> cache() {
+        return onAssembly(new SoloCache<T>(this));
+    }
+
     // ----------------------------------------------------
     // Consumers (leave)
     // ----------------------------------------------------

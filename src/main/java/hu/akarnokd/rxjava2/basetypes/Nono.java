@@ -1107,6 +1107,17 @@ public abstract class Nono implements Publisher<Void> {
         return onAssembly(new NonoTakeUntil(this, other));
     }
 
+    /**
+     * Caches the terminal event of the upstream Nono
+     * and relays/replays it to Subscribers.
+     * @return the new Nono instance
+     *
+     * @since 0.14.1
+     */
+    public final Nono cache() {
+        return onAssembly(new NonoCache(this));
+    }
+
     // -----------------------------------------------------------
     // Consumers and subscribers (leave)
     // -----------------------------------------------------------
