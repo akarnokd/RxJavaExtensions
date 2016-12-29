@@ -19,11 +19,85 @@ package hu.akarnokd.rxjava2.operators;
 import org.junit.Test;
 
 import hu.akarnokd.rxjava2.test.TestHelper;
+import io.reactivex.internal.functions.Functions;
 
 public class FlowablesTest {
 
     @Test
     public void utilityClass() {
         TestHelper.checkUtilityClass(Flowables.class);
+    }
+
+    @Test
+    public void repeatScalar() {
+        Flowables.repeat(1)
+        .take(5)
+        .test()
+        .assertResult(1, 1, 1, 1, 1);
+    }
+
+    @Test
+    public void repeatScalarSlowPath() {
+        Flowables.repeat(1)
+        .rebatchRequests(1)
+        .take(5)
+        .test()
+        .assertResult(1, 1, 1, 1, 1);
+    }
+
+
+    @Test
+    public void repeatScalarConditional() {
+        Flowables.repeat(1)
+        .filter(Functions.alwaysTrue())
+        .take(5)
+        .test()
+        .assertResult(1, 1, 1, 1, 1);
+    }
+
+    @Test
+    public void repeatScalarSlowPathConditional() {
+        Flowables.repeat(1)
+        .filter(Functions.alwaysTrue())
+        .rebatchRequests(1)
+        .take(5)
+        .test()
+        .assertResult(1, 1, 1, 1, 1);
+    }
+
+    @Test
+    public void repeatCallable() {
+        Flowables.repeatCallable(Functions.justCallable(1))
+        .take(5)
+        .test()
+        .assertResult(1, 1, 1, 1, 1);
+    }
+
+    @Test
+    public void repeatCallableSlowPath() {
+        Flowables.repeatCallable(Functions.justCallable(1))
+        .rebatchRequests(1)
+        .take(5)
+        .test()
+        .assertResult(1, 1, 1, 1, 1);
+    }
+
+    @Test
+    public void repeatCallableConditional() {
+        Flowables.repeatCallable(Functions.justCallable(1))
+        .filter(Functions.alwaysTrue())
+        .take(5)
+        .test()
+        .assertResult(1, 1, 1, 1, 1);
+    }
+
+    @Test
+    public void repeatCallableSlowPathConditional() {
+        Flowables.repeatCallable(Functions.justCallable(1))
+        .filter(Functions.alwaysTrue())
+        .rebatchRequests(1)
+        .take(5)
+        .test()
+        .assertResult(1, 1, 1, 1, 1);
     }
 }

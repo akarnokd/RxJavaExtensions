@@ -688,6 +688,42 @@ Flowable.intervalRange(1, 5, 100, 100, TimeUnit.MILLISECONDS)
         .assertResult();
 ```
 
+### Flowables.repeat
+
+Repeats a scalar value indefinitely (until the downstream actually cancels), honoring backpressure and supporting synchronous fusion and/or conditional fusion.
+
+```java
+Flowable.repeat("doesn't matter")
+.map(v -> ThreadLocalRandom.current().nextDouble())
+.take(100)
+.all(v -> v < 1d)
+.test()
+.assertResult(true);
+```
+
+### Flowables.repeatCallable
+
+Repeatedly calls a callable, indefinitely (until the downstream actually cancels) or if the callable throws or returns null (when it signals `NullPointerException`), honoring backpressure and supporting synchronous fusion and/or conditional fusion.
+
+```java
+Flowable.repeatCallable(() -> ThreadLocalRandom.current().nextDouble())
+.take(100)
+.all(v -> v < 1d)
+.test()
+.assertResult(true);
+```
+
+### FlowableTransformers.every
+
+Relays every Nth item from upstream (skipping the in-between items).
+
+```java
+Flowable.range(1, 5)
+.compose(FlowableTransformers.<Integer>every(2))
+.test()
+.assertResult(2, 4)
+```
+
 ## Special Publisher implementations
 
 ### Nono - 0-error publisher

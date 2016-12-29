@@ -17,6 +17,7 @@
 package hu.akarnokd.rxjava2.operators;
 
 import java.util.Comparator;
+import java.util.concurrent.Callable;
 
 import org.reactivestreams.Publisher;
 
@@ -256,5 +257,35 @@ public final class Flowables {
     @SchedulerSupport(SchedulerSupport.NONE)
     public static <T extends Comparable<? super T>> Flowable<T> orderedMerge(Iterable<? extends Publisher<T>> sources, boolean delayErrors, int prefetch) {
         return orderedMerge(sources, Functions.naturalOrder(), delayErrors, prefetch);
+    }
+
+    /**
+     * Repeats a scalar value indefinitely.
+     * @param <T> the value type
+     * @param item the value to repeat
+     * @return the new Flowable instance
+     * 
+     * @since 0.14.2
+     */
+    @BackpressureSupport(BackpressureKind.FULL)
+    @SchedulerSupport(SchedulerSupport.NONE)
+    public static <T> Flowable<T> repeat(T item) {
+        ObjectHelper.requireNonNull(item, "item is null");
+        return new FlowableRepeatScalar<T>(item);
+    }
+
+    /**
+     * Repeatedly calls the given Callable to produce items indefinitely.
+     * @param <T> the value type
+     * @param callable the Callable to call
+     * @return the new Flowable instance
+     * 
+     * @since 0.14.2
+     */
+    @BackpressureSupport(BackpressureKind.FULL)
+    @SchedulerSupport(SchedulerSupport.NONE)
+    public static <T> Flowable<T> repeatCallable(Callable<T> callable) {
+        ObjectHelper.requireNonNull(callable, "callable is null");
+        return new FlowableRepeatCallable<T>(callable);
     }
 }

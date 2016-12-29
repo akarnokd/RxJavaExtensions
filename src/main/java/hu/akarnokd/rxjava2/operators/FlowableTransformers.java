@@ -478,4 +478,26 @@ public final class FlowableTransformers {
 
         return new FlowableOnBackpressureTimeout<T>(null, maxSize, timeout, unit, scheduler, onEvict);
     }
+
+    /**
+     * Relays every Nth item from upstream.
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The operator requests keep {@code times} what the downstream requests and skips @code keep-1} items.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>The operator doesn't run on any particular {@link Scheduler}.</dd>
+     * </dl>
+     * @param <T> the value type
+     * @param keep the period of items to keep, i.e., this minus one items will be dropped
+     * before emitting an item directly
+     * @return the new FlowableTransformer instance
+     *
+     * @since 0.14.2
+     */
+    @BackpressureSupport(BackpressureKind.SPECIAL)
+    @SchedulerSupport(SchedulerSupport.NONE)
+    public static <T> FlowableTransformer<T, T> every(long keep) {
+        ObjectHelper.verifyPositive(keep, "keep");
+        return new FlowableEvery<T>(null, keep);
+    }
 }
