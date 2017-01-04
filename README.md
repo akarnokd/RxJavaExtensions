@@ -13,7 +13,7 @@ RxJava 2.x implementation of extra sources, operators and components and ports o
 
 ```
 dependencies {
-    compile "com.github.akarnokd:rxjava2-extensions:0.14.2"
+    compile "com.github.akarnokd:rxjava2-extensions:0.14.3"
 }
 ```
 
@@ -638,6 +638,22 @@ Flowable.just("1", "2", "#", "3", "#", "4", "#")
     Arrays.asList("1", "2", "#"),
     Arrays.asList("3", "#"),
     Arrays.asList("4", "#")
+);
+```
+
+### FlowableTransformers.bufferSplit
+
+Buffers into a list/collection while the predicate returns false. When it returns true,
+a new buffer is started and the particular item won't be in any of the buffers.
+
+```java
+Flowable.just("1", "2", "#", "3", "#", "4", "#")
+.compose(FlowableTransformers.bufferSplit(v -> "#".equals(v)))
+.test()
+.assertResult(
+    Arrays.asList("1", "2"),
+    Arrays.asList("3"),
+    Arrays.asList("4")
 );
 ```
 
