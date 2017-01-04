@@ -40,19 +40,28 @@ import io.reactivex.plugins.RxJavaPlugins;
  */
 final class FlowableBufferPredicate<T, C extends Collection<? super T>> extends Flowable<C> implements FlowableTransformer<T, C> {
 
+    enum Mode {
+        /** The item triggering the new buffer will be part of the new buffer. */
+        BEFORE,
+        /** The item triggering the new buffer will be part of the old buffer. */
+        AFTER,
+        /** The item won't be part of any buffers. */
+        SPLIT
+    }
+    
     final Publisher<T> source;
 
     final Predicate<? super T> predicate;
 
-    final boolean cutAfter;
+    final Mode mode;
 
     final Callable<C> bufferSupplier;
 
-    FlowableBufferPredicate(Publisher<T> source, Predicate<? super T> predicate, boolean cutAfter,
+    FlowableBufferPredicate(Publisher<T> source, Predicate<? super T> predicate, Mode mode,
             Callable<C> bufferSupplier) {
         this.source = source;
         this.predicate = predicate;
-        this.cutAfter = cutAfter;
+        this.mode = mode;
         this.bufferSupplier = bufferSupplier;
     }
 
@@ -68,12 +77,12 @@ final class FlowableBufferPredicate<T, C extends Collection<? super T>> extends 
             return;
         }
 
-        source.subscribe(new BufferPredicateSubscriber<T, C>(s, buffer, predicate, cutAfter, bufferSupplier));
+        source.subscribe(new BufferPredicateSubscriber<T, C>(s, buffer, predicate, mode, bufferSupplier));
     }
 
     @Override
     public Publisher<C> apply(Flowable<T> upstream) {
-        return new FlowableBufferPredicate<T, C>(upstream, predicate, cutAfter, bufferSupplier);
+        return new FlowableBufferPredicate<T, C>(upstream, predicate, mode, bufferSupplier);
     }
 
     static final class BufferPredicateSubscriber<T, C extends Collection<? super T>>
@@ -83,7 +92,7 @@ final class FlowableBufferPredicate<T, C extends Collection<? super T>> extends 
 
         final Predicate<? super T> predicate;
 
-        final boolean cutAfter;
+        final Mode mode;
 
         final Callable<C> bufferSupplier;
 
@@ -95,11 +104,11 @@ final class FlowableBufferPredicate<T, C extends Collection<? super T>> extends 
 
         BufferPredicateSubscriber(Subscriber<? super C> actual,
                 C buffer,
-                Predicate<? super T> predicate, boolean cutAfter,
+                Predicate<? super T> predicate, Mode mode,
                 Callable<C> bufferSupplier) {
             this.actual = actual;
             this.predicate = predicate;
-            this.cutAfter = cutAfter;
+            this.mode = mode;
             this.buffer = buffer;
             this.bufferSupplier = bufferSupplier;
         }
@@ -136,7 +145,8 @@ final class FlowableBufferPredicate<T, C extends Collection<? super T>> extends 
                     return true;
                 }
 
-                if (cutAfter) {
+                switch (mode) {
+                case AFTER: {
                     buf.add(t);
                     if (b) {
                         actual.onNext(buf);
@@ -155,7 +165,9 @@ final class FlowableBufferPredicate<T, C extends Collection<? super T>> extends 
                         count++;
                         return false;
                     }
-                } else {
+                    break;
+                }
+                case BEFORE: {
                     if (b) {
                         buf.add(t);
                         count++;
@@ -174,6 +186,27 @@ final class FlowableBufferPredicate<T, C extends Collection<? super T>> extends 
                         buf.add(t);
                         buffer = buf;
                         count = 1;
+                    }
+                    break;
+                }
+                default:
+                    if (b) {
+                        actual.onNext(buf);
+
+                        try {
+                            buffer = bufferSupplier.call();
+                        } catch (Throwable ex) {
+                            Exceptions.throwIfFatal(ex);
+                            s.cancel();
+                            onError(ex);
+                            return true;
+                        }
+
+                        count = 0;
+                    } else {
+                        buf.add(t);
+                        count++;
+                        return false;
                     }
                 }
             }

@@ -271,7 +271,7 @@ public final class Flowables {
     @SchedulerSupport(SchedulerSupport.NONE)
     public static <T> Flowable<T> repeat(T item) {
         ObjectHelper.requireNonNull(item, "item is null");
-        return new FlowableRepeatScalar<T>(item);
+        return RxJavaPlugins.onAssembly(new FlowableRepeatScalar<T>(item));
     }
 
     /**
@@ -286,6 +286,6 @@ public final class Flowables {
     @SchedulerSupport(SchedulerSupport.NONE)
     public static <T> Flowable<T> repeatCallable(Callable<T> callable) {
         ObjectHelper.requireNonNull(callable, "callable is null");
-        return new FlowableRepeatCallable<T>(callable);
+        return RxJavaPlugins.onAssembly(new FlowableRepeatCallable<T>(callable));
     }
 }

@@ -148,14 +148,14 @@ public final class FlowableTransformers {
     @SchedulerSupport(SchedulerSupport.NONE)
     @BackpressureSupport(BackpressureKind.FULL)
     public static <T, C extends Collection<? super T>> FlowableTransformer<T, C> bufferWhile(Predicate<? super T> predicate, Callable<C> bufferSupplier) {
-        return new FlowableBufferPredicate<T, C>(null, predicate, false, bufferSupplier);
+        return new FlowableBufferPredicate<T, C>(null, predicate, FlowableBufferPredicate.Mode.BEFORE, bufferSupplier);
     }
 
     /**
      * Buffers elements into a List until the given predicate returns true at which
      * point a new empty buffer is started.
      * @param <T> the source value type
-     * @param predicate the predicate receiving the current itam and if returns true,
+     * @param predicate the predicate receiving the current item and if returns true,
      *                  the current buffer is emitted and a fresh empty buffer is created
      * @return the new FlowableTransformer instance
      *
@@ -173,7 +173,7 @@ public final class FlowableTransformers {
      * point a new empty custom collection is started.
      * @param <T> the source value type
      * @param <C> the collection type
-     * @param predicate the predicate receiving the current itam and if returns true,
+     * @param predicate the predicate receiving the current item and if returns true,
      *                  the current collection is emitted and a fresh empty collection is created
      * @param bufferSupplier the callable that returns a fresh collection
      * @return the new Flowable instance
@@ -183,7 +183,42 @@ public final class FlowableTransformers {
     @SchedulerSupport(SchedulerSupport.NONE)
     @BackpressureSupport(BackpressureKind.FULL)
     public static <T, C extends Collection<? super T>> FlowableTransformer<T, C> bufferUntil(Predicate<? super T> predicate, Callable<C> bufferSupplier) {
-        return new FlowableBufferPredicate<T, C>(null, predicate, true, bufferSupplier);
+        return new FlowableBufferPredicate<T, C>(null, predicate, FlowableBufferPredicate.Mode.AFTER, bufferSupplier);
+    }
+
+    /**
+     * Buffers elements into a List until the given predicate returns true at which
+     * point a new empty buffer is started; the particular item will be dropped.
+     * @param <T> the source value type
+     * @param predicate the predicate receiving the current item and if returns true,
+     *                  the current buffer is emitted and a fresh empty buffer is created
+     * @return the new FlowableTransformer instance
+     *
+     * @since 0.14.3
+     */
+    @SchedulerSupport(SchedulerSupport.NONE)
+    @BackpressureSupport(BackpressureKind.FULL)
+    public static <T> FlowableTransformer<T, List<T>> bufferSplit(Predicate<? super T> predicate) {
+        return bufferSplit(predicate, Functions.<T>createArrayList(16));
+    }
+
+
+    /**
+     * Buffers elements into a custom collection until the given predicate returns true at which
+     * point a new empty custom collection is started; the particular item will be dropped.
+     * @param <T> the source value type
+     * @param <C> the collection type
+     * @param predicate the predicate receiving the current item and if returns true,
+     *                  the current collection is emitted and a fresh empty collection is created
+     * @param bufferSupplier the callable that returns a fresh collection
+     * @return the new Flowable instance
+     *
+     * @since 0.14.3
+     */
+    @SchedulerSupport(SchedulerSupport.NONE)
+    @BackpressureSupport(BackpressureKind.FULL)
+    public static <T, C extends Collection<? super T>> FlowableTransformer<T, C> bufferSplit(Predicate<? super T> predicate, Callable<C> bufferSupplier) {
+        return new FlowableBufferPredicate<T, C>(null, predicate, FlowableBufferPredicate.Mode.SPLIT, bufferSupplier);
     }
 
     /**

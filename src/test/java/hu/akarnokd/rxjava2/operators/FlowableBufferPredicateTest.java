@@ -334,6 +334,29 @@ public class FlowableBufferPredicateTest {
 
     @SuppressWarnings("unchecked")
     @Test
+    public void bufferSupplierCrash3() {
+        Flowable.just(1, 2, -1, 3, 4, 5, -1, -1, 6)
+        .compose(FlowableTransformers.bufferSplit(new Predicate<Integer>() {
+            @Override
+            public boolean test(Integer v) throws Exception {
+                return v == -1;
+            }
+        }, new Callable<List<Integer>>() {
+            int c;
+            @Override
+            public List<Integer> call() throws Exception {
+                if (c++ == 1) {
+                    throw new IllegalArgumentException();
+                }
+                return new ArrayList<Integer>();
+            }
+        }))
+        .test()
+        .assertFailure(IllegalArgumentException.class, Arrays.asList(1, 2));
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
     public void doubleError() {
         List<Throwable> errors = TestHelper.trackPluginErrors();
         try {
@@ -359,4 +382,70 @@ public class FlowableBufferPredicateTest {
             RxJavaPlugins.reset();
         }
     }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void splitNormal() {
+        Flowable.just(1, 2, -1, 3, 4, 5, -1, -1, 6)
+        .compose(FlowableTransformers.bufferSplit(new Predicate<Integer>() {
+            @Override
+            public boolean test(Integer v) throws Exception {
+                return v == -1;
+            }
+        }))
+        .test()
+        .assertResult(
+                Arrays.asList(1, 2),
+                Arrays.asList(3, 4, 5),
+                Arrays.<Integer>asList(),
+                Arrays.asList(6)
+        );
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void splitNormalHidden() {
+        Flowable.just(1, 2, -1, 3, 4, 5, -1, -1, 6).hide()
+        .compose(FlowableTransformers.bufferSplit(new Predicate<Integer>() {
+            @Override
+            public boolean test(Integer v) throws Exception {
+                return v == -1;
+            }
+        }))
+        .test()
+        .assertResult(
+                Arrays.asList(1, 2),
+                Arrays.asList(3, 4, 5),
+                Arrays.<Integer>asList(),
+                Arrays.asList(6)
+        );
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void splitNormalBackpressured() {
+        Flowable.just(1, 2, -1, 3, 4, 5, -1, -1, 6)
+        .compose(FlowableTransformers.bufferSplit(new Predicate<Integer>() {
+            @Override
+            public boolean test(Integer v) throws Exception {
+                return v == -1;
+            }
+        }))
+        .test(0)
+        .assertNoValues()
+        .requestMore(1)
+        .assertValue(Arrays.asList(1, 2))
+        .requestMore(2)
+        .assertValues(Arrays.asList(1, 2),
+                Arrays.asList(3, 4, 5),
+                Arrays.<Integer>asList())
+        .requestMore(1)
+        .assertResult(
+                Arrays.asList(1, 2),
+                Arrays.asList(3, 4, 5),
+                Arrays.<Integer>asList(),
+                Arrays.asList(6)
+        );
+    }
+
 }
