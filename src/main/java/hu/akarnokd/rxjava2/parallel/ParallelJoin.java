@@ -34,6 +34,7 @@ import io.reactivex.plugins.RxJavaPlugins;
  *
  * @param <T> the value type
  */
+@SuppressWarnings("deprecation")
 final class ParallelJoin<T> extends Flowable<T> {
 
     final ParallelFlowable<? extends T> source;

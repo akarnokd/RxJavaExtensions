@@ -29,6 +29,7 @@ import io.reactivex.internal.util.ErrorMode;
  * @param <T> the input value type
  * @param <R> the output value type
  */
+@SuppressWarnings("deprecation")
 final class ParallelConcatMap<T, R> extends ParallelFlowable<R> {
 
     final ParallelFlowable<T> source;

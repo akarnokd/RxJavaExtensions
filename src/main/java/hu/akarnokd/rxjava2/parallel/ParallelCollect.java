@@ -32,6 +32,7 @@ import io.reactivex.plugins.RxJavaPlugins;
  * @param <T> the input value type
  * @param <C> the collection type
  */
+@SuppressWarnings("deprecation")
 final class ParallelCollect<T, C> extends ParallelFlowable<C> {
 
     final ParallelFlowable<? extends T> source;

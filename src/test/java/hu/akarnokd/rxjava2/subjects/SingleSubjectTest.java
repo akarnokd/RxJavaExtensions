@@ -30,6 +30,7 @@ import io.reactivex.observers.TestObserver;
 import io.reactivex.plugins.RxJavaPlugins;
 import io.reactivex.schedulers.Schedulers;
 
+@SuppressWarnings("deprecation")
 public class SingleSubjectTest {
 
     @Test

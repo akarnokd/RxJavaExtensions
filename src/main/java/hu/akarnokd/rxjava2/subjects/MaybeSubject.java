@@ -32,7 +32,10 @@ import io.reactivex.plugins.RxJavaPlugins;
  * The MaybeSubject doesn't store the Disposables coming through onSubscribe but
  * disposes them once the other onXXX methods were called (terminal state reached).
  * @param <T> the value type received and emitted
+ * @deprecation moved to io.reactivex.subject.MaybeSubject in RxJava 2.0.5;
+ * will be removed when RxJava 2.1 comes out
  */
+@Deprecated
 public final class MaybeSubject<T> extends Maybe<T> implements MaybeObserver<T> {
 
     final AtomicReference<MaybeDisposable<T>[]> observers;

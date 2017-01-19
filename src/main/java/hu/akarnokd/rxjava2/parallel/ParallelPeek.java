@@ -29,6 +29,7 @@ import io.reactivex.plugins.RxJavaPlugins;
  *
  * @param <T> the value type
  */
+@SuppressWarnings("deprecation")
 final class ParallelPeek<T> extends ParallelFlowable<T> {
 
     final ParallelFlowable<T> source;

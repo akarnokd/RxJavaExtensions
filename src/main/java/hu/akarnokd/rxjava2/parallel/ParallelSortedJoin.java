@@ -34,6 +34,7 @@ import io.reactivex.plugins.RxJavaPlugins;
  *
  * @param <T> the value type
  */
+@SuppressWarnings("deprecation")
 final class ParallelSortedJoin<T> extends Flowable<T> {
 
     final ParallelFlowable<List<T>> source;

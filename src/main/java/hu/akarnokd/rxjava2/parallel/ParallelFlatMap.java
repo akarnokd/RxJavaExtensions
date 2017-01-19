@@ -28,6 +28,7 @@ import io.reactivex.internal.operators.flowable.FlowableFlatMap;
  * @param <T> the input value type
  * @param <R> the output value type
  */
+@SuppressWarnings("deprecation")
 final class ParallelFlatMap<T, R> extends ParallelFlowable<R> {
 
     final ParallelFlowable<T> source;

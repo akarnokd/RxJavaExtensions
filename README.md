@@ -99,6 +99,8 @@ Flowable.just(5, 1, 3, 2, 4)
 
 ## Parallel operations
 
+**Deprecated in 0.14.4, functions moved to `io.reactivex.parallel.ParallelFlowable` in RxJava 2.0.5; this will be removed when RxJava 2.1 becomes available.**
+
 RxJava is sequential by nature and you can achieve parallelism by having parallel sequences. Forking out
 and joining a single sequence can become complicated and incurs quite an overhead. By using the `ParallelFlowable`
 API, the forking and joining of parallel computations started in and ending in a Flowable is more efficient than
@@ -424,6 +426,9 @@ if (assembled != null) {
 ```
 
 ## SingleSubject, MaybeSubject and CompletableSubject
+
+**Deprecated in 0.14.4, functions moved to `io.reactivex.subjects.*` in RxJava 2.0.5; they will be removed when RxJava 2.1 becomes available.**
+
 
 These are the hot variants of the respective base reactive types.
 

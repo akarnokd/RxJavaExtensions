@@ -29,6 +29,7 @@ import io.reactivex.processors.UnicastProcessor;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subscribers.TestSubscriber;
 
+@SuppressWarnings("deprecation")
 public class ParallelFlowableTest {
 
     static <T> Function<Flowable<Integer>, ParallelFlowable<Integer>> parallel() {

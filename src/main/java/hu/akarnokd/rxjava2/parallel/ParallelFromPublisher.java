@@ -32,6 +32,7 @@ import io.reactivex.internal.util.BackpressureHelper;
  *
  * @param <T> the value type
  */
+@SuppressWarnings("deprecation")
 final class ParallelFromPublisher<T> extends ParallelFlowable<T> {
     final Publisher<? extends T> source;
 

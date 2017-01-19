@@ -30,6 +30,7 @@ import io.reactivex.plugins.RxJavaPlugins;
  * @param <T> the input value type
  * @param <R> the output value type
  */
+@SuppressWarnings("deprecation")
 final class ParallelMap<T, R> extends ParallelFlowable<R> {
 
     final ParallelFlowable<T> source;

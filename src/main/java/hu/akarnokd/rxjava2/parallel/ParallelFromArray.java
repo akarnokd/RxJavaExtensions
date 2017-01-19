@@ -25,6 +25,7 @@ import org.reactivestreams.Subscriber;
  *
  * @param <T> the value type
  */
+@SuppressWarnings("deprecation")
 final class ParallelFromArray<T> extends ParallelFlowable<T> {
     final Publisher<T>[] sources;
 
