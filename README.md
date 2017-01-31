@@ -572,7 +572,7 @@ try {
 The custom transformers (to be applied with `Flowable.compose` for example), can be found in `hu.akarnokd.rxjava2.operators.FlowableTransformers` class. The custom source-like operators can be found in `hu.akarnokd.rxjava2.operators.Flowables` class. The operators and transformers for the other base
 reactive classes (will) follow the usual naming scheme.
 
-### FlowableTransflormers.Valve
+### FlowableTransflormers.valve
 
 Pauses and resumes a main flow if the secondary flow signals false and true respectively.
 
