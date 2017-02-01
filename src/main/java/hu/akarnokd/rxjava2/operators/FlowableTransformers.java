@@ -626,4 +626,48 @@ public final class FlowableTransformers {
     public static <T> FlowableTransformer<T, T> timeoutLastAbsolute(long timeout, TimeUnit unit, Scheduler scheduler) {
         return new FlowableTimeoutLast<T>(null, timeout, unit, scheduler, true);
     }
+
+    /**
+     * Debounces the upstream by taking an item and dropping subsequent items until
+     * the specified amount of time elapses after the last item, after which the
+     * process repeats.
+     * <p>
+     * Note that the operator uses the {@code computation} {@link Scheduler} for
+     * the source of time but doesn't use it to emit non-dropped items or terminal events.
+     * The operator uses calculation with the current time to decide if an upstream
+     * item may pass or not.
+     * @param <T> the value type
+     * @param timeout the timeout
+     * @param unit the unit of measure of the timeout parameter
+     * @return the new FlowableTransformer instance
+     *
+     * @since 0.15.0
+     */
+    @BackpressureSupport(BackpressureKind.PASS_THROUGH)
+    @SchedulerSupport(SchedulerSupport.COMPUTATION)
+    public static <T> FlowableTransformer<T, T> debounceFirst(long timeout, TimeUnit unit) {
+        return debounceFirst(timeout, unit, Schedulers.computation());
+    }
+
+    /**
+     * Debounces the upstream by taking an item and dropping subsequent items until
+     * the specified amount of time elapses after the last item, after which the
+     * process repeats.
+     * <p>
+     * Note that the operator uses the {@code computation} {@link Scheduler} for
+     * the source of time but doesn't use it to emit non-dropped items or terminal events.
+     * The operator uses calculation with the current time to decide if an upstream
+     * item may pass or not.
+     * @param <T> the value type
+     * @param timeout the timeout
+     * @param unit the unit of measure of the timeout parameter
+     * @param scheduler the scheduler used for getting the current time when
+     * evaluating upstream items
+     * @return the new FlowableTransformer instance
+     *
+     * @since 0.15.0
+     */
+    public static <T> FlowableTransformer<T, T> debounceFirst(long timeout, TimeUnit unit, Scheduler scheduler) {
+        return new FlowableDebounceFirst<T>(null, timeout, unit, scheduler);
+    }
 }

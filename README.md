@@ -810,6 +810,19 @@ Flowable.just(0, 50, 100, 150, 400)
 .assertResult(150);
 ```
 
+### FlowableTransformer.debounceFirst()
+
+Debounces the upstream by taking an item and dropping subsequent items until the specified amount of time elapses after the last item, after which the process repeats.
+
+```java
+Flowable.just(0, 50, 100, 150, 400, 500, 550, 1000)
+.flatMap(v -> Flowable.timer(v, TimeUnit.MILLISECONDS).map(w -> v))
+.compose(FlowableTransformers.debounceFirst(200, TimeUnit.MILLISECONDS))
+.test()
+.awaitDone(5, TimeUnit.SECONDS)
+.assertResult(0, 400, 1000);
+```
+
 
 
 ## Special Publisher implementations
