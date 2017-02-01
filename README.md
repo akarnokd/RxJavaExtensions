@@ -768,11 +768,48 @@ Caches the very last value of the upstream source and relays/replays it to Subsc
 to hold onto exactly one value whereas `replay(1)` may keep a reference to the one before too due to continuity reasons.
 
 ```java
-Flowable.range(1, 5)
-.compose(FlowableTransformers.cacheLast())
-.test()
-.assertResult(5);
+Flowable<Integer> f = Flowable.range(1, 5)
+.doOnSubscribe(s -> System.out.println("Subscribed!"))
+.compose(FlowableTransformers.cacheLast());
+
+// prints "Subscribed!"
+f.test().assertResult(5);
+
+// doesn't print anything else
+f.test().assertResult(5);
+f.test().assertResult(5);
 ```
+
+### FlowableTransformers.timeoutLast() & timeoutLastAbsolute()
+
+The operator consumes the upstream to get to the last value but completes if the
+sequence doesn't complete within the specified timeout. A use case is when the upstream generates estimates, each better than the previous but we'd like to receive the last of it and not wait for a potentially infinite series.
+
+There are two variants: relative timeout and absolute timeout.
+
+With relative timeout, the operator restarts the timeout after each upstream item, cancels the upstream and emits that latest item if the timeout happens:
+
+```java
+Flowable.just(0, 50, 100, 400)
+.flatMap(v -> Flowable.timer(v, TimeUnit.MILLISECONDS).map(w -> v))
+.compose(FlowableTransformers.timeoutLast(200, TimeUnit.MILLISECONDS))
+.test()
+.awaitDone(5, TimeUnit.SECONDS)
+.assertResult(100);
+```
+
+With absolute timeout, the upstream operator is expected to complete within the
+specified amount of time and if it doesn't, the upstream gets cancelled and the latest item emitted.
+
+```java
+Flowable.just(0, 50, 100, 150, 400)
+.flatMap(v -> Flowable.timer(v, TimeUnit.MILLISECONDS).map(w -> v))
+.compose(FlowableTransformers.timeoutLastAbsolute(200, TimeUnit.MILLISECONDS))
+.test()
+.awaitDone(5, TimeUnit.SECONDS)
+.assertResult(150);
+```
+
 
 
 ## Special Publisher implementations

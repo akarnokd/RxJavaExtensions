@@ -556,4 +556,74 @@ public final class FlowableTransformers {
     public static <T> FlowableTransformer<T, T> cacheLast() {
         return new FlowableCacheLast<T>(null);
     }
+
+    /**
+     * Emit the last item when the upstream completes or the
+     * the latest received if the specified timeout elapses since
+     * the last received item.
+     * @param <T> the value type
+     * @param timeout the timeout value
+     * @param unit the timeout time unit
+     * @return the new Flowable type
+     * 
+     * @since 0.15.0
+     */
+    @BackpressureSupport(BackpressureKind.UNBOUNDED_IN)
+    @SchedulerSupport(SchedulerSupport.COMPUTATION)
+    public static <T> FlowableTransformer<T, T> timeoutLast(long timeout, TimeUnit unit) {
+        return timeoutLast(timeout, unit, Schedulers.computation());
+    }
+
+    /**
+     * Emit the last item when the upstream completes or the
+     * the latest received if the specified timeout elapses since
+     * the last received item.
+     * @param <T> the value type
+     * @param timeout the timeout value
+     * @param unit the timeout time unit
+     * @param scheduler the scheduler to run the timeout and possible emit the last/latest
+     * @return the new Flowable type
+     * 
+     * @since 0.15.0
+     */
+    @BackpressureSupport(BackpressureKind.UNBOUNDED_IN)
+    @SchedulerSupport(SchedulerSupport.CUSTOM)
+    public static <T> FlowableTransformer<T, T> timeoutLast(long timeout, TimeUnit unit, Scheduler scheduler) {
+        return new FlowableTimeoutLast<T>(null, timeout, unit, scheduler, false);
+    }
+
+    /**
+     * Emit the last item when the upstream completes or the
+     * the latest received if the specified timeout elapses
+     * since the start of the sequence.
+     * @param <T> the value type
+     * @param timeout the timeout value
+     * @param unit the timeout time unit
+     * @return the new Flowable type
+     * 
+     * @since 0.15.0
+     */
+    @BackpressureSupport(BackpressureKind.UNBOUNDED_IN)
+    @SchedulerSupport(SchedulerSupport.COMPUTATION)
+    public static <T> FlowableTransformer<T, T> timeoutLastAbsolute(long timeout, TimeUnit unit) {
+        return timeoutLastAbsolute(timeout, unit, Schedulers.computation());
+    }
+
+    /**
+     * Emit the last item when the upstream completes or the
+     * the latest received if the specified timeout elapses
+     * since the start of the sequence.
+     * @param <T> the value type
+     * @param timeout the timeout value
+     * @param unit the timeout time unit
+     * @param scheduler the scheduler to run the timeout and possible emit the last/latest
+     * @return the new Flowable type
+     * 
+     * @since 0.15.0
+     */
+    @BackpressureSupport(BackpressureKind.UNBOUNDED_IN)
+    @SchedulerSupport(SchedulerSupport.CUSTOM)
+    public static <T> FlowableTransformer<T, T> timeoutLastAbsolute(long timeout, TimeUnit unit, Scheduler scheduler) {
+        return new FlowableTimeoutLast<T>(null, timeout, unit, scheduler, true);
+    }
 }
