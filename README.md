@@ -823,6 +823,8 @@ Flowable.just(0, 50, 100, 150, 400, 500, 550, 1000)
 .assertResult(0, 400, 1000);
 ```
 
+### FlowableTransformer.switchFlatMap
+
 
 
 ## Special Publisher implementations
