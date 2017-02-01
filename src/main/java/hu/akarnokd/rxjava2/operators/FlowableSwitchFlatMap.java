@@ -26,7 +26,7 @@ import io.reactivex.exceptions.Exceptions;
 import io.reactivex.functions.Function;
 import io.reactivex.internal.functions.ObjectHelper;
 import io.reactivex.internal.fuseable.SimplePlainQueue;
-import io.reactivex.internal.queue.SpscLinkedArrayQueue;
+import io.reactivex.internal.queue.SpscArrayQueue;
 import io.reactivex.internal.subscriptions.SubscriptionHelper;
 import io.reactivex.internal.util.*;
 import io.reactivex.plugins.RxJavaPlugins;
@@ -243,103 +243,127 @@ implements FlowableTransformer<T, R> {
         }
 
         void drain() {
-            if (getAndIncrement() != 0) {
+            if (getAndIncrement() == 0) {
                 int missed = 1;
                 Subscriber<? super R> a = actual;
                 SfmInnerSubscriber<T, R>[] inners = activeCache;
+                AtomicThrowable err = error;
 
                 outer:
                 for (;;) {
-                    updateInners();
-                    long ver = versionCache;
                     long r = requested.get();
                     long e = 0;
 
-                    if (cancelled) {
-                        clearCache();
-                        return;
-                    }
 
-                    boolean d = done;
-
-                    if (d) {
-                        Throwable ex = error.get();
-                        if (ex != null) {
-                            clearCache();
-
-                            a.onError(error.get());
-                            return;
-                        } else
-                        if (inners[0] == null) {
-                            a.onComplete();
-                            return;
-                        }
-                    }
-
-                    draining:
-                    for (SfmInnerSubscriber<T, R> inner : inners) {
+                    for (;;) {
                         if (cancelled) {
                             clearCache();
                             return;
                         }
 
-                        if (inner == null) {
-                            break;
-                        }
-                        if (ver != version) {
-                            if (e != 0) {
-                                BackpressureHelper.produced(requested, e);
+                        boolean d = done;
+
+                        updateInners();
+                        long ver = versionCache;
+
+
+                        if (d) {
+                            Throwable ex = err.get();
+                            if (ex != null) {
+                                clearCache();
+
+                                a.onError(err.terminate());
+                                return;
+                            } else
+                            if (inners[0] == null) {
+                                a.onComplete();
+                                return;
                             }
-                            continue outer;
                         }
 
-                        long f = 0;
+                        int becameEmpty = 0;
+                        int activeCount = 0;
 
-                        SimplePlainQueue<R> q = inner.queue;
-
-                        while (e != r) {
+                        draining:
+                        for (SfmInnerSubscriber<T, R> inner : inners) {
                             if (cancelled) {
                                 clearCache();
                                 return;
                             }
 
+                            if (inner == null) {
+                                break;
+                            }
                             if (ver != version) {
                                 if (e != 0) {
                                     BackpressureHelper.produced(requested, e);
                                 }
-                                if (f != 0L) {
-                                    inner.produced(f);
-                                }
                                 continue outer;
                             }
 
-                            boolean d2 = inner.done;
-                            R v = q.poll();
-                            boolean empty = v == null;
+                            activeCount++;
 
-                            if (d2 && empty) {
-                                remove(inner);
-                                continue draining;
-                            }
+                            long f = 0;
 
-                            if (empty) {
-                                if (f != 0L) {
-                                    inner.produced(f);
-                                    f = 0L;
+                            SimplePlainQueue<R> q = inner.queue;
+
+                            while (e != r) {
+                                if (cancelled) {
+                                    clearCache();
+                                    return;
                                 }
-                                break;
+
+                                Throwable ex = err.get();
+                                if (ex != null) {
+                                    clearCache();
+
+                                    a.onError(err.terminate());
+                                    return;
+                                }
+
+                                if (ver != version) {
+                                    if (e != 0) {
+                                        BackpressureHelper.produced(requested, e);
+                                    }
+                                    if (f != 0L) {
+                                        inner.produced(f);
+                                    }
+                                    continue outer;
+                                }
+
+                                boolean d2 = inner.done;
+                                R v = q.poll();
+                                boolean empty = v == null;
+
+                                if (d2 && empty) {
+                                    remove(inner);
+                                    continue draining;
+                                }
+
+                                if (empty) {
+                                    if (f != 0L) {
+                                        inner.produced(f);
+                                        f = 0L;
+                                    }
+                                    becameEmpty++;
+                                    break;
+                                }
+
+                                a.onNext(v);
+                                e++;
+                                f++;
                             }
 
-                            a.onNext(v);
-                            e++;
-                            f++;
+                            if (inner.done && q.isEmpty()) {
+                                remove(inner);
+                            } else
+                            if (f != 0L) {
+                                inner.produced(f);
+                            }
                         }
 
-                        if (inner.done && q.isEmpty()) {
-                            remove(inner);
-                        } else
-                        if (f != 0L) {
-                            inner.produced(f);
+                        if (becameEmpty == activeCount || e == r) {
+                            break;
                         }
                     }
 
@@ -376,15 +400,11 @@ implements FlowableTransformer<T, R> {
                 this.parent = parent;
                 this.bufferSize = bufferSize;
                 this.limit = bufferSize - (bufferSize >> 2);
-                this.queue = new SpscLinkedArrayQueue<R>(bufferSize);
+                this.queue = new SpscArrayQueue<R>(bufferSize);
             }
 
             void cancel() {
                 SubscriptionHelper.cancel(this);
-            }
-
-            boolean isCancelled() {
-                return SubscriptionHelper.isCancelled(get());
             }
 
             @Override

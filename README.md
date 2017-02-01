@@ -572,7 +572,7 @@ try {
 The custom transformers (to be applied with `Flowable.compose` for example), can be found in `hu.akarnokd.rxjava2.operators.FlowableTransformers` class. The custom source-like operators can be found in `hu.akarnokd.rxjava2.operators.Flowables` class. The operators and transformers for the other base
 reactive classes (will) follow the usual naming scheme.
 
-### FlowableTransflormers.valve
+### FlowableTransflormers.valve()
 
 Pauses and resumes a main flow if the secondary flow signals false and true respectively.
 
@@ -602,7 +602,7 @@ valveSource.onNext(true);
 Thread.sleep(3000);
 ```
 
-### Flowables.orderedMerge
+### Flowables.orderedMerge()
 
 Given a fixed number of input sources (which can be self-comparable or given a `Comparator`) merges them
 into a single stream by repeatedly picking the smallest one from each source until all of them completes.
@@ -613,7 +613,7 @@ Flowables.orderedMerge(Flowable.just(1, 3, 5), Flowable.just(2, 4, 6))
 .assertResult(1, 2, 3, 4, 5, 6);
 ```
 
-### FlowableTransformers.bufferWhile
+### FlowableTransformers.bufferWhile()
 
 Buffers into a list/collection while the given predicate returns true for
 the current item, otherwise starts a new list/collection containing the given item (i.e., the "separator" ends up in the next list/collection).
@@ -630,7 +630,7 @@ Flowable.just("1", "2", "#", "3", "#", "4", "#")
 );
 ```
 
-### FlowableTransformers.bufferUntil
+### FlowableTransformers.bufferUntil()
 
 Buffers into a list/collection until the given predicate returns true for
 the current item and starts an new empty list/collection  (i.e., the "separator" ends up in the same list/collection).
@@ -646,7 +646,7 @@ Flowable.just("1", "2", "#", "3", "#", "4", "#")
 );
 ```
 
-### FlowableTransformers.bufferSplit
+### FlowableTransformers.bufferSplit()
 
 Buffers into a list/collection while the predicate returns false. When it returns true,
 a new buffer is started and the particular item won't be in any of the buffers.
@@ -662,7 +662,7 @@ Flowable.just("1", "2", "#", "3", "#", "4", "#")
 );
 ```
 
-### FlowableTransformers.spanout
+### FlowableTransformers.spanout()
 
 Inserts a time delay between emissions from the upstream. For example, if the upstream emits 1, 2, 3 in a quick succession, a spanout(1, TimeUnit.SECONDS) will emit 1 immediately, 2 after a second and 3 after a second after 2. You can specify the initial delay, a custom scheduler and if an upstream error should be delayed after the normal items or not.
 
@@ -675,7 +675,7 @@ Flowable.range(1, 10)
 .assertResult(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
 ```
 
-### FlowableTransformers.mapFilter
+### FlowableTransformers.mapFilter()
 
 A callback `Consumer` is called with the current upstream value and a `BasicEmitter` on which doXXX methods can be called
 to transform a value, signal an error or stop a sequence. If none of the `doXXX` methods is called, the current value is dropped and another is requested from upstream. The operator is a pass-through for downstream requests otherwise.
@@ -694,7 +694,7 @@ Flowable.range(1, 10)
 .assertResult(4, 8);
 ```
 
-### FlowableTransformers.onBackpressureTimeout
+### FlowableTransformers.onBackpressureTimeout()
 
 Consumes the upstream in an unbounded manner and buffers elements until the downstream requests but each buffered element has an associated timeout after which it becomes unavailable. Note that this may create discontinuities in the stream. In addition, an overload allows specifying the maximum buffer size and an eviction action which gets triggered when the buffer reaches its
 capacity or elements time out.
@@ -709,7 +709,7 @@ Flowable.intervalRange(1, 5, 100, 100, TimeUnit.MILLISECONDS)
         .assertResult();
 ```
 
-### Flowables.repeat
+### Flowables.repeat()
 
 Repeats a scalar value indefinitely (until the downstream actually cancels), honoring backpressure and supporting synchronous fusion and/or conditional fusion.
 
@@ -722,7 +722,7 @@ Flowable.repeat("doesn't matter")
 .assertResult(true);
 ```
 
-### Flowables.repeatCallable
+### Flowables.repeatCallable()
 
 Repeatedly calls a callable, indefinitely (until the downstream actually cancels) or if the callable throws or returns null (when it signals `NullPointerException`), honoring backpressure and supporting synchronous fusion and/or conditional fusion.
 
@@ -734,7 +734,7 @@ Flowable.repeatCallable(() -> ThreadLocalRandom.current().nextDouble())
 .assertResult(true);
 ```
 
-### FlowableTransformers.every
+### FlowableTransformers.every()
 
 Relays every Nth item from upstream (skipping the in-between items).
 
@@ -745,7 +745,7 @@ Flowable.range(1, 5)
 .assertResult(2, 4)
 ```
 
-### Flowables.intervalBackpressure
+### Flowables.intervalBackpressure()
 
 Emit an ever increasing series of long values, starting from 0L and "buffer"
 emissions in case the downstream can't keep up. The "buffering" is virtual and isn't accompanied by increased memory usage if it happens for a longer
@@ -825,7 +825,27 @@ Flowable.just(0, 50, 100, 150, 400, 500, 550, 1000)
 
 ### FlowableTransformer.switchFlatMap
 
+This is a combination of switchMap and a limited flatMap. It merges a maximum number of Publishers at once but if a new inner Publisher gets mapped in and the active count is at max, the oldest active Publisher is cancelled and the new inner Publisher gets flattened as well. Running with `maxActive == 1` is equivalent to the plain `switchMap`.
 
+```java
+Flowable.just(100, 300, 500)
+.flatMap(v -> Flowable.timer(v, TimeUnit.MILLISECONDS).map(w -> v))
+.compose(FlowableTransformers.switchFlatMap(v -> {
+    if (v == 100) {
+        return Flowable.intervalRange(1, 3, 75, 100, TimeUnit.MILLISECONDS)
+           .map(w -> "A" + w);
+    } else
+    if (v == 300) {
+        return Flowable.intervalRange(1, 3, 10, 100, TimeUnit.MILLISECONDS)
+           .map(w -> "B" + w);
+    }
+    return Flowable.intervalRange(1, 3, 20, 100, TimeUnit.MILLISECONDS)
+        .map(w -> "C" + w);
+}, 2)
+.test()
+.awaitDone(5, TimeUnit.SECONDS)
+.assertResult("A1", "A2", "B1", "A3", "B2", "C1", B3", "C2", "C3);
+``` 
 
 ## Special Publisher implementations
 

@@ -589,6 +589,8 @@ public final class FlowableTransformers {
     @BackpressureSupport(BackpressureKind.UNBOUNDED_IN)
     @SchedulerSupport(SchedulerSupport.CUSTOM)
     public static <T> FlowableTransformer<T, T> timeoutLast(long timeout, TimeUnit unit, Scheduler scheduler) {
+        ObjectHelper.requireNonNull(unit, "unit is null");
+        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
         return new FlowableTimeoutLast<T>(null, timeout, unit, scheduler, false);
     }
 
@@ -624,6 +626,8 @@ public final class FlowableTransformers {
     @BackpressureSupport(BackpressureKind.UNBOUNDED_IN)
     @SchedulerSupport(SchedulerSupport.CUSTOM)
     public static <T> FlowableTransformer<T, T> timeoutLastAbsolute(long timeout, TimeUnit unit, Scheduler scheduler) {
+        ObjectHelper.requireNonNull(unit, "unit is null");
+        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
         return new FlowableTimeoutLast<T>(null, timeout, unit, scheduler, true);
     }
 
@@ -667,7 +671,53 @@ public final class FlowableTransformers {
      *
      * @since 0.15.0
      */
+    @BackpressureSupport(BackpressureKind.PASS_THROUGH)
+    @SchedulerSupport(SchedulerSupport.CUSTOM)
     public static <T> FlowableTransformer<T, T> debounceFirst(long timeout, TimeUnit unit, Scheduler scheduler) {
+        ObjectHelper.requireNonNull(unit, "unit is null");
+        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
         return new FlowableDebounceFirst<T>(null, timeout, unit, scheduler);
+    }
+
+    /**
+     * Combination of switchMap and flatMap where there is a limit on the number of
+     * concurrent sources to be flattened into a single sequence and if the operator is at
+     * the given maximum active count, a newer source Publisher will switch out the oldest
+     * active source Publisher being merged.
+     * @param <T> the source value type
+     * @param <R> the result value type
+     * @param mapper the function that maps an upstream value into a Publisher to be merged/switched
+     * @param maxActive the maximum number of active inner Publishers
+     * @return the new FlowableTransformer instance
+     * 
+     * @since 0.15.0
+     */
+    @BackpressureSupport(BackpressureKind.FULL)
+    @SchedulerSupport(SchedulerSupport.NONE)
+    public static <T, R> FlowableTransformer<T, R> switchFlatMap(Function<? super T, ? extends Publisher<? extends R>> mapper, int maxActive) {
+        return switchFlatMap(mapper, maxActive, Flowable.bufferSize());
+    }
+
+    /**
+     * Combination of switchMap and flatMap where there is a limit on the number of
+     * concurrent sources to be flattened into a single sequence and if the operator is at
+     * the given maximum active count, a newer source Publisher will switch out the oldest
+     * active source Publisher being merged.
+     * @param <T> the source value type
+     * @param <R> the result value type
+     * @param mapper the function that maps an upstream value into a Publisher to be merged/switched
+     * @param maxActive the maximum number of active inner Publishers
+     * @param bufferSize the number of items to prefetch from each inner source
+     * @return the new FlowableTransformer instance
+     * 
+     * @since 0.15.0
+     */
+    @BackpressureSupport(BackpressureKind.FULL)
+    @SchedulerSupport(SchedulerSupport.NONE)
+    public static <T, R> FlowableTransformer<T, R> switchFlatMap(Function<? super T, ? extends Publisher<? extends R>> mapper, int maxActive, int bufferSize) {
+        ObjectHelper.requireNonNull(mapper, "mapper is null");
+        ObjectHelper.verifyPositive(maxActive, "maxActive");
+        ObjectHelper.verifyPositive(bufferSize, "bufferSize");
+        return new FlowableSwitchFlatMap<T, R>(null, mapper, maxActive, bufferSize);
     }
 }
