@@ -745,6 +745,36 @@ Flowable.range(1, 5)
 .assertResult(2, 4)
 ```
 
+### Flowables.intervalBackpressure
+
+Emit an ever increasing series of long values, starting from 0L and "buffer"
+emissions in case the downstream can't keep up. The "buffering" is virtual and isn't accompanied by increased memory usage if it happens for a longer
+period of time.
+
+```java
+Flowables.intervalBackpressure(1, TimeUnit.MILLISECONDS)
+.observeOn(Schedulers.single())
+.take(1000)
+.test()
+.awaitDone(5, TimeUnit.SECONDS)
+.assertValueCount(1000)
+.assertNoErrors()
+.assertComplete();
+```
+
+### FlowableTransformers.cacheLast()
+
+Caches the very last value of the upstream source and relays/replays it to Subscribers. The difference from `replay(1)` is that this operator is guaranteed
+to hold onto exactly one value whereas `replay(1)` may keep a reference to the one before too due to continuity reasons.
+
+```java
+Flowable.range(1, 5)
+.compose(FlowableTransformers.cacheLast())
+.test()
+.assertResult(5);
+```
+
+
 ## Special Publisher implementations
 
 ### Nono - 0-error publisher

@@ -535,4 +535,25 @@ public final class FlowableTransformers {
         ObjectHelper.verifyPositive(keep, "keep");
         return new FlowableEvery<T>(null, keep);
     }
+
+    /**
+     * Cache the very last value of the flow and relay/replay it to Subscribers.
+     * <p>
+     * The operator subscribes to the upstream when the first downstream Subscriber
+     * arrives. Once connected, the upstream can't be stopped from the
+     * downstream even if all Subscribers cancel.
+     * <p>
+     * A difference from {@code replay(1)} is that {@code replay()} is likely
+     * holding onto 2 references due to continuity requirements whereas this
+     * operator is guaranteed to hold only the very last item.
+     * @param <T> the value type emitted
+     * @return the new FlowableTransformer instance
+     * 
+     * @since 0.15.0
+     */
+    @BackpressureSupport(BackpressureKind.UNBOUNDED_IN)
+    @SchedulerSupport(SchedulerSupport.NONE)
+    public static <T> FlowableTransformer<T, T> cacheLast() {
+        return new FlowableCacheLast<T>(null);
+    }
 }
