@@ -37,7 +37,7 @@ import io.reactivex.plugins.RxJavaPlugins;
  * Use {@code sequential()} to merge the sources back into a single Flowable.
  *
  * @param <T> the value type
- * @deprecation 0.14.4: moved to io.reactivex.parallel.ParallelFlowable in RxJava 2.0.5;
+ * @deprecated 0.14.4: moved to io.reactivex.parallel.ParallelFlowable in RxJava 2.0.5;
  * will be removed when RxJava 2.1 comes out
  */
 @Deprecated

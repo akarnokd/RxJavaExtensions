@@ -31,7 +31,7 @@ import io.reactivex.plugins.RxJavaPlugins;
  * <p>
  * The CompletableSubject doesn't store the Disposables coming through onSubscribe but
  * disposes them once the other onXXX methods were called (terminal state reached).
- * @deprecation moved to io.reactivex.subject.CompletableSubject in RxJava 2.0.5;
+ * @deprecated moved to io.reactivex.subject.CompletableSubject in RxJava 2.0.5;
  * will be removed when RxJava 2.1 comes out
  */
 @Deprecated

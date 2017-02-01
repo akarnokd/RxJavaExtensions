@@ -17,14 +17,15 @@
 package hu.akarnokd.rxjava2.operators;
 
 import java.util.Comparator;
-import java.util.concurrent.Callable;
+import java.util.concurrent.*;
 
 import org.reactivestreams.Publisher;
 
-import io.reactivex.Flowable;
+import io.reactivex.*;
 import io.reactivex.annotations.*;
 import io.reactivex.internal.functions.*;
 import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Utility class to create Flowable sources.
@@ -287,5 +288,109 @@ public final class Flowables {
     public static <T> Flowable<T> repeatCallable(Callable<T> callable) {
         ObjectHelper.requireNonNull(callable, "callable is null");
         return RxJavaPlugins.onAssembly(new FlowableRepeatCallable<T>(callable));
+    }
+
+    /**
+     * Periodically tries to emit an ever increasing long value or
+     * buffers (efficiently) such emissions until the downstream requests.
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The operator honors the backpressure of the downstream and
+     *  no emission is lost, however, the timing of the reception of the
+     *  values is now dependent on the downstream backpressure.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>The operator uses the {@code computation} {@link Scheduler} to time
+     *  the emission and likely deliver the value (unless backpressured).</dd>
+     * </dl>
+     * 
+     * @param period the emission period (including the delay for the first emission)
+     * @param unit the emission time unit
+     * @return the new Flowable instance
+     * 
+     * @since 0.15.0
+     */
+    @BackpressureSupport(BackpressureKind.FULL)
+    @SchedulerSupport(SchedulerSupport.COMPUTATION)
+    public static Flowable<Long> intervalBackpressure(long period, TimeUnit unit) {
+        return intervalBackpressure(period, period, unit, Schedulers.computation());
+    }
+
+    /**
+     * Periodically tries to emit an ever increasing long value or
+     * buffers (efficiently) such emissions until the downstream requests.
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The operator honors the backpressure of the downstream and
+     *  no emission is lost, however, the timing of the reception of the
+     *  values is now dependent on the downstream backpressure.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>The operator uses the {@code computation} {@link Scheduler} to time
+     *  the emission and likely deliver the value (unless backpressured).</dd>
+     * </dl>
+     * 
+     * @param period the emission period (including the delay for the first emission)
+     * @param unit the emission time unit
+     * @param scheduler the scheduler to use for timing and likely emitting items
+     * @return the new Flowable instance
+     * 
+     * @since 0.15.0
+     */
+    @BackpressureSupport(BackpressureKind.FULL)
+    @SchedulerSupport(SchedulerSupport.CUSTOM)
+    public static Flowable<Long> intervalBackpressure(long period, TimeUnit unit, Scheduler scheduler) {
+        return intervalBackpressure(period, period, unit, scheduler);
+    }
+
+    /**
+     * Periodically tries to emit an ever increasing long value or
+     * buffers (efficiently) such emissions until the downstream requests.
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The operator honors the backpressure of the downstream and
+     *  no emission is lost, however, the timing of the reception of the
+     *  values is now dependent on the downstream backpressure.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>The operator uses the {@code computation} {@link Scheduler} to time
+     *  the emission and likely deliver the value (unless backpressured).</dd>
+     * </dl>
+     * 
+     * @param initialDelay the initial delay before emitting the first 0L
+     * @param period the emission period after the first emission
+     * @param unit the emission time unit
+     * @return the new Flowable instance
+     * 
+     * @since 0.15.0
+     */
+    @BackpressureSupport(BackpressureKind.FULL)
+    @SchedulerSupport(SchedulerSupport.COMPUTATION)
+    public static Flowable<Long> intervalBackpressure(long initialDelay, long period, TimeUnit unit) {
+        return intervalBackpressure(initialDelay, period, unit, Schedulers.computation());
+    }
+
+    /**
+     * Periodically tries to emit an ever increasing long value or
+     * buffers (efficiently) such emissions until the downstream requests.
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The operator honors the backpressure of the downstream and
+     *  no emission is lost, however, the timing of the reception of the
+     *  values is now dependent on the downstream backpressure.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>The operator uses the{@link Scheduler} provided to time
+     *  the emission and likely deliver the value (unless backpressured).</dd>
+     * </dl>
+     * 
+     * @param initialDelay the initial delay before emitting the first 0L
+     * @param period the emission period (including the delay for the first emission)
+     * @param unit the emission time unit
+     * @param scheduler the scheduler to use for timing and likely emitting items
+     * @return the new Flowable instance
+     * 
+     * @since 0.15.0
+     */
+    @BackpressureSupport(BackpressureKind.FULL)
+    @SchedulerSupport(SchedulerSupport.CUSTOM)
+    public static Flowable<Long> intervalBackpressure(long initialDelay, long period, TimeUnit unit, Scheduler scheduler) {
+        return RxJavaPlugins.onAssembly(new FlowableIntervalBackpressure(initialDelay, period, unit, scheduler));
     }
 }

@@ -48,7 +48,7 @@ final class FlowableBufferPredicate<T, C extends Collection<? super T>> extends 
         /** The item won't be part of any buffers. */
         SPLIT
     }
-    
+
     final Publisher<T> source;
 
     final Predicate<? super T> predicate;

@@ -60,7 +60,7 @@ final class FlowableEvery<T> extends Flowable<T> implements FlowableTransformer<
 
         Subscription s;
 
-        public EverySubscriber(Subscriber<? super T> actual, long keep) {
+        EverySubscriber(Subscriber<? super T> actual, long keep) {
             this.actual = actual;
             this.keep = keep;
         }
