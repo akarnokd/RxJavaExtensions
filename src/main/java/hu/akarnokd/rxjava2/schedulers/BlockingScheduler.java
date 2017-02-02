@@ -24,7 +24,7 @@ import io.reactivex.Scheduler;
 import io.reactivex.disposables.*;
 import io.reactivex.functions.Action;
 import io.reactivex.internal.disposables.SequentialDisposable;
-import io.reactivex.internal.functions.Functions;
+import io.reactivex.internal.functions.*;
 import io.reactivex.plugins.RxJavaPlugins;
 import io.reactivex.schedulers.Schedulers;
 
@@ -46,7 +46,7 @@ import io.reactivex.schedulers.Schedulers;
  *         someApi.methodCall()
  *           .subscribeOn(Schedulers.io())
  *           .observeOn(scheduler)
- *           .subscribe();
+ *           .subscribe(v -> { /* on the main thread *&#47; });
  *     });
  * }
  * </code></pre>
@@ -93,11 +93,25 @@ public final class BlockingScheduler extends Scheduler {
         this.timedHelper = Schedulers.single();
     }
 
+    /**
+     * Begin executing the blocking event loop without any initial action.
+     * <p>
+     * This method will block until the {@link #shutdown()} is invoked.
+     * @see #execute(Action)
+     */
     public void execute() {
         execute(Functions.EMPTY_ACTION);
     }
 
+    /**
+     * Begin executing the blocking event loop with the given initial action
+     * (usually contain the rest of the 'main' method).
+     * <p>
+     * This method will block until the {@link #shutdown()} is invoked.
+     * @param action the action to execute
+     */
     public void execute(Action action) {
+        ObjectHelper.requireNonNull(action, "action is null");
         if (!running.get() && running.compareAndSet(false, true)) {
             thread = Thread.currentThread();
             queue.offer(action);
@@ -107,19 +121,18 @@ public final class BlockingScheduler extends Scheduler {
     }
 
     void drainLoop() {
-        final ConcurrentLinkedQueue<Action> q = queue;
         final AtomicBoolean stop = shutdown;
         final AtomicLong wip = this.wip;
 
         for (;;) {
             if (stop.get()) {
-                q.clear();
+                cancelAll();
                 return;
             }
             do {
                 Action a = queue.poll();
                 if (a == SHUTDOWN) {
-                    q.clear();
+                    cancelAll();
                     return;
                 }
                 try {
@@ -144,8 +157,22 @@ public final class BlockingScheduler extends Scheduler {
         }
     }
 
+    void cancelAll() {
+        final ConcurrentLinkedQueue<Action> q = queue;
+
+        Action a;
+
+        while ((a = q.poll()) != null) {
+            if (a instanceof Disposable) {
+                ((Disposable)a).dispose();
+            }
+        }
+    }
+
     @Override
     public Disposable scheduleDirect(Runnable run, long delay, TimeUnit unit) {
+        ObjectHelper.requireNonNull(run, "run is null");
+        ObjectHelper.requireNonNull(unit, "unit is null");
         if (shutdown.get()) {
             return Disposables.disposed();
         }
@@ -286,6 +313,9 @@ public final class BlockingScheduler extends Scheduler {
 
         @Override
         public Disposable schedule(Runnable run, long delay, TimeUnit unit) {
+            ObjectHelper.requireNonNull(run, "run is null");
+            ObjectHelper.requireNonNull(unit, "unit is null");
+
             if (shutdown.get()) {
                 return Disposables.disposed();
             }

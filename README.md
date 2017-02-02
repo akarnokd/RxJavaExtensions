@@ -567,6 +567,26 @@ try {
 }
 ```
 
+### BlockingScheduler
+
+This type of scheduler runs its execution loop on the "current thread", more specifically, the thread which invoked its `execute()` method. The method blocks until the `shutdown()` is invoked. This type of scheduler allows returning to the "main" thread from other threads.
+
+```java
+public static void main(String[] args) {
+    BlockingScheduler scheduler = new BlockingScheduler();
+
+    scheduler.execute(() -> {
+        Flowable.range(1,10)
+        .subscribeOn(Schedulers.io())
+        .observeOn(scheduler)
+        .doAfterTerminate(() -> scheduler.shutdown())
+        .subscribe(v -> System.out.println(v + " on " + Thread.currentThread()));
+    });
+    
+    System.out.println("BlockingScheduler finished");
+}
+```
+
 ## Custom operators and transformers
 
 The custom transformers (to be applied with `Flowable.compose` for example), can be found in `hu.akarnokd.rxjava2.operators.FlowableTransformers` class. The custom source-like operators can be found in `hu.akarnokd.rxjava2.operators.Flowables` class. The operators and transformers for the other base
