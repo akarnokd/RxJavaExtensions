@@ -14,27 +14,8 @@
  * limitations under the License.
  */
 
-package hu.akarnokd.rxjava2.basetypes;
+package hu.akarnokd.rxjava2.schedulers;
 
-import org.reactivestreams.Subscriber;
-
-import io.reactivex.internal.subscriptions.EmptySubscription;
-
-/**
- * Never signals an event other than onSubscribe.
- */
-final class PerhapsNever extends Perhaps<Object> {
-
-    static final PerhapsNever INSTANCE = new PerhapsNever();
-
-    @SuppressWarnings("unchecked")
-    static <T> Perhaps<T> instance() {
-        return (Perhaps<T>)INSTANCE;
-    }
-
-    @Override
-    protected void subscribeActual(Subscriber<? super Object> s) {
-        s.onSubscribe(EmptySubscription.INSTANCE);
-    }
+public class BlockingSchedulerTest {
 
 }
