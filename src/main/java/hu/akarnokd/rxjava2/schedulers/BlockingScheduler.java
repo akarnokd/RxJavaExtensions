@@ -316,7 +316,7 @@ public final class BlockingScheduler extends Scheduler {
             ObjectHelper.requireNonNull(run, "run is null");
             ObjectHelper.requireNonNull(unit, "unit is null");
 
-            if (shutdown.get()) {
+            if (shutdown.get() || isDisposed()) {
                 return Disposables.disposed();
             }
 
