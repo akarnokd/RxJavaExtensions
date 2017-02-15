@@ -85,7 +85,7 @@ public class SingleSubjectTest {
         try {
             ms.onError(new IOException());
 
-            TestHelper.assertError(errors, 0, IOException.class);
+            TestHelper.assertUndeliverable(errors, 0, IOException.class);
         } finally {
             RxJavaPlugins.reset();
         }

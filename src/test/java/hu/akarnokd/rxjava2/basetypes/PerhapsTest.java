@@ -190,7 +190,7 @@ public class PerhapsTest implements Consumer<Object>, Action, LongConsumer, Canc
 
             assertEquals(1, count);
 
-            TestHelper.assertError(errors, 0, IOException.class);
+            TestHelper.assertUndeliverable(errors, 0, IOException.class);
         } finally {
             RxJavaPlugins.reset();
         }
@@ -211,7 +211,7 @@ public class PerhapsTest implements Consumer<Object>, Action, LongConsumer, Canc
             .test()
             .assertResult(1);
 
-            TestHelper.assertError(errors, 0, IOException.class);
+            TestHelper.assertUndeliverable(errors, 0, IOException.class);
         } finally {
             RxJavaPlugins.reset();
         }
@@ -234,7 +234,7 @@ public class PerhapsTest implements Consumer<Object>, Action, LongConsumer, Canc
             .assertFailure(IOException.class);
 
             assertEquals(1, count);
-            TestHelper.assertError(errors, 0, IOException.class);
+            TestHelper.assertUndeliverable(errors, 0, IOException.class);
         } finally {
             RxJavaPlugins.reset();
         }
@@ -255,7 +255,7 @@ public class PerhapsTest implements Consumer<Object>, Action, LongConsumer, Canc
             .test()
             .assertFailure(IOException.class);
 
-            TestHelper.assertError(errors, 0, IOException.class);
+            TestHelper.assertUndeliverable(errors, 0, IOException.class);
         } finally {
             RxJavaPlugins.reset();
         }

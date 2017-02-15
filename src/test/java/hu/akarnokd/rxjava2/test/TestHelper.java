@@ -33,6 +33,7 @@ import io.reactivex.Observer;
 import io.reactivex.disposables.*;
 import io.reactivex.exceptions.*;
 import io.reactivex.functions.*;
+import io.reactivex.internal.functions.ObjectHelper;
 import io.reactivex.internal.fuseable.SimpleQueue;
 import io.reactivex.internal.operators.maybe.MaybeToFlowable;
 import io.reactivex.internal.operators.single.SingleToFlowable;
@@ -152,6 +153,41 @@ public enum TestHelper {
     public static void assertError(List<Throwable> list, int index, Class<? extends Throwable> clazz, String message) {
         assertTrue(list.get(index).toString(), clazz.isInstance(list.get(index)));
         assertEquals(message, list.get(index).getMessage());
+    }
+
+    public static void assertUndeliverable(List<Throwable> list, int index, Class<? extends Throwable> clazz) {
+        Throwable ex = list.get(index);
+        if (!(ex instanceof UndeliverableException)) {
+            AssertionError err = new AssertionError("Outer exception UndeliverableException expected but got " + list.get(index));
+            err.initCause(list.get(index));
+            throw err;
+        }
+        ex = ex.getCause();
+        if (!clazz.isInstance(ex)) {
+            AssertionError err = new AssertionError("Inner exception " + clazz + " expected but got " + list.get(index));
+            err.initCause(list.get(index));
+            throw err;
+        }
+    }
+
+    public static void assertUndeliverable(List<Throwable> list, int index, Class<? extends Throwable> clazz, String message) {
+        Throwable ex = list.get(index);
+        if (!(ex instanceof UndeliverableException)) {
+            AssertionError err = new AssertionError("Outer exception UndeliverableException expected but got " + list.get(index));
+            err.initCause(list.get(index));
+            throw err;
+        }
+        ex = ex.getCause();
+        if (!clazz.isInstance(ex)) {
+            AssertionError err = new AssertionError("Inner exception " + clazz + " expected but got " + list.get(index));
+            err.initCause(list.get(index));
+            throw err;
+        }
+        if (!ObjectHelper.equals(message, ex.getMessage())) {
+            AssertionError err = new AssertionError("Message " + message + " expected but got " + ex.getMessage());
+            err.initCause(ex);
+            throw err;
+        }
     }
 
     public static void assertError(TestObserver<?> ts, int index, Class<? extends Throwable> clazz) {

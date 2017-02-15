@@ -197,7 +197,7 @@ public class FlowableOrderedMergeTest {
             .test()
             .assertFailureAndMessage(IOException.class, "first");
 
-            TestHelper.assertError(errors, 0, IOException.class, "second");
+            TestHelper.assertUndeliverable(errors, 0, IOException.class, "second");
         } finally {
             RxJavaPlugins.reset();
         }

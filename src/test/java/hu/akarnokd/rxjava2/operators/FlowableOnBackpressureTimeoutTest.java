@@ -278,11 +278,11 @@ public class FlowableOnBackpressureTimeoutTest implements Consumer<Object> {
 
             ts.requestMore(1).assertResult();
 
-            TestHelper.assertError(errors, 0, IOException.class, "1");
-            TestHelper.assertError(errors, 1, IOException.class, "2");
-            TestHelper.assertError(errors, 2, IOException.class, "3");
-            TestHelper.assertError(errors, 3, IOException.class, "4");
-            TestHelper.assertError(errors, 4, IOException.class, "5");
+            TestHelper.assertUndeliverable(errors, 0, IOException.class, "1");
+            TestHelper.assertUndeliverable(errors, 1, IOException.class, "2");
+            TestHelper.assertUndeliverable(errors, 2, IOException.class, "3");
+            TestHelper.assertUndeliverable(errors, 3, IOException.class, "4");
+            TestHelper.assertUndeliverable(errors, 4, IOException.class, "5");
         } finally {
             RxJavaPlugins.reset();
         }

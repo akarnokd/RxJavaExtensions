@@ -131,7 +131,7 @@ public class SoloTest implements Consumer<Object>, Action, LongConsumer, Cancell
 
             assertEquals(1, count);
 
-            TestHelper.assertError(errors, 0, IOException.class);
+            TestHelper.assertUndeliverable(errors, 0, IOException.class);
         } finally {
             RxJavaPlugins.reset();
         }
@@ -152,7 +152,7 @@ public class SoloTest implements Consumer<Object>, Action, LongConsumer, Cancell
             .test()
             .assertResult(1);
 
-            TestHelper.assertError(errors, 0, IOException.class);
+            TestHelper.assertUndeliverable(errors, 0, IOException.class);
         } finally {
             RxJavaPlugins.reset();
         }
@@ -175,7 +175,7 @@ public class SoloTest implements Consumer<Object>, Action, LongConsumer, Cancell
             .assertFailure(IOException.class);
 
             assertEquals(1, count);
-            TestHelper.assertError(errors, 0, IOException.class);
+            TestHelper.assertUndeliverable(errors, 0, IOException.class);
         } finally {
             RxJavaPlugins.reset();
         }
@@ -196,7 +196,7 @@ public class SoloTest implements Consumer<Object>, Action, LongConsumer, Cancell
             .test()
             .assertFailure(IOException.class);
 
-            TestHelper.assertError(errors, 0, IOException.class);
+            TestHelper.assertUndeliverable(errors, 0, IOException.class);
         } finally {
             RxJavaPlugins.reset();
         }

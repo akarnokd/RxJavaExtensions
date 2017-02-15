@@ -1766,7 +1766,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
 
             Assert.assertEquals(1, count);
 
-            TestHelper.assertError(errors, 0, IOException.class);
+            TestHelper.assertUndeliverable(errors, 0, IOException.class);
         } finally {
             RxJavaPlugins.reset();
         }
@@ -1807,7 +1807,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
 
             Assert.assertEquals(1, count);
 
-            TestHelper.assertError(errors, 0, IOException.class);
+            TestHelper.assertUndeliverable(errors, 0, IOException.class);
         } finally {
             RxJavaPlugins.reset();
         }
@@ -2324,7 +2324,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
 
             Assert.assertEquals(0, count);
 
-            TestHelper.assertError(errors, 0, IOException.class);
+            TestHelper.assertUndeliverable(errors, 0, IOException.class);
         } finally {
             RxJavaPlugins.reset();
         }
@@ -2453,7 +2453,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
 
             Assert.assertEquals(0, count);
 
-            TestHelper.assertError(errors, 0, IOException.class);
+            TestHelper.assertUndeliverable(errors, 0, IOException.class);
         } finally {
             RxJavaPlugins.reset();
         }
@@ -2674,7 +2674,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         try {
             ioError.subscribe();
 
-            TestHelper.assertError(errors, 0, IOException.class);
+            TestHelper.assertUndeliverable(errors, 0, IOException.class);
         } finally {
             RxJavaPlugins.reset();
         }
@@ -2695,7 +2695,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
             .delay(100, TimeUnit.MILLISECONDS)
             .blockingSubscribe();
 
-            TestHelper.assertError(errors, 0, IOException.class);
+            TestHelper.assertUndeliverable(errors, 0, IOException.class);
         } finally {
             RxJavaPlugins.reset();
         }
@@ -2719,7 +2719,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
 
             assertEquals(1, count);
 
-            TestHelper.assertError(errors, 0, IOException.class);
+            TestHelper.assertUndeliverable(errors, 0, IOException.class);
         } finally {
             RxJavaPlugins.reset();
         }
@@ -2740,7 +2740,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
             .test()
             .assertResult();
 
-            TestHelper.assertError(errors, 0, IOException.class);
+            TestHelper.assertUndeliverable(errors, 0, IOException.class);
         } finally {
             RxJavaPlugins.reset();
         }
@@ -2763,7 +2763,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
             .assertFailure(IOException.class);
 
             assertEquals(1, count);
-            TestHelper.assertError(errors, 0, IOException.class);
+            TestHelper.assertUndeliverable(errors, 0, IOException.class);
         } finally {
             RxJavaPlugins.reset();
         }
@@ -2784,7 +2784,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
             .test()
             .assertFailure(IOException.class);
 
-            TestHelper.assertError(errors, 0, IOException.class);
+            TestHelper.assertUndeliverable(errors, 0, IOException.class);
         } finally {
             RxJavaPlugins.reset();
         }

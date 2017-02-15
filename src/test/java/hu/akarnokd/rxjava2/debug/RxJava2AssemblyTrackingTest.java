@@ -26,6 +26,7 @@ import org.junit.Test;
 import io.reactivex.*;
 import io.reactivex.functions.Action;
 import io.reactivex.observers.TestObserver;
+import io.reactivex.parallel.ParallelFlowable;
 import io.reactivex.subscribers.TestSubscriber;
 
 /**
@@ -76,6 +77,10 @@ public class RxJava2AssemblyTrackingTest {
 
     static Completable createCompletable() {
         return Completable.error(new IOException());
+    }
+
+    static ParallelFlowable<Integer> createParallelFlowable() {
+        return Flowable.range(1, 5).concatWith(Flowable.<Integer>error(new IOException())).parallel();
     }
 
     @Test
@@ -199,6 +204,31 @@ public class RxJava2AssemblyTrackingTest {
 
         TestObserver<Void> ts = source.test()
         .assertFailure(IOException.class);
+
+        assertNull(RxJavaAssemblyException.find(ts.errors().get(0)));
+    }
+
+    @Test
+    public void parallelFlowable() {
+        RxJavaAssemblyTracking.enable();
+        try {
+            ParallelFlowable<Integer> source = createParallelFlowable();
+
+            TestSubscriber<Integer> ts = source.sequential().test()
+            .assertFailure(IOException.class, 1, 2, 3, 4, 5);
+
+            String st = RxJavaAssemblyException.find(ts.errors().get(0)).stacktrace();
+
+            assertTrue(st, st.contains("RxJava2AssemblyTrackingTest.createParallelFlowable"));
+
+        } finally {
+            RxJavaAssemblyTracking.disable();
+        }
+
+        ParallelFlowable<Integer> source = createParallelFlowable();
+
+        TestSubscriber<Integer> ts = source.sequential().test()
+        .assertFailure(IOException.class, 1, 2, 3, 4, 5);
 
         assertNull(RxJavaAssemblyException.find(ts.errors().get(0)));
     }

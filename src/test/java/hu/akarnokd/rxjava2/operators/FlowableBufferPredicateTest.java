@@ -377,7 +377,7 @@ public class FlowableBufferPredicateTest {
             .test()
             .assertFailure(IllegalArgumentException.class);
 
-            TestHelper.assertError(errors, 0, IOException.class);
+            TestHelper.assertUndeliverable(errors, 0, IOException.class);
         } finally {
             RxJavaPlugins.reset();
         }

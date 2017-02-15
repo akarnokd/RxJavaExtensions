@@ -24,6 +24,7 @@ import io.reactivex.flowables.ConnectableFlowable;
 import io.reactivex.functions.Function;
 import io.reactivex.internal.fuseable.ScalarCallable;
 import io.reactivex.observables.ConnectableObservable;
+import io.reactivex.parallel.ParallelFlowable;
 import io.reactivex.plugins.RxJavaPlugins;
 
 /**
@@ -128,6 +129,13 @@ public final class RxJavaAssemblyTracking {
                 }
             });
 
+            RxJavaPlugins.setOnParallelAssembly(new Function<ParallelFlowable, ParallelFlowable>() {
+                @Override
+                public ParallelFlowable apply(ParallelFlowable t) throws Exception {
+                    return new ParallelFlowableOnAssembly(t);
+                }
+            });
+
             lock.set(false);
         }
     }
@@ -146,6 +154,8 @@ public final class RxJavaAssemblyTracking {
             RxJavaPlugins.setOnFlowableAssembly(null);
             RxJavaPlugins.setOnConnectableObservableAssembly(null);
             RxJavaPlugins.setOnConnectableFlowableAssembly(null);
+
+            RxJavaPlugins.setOnParallelAssembly(null);
 
             lock.set(false);
         }
