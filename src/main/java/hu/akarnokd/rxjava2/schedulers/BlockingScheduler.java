@@ -46,7 +46,7 @@ import io.reactivex.schedulers.Schedulers;
  *         someApi.methodCall()
  *           .subscribeOn(Schedulers.io())
  *           .observeOn(scheduler)
- *           .subscribe(v -> { /* on the main thread *&#47; });
+ *           .subscribe(v -&gt; { /* on the main thread *&#47; });
  *     });
  * }
  * </code></pre>
