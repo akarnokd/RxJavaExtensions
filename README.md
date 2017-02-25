@@ -888,6 +888,7 @@ A bounded-concurrency `flatMap` implementation taking a scheduler which is used 
 Flowable.range(1, 1000)
 .compose(FlowableTransformers.flatMapAsync(v -> Flowable.range(1, 1000), Schedulers.single()))
 .test()
+.awaitDone(5, TimeUnit.SECONDS)
 .assertValueCount(1_000_000)
 .assertNoErrors()
 .assertComplete();
