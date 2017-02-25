@@ -38,12 +38,12 @@ Maven search:
   - [Custom Schedulers](#custom-schedulers)
   - [Custom operators and transformers](#custom-operators-and-transformers)
     - [valve()](#flowabletransflormersvalve), [orderedMerge()](#flowablesorderedmerge), [bufferWhile()](#flowabletransformersbufferwhile),
-    - [bufferUntil()](#flowabletransformersbufferuntil), [bufferSplit()](#flowabletransformersbuffersplit), [spanout](#flowabletransformersspanout),
+    - [bufferUntil()](#flowabletransformersbufferuntil), [bufferSplit()](#flowabletransformersbuffersplit), [spanout()](#flowabletransformersspanout),
     - [mapFilter()](#flowabletransformersmapfilter), [onBackpressureTimeout()](#flowabletransformersonbackpressuretimeout), [repeat()](#flowablesrepeat),
     - [repeatCallable()](#flowablesrepeatcallable), [every()](#flowabletransformersevery), [intervalBackpressure()](#flowablesintervalbackpressure),
-    - [cacheLast()](#flowabletransformerscachelast), [timeoutLast()](#flowabletransformerstimeoutlasttimeoutlastabsolute), [timeoutLastAbsolute()](#flowabletransformerstimeoutlasttimeoutlastabsolute),
+    - [cacheLast()](#flowabletransformerscachelast), [timeoutLast()](#flowabletransformerstimeoutlast--timeoutlastabsolute), [timeoutLastAbsolute()](#flowabletransformerstimeoutlast--timeoutlastabsolute),
     - [debounceFirst()](#flowabletransformersdebouncefirst), [switchFlatMap()](#flowabletransformersswitchflatmap), [flatMapSync()](#flowabletransformersflatmapsync),
-    - [flatMapAsync()](#flowabletransformersflatmapasync), [switchIfEmpty()](#flowabletransformersswitchifemptyswitchifemptyarray)
+    - [flatMapAsync()](#flowabletransformersflatmapasync), [switchIfEmpty()](#flowabletransformersswitchifempty--switchifemptyarray)
   - [Special Publisher implementations](#special-publisher-implementations)
 
 ## Extra functional interfaces

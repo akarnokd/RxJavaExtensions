@@ -34,7 +34,6 @@ import io.reactivex.schedulers.Schedulers;
  * <p>
  * Use the {@link #execute()} to start waiting for tasks (from other
  * threads) or {@link #execute(Action)} to start with a first action.
- * <p>
  * <pre><code>
  * public static void main(String[] args) {
  *     BlockingScheduler scheduler = new BlockingScheduler();

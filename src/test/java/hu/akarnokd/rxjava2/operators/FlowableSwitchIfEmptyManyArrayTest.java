@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 import org.junit.Test;
 import org.reactivestreams.Publisher;
 
-import io.reactivex.Flowable;
+import io.reactivex.*;
 import io.reactivex.schedulers.Schedulers;
 
 public class FlowableSwitchIfEmptyManyArrayTest {
@@ -66,11 +66,13 @@ public class FlowableSwitchIfEmptyManyArrayTest {
         .assertResult(1, 2, 3, 4, 5);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void normalNonEmptyBackpressured2() {
+        @SuppressWarnings("unchecked")
+        FlowableTransformer<Integer, Integer> t = FlowableTransformers.<Integer>switchIfEmptyArray(new Publisher[] { Flowable.range(10, 5) });
+
         Flowable.range(1, 5)
-        .compose(FlowableTransformers.<Integer>switchIfEmptyArray(new Publisher[] { Flowable.range(10, 5) }))
+        .compose(t)
         .test(0)
         .assertEmpty()
         .requestMore(1)
