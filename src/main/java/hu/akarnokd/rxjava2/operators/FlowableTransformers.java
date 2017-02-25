@@ -825,4 +825,30 @@ public final class FlowableTransformers {
     public static <T, R> FlowableTransformer<T, R> flatMapAsync(Function<? super T, ? extends Publisher<? extends R>> mapper, Scheduler scheduler, int maxConcurrency, int bufferSize, boolean depthFirst) {
         return new FlowableFlatMapAsync<T, R>(null, mapper, maxConcurrency, bufferSize, depthFirst, scheduler);
     }
+
+    /**
+     * If the upstream turns out to be empty, it keeps switching to the alternative sources until
+     * one of them is non-empty or there are no more alternatives remaining.
+     * @param <T> the input and output value type
+     * @param alternatives the array of alternative Publishers.
+     * @return the new FlowableTransformer instance
+     *
+     * @since 0.16.0
+     */
+    public static <T> FlowableTransformer<T, T> switchIfEmptyArray(Publisher<? extends T>... alternatives) {
+        return new FlowableSwitchIfEmptyManyArray<T>(null, alternatives);
+    }
+
+    /**
+     * If the upstream turns out to be empty, it keeps switching to the alternative sources until
+     * one of them is non-empty or there are no more alternatives remaining.
+     * @param <T> the input and output value type
+     * @param alternatives the Iterable of alternative Publishers.
+     * @return the new FlowableTransformer instance
+     *
+     * @since 0.16.0
+     */
+    public static <T> FlowableTransformer<T, T> switchIfEmpty(Iterable<? extends Publisher<? extends T>> alternatives) {
+        return new FlowableSwitchIfEmptyMany<T>(null, alternatives);
+    }
 }

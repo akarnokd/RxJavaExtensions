@@ -830,7 +830,7 @@ Flowable.just(0, 50, 100, 150, 400)
 .assertResult(150);
 ```
 
-### FlowableTransformer.debounceFirst()
+### FlowableTransformers.debounceFirst()
 
 Debounces the upstream by taking an item and dropping subsequent items until the specified amount of time elapses after the last item, after which the process repeats.
 
@@ -843,7 +843,7 @@ Flowable.just(0, 50, 100, 150, 400, 500, 550, 1000)
 .assertResult(0, 400, 1000);
 ```
 
-### FlowableTransformer.switchFlatMap
+### FlowableTransformers.switchFlatMap()
 
 This is a combination of switchMap and a limited flatMap. It merges a maximum number of Publishers at once but if a new inner Publisher gets mapped in and the active count is at max, the oldest active Publisher is cancelled and the new inner Publisher gets flattened as well. Running with `maxActive == 1` is equivalent to the plain `switchMap`.
 
@@ -867,7 +867,7 @@ Flowable.just(100, 300, 500)
 .assertResult("A1", "A2", "B1", "A3", "B2", "C1", B3", "C2", "C3);
 ``` 
 
-### FlowableTransformer.flatMapSync
+### FlowableTransformers.flatMapSync()
 
 A bounded-concurrency `flatMap` implementation optimized for mostly non-trivial, largely synchronous sources in mind and using different tracking method and configurable merging strategy: depth-first consumes each inner source as much as possible before switching to the next; breath-first consumes one element from each source in a round-robin fashion. Overloads allow specifying the concurrency level (32 default), inner-prefetch (`Flowable.bufferSize()` default) and the merge strategy (depth-first default).
 
@@ -880,7 +880,7 @@ Flowable.range(1, 1000)
 .assertComplete();
 ```
 
-### FlowableTransformer.flatMapAsync
+### FlowableTransformers.flatMapAsync()
 
 A bounded-concurrency `flatMap` implementation taking a scheduler which is used for collecting and emitting items from the active sources and freeing up the inner sources to keep producing. It also uses a different tracking method and configurable merging strategy: depth-first consumes each inner source as much as possible before switching to the next; breath-first consumes one element from each source in a round-robin fashion. Overloads allow specifying the concurrency level (32 default), inner-prefetch (`Flowable.bufferSize()` default) and the merge strategy (depth-first default).
 
@@ -894,6 +894,21 @@ Flowable.range(1, 1000)
 .assertComplete();
 ```
 
+### FlowableTransformers.switchIfEmpty() & switchIfEmptyArray()
+
+Switches to the alternatives, one after the other if the main source or the previous alternative turns out to be empty.
+
+```java
+Flowable.empty()
+.compose(FlowableTransformers.switchIfEmpty(Arrays.asList(Flowable.empty(), Flowable.range(1, 5))))
+.test()
+.assertResult(1, 2, 3, 4, 5);
+
+Flowable.empty()
+.compose(FlowableTransformers.switchIfEmptyArray(Flowable.empty(), Flowable.range(1, 5)))
+.test()
+.assertResult(1, 2, 3, 4, 5);
+```
 
 ## Special Publisher implementations
 
