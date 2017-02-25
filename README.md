@@ -37,13 +37,13 @@ Maven search:
   - [FlowableProcessor utils](#flowableprocessor-utils)
   - [Custom Schedulers](#custom-schedulers)
   - [Custom operators and transformers](#custom-operators-and-transformers)
-    - [valve()](#flowabletransflormers-valve), [orderedMerge()](#flowables-orderedmerge), [bufferWhile()](#flowabletransformers-bufferwhile),
-    - [bufferUntil()](#flowabletransformers-bufferuntil), [bufferSplit()](#flowabletransformers-buffersplit), [spanout](#flowabletransformers-spanout),
-    - [mapFilter()](#flowabletransformers-mapfilter), [onBackpressureTimeout()](#flowabletransformers-onbackpressuretimeout), [repeat()](#flowables-repeat),
-    - [repeatCallable()](#flowables-repeatcallable), [every()](#flowabletransformers-every), [intervalBackpressure()](#flowables-intervalbackpressure),
-    - [cacheLast()](#flowabletransformers-cachelast), [timeoutLast()](#flowabletransformers-timeoutlast-timeoutlastabsolute), [timeoutLastAbsolute()](#flowabletransformers-timeoutlast-timeoutlastabsolute),
-    - [debounceFirst()](#flowabletransformers-debouncefirst), [switchFlatMap()](#flowabletransformers-switchflatmap), [flatMapSync()](#flowabletransformers-flatmapsync),
-    - [flatMapAsync()](#flowabletransformers-flatmapasync), [switchIfEmpty()](#flowabletransformers-switchifempty-switchifemptyarray)
+    - [valve()](#flowabletransflormersvalve), [orderedMerge()](#flowablesorderedmerge), [bufferWhile()](#flowabletransformersbufferwhile),
+    - [bufferUntil()](#flowabletransformersbufferuntil), [bufferSplit()](#flowabletransformersbuffersplit), [spanout](#flowabletransformersspanout),
+    - [mapFilter()](#flowabletransformersmapfilter), [onBackpressureTimeout()](#flowabletransformersonbackpressuretimeout), [repeat()](#flowablesrepeat),
+    - [repeatCallable()](#flowablesrepeatcallable), [every()](#flowabletransformersevery), [intervalBackpressure()](#flowablesintervalbackpressure),
+    - [cacheLast()](#flowabletransformerscachelast), [timeoutLast()](#flowabletransformerstimeoutlasttimeoutlastabsolute), [timeoutLastAbsolute()](#flowabletransformerstimeoutlasttimeoutlastabsolute),
+    - [debounceFirst()](#flowabletransformersdebouncefirst), [switchFlatMap()](#flowabletransformersswitchflatmap), [flatMapSync()](#flowabletransformersflatmapsync),
+    - [flatMapAsync()](#flowabletransformersflatmapasync), [switchIfEmpty()](#flowabletransformersswitchifemptyswitchifemptyarray)
   - [Special Publisher implementations](#special-publisher-implementations)
 
 ## Extra functional interfaces
