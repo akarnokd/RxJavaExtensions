@@ -13,7 +13,7 @@ RxJava 2.x implementation of extra sources, operators and components and ports o
 
 ```
 dependencies {
-    compile "com.github.akarnokd:rxjava2-extensions:0.15.2"
+    compile "com.github.akarnokd:rxjava2-extensions:0.16.0"
 }
 ```
 
@@ -866,6 +866,33 @@ Flowable.just(100, 300, 500)
 .awaitDone(5, TimeUnit.SECONDS)
 .assertResult("A1", "A2", "B1", "A3", "B2", "C1", B3", "C2", "C3);
 ``` 
+
+### FlowableTransformer.flatMapSync
+
+A bounded-concurrency `flatMap` implementation optimized for mostly non-trivial, largely synchronous sources in mind and using different tracking method and configurable merging strategy: depth-first consumes each inner source as much as possible before switching to the next; breath-first consumes one element from each source in a round-robin fashion. Overloads allow specifying the concurrency level (32 default), inner-prefetch (`Flowable.bufferSize()` default) and the merge strategy (depth-first default).
+
+```java
+Flowable.range(1, 1000)
+.compose(FlowableTransformers.flatMapSync(v -> Flowable.range(1, 1000)))
+.test()
+.assertValueCount(1_000_000)
+.assertNoErrors()
+.assertComplete();
+```
+
+### FlowableTransformer.flatMapAsync
+
+A bounded-concurrency `flatMap` implementation taking a scheduler which is used for collecting and emitting items from the active sources and freeing up the inner sources to keep producing. It also uses a different tracking method and configurable merging strategy: depth-first consumes each inner source as much as possible before switching to the next; breath-first consumes one element from each source in a round-robin fashion. Overloads allow specifying the concurrency level (32 default), inner-prefetch (`Flowable.bufferSize()` default) and the merge strategy (depth-first default).
+
+```java
+Flowable.range(1, 1000)
+.compose(FlowableTransformers.flatMapAsync(v -> Flowable.range(1, 1000), Schedulers.single()))
+.test()
+.assertValueCount(1_000_000)
+.assertNoErrors()
+.assertComplete();
+```
+
 
 ## Special Publisher implementations
 

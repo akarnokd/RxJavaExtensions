@@ -720,4 +720,109 @@ public final class FlowableTransformers {
         ObjectHelper.verifyPositive(bufferSize, "bufferSize");
         return new FlowableSwitchFlatMap<T, R>(null, mapper, maxActive, bufferSize);
     }
+
+    /**
+     * Maps the upstream values into Publisher and merges at most 32 of them at once,
+     * optimized for mainly synchronous sources.
+     * @param <T> the input value type
+     * @param <R> the result value type
+     * @param mapper the function mapping from a value into a Publisher
+     * @return the new FlowableTransformer instance
+     *
+     * @since 0.16.0
+     */
+    public static <T, R> FlowableTransformer<T, R> flatMapSync(Function<? super T, ? extends Publisher<? extends R>> mapper) {
+        return flatMapSync(mapper, 32, Flowable.bufferSize(), true);
+    }
+
+    /**
+     * Maps the upstream values into Publisher and merges at most maxConcurrency of them at once,
+     * optimized for mainly synchronous sources.
+     * @param <T> the input value type
+     * @param <R> the result value type
+     * @param mapper the function mapping from a value into a Publisher
+     * @param depthFirst if true, the inner sources are drained as much as possible
+     *                   if false, the inner sources are consumed in a round-robin fashion
+     * @return the new FlowableTransformer instance
+     *
+     * @since 0.16.0
+     */
+    public static <T, R> FlowableTransformer<T, R> flatMapSync(Function<? super T, ? extends Publisher<? extends R>> mapper, boolean depthFirst) {
+        return flatMapSync(mapper, 32, Flowable.bufferSize(), depthFirst);
+    }
+
+    /**
+     * Maps the upstream values into Publisher and merges at most maxConcurrency of them at once,
+     * optimized for mainly synchronous sources.
+     * @param <T> the input value type
+     * @param <R> the result value type
+     * @param mapper the function mapping from a value into a Publisher
+     * @param maxConcurrency the maximum number of sources merged at once
+     * @param bufferSize the prefetch on each inner source
+     * @param depthFirst if true, the inner sources are drained as much as possible
+     *                   if false, the inner sources are consumed in a round-robin fashion
+     * @return the new FlowableTransformer instance
+     *
+     * @since 0.16.0
+     */
+    public static <T, R> FlowableTransformer<T, R> flatMapSync(Function<? super T, ? extends Publisher<? extends R>> mapper, int maxConcurrency, int bufferSize, boolean depthFirst) {
+        return new FlowableFlatMapSync<T, R>(null, mapper, maxConcurrency, bufferSize, depthFirst);
+    }
+
+    /**
+     * Maps the upstream values into Publisher and merges at most 32 of them at once,
+     * collects and emits the items on the specified scheduler.
+     * <p>This operator can be considered as a fusion between a flatMapSync
+     * and observeOn.
+     * @param <T> the input value type
+     * @param <R> the output value type
+     * @param mapper the function mapping from a value into a Publisher
+     * @param scheduler the Scheduler to use to collect and emit merged items
+     * @return the new FlowableTransformer instance
+     *
+     * @since 0.16.0
+     */
+    public static <T, R> FlowableTransformer<T, R> flatMapAsync(Function<? super T, ? extends Publisher<? extends R>> mapper, Scheduler scheduler) {
+        return flatMapAsync(mapper, scheduler, 32, Flowable.bufferSize(), true);
+    }
+
+    /**
+     * Maps the upstream values into Publisher and merges at most 32 of them at once,
+     * collects and emits the items on the specified scheduler.
+     * <p>This operator can be considered as a fusion between a flatMapSync
+     * and observeOn.
+     * @param <T> the input value type
+     * @param <R> the output value type
+     * @param mapper the function mapping from a value into a Publisher
+     * @param scheduler the Scheduler to use to collect and emit merged items
+     * @param depthFirst if true, the inner sources are drained as much as possible
+     *                   if false, the inner sources are consumed in a round-robin fashion
+     * @return the new FlowableTransformer instance
+     *
+     * @since 0.16.0
+     */
+    public static <T, R> FlowableTransformer<T, R> flatMapAsync(Function<? super T, ? extends Publisher<? extends R>> mapper, Scheduler scheduler, boolean depthFirst) {
+        return flatMapAsync(mapper, scheduler, 32, Flowable.bufferSize(), depthFirst);
+    }
+
+    /**
+     * Maps the upstream values into Publisher and merges at most 32 of them at once,
+     * collects and emits the items on the specified scheduler.
+     * <p>This operator can be considered as a fusion between a flatMapSync
+     * and observeOn.
+     * @param <T> the input value type
+     * @param <R> the output value type
+     * @param mapper the function mapping from a value into a Publisher
+     * @param scheduler the Scheduler to use to collect and emit merged items
+     * @param maxConcurrency the maximum number of sources merged at once
+     * @param bufferSize the prefetch on each inner source
+     * @param depthFirst if true, the inner sources are drained as much as possible
+     *                   if false, the inner sources are consumed in a round-robin fashion
+     * @return the new FlowableTransformer instance
+     *
+     * @since 0.16.0
+     */
+    public static <T, R> FlowableTransformer<T, R> flatMapAsync(Function<? super T, ? extends Publisher<? extends R>> mapper, Scheduler scheduler, int maxConcurrency, int bufferSize, boolean depthFirst) {
+        return new FlowableFlatMapAsync<T, R>(null, mapper, maxConcurrency, bufferSize, depthFirst, scheduler);
+    }
 }
