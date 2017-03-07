@@ -27,7 +27,6 @@ import io.reactivex.exceptions.*;
 import io.reactivex.functions.*;
 import io.reactivex.internal.disposables.SequentialDisposable;
 import io.reactivex.internal.functions.Functions;
-import io.reactivex.internal.operators.flowable.FlowableSubscribeOn;
 import io.reactivex.internal.subscribers.LambdaSubscriber;
 import io.reactivex.plugins.RxJavaPlugins;
 import io.reactivex.processors.*;
@@ -1718,7 +1717,6 @@ public final class AsyncFlowable {
      * @return the Future representing the entire for-each operation
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Async-Operators#wiki-foreachfuture">RxJava Wiki: forEachFuture()</a>
      */
-    @SuppressWarnings("unchecked")
     public static <T> Future<Object> forEachFuture(
             Publisher<? extends T> source,
             Consumer<? super T> onNext,
@@ -1762,7 +1760,7 @@ public final class AsyncFlowable {
         });
         d.lazySet(ls);
 
-        RxJavaPlugins.onAssembly(new FlowableSubscribeOn<T>((Publisher<T>)source, scheduler, false)).subscribe(ls);
+        Flowable.fromPublisher(source).subscribeOn(scheduler).subscribe(ls);
 
         return f;
     }

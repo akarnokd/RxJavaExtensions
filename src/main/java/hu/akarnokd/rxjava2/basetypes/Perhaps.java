@@ -25,7 +25,6 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.exceptions.Exceptions;
 import io.reactivex.functions.*;
 import io.reactivex.internal.functions.*;
-import io.reactivex.internal.operators.flowable.*;
 import io.reactivex.internal.subscribers.LambdaSubscriber;
 import io.reactivex.internal.util.ExceptionHelper;
 import io.reactivex.plugins.RxJavaPlugins;
@@ -933,7 +932,7 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new Flowable instance
      */
     public final Flowable<T> repeat() {
-        return RxJavaPlugins.onAssembly(new FlowableRepeat<T>(this, Long.MAX_VALUE));
+        return Flowable.fromPublisher(this).repeat();
     }
 
     /**
@@ -942,10 +941,7 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new Flowable instance
      */
     public final Flowable<T> repeat(long times) {
-        if (times < 0L) {
-            throw new IllegalArgumentException("times >= 0 required but it was " + times);
-        }
-        return RxJavaPlugins.onAssembly(new FlowableRepeat<T>(this, times));
+        return Flowable.fromPublisher(this).repeat(times);
     }
 
     /**
@@ -956,8 +952,7 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new Flowable instance
      */
     public final Flowable<T> repeat(BooleanSupplier stop) {
-        ObjectHelper.requireNonNull(stop, "stop is null");
-        return RxJavaPlugins.onAssembly(new FlowableRepeatUntil<T>(this, stop));
+        return Flowable.fromPublisher(this).repeatUntil(stop);
     }
 
     /**
@@ -969,8 +964,7 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new Flowable instance
      */
     public final Flowable<T> repeatWhen(Function<? super Flowable<Object>, ? extends Publisher<?>> handler) {
-        ObjectHelper.requireNonNull(handler, "handler is null");
-        return RxJavaPlugins.onAssembly(new FlowableRepeatWhen<T>(this, handler));
+        return Flowable.fromPublisher(this).repeatWhen(handler);
     }
 
     /**
