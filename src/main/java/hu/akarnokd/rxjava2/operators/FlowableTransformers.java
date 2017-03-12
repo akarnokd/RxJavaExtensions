@@ -851,4 +851,55 @@ public final class FlowableTransformers {
     public static <T> FlowableTransformer<T, T> switchIfEmpty(Iterable<? extends Publisher<? extends T>> alternatives) {
         return new FlowableSwitchIfEmptyMany<T>(null, alternatives);
     }
+
+    /**
+     * Emits elements from the source and then expands them into another layer of Publishers, emitting
+     * those items recursively until all Publishers become empty in a depth-first manner.
+     * @param <T> the value type
+     * @param expander the function that converts an element into a Publisher to be expanded
+     * @return the new FlwoableTransformer instance
+     *
+     * @since 0.16.1
+     */
+    public static <T> FlowableTransformer<T, T> expand(Function<? super T, ? extends Publisher<? extends T>> expander) {
+        return expand(expander, ExpandStrategy.DEPTH_FIRST, Flowable.bufferSize());
+    }
+
+    /**
+     * Emits elements from the source and then expands them into another layer of Publishers, emitting
+     * those items recursively until all Publishers become empty with the specified strategy.
+     * @param <T> the value type
+     * @param expander the function that converts an element into a Publisher to be expanded
+     * @param strategy the expansion strategy; depth-first will recursively expand the first item until there is no
+     *                 more expansion possible, then the second items, and so on;
+     *                 breath-first will first expand the main source, then runs the expaned
+     *                 Publishers in sequence, then the 3rd level, and so on.
+     * @return the new FlwoableTransformer instance
+     *
+     * @since 0.16.1
+     */
+    public static <T> FlowableTransformer<T, T> expand(Function<? super T, ? extends Publisher<? extends T>> expander, ExpandStrategy strategy) {
+        return expand(expander, strategy, Flowable.bufferSize());
+    }
+
+    /**
+     * Emits elements from the source and then expands them into another layer of Publishers, emitting
+     * those items recursively until all Publishers become empty with the specified strategy.
+     * @param <T> the value type
+     * @param expander the function that converts an element into a Publisher to be expanded
+     * @param strategy the expansion strategy; depth-first will recursively expand the first item until there is no
+     *                 more expansion possible, then the second items, and so on;
+     *                 breath-first will first expand the main source, then runs the expaned
+     *                 Publishers in sequence, then the 3rd level, and so on.
+     * @param capacityHint the capacity hint for the breath-first expansion
+     * @return the new FlwoableTransformer instance
+     *
+     * @since 0.16.1
+     */
+    public static <T> FlowableTransformer<T, T> expand(Function<? super T, ? extends Publisher<? extends T>> expander, ExpandStrategy strategy, int capacityHint) {
+        ObjectHelper.requireNonNull(expander, "expander is null");
+        ObjectHelper.requireNonNull(strategy, "strategy is null");
+        ObjectHelper.verifyPositive(capacityHint, "capacityHint");
+        return new FlowableExpand<T>(null, expander, strategy, capacityHint);
+    }
 }
