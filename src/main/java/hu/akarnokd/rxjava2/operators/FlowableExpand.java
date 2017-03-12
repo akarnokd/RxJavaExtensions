@@ -185,6 +185,8 @@ final class FlowableExpand<T> extends Flowable<T> implements FlowableTransformer
 
         final AtomicLong requested;
 
+        final AtomicReference<Object> current;
+
         ArrayDeque<ExpandDepthSubscriber> subscriptionStack;
 
         volatile boolean cancelled;
@@ -192,8 +194,6 @@ final class FlowableExpand<T> extends Flowable<T> implements FlowableTransformer
         Publisher<? extends T> source;
 
         long consumed;
-
-        ExpandDepthSubscriber current;
 
         ExpandDepthSubscription(Subscriber<? super T> actual,
                 Function<? super T, ? extends Publisher<? extends T>> expander,
@@ -204,6 +204,7 @@ final class FlowableExpand<T> extends Flowable<T> implements FlowableTransformer
             this.error = new AtomicThrowable();
             this.active = new AtomicInteger();
             this.requested = new AtomicLong();
+            this.current = new AtomicReference<Object>();
         }
 
         @Override
@@ -214,6 +215,7 @@ final class FlowableExpand<T> extends Flowable<T> implements FlowableTransformer
             }
         }
 
+        @SuppressWarnings("unchecked")
         @Override
         public void cancel() {
             if (!cancelled) {
@@ -228,6 +230,11 @@ final class FlowableExpand<T> extends Flowable<T> implements FlowableTransformer
                     while (!q.isEmpty()) {
                         q.poll().dispose();
                     }
+                }
+
+                Object o = current.getAndSet(this);
+                if (o != this && o != null) {
+                    ((ExpandDepthSubscriber)o).dispose();
                 }
             }
         }
@@ -250,6 +257,21 @@ final class FlowableExpand<T> extends Flowable<T> implements FlowableTransformer
             }
         }
 
+        boolean setCurrent(ExpandDepthSubscriber inner) {
+            for (;;) {
+                Object o = current.get();
+                if (o == this) {
+                    if (inner != null) {
+                        inner.dispose();
+                    }
+                    return false;
+                }
+                if (current.compareAndSet(o, inner)) {
+                    return true;
+                }
+            }
+        }
+
         void drainQueue() {
             if (getAndIncrement() != 0) {
                 return;
@@ -261,13 +283,14 @@ final class FlowableExpand<T> extends Flowable<T> implements FlowableTransformer
             AtomicInteger n = active;
 
             for (;;) {
-                if (cancelled) {
+                Object o = current.get();
+                if (cancelled || o == this) {
                     source = null;
-                    current = null;
                     return;
                 }
 
-                ExpandDepthSubscriber curr = current;
+                @SuppressWarnings("unchecked")
+                ExpandDepthSubscriber curr = (ExpandDepthSubscriber)o;
                 Publisher<? extends T> p = source;
 
                 if (curr == null && p != null) {
@@ -276,9 +299,11 @@ final class FlowableExpand<T> extends Flowable<T> implements FlowableTransformer
 
                     ExpandDepthSubscriber eds = new ExpandDepthSubscriber();
                     curr = eds;
-                    current = eds;
-
-                    p.subscribe(eds);
+                    if (setCurrent(eds)) {
+                        p.subscribe(eds);
+                    } else {
+                        return;
+                    }
                 } else {
 
                     boolean currentDone = curr.done;
@@ -306,10 +331,12 @@ final class FlowableExpand<T> extends Flowable<T> implements FlowableTransformer
                             if (push(curr)) {
                                 n.getAndIncrement();
                                 curr = new ExpandDepthSubscriber();
-                                current = curr;
-
-                                p.subscribe(curr);
-                                newSource = true;
+                                if (setCurrent(curr)) {
+                                    p.subscribe(curr);
+                                    newSource = true;
+                                } else {
+                                    return;
+                                }
                             }
                         }
                     }
@@ -326,9 +353,12 @@ final class FlowableExpand<T> extends Flowable<T> implements FlowableTransformer
                                 return;
                             }
                             curr = pop();
-                            current = curr;
-                            curr.requestOne();
-                            continue;
+                            if (setCurrent(curr)) {
+                                curr.requestOne();
+                                continue;
+                            } else {
+                                return;
+                            }
                         }
                     }
                 }

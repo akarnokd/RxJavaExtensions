@@ -18,11 +18,13 @@ package hu.akarnokd.rxjava2.operators;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.*;
 import org.reactivestreams.*;
 
+import hu.akarnokd.rxjava2.test.TestHelper;
 import io.reactivex.*;
 import io.reactivex.functions.Function;
 import io.reactivex.internal.functions.Functions;
@@ -389,5 +391,122 @@ public class FlowableExpandTest {
         Assert.assertFalse(pp.hasSubscribers());
 
         ts.assertResult(1);
+    }
+
+    @Test
+    public void depthCancelRace() {
+        for (int i = 0; i < 1000; i++) {
+            final TestSubscriber<Integer> ts = Flowable.just(0)
+            .compose(FlowableTransformers.<Integer>expand(countDown, ExpandStrategy.DEPTH_FIRST))
+            .test(0);
+
+            Runnable r1 = new Runnable() {
+                @Override
+                public void run() {
+                    ts.request(1);
+                }
+            };
+            Runnable r2 = new Runnable() {
+                @Override
+                public void run() {
+                    ts.cancel();
+                }
+            };
+
+            TestHelper.race(r1, r2, Schedulers.single());
+        }
+    }
+
+    @Test
+    public void depthEmitCancelRace() {
+        for (int i = 0; i < 1000; i++) {
+
+            final PublishProcessor<Integer> pp = PublishProcessor.create();
+
+            final TestSubscriber<Integer> ts = Flowable.just(0)
+            .compose(FlowableTransformers.<Integer>expand(Functions.justFunction(pp), ExpandStrategy.DEPTH_FIRST))
+            .test(1);
+
+            Runnable r1 = new Runnable() {
+                @Override
+                public void run() {
+                    pp.onNext(1);
+                }
+            };
+            Runnable r2 = new Runnable() {
+                @Override
+                public void run() {
+                    ts.cancel();
+                }
+            };
+
+            TestHelper.race(r1, r2, Schedulers.single());
+        }
+    }
+
+    @Test
+    public void depthCompleteCancelRace() {
+        for (int i = 0; i < 1000; i++) {
+
+            final PublishProcessor<Integer> pp = PublishProcessor.create();
+
+            final TestSubscriber<Integer> ts = Flowable.just(0)
+            .compose(FlowableTransformers.<Integer>expand(Functions.justFunction(pp), ExpandStrategy.DEPTH_FIRST))
+            .test(1);
+
+            Runnable r1 = new Runnable() {
+                @Override
+                public void run() {
+                    pp.onComplete();
+                }
+            };
+            Runnable r2 = new Runnable() {
+                @Override
+                public void run() {
+                    ts.cancel();
+                }
+            };
+
+            TestHelper.race(r1, r2, Schedulers.single());
+        }
+    }
+
+    @Test
+    public void depthCancelRace2() throws Exception {
+        for (int i = 0; i < 1000; i++) {
+
+            final PublishProcessor<Integer> pp = PublishProcessor.create();
+
+            Flowable<Integer> source = Flowable.just(0)
+            .compose(FlowableTransformers.<Integer>expand(Functions.justFunction(pp), ExpandStrategy.DEPTH_FIRST));
+
+            final CountDownLatch cdl = new CountDownLatch(1);
+
+            TestSubscriber<Integer> ts = new TestSubscriber<Integer>() {
+                final AtomicInteger sync = new AtomicInteger(2);
+
+                @Override
+                public void onNext(Integer t) {
+                    super.onNext(t);
+                    Schedulers.single().scheduleDirect(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (sync.decrementAndGet() != 0) {
+                                while (sync.get() != 0) { }
+                            }
+                            cancel();
+                            cdl.countDown();
+                        }
+                    });
+                    if (sync.decrementAndGet() != 0) {
+                        while (sync.get() != 0) { }
+                    }
+                }
+            };
+
+            source.subscribe(ts);
+
+            Assert.assertTrue(cdl.await(5, TimeUnit.SECONDS));
+        }
     }
 }
