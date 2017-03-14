@@ -130,6 +130,7 @@ test {
     testLogging  {
         events "started", "failed" // "skipped", "passed"
     //    showStandardStreams = true
+      exceptionFormat="full"
     }
 }
 
