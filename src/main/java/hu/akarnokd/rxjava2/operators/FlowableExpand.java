@@ -353,7 +353,7 @@ final class FlowableExpand<T> extends Flowable<T> implements FlowableTransformer
                                 return;
                             }
                             curr = pop();
-                            if (setCurrent(curr)) {
+                            if (curr != null && setCurrent(curr)) {
                                 curr.requestOne();
                                 continue;
                             } else {
