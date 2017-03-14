@@ -961,7 +961,7 @@ Flowable.just(new File("."))
 // ~/git/RxJava2Extensions/src/test/java
 ```
 
-Depth-first example:
+Breath-first example:
 
 ```java
 Flowable.just(new File("."))
