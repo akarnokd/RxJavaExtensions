@@ -13,7 +13,7 @@ RxJava 2.x implementation of extra sources, operators and components and ports o
 
 ```
 dependencies {
-    compile "com.github.akarnokd:rxjava2-extensions:0.16.1"
+    compile "com.github.akarnokd:rxjava2-extensions:0.16.2"
 }
 ```
 
@@ -44,7 +44,7 @@ Maven search:
     - [cacheLast()](#flowabletransformerscachelast), [timeoutLast()](#flowabletransformerstimeoutlast--timeoutlastabsolute), [timeoutLastAbsolute()](#flowabletransformerstimeoutlast--timeoutlastabsolute),
     - [debounceFirst()](#flowabletransformersdebouncefirst), [switchFlatMap()](#flowabletransformersswitchflatmap), [flatMapSync()](#flowabletransformersflatmapsync),
     - [flatMapAsync()](#flowabletransformersflatmapasync), [switchIfEmpty()](#flowabletransformersswitchifempty--switchifemptyarray),
-    - [expand()](#flowabletransformersexpand)
+    - [expand()](#flowabletransformersexpand), [mapAsync()](#flowabletransformersmapasync), [filterAsync()](#flowabletransformerfilterAsync)
   - [Special Publisher implementations](#special-publisher-implementations)
 
 ## Extra functional interfaces
@@ -999,6 +999,48 @@ Flowable.just(new File("."))
 // ~/git/RxJava2Extensions/src/main/java/hu/akarnokd/rxjava2/operators/FlowableExpand.java
 // ~/git/RxJava2Extensions/src/main/java/hu/akarnokd/rxjava2/operators/FlowableTransformers.java
 ```
+
+### FlowableTransformers.mapAsync()
+
+This is an "asynchronous" version of the regular `map()` operator where an upstream value is mapped to a `Publisher` which
+is expected to emit a single value to be the result itself or through a combiner function become the result. Only
+one such `Publisher` is executed at once and the source order is kept. If the `Publisher` is empty, no value is emitted
+and the sequence continues with the next upstream value. If the `Publisher` has more than one element, only the first
+element is considered and the inner sequence gets cancelled after that first element.
+
+```java
+Flowable.range(1, 5)
+.compose(FlowableTransformers.mapAsync(v -> Flowable.just(v + 1).delay(1, TimeUnit.SECONDS)))
+.test()
+.awaitDone(10, TimeUnit.SECONDS)
+.assertResult(2, 3, 4, 5, 6);
+```
+
+Example when using a combiner function to combine the original and the generated values:
+
+```java
+Flowable.range(1, 5)
+.compose(FlowableTransformers.mapAsync(v -> Flowable.just(v + 1).delay(1, TimeUnit.SECONDS)), (v, w) -> v + "-" + w)
+.test()
+.awaitDone(10, TimeUnit.SECONDS)
+.assertResult("1-2", "2-3", "3-4", "4-5", "5-6");
+```
+
+### FlowableTransformers.filterAsync()
+
+This is an "asynchronous" version of the regular `filter()` operator where an upstream value is mapped to a `Publisher`
+which is expected to emit a single `true` or `false` that indicates the original value should go through. An empty `Publisher`
+is considered to be a `false` response. If the `Publisher` has more than one element, only the first
+element is considered and the inner sequence gets cancelled after that first element.
+
+```java
+Flowable.range(1, 10)
+.compose(FlowableTransformers.filterAsync(v -> Flowable.just(v).delay(1, TimeUnit.SECONDS).filter(v % 2 == 0))
+.test()
+.awaitDone(10, TimeUnit.SECONDS)
+.assertResult(2, 4, 6, 8, 10);
+```
+
 
 ## Special Publisher implementations
 

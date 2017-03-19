@@ -21,6 +21,7 @@ import java.util.concurrent.*;
 
 import org.reactivestreams.Publisher;
 
+import hu.akarnokd.rxjava2.util.BiFunctionSecondIdentity;
 import io.reactivex.*;
 import io.reactivex.annotations.*;
 import io.reactivex.functions.*;
@@ -901,5 +902,90 @@ public final class FlowableTransformers {
         ObjectHelper.requireNonNull(strategy, "strategy is null");
         ObjectHelper.verifyPositive(capacityHint, "capacityHint");
         return new FlowableExpand<T>(null, expander, strategy, capacityHint);
+    }
+
+    /**
+     * Maps each upstream value into a single value provided by a generated Publisher for that
+     * input value to be emitted to downstream.
+     * <p>Only the first item emitted by the inner Publisher's are considered. If
+     * the inner Publisher is empty, no resulting item is generated for that input value.
+     * <p>The inner Publishers are consumed in order and one at a time.
+     * @param <T> the input value type
+     * @param <R> the result value type
+     * @param mapper the function that receives the upstream value and returns a Publisher
+     * that should emit a single value to be emitted.
+     * @return the new FlowableTransformer instance
+     * @since 0.16.2
+     */
+    public static <T, R> FlowableTransformer<T, R> mapAsync(Function<? super T, ? extends Publisher<? extends R>> mapper) {
+        return mapAsync(mapper, BiFunctionSecondIdentity.<T, R>instance(), Flowable.bufferSize());
+    }
+
+    /**
+     * Maps each upstream value into a single value provided by a generated Publisher for that
+     * input value to be emitted to downstream.
+     * <p>Only the first item emitted by the inner Publisher's are considered. If
+     * the inner Publisher is empty, no resulting item is generated for that input value.
+     * <p>The inner Publishers are consumed in order and one at a time.
+     * @param <T> the input value type
+     * @param <R> the result value type
+     * @param mapper the function that receives the upstream value and returns a Publisher
+     * @param bufferSize the internal buffer size and prefetch amount to buffer items from
+     * upstream until their turn comes up
+     * that should emit a single value to be emitted.
+     * @return the new FlowableTransformer instance
+     * @since 0.16.2
+     */
+    public static <T, R> FlowableTransformer<T, R> mapAsync(Function<? super T, ? extends Publisher<? extends R>> mapper, int bufferSize) {
+        return mapAsync(mapper, BiFunctionSecondIdentity.<T, R>instance(), bufferSize);
+    }
+
+    /**
+     * Maps each upstream value into a single value provided by a generated Publisher for that
+     * input value and combines the original and generated single value into a final result item
+     * to be emitted to downstream.
+     * <p>Only the first item emitted by the inner Publisher's are considered. If
+     * the inner Publisher is empty, no resulting item is generated for that input value.
+     * <p>The inner Publishers are consumed in order and one at a time.
+     * @param <T> the input value type
+     * @param <U> the intermediate value type
+     * @param <R> the result value type
+     * @param mapper the function that receives the upstream value and returns a Publisher
+     * that should emit a single value to be emitted.
+     * @param combiner the bi-function that receives the original upstream value and the
+     * single value emitted by the Publisher and returns a result value to be emitted to
+     * downstream.
+     * @return the new FlowableTransformer instance
+     * @since 0.16.2
+     */
+    public static <T, U, R> FlowableTransformer<T, R> mapAsync(Function<? super T, ? extends Publisher<? extends U>> mapper, BiFunction<? super T, ? super U, ? extends R> combiner) {
+        return mapAsync(mapper, combiner, Flowable.bufferSize());
+    }
+
+    /**
+     * Maps each upstream value into a single value provided by a generated Publisher for that
+     * input value and combines the original and generated single value into a final result item
+     * to be emitted to downstream.
+     * <p>Only the first item emitted by the inner Publisher's are considered. If
+     * the inner Publisher is empty, no resulting item is generated for that input value.
+     * <p>The inner Publishers are consumed in order and one at a time.
+     * @param <T> the input value type
+     * @param <U> the intermediate value type
+     * @param <R> the result value type
+     * @param mapper the function that receives the upstream value and returns a Publisher
+     * that should emit a single value to be emitted.
+     * @param bufferSize the internal buffer size and prefetch amount to buffer items from
+     * upstream until their turn comes up
+     * @param combiner the bi-function that receives the original upstream value and the
+     * single value emitted by the Publisher and returns a result value to be emitted to
+     * downstream.
+     * @return the new FlowableTransformer instance
+     * @since 0.16.2
+     */
+    public static <T, U, R> FlowableTransformer<T, R> mapAsync(Function<? super T, ? extends Publisher<? extends U>> mapper, BiFunction<? super T, ? super U, ? extends R> combiner, int bufferSize) {
+        ObjectHelper.requireNonNull("mapper", "mapper is null");
+        ObjectHelper.requireNonNull("combiner", "combiner is null");
+        ObjectHelper.verifyPositive(bufferSize, "bufferSize");
+        return new FlowableMapAsync<T, U, R>(null, mapper, combiner, bufferSize);
     }
 }
