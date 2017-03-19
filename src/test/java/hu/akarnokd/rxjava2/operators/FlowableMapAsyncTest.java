@@ -364,7 +364,6 @@ public class FlowableMapAsyncTest {
         ts.assertResult("2");
     }
 
-
     @Test
     public void take1CancelBackpressured() {
         TestSubscriber<Object> ts = new TestSubscriber<Object>(1) {

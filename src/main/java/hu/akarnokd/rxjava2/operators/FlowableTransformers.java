@@ -974,11 +974,11 @@ public final class FlowableTransformers {
      * @param <R> the result value type
      * @param mapper the function that receives the upstream value and returns a Publisher
      * that should emit a single value to be emitted.
-     * @param bufferSize the internal buffer size and prefetch amount to buffer items from
-     * upstream until their turn comes up
      * @param combiner the bi-function that receives the original upstream value and the
      * single value emitted by the Publisher and returns a result value to be emitted to
      * downstream.
+     * @param bufferSize the internal buffer size and prefetch amount to buffer items from
+     * upstream until their turn comes up
      * @return the new FlowableTransformer instance
      * @since 0.16.2
      */
@@ -987,5 +987,41 @@ public final class FlowableTransformers {
         ObjectHelper.requireNonNull("combiner", "combiner is null");
         ObjectHelper.verifyPositive(bufferSize, "bufferSize");
         return new FlowableMapAsync<T, U, R>(null, mapper, combiner, bufferSize);
+    }
+
+    /**
+     * Maps each upstream value into a single {@code true} or {@code false} value provided by a generated Publisher for that
+     * input value and emits the input value if the inner Publisher returned {@code true}.
+     * <p>Only the first item emitted by the inner Publisher's are considered. If
+     * the inner Publisher is empty, no resulting item is generated for that input value.
+     * <p>The inner Publishers are consumed in order and one at a time.
+     * @param <T> the input and output value type
+     * @param asyncPredicate the function that receives the upstream value and returns
+     * a Publisher that should emit a single truee to indicate the original value should pass.
+     * @return the new FlowableTransformer instance
+     * @since 0.16.2
+     */
+    public static <T> FlowableTransformer<T, T> filterAsync(Function<? super T, ? extends Publisher<Boolean>> asyncPredicate) {
+        return filterAsync(asyncPredicate, Flowable.bufferSize());
+    }
+
+    /**
+     * Maps each upstream value into a single {@code true} or {@code false} value provided by a generated Publisher for that
+     * input value and emits the input value if the inner Publisher returned {@code true}.
+     * <p>Only the first item emitted by the inner Publisher's are considered. If
+     * the inner Publisher is empty, no resulting item is generated for that input value.
+     * <p>The inner Publishers are consumed in order and one at a time.
+     * @param <T> the input and output value type
+     * @param asyncPredicate the function that receives the upstream value and returns
+     * a Publisher that should emit a single truee to indicate the original value should pass.
+     * @param bufferSize the internal buffer size and prefetch amount to buffer items from
+     * upstream until their turn comes up
+     * @return the new FlowableTransformer instance
+     * @since 0.16.2
+     */
+    public static <T> FlowableTransformer<T, T> filterAsync(Function<? super T, ? extends Publisher<Boolean>> asyncPredicate, int bufferSize) {
+        ObjectHelper.requireNonNull("combiner", "combiner is null");
+        ObjectHelper.verifyPositive(bufferSize, "bufferSize");
+        return new FlowableFilterAsync<T>(null, asyncPredicate, bufferSize);
     }
 }
