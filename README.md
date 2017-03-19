@@ -1045,7 +1045,7 @@ Flowable.range(1, 10)
 .assertResult(2, 4, 6, 8, 10);
 ```
 
-## Custom operators and transformers
+## Custom parallel operators and transformers
 
 ### ParallelTransformers.sumX()
 
