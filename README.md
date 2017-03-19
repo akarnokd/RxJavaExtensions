@@ -1039,7 +1039,7 @@ element is considered and the inner sequence gets cancelled after that first ele
 Flowable.range(1, 10)
 .compose(FlowableTransformers.filterAsync(v -> Flowable.just(v).delay(1, TimeUnit.SECONDS).filter(v % 2 == 0))
 .test()
-.awaitDone(10, TimeUnit.SECONDS)
+.awaitDone(15, TimeUnit.SECONDS)
 .assertResult(2, 4, 6, 8, 10);
 ```
 
