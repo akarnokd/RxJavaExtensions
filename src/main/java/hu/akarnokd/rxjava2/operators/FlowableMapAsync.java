@@ -38,7 +38,7 @@ import io.reactivex.plugins.RxJavaPlugins;
  * @param <T> the input value type
  * @param <U> the intermediate value type
  * @param <R> the result value type
- * 
+ *
  * @since 0.16.2
  */
 final class FlowableMapAsync<T, U, R> extends Flowable<R> implements FlowableTransformer<T, R> {
@@ -170,10 +170,13 @@ final class FlowableMapAsync<T, U, R> extends Flowable<R> implements FlowableTra
 
         @Override
         public void cancel() {
-            upstream.cancel();
-            cancelInner();
-            if (wip.getAndIncrement() == 0) {
-                clear();
+            if (!cancelled) {
+                cancelled = true;
+                upstream.cancel();
+                cancelInner();
+                if (wip.getAndIncrement() == 0) {
+                    clear();
+                }
             }
         }
 
