@@ -1010,7 +1010,8 @@ element is considered and the inner sequence gets cancelled after that first ele
 
 ```java
 Flowable.range(1, 5)
-.compose(FlowableTransformers.mapAsync(v -> Flowable.just(v + 1).delay(1, TimeUnit.SECONDS)))
+.compose(FlowableTransformers.mapAsync(v -> 
+    Flowable.just(v + 1).delay(1, TimeUnit.SECONDS)))
 .test()
 .awaitDone(10, TimeUnit.SECONDS)
 .assertResult(2, 3, 4, 5, 6);
@@ -1020,7 +1021,8 @@ Example when using a combiner function to combine the original and the generated
 
 ```java
 Flowable.range(1, 5)
-.compose(FlowableTransformers.mapAsync(v -> Flowable.just(v + 1).delay(1, TimeUnit.SECONDS)), (v, w) -> v + "-" + w)
+.compose(FlowableTransformers.mapAsync(v -> 
+    Flowable.just(v + 1).delay(1, TimeUnit.SECONDS)), (v, w) -> v + "-" + w)
 .test()
 .awaitDone(10, TimeUnit.SECONDS)
 .assertResult("1-2", "2-3", "3-4", "4-5", "5-6");
