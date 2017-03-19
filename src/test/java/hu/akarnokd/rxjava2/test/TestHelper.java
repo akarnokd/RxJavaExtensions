@@ -40,6 +40,7 @@ import io.reactivex.internal.operators.single.SingleToFlowable;
 import io.reactivex.internal.subscriptions.BooleanSubscription;
 import io.reactivex.internal.util.ExceptionHelper;
 import io.reactivex.observers.*;
+import io.reactivex.parallel.ParallelFlowable;
 import io.reactivex.plugins.RxJavaPlugins;
 import io.reactivex.processors.PublishProcessor;
 import io.reactivex.subjects.Subject;
@@ -1713,5 +1714,21 @@ public enum TestHelper {
                 assertEquals(mode, f.get(ts));
             }
         };
+    }
+
+    public static <T> void checkInvalidParallelSubscribers(ParallelFlowable<T> source) {
+        int n = source.parallelism();
+
+        @SuppressWarnings("unchecked")
+        TestSubscriber<Object>[] tss = new TestSubscriber[n + 1];
+        for (int i = 0; i <= n; i++) {
+            tss[i] = new TestSubscriber<Object>().withTag("" + i);
+        }
+
+        source.subscribe(tss);
+
+        for (int i = 0; i <= n; i++) {
+            tss[i].assertFailure(IllegalArgumentException.class);
+        }
     }
 }

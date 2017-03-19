@@ -45,6 +45,8 @@ Maven search:
     - [debounceFirst()](#flowabletransformersdebouncefirst), [switchFlatMap()](#flowabletransformersswitchflatmap), [flatMapSync()](#flowabletransformersflatmapsync),
     - [flatMapAsync()](#flowabletransformersflatmapasync), [switchIfEmpty()](#flowabletransformersswitchifempty--switchifemptyarray),
     - [expand()](#flowabletransformersexpand), [mapAsync()](#flowabletransformersmapasync), [filterAsync()](#flowabletransformerfilterasync)
+  - [Custom parallel operators and transformers](#custom-parallel-operators-and-transformers)
+    - [sumX()](#paralleltransformerssumx)
   - [Special Publisher implementations](#special-publisher-implementations)
 
 ## Extra functional interfaces
@@ -1043,6 +1045,34 @@ Flowable.range(1, 10)
 .assertResult(2, 4, 6, 8, 10);
 ```
 
+## Custom operators and transformers
+
+### ParallelTransformers.sumX()
+
+Sums the numerical values on each rail as integer, long or double.
+
+```java
+Flowable.range(1, 5)
+.parallel(1)
+.compose(ParallelTransformers.<Integer>sumInteger())
+.sequential()
+.test()
+.assertResult(15);
+
+Flowable.range(1, 5)
+.parallel(1)
+.compose(ParallelTransformers.<Integer>sumLong())
+.sequential()
+.test()
+.assertResult(15L);
+
+Flowable.range(1, 5)
+.parallel(1)
+.compose(ParallelTransformers.<Integer>sumDouble())
+.sequential()
+.test()
+.assertResult(15d);
+```
 
 ## Special Publisher implementations
 
