@@ -18,11 +18,12 @@ package hu.akarnokd.rxjava2.parallel;
 
 import java.io.IOException;
 
-import org.junit.Test;
+import org.junit.*;
 
 import hu.akarnokd.rxjava2.test.TestHelper;
 import io.reactivex.Flowable;
-import io.reactivex.functions.Function;
+import io.reactivex.functions.*;
+import io.reactivex.schedulers.Schedulers;
 
 public class ParallelSumTest {
 
@@ -143,4 +144,25 @@ public class ParallelSumTest {
                 .compose(ParallelTransformers.<Integer>sumDouble()));
     }
 
+    @Test
+    public void sumALot() {
+        Long[] array = new Long[1000 * 1000];
+        for (int i = 0; i < array.length; i++) {
+            array[i] = (long)i;
+        }
+
+        long n = Flowable.fromArray(array)
+        .parallel()
+        .runOn(Schedulers.computation())
+        .compose(ParallelTransformers.<Long>sumLong())
+        .reduce(new BiFunction<Long, Long, Long>() {
+            @Override
+            public Long apply(Long a, Long b) throws Exception {
+                return a + b;
+            }
+        })
+        .blockingLast();
+
+        Assert.assertEquals(999999L * 500000L, n);
+    }
 }
