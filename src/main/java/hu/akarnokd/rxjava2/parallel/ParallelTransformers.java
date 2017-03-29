@@ -16,6 +16,8 @@
 
 package hu.akarnokd.rxjava2.parallel;
 
+import io.reactivex.parallel.ParallelTransformer;
+
 /**
  * Transformers for RxJava 2 ParallelFlowable sequences.
  * @since 0.16.3

@@ -21,6 +21,7 @@ import org.reactivestreams.*;
 import io.reactivex.FlowableSubscriber;
 import io.reactivex.internal.subscriptions.*;
 import io.reactivex.parallel.ParallelFlowable;
+import io.reactivex.parallel.ParallelTransformer;
 
 /**
  * Sums numbers as longs on each parallel rail, or empty if the rail doesn't produce any data.
@@ -35,7 +36,7 @@ final class ParallelSumDouble<T extends Number> extends ParallelFlowable<Double>
     }
 
     @Override
-    public ParallelFlowable<Double> apply(ParallelFlowable<T> t) throws Exception {
+    public ParallelFlowable<Double> apply(ParallelFlowable<T> t) {
         return new ParallelSumDouble<T>(t);
     }
 
