@@ -495,4 +495,36 @@ public class MulticastProcessorTest {
 
         mp.test().assertFailure(IOException.class);
     }
+
+    @Test
+    public void lockstep() {
+        MulticastProcessor<Integer> mp = MulticastProcessor.create();
+
+        TestSubscriber<Integer> ts1 = mp.test();
+        mp.start();
+
+        mp.onNext(1);
+        mp.onNext(2);
+
+        ts1.assertValues(1, 2);
+
+        TestSubscriber<Integer> ts2 = mp.test(0);
+
+        ts2.assertEmpty();
+
+        mp.onNext(3);
+
+        ts1.assertValues(1, 2);
+        ts2.assertEmpty();
+
+        mp.onComplete();
+
+        ts1.assertValues(1, 2);
+        ts2.assertEmpty();
+
+        ts2.request(1);
+
+        ts1.assertResult(1, 2, 3);
+        ts2.assertResult(3);
+    }
 }

@@ -57,8 +57,6 @@ public final class MulticastProcessor<T> extends FlowableProcessor<T> {
 
     int consumed;
 
-    long emitted;
-
     int fusionMode;
 
     @SuppressWarnings("rawtypes")
@@ -360,7 +358,6 @@ public final class MulticastProcessor<T> extends FlowableProcessor<T> {
         AtomicReference<MulticastSubscription<T>[]> subs = subscribers;
         int c = consumed;
         int lim = limit;
-        long e = emitted;
         SimpleQueue<T> q = queue;
         int fm = fusionMode;
 
@@ -368,19 +365,23 @@ public final class MulticastProcessor<T> extends FlowableProcessor<T> {
         for (;;) {
 
             MulticastSubscription<T>[] as = subs.get();
+            int n = as.length;
 
-            long r = Long.MAX_VALUE;
+            if (n != 0) {
+                long r = -1L;
 
-            for (MulticastSubscription<T> a : as) {
-                long ra = a.get();
-                if (ra >= 0L) {
-                    r = Math.min(r, ra);
+                for (MulticastSubscription<T> a : as) {
+                    long ra = a.get();
+                    if (ra >= 0L) {
+                        if (r == -1L) {
+                            r = ra - a.emitted;
+                        } else {
+                            r = Math.min(r, ra - a.emitted);
+                        }
+                    }
                 }
-            }
 
-            if (as.length != 0) {
-
-                while (e != r) {
+                while (r > 0L) {
                     MulticastSubscription<T>[] bs = subs.get();
 
                     if (bs == TERMINATED) {
@@ -430,7 +431,7 @@ public final class MulticastProcessor<T> extends FlowableProcessor<T> {
                         inner.onNext(v);
                     }
 
-                    e++;
+                    r--;
 
                     if (fm != QueueSubscription.SYNC) {
                         if (++c == lim) {
@@ -440,7 +441,7 @@ public final class MulticastProcessor<T> extends FlowableProcessor<T> {
                     }
                 }
 
-                if (e == r) {
+                if (r == 0) {
                     MulticastSubscription<T>[] bs = subs.get();
 
                     if (bs == TERMINATED) {
@@ -471,7 +472,6 @@ public final class MulticastProcessor<T> extends FlowableProcessor<T> {
             int w = wip.get();
             if (w == missed) {
                 consumed = c;
-                emitted = e;
                 missed = wip.addAndGet(-missed);
                 if (missed == 0) {
                     break;
@@ -489,6 +489,8 @@ public final class MulticastProcessor<T> extends FlowableProcessor<T> {
         final Subscriber<? super T> actual;
 
         final MulticastProcessor<T> parent;
+
+        long emitted;
 
         MulticastSubscription(Subscriber<? super T> actual, MulticastProcessor<T> parent) {
             this.actual = actual;
@@ -524,6 +526,7 @@ public final class MulticastProcessor<T> extends FlowableProcessor<T> {
 
         void onNext(T t) {
             if (get() != Long.MIN_VALUE) {
+                emitted++;
                 actual.onNext(t);
             }
         }
