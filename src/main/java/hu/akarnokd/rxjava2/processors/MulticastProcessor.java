@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
 
-import io.reactivex.exceptions.MissingBackpressureException;
+import io.reactivex.exceptions.*;
 import io.reactivex.internal.fuseable.*;
 import io.reactivex.internal.queue.*;
 import io.reactivex.internal.subscriptions.*;
@@ -52,10 +52,12 @@ public final class MulticastProcessor<T> extends FlowableProcessor<T> {
 
     volatile SimpleQueue<T> queue;
 
-    boolean done;
-    Throwable error;
+    volatile boolean done;
+    volatile Throwable error;
 
     int consumed;
+
+    long emitted;
 
     int fusionMode;
 
@@ -68,17 +70,47 @@ public final class MulticastProcessor<T> extends FlowableProcessor<T> {
     /**
      * Constructs a fresh instance with the default Flowable.bufferSize() prefetch
      * amount and no refCount-behavior.
+     * @param <T> the input and output value type
+     * @return the new MulticastProcessor instance
      */
-    public MulticastProcessor() {
-        this(bufferSize(), false);
+    public static <T> MulticastProcessor<T> create() {
+        return new MulticastProcessor<T>(bufferSize(), false);
+    }
+
+
+    /**
+     * Constructs a fresh instance with the default Flowable.bufferSize() prefetch
+     * amount and no refCount-behavior.
+     * @param <T> the input and output value type
+     * @param refCount if true and if all Subscribers have unsubscribed, the upstream
+     * is cancelled
+     * @return the new MulticastProcessor instance
+     */
+    public static <T> MulticastProcessor<T> create(boolean refCount) {
+        return new MulticastProcessor<T>(bufferSize(), refCount);
     }
 
     /**
      * Constructs a fresh instance with the given prefetch amount and no refCount behavior.
      * @param bufferSize the prefetch amount
+     * @param <T> the input and output value type
+     * @return the new MulticastProcessor instance
      */
-    public MulticastProcessor(int bufferSize) {
-        this(bufferSize, false);
+    public static <T> MulticastProcessor<T> create(int bufferSize) {
+        return new MulticastProcessor<T>(bufferSize, false);
+    }
+
+    /**
+     * Constructs a fres instance with the given prefetch amount and the optional
+     * refCount-behavior.
+     * @param bufferSize the prefech amount
+     * @param refCount if true and if all Subscribers have unsubscribed, the upstream
+     * is cancelled
+     * @param <T> the input and output value type
+     * @return the new MulticastProcessor instance
+     */
+    public static <T> MulticastProcessor<T> create(int bufferSize, boolean refCount) {
+        return new MulticastProcessor<T>(bufferSize, refCount);
     }
 
     /**
@@ -89,7 +121,7 @@ public final class MulticastProcessor<T> extends FlowableProcessor<T> {
      * is cancelled
      */
     @SuppressWarnings("unchecked")
-    public MulticastProcessor(int bufferSize, boolean refCount) {
+    MulticastProcessor(int bufferSize, boolean refCount) {
         this.bufferSize = bufferSize;
         this.limit = bufferSize - (bufferSize >> 2);
         this.wip = new AtomicInteger();
@@ -99,12 +131,24 @@ public final class MulticastProcessor<T> extends FlowableProcessor<T> {
         this.once = new AtomicBoolean();
     }
 
+    /**
+     * Initializes this Processor by setting an upstream Subscription that
+     * ignores request amounts, uses a fixed buffer
+     * and allows using the onXXX and offer methods
+     * afterwards.
+     */
     public void start() {
         if (SubscriptionHelper.setOnce(upstream, EmptySubscription.INSTANCE)) {
             queue = new SpscArrayQueue<T>(bufferSize);
         }
     }
 
+    /**
+     * Initializes this Processor by setting an upstream Subscription that
+     * ignores request amounts, uses an unbounded buffer
+     * and allows using the onXXX and offer methods
+     * afterwards.
+     */
     public void startUnbounded() {
         if (SubscriptionHelper.setOnce(upstream, EmptySubscription.INSTANCE)) {
             queue = new SpscLinkedArrayQueue<T>(bufferSize);
@@ -146,10 +190,10 @@ public final class MulticastProcessor<T> extends FlowableProcessor<T> {
         if (once.get()) {
             return;
         }
-        if (t == null) {
-            throw new NullPointerException("t is null");
-        }
         if (fusionMode == QueueSubscription.NONE) {
+            if (t == null) {
+                throw new NullPointerException("t is null");
+            }
             if (!queue.offer(t)) {
                 SubscriptionHelper.cancel(upstream);
                 onError(new MissingBackpressureException());
@@ -157,6 +201,28 @@ public final class MulticastProcessor<T> extends FlowableProcessor<T> {
             }
         }
         drain();
+    }
+
+    /**
+     * Tries to offer an item into the internal queue and returns false
+     * if the queue is full.
+     * @param t the item to offer, not null
+     * @return true if successful, false if the queue is full
+     */
+    public boolean offer(T t) {
+        if (once.get()) {
+            return false;
+        }
+        if (t == null) {
+            throw new NullPointerException("t is null");
+        }
+        if (fusionMode == QueueSubscription.NONE) {
+            if (queue.offer(t)) {
+                drain();
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -224,18 +290,196 @@ public final class MulticastProcessor<T> extends FlowableProcessor<T> {
     }
 
     boolean add(MulticastSubscription<T> inner) {
-        // TODO Auto-generated method stub
-        return false;
+        for (;;) {
+            MulticastSubscription<T>[] a = subscribers.get();
+            if (a == TERMINATED) {
+                return false;
+            }
+            int n = a.length;
+            @SuppressWarnings("unchecked")
+            MulticastSubscription<T>[] b = new MulticastSubscription[n + 1];
+            System.arraycopy(a, 0, b, 0, n);
+            b[n] = inner;
+            if (subscribers.compareAndSet(a, b)) {
+                return true;
+            }
+        }
     }
 
+    @SuppressWarnings("unchecked")
     void remove(MulticastSubscription<T> inner) {
-        // TODO Auto-generated method stub
-        
+        for (;;) {
+            MulticastSubscription<T>[] a = subscribers.get();
+            int n = a.length;
+            if (n == 0) {
+                return;
+            }
+
+            int j = -1;
+            for (int i = 0; i < n; i++) {
+                if (a[i] == inner) {
+                    j = i;
+                    break;
+                }
+            }
+
+            if (j < 0) {
+                break;
+            }
+
+            if (n == 1) {
+                if (refcount) {
+                    if (subscribers.compareAndSet(a, TERMINATED)) {
+                        SubscriptionHelper.cancel(upstream);
+                        once.set(true);
+                        break;
+                    }
+                } else {
+                    if (subscribers.compareAndSet(a, EMPTY)) {
+                        break;
+                    }
+                }
+            } else {
+                MulticastSubscription<T>[] b = new MulticastSubscription[n - 1];
+                System.arraycopy(a, 0, b, 0, j);
+                System.arraycopy(a, j + 1, b, j, n - j - 1);
+                if (subscribers.compareAndSet(a, b)) {
+                    break;
+                }
+            }
+        }
     }
 
+    @SuppressWarnings("unchecked")
     void drain() {
-        // TODO Auto-generated method stub
-        
+        if (wip.getAndIncrement() != 0) {
+            return;
+        }
+
+        int missed = 1;
+        AtomicReference<MulticastSubscription<T>[]> subs = subscribers;
+        int c = consumed;
+        int lim = limit;
+        long e = emitted;
+        SimpleQueue<T> q = queue;
+        int fm = fusionMode;
+
+        outer:
+        for (;;) {
+
+            MulticastSubscription<T>[] as = subs.get();
+
+            long r = Long.MAX_VALUE;
+
+            for (MulticastSubscription<T> a : as) {
+                long ra = a.get();
+                if (ra >= 0L) {
+                    r = Math.min(r, ra);
+                }
+            }
+
+            if (as.length != 0) {
+
+                while (e != r) {
+                    MulticastSubscription<T>[] bs = subs.get();
+
+                    if (bs == TERMINATED) {
+                        q.clear();
+                        return;
+                    }
+
+                    if (as != bs) {
+                        continue outer;
+                    }
+
+                    boolean d = done;
+
+                    T v;
+
+                    try {
+                        v = q != null ? q.poll() : null;
+                    } catch (Throwable ex) {
+                        Exceptions.throwIfFatal(ex);
+                        SubscriptionHelper.cancel(upstream);
+                        d = true;
+                        v = null;
+                        error = ex;
+                        done = true;
+                    }
+                    boolean empty = v == null;
+
+                    if (d && empty) {
+                        Throwable ex = error;
+                        if (ex != null) {
+                            for (MulticastSubscription<T> inner : subs.getAndSet(TERMINATED)) {
+                                inner.onError(ex);
+                            }
+                        } else {
+                            for (MulticastSubscription<T> inner : subs.getAndSet(TERMINATED)) {
+                                inner.onComplete();
+                            }
+                        }
+                        return;
+                    }
+
+                    if (empty) {
+                        break;
+                    }
+
+                    for (MulticastSubscription<T> inner : as) {
+                        inner.onNext(v);
+                    }
+
+                    e++;
+
+                    if (fm != QueueSubscription.SYNC) {
+                        if (++c == lim) {
+                            c = 0;
+                            upstream.get().request(lim);
+                        }
+                    }
+                }
+
+                if (e == r) {
+                    MulticastSubscription<T>[] bs = subs.get();
+
+                    if (bs == TERMINATED) {
+                        q.clear();
+                        return;
+                    }
+
+                    if (as != bs) {
+                        continue outer;
+                    }
+
+                    if (done && q.isEmpty()) {
+                        Throwable ex = error;
+                        if (ex != null) {
+                            for (MulticastSubscription<T> inner : subs.getAndSet(TERMINATED)) {
+                                inner.onError(ex);
+                            }
+                        } else {
+                            for (MulticastSubscription<T> inner : subs.getAndSet(TERMINATED)) {
+                                inner.onComplete();
+                            }
+                        }
+                        return;
+                    }
+                }
+            }
+
+            int w = wip.get();
+            if (w == missed) {
+                consumed = c;
+                emitted = e;
+                missed = wip.addAndGet(-missed);
+                if (missed == 0) {
+                    break;
+                }
+            } else {
+                missed = w;
+            }
+        }
     }
 
     static final class MulticastSubscription<T> extends AtomicLong implements Subscription {
@@ -245,8 +489,6 @@ public final class MulticastProcessor<T> extends FlowableProcessor<T> {
         final Subscriber<? super T> actual;
 
         final MulticastProcessor<T> parent;
-
-        long emitted;
 
         MulticastSubscription(Subscriber<? super T> actual, MulticastProcessor<T> parent) {
             this.actual = actual;
