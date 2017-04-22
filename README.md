@@ -13,7 +13,7 @@ RxJava 2.x implementation of extra sources, operators and components and ports o
 
 ```
 dependencies {
-    compile "com.github.akarnokd:rxjava2-extensions:0.16.4"
+    compile "com.github.akarnokd:rxjava2-extensions:0.16.5"
 }
 ```
 
