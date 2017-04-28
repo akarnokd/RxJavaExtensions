@@ -1024,4 +1024,103 @@ public final class FlowableTransformers {
         ObjectHelper.verifyPositive(bufferSize, "bufferSize");
         return new FlowableFilterAsync<T>(null, asyncPredicate, bufferSize);
     }
+
+
+    /**
+     * Connects to the upstream ConnectableFlowable if the number of subscribed
+     * subscriber reaches the specified count and disconnect if all subscribers have unsubscribed.
+     * <p>
+     * When applying this transformer via {@link Flowable#compose(FlowableTransformer)}
+     * and the upstream is not a {@code ConnectableFlowable}, an {@code IllegalArgumentException}
+     * is thrown.
+     * @param <T> the value type
+     * @param subscriberCount the number of subscribers required to connect to the upstream
+     * @return the new FlowableTransformer instance
+     * @since 0.17.0
+     */
+    public static <T> FlowableTransformer<T, T> refCount(int subscriberCount) {
+        ObjectHelper.verifyPositive(subscriberCount, "subscriberCount");
+        return refCount(subscriberCount, 0, TimeUnit.NANOSECONDS, Schedulers.computation());
+    }
+
+
+    /**
+     * Connects to the upstream ConnectableFlowable if the number of subscribed
+     * subscriber reaches 1 and disconnect after the specified
+     * timeout if all subscribers have unsubscribed.
+     * <p>
+     * When applying this transformer via {@link Flowable#compose(FlowableTransformer)}
+     * and the upstream is not a {@code ConnectableFlowable}, an {@code IllegalArgumentException}
+     * is thrown.
+     * @param <T> the value type
+     * @param timeout the time to wait before disconnecting after all subscribers unsubscribed
+     * @param unit the time unit of the timeout
+     * @return the new FlowableTransformer instance
+     * @since 0.17.0
+     */
+    public static <T> FlowableTransformer<T, T> refCount(long timeout, TimeUnit unit) {
+        return refCount(1, timeout, unit, Schedulers.computation());
+    }
+
+
+    /**
+     * Connects to the upstream ConnectableFlowable if the number of subscribed
+     * subscriber reaches 1 and disconnect after the specified
+     * timeout if all subscribers have unsubscribed.
+     * <p>
+     * When applying this transformer via {@link Flowable#compose(FlowableTransformer)}
+     * and the upstream is not a {@code ConnectableFlowable}, an {@code IllegalArgumentException}
+     * is thrown.
+     * @param <T> the value type
+     * @param timeout the time to wait before disconnecting after all subscribers unsubscribed
+     * @param unit the time unit of the timeout
+     * @param scheduler the target scheduler to wait on before disconnecting
+     * @return the new FlowableTransformer instance
+     * @since 0.17.0
+     */
+    public static <T> FlowableTransformer<T, T> refCount(long timeout, TimeUnit unit, Scheduler scheduler) {
+        return refCount(1, timeout, unit, scheduler);
+    }
+
+
+    /**
+     * Connects to the upstream ConnectableFlowable if the number of subscribed
+     * subscriber reaches the specified count and disconnect after the specified
+     * timeout if all subscribers have unsubscribed.
+     * <p>
+     * When applying this transformer via {@link Flowable#compose(FlowableTransformer)}
+     * and the upstream is not a {@code ConnectableFlowable}, an {@code IllegalArgumentException}
+     * is thrown.
+     * @param <T> the value type
+     * @param subscriberCount the number of subscribers required to connect to the upstream
+     * @param timeout the time to wait before disconnecting after all subscribers unsubscribed
+     * @param unit the time unit of the timeout
+     * @return the new FlowableTransformer instance
+     * @since 0.17.0
+     */
+    public static <T> FlowableTransformer<T, T> refCount(int subscriberCount, long timeout, TimeUnit unit) {
+        return refCount(subscriberCount, timeout, unit, Schedulers.computation());
+    }
+
+    /**
+     * Connects to the upstream ConnectableFlowable if the number of subscribed
+     * subscriber reaches the specified count and disconnect after the specified
+     * timeout if all subscribers have unsubscribed.
+     * <p>
+     * When applying this transformer via {@link Flowable#compose(FlowableTransformer)}
+     * and the upstream is not a {@code ConnectableFlowable}, an {@code IllegalArgumentException}
+     * is thrown.
+     * @param <T> the value type
+     * @param subscriberCount the number of subscribers required to connect to the upstream
+     * @param timeout the time to wait before disconnecting after all subscribers unsubscribed
+     * @param unit the time unit of the timeout
+     * @param scheduler the target scheduler to wait on before disconnecting
+     * @return the new FlowableTransformer instance
+     * @since 0.17.0
+     */
+    public static <T> FlowableTransformer<T, T> refCount(int subscriberCount, long timeout, TimeUnit unit, Scheduler scheduler) {
+        ObjectHelper.requireNonNull(unit, "unit is null");
+        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
+        return new FlowableRefCountTimeout<T>(null, subscriberCount, timeout, unit, scheduler);
+    }
 }
