@@ -26,14 +26,12 @@ Maven search:
 
   - [Extra functional interfaces](#extra-functional-interfaces)
   - [Mathematical operations over numerical sequences](#mathematical-operations-over-numerical-sequences)
-  - [Parallel operations](#parallel-operations)
   - [String operations](#string-operations)
   - [Asynchronous jumpstarting a sequence](#asynchronous-jumpstarting-a-sequence)
   - [Computational expressions](#computational-expressions)
   - [Join patterns](#join-patterns)
   - [Debug support](#debug-support)
   - Custom Processors and Subjects
-    - [SingleSubject, MaybeSubject and CompletableSubject](#singlesubject-maybesubject-and-completablesubject)
     - [SoloProcessor, PerhapsProcessor and NonoProcessor](#soloprocessor-perhapsprocessor-and-nonoprocessor)
     - [MulticastProcessor](#multicastprocessor)
   - [FlowableProcessor utils](#flowableprocessor-utils)
@@ -109,45 +107,6 @@ Flowable.just(5, 1, 3, 2, 4)
 .assertResult(1);
 ```
   
-
-## Parallel operations
-
-**Deprecated in 0.14.4, functions moved to `io.reactivex.parallel.ParallelFlowable` in RxJava 2.0.5; this will be removed when RxJava 2.1 becomes available.**
-
-RxJava is sequential by nature and you can achieve parallelism by having parallel sequences. Forking out
-and joining a single sequence can become complicated and incurs quite an overhead. By using the `ParallelFlowable`
-API, the forking and joining of parallel computations started in and ending in a Flowable is more efficient than
-the classical methods (groupBy/flatMap, window/flatMap, etc).
-
-The main entry point is `ParallelFlowable.from(Publisher, int)` where given a `Flowable` and the parallelism level, the source
-sequence is dispatched into N parallel 'rails' which are fed in a round-robin fashion from the source `Flowable`.
-
-The `from()` method only defines how many rails there will be but it won't actually run these rails on different threads. As with other RxJava, asynchrony is optional and introduced via an operator `runOn` which takes the usual `Scheduler` of your chosing. Note that the parallelism level of the `Scheduler` and the `ParallelFlowable` need not to match (but it is recommended).
-
-Not all sequential operations make sense in the parallel world. These are the currently supported operations:
-
-  - `map`, 
-  - `filter`
-  - `flatMap`, 
-  - `concatMap`
-  - `reduce`
-  - `collect`
-  - `sort`
-  - `toSortedList`
-  - `compose`
-  - `doOnCancel`, `doOnError`, `doOnComplete`, `doOnNext`, `doOnSubscribe`, `doAfterTerminate`, `doOnRequest`
-
-Example:
-
-```java
-ParallelFlowable.from(Flowable.range(1, 1000))
-.runOn(Schedulers.computation())
-.map(v -> v * v)
-.filter(v -> (v & 1) != 0)
-.sequential()
-.subscribe(System.out::println)
-```
-
 ## String operations
 
 ### characters
@@ -436,48 +395,6 @@ RxJavaAssemblyException assembled = RxJavaAssemblyException.find(someThrowable);
 if (assembled != null) {
     System.err.println(assembled.stacktrace());
 }
-```
-
-## SingleSubject, MaybeSubject and CompletableSubject
-
-**Deprecated in 0.14.4, functions moved to `io.reactivex.subjects.*` in RxJava 2.0.5; they will be removed when RxJava 2.1 becomes available.**
-
-
-These are the hot variants of the respective base reactive types.
-
-```java
-MaybeSubject<Integer> ms = MaybeSubject.create();
-
-TestObserver<Integer> to = ms.test();
-
-ms.onSuccess(1);
-
-to.assertResult(1);
-```
-
-Similarly:
-
-```java
-CompletableSubject cs = CompletableSubject.create();
-
-TestObserver<Void> to2 = cs.test();
-
-cs.onComplete();
-
-to2.assertResult();
-```
-
-and
-
-
-```java
-SingleSubject<Integer> ss = SingleSubject.create();
-
-TestObserver<Integer> to3 = ss.test();
-
-ss.onSuccess(1);
-
-to3.assertResult(1);
 ```
 
 ## SoloProcessor, PerhapsProcessor and NonoProcessor
