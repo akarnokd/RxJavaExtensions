@@ -70,7 +70,7 @@ final class ParallelSumInteger<T extends Number> extends ParallelFlowable<Intege
 
         Subscription upstream;
 
-        public SumIntSubscriber(Subscriber<? super Integer> actual) {
+        SumIntSubscriber(Subscriber<? super Integer> actual) {
             super(actual);
         }
 
