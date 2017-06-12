@@ -138,6 +138,7 @@ final class FlowableRepeatCallable<T> extends Flowable<T> {
                     if (r == 0L) {
                         break;
                     }
+                    e = 0L;
                 }
             }
         }
@@ -149,7 +150,10 @@ final class FlowableRepeatCallable<T> extends Flowable<T> {
 
         @Override
         public int requestFusion(int mode) {
-            return mode & SYNC;
+            if ((mode & BOUNDARY) == 0) {
+                return mode & SYNC;
+            }
+            return NONE;
         }
 
         @Override
@@ -254,6 +258,7 @@ final class FlowableRepeatCallable<T> extends Flowable<T> {
                     if (r == 0L) {
                         break;
                     }
+                    e = 0L;
                 }
             }
         }
@@ -265,7 +270,10 @@ final class FlowableRepeatCallable<T> extends Flowable<T> {
 
         @Override
         public int requestFusion(int mode) {
-            return mode & SYNC;
+            if ((mode & BOUNDARY) == 0) {
+                return mode & SYNC;
+            }
+            return NONE;
         }
 
         @Override

@@ -112,6 +112,7 @@ final class FlowableRepeatScalar<T> extends Flowable<T> {
                     if (r == 0L) {
                         break;
                     }
+                    e = 0L;
                 }
             }
         }
@@ -207,6 +208,7 @@ final class FlowableRepeatScalar<T> extends Flowable<T> {
                     if (r == 0L) {
                         break;
                     }
+                    e = 0L;
                 }
             }
         }
