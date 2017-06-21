@@ -81,6 +81,13 @@ final class SoloCreate<T> extends Solo<T> {
 
         @Override
         public void onError(Throwable t) {
+            if (!tryOnError(t)) {
+                RxJavaPlugins.onError(t);
+            }
+        }
+
+        @Override
+        public boolean tryOnError(Throwable t) {
             Disposable d = resource.getAndSet(DisposableHelper.DISPOSED);
             if (d != DisposableHelper.DISPOSED) {
                 actual.onError(t);
@@ -88,9 +95,9 @@ final class SoloCreate<T> extends Solo<T> {
                 if (d != null) {
                     d.dispose();
                 }
-            } else {
-                RxJavaPlugins.onError(t);
+                return true;
             }
+            return false;
         }
 
         @Override
