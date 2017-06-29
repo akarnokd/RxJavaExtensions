@@ -117,6 +117,8 @@ final class FlowableMapAsync<T, U, R> extends Flowable<R> implements FlowableTra
 
         U innerResult;
 
+        long emitted;
+
         volatile int state;
         static final int STATE_FRESH = 0;
         static final int STATE_RUNNING = 1;
@@ -217,6 +219,7 @@ final class FlowableMapAsync<T, U, R> extends Flowable<R> implements FlowableTra
 
             int missed = 1;
             int limit = bufferSize - (bufferSize >> 2);
+            long e = emitted;
             long ci = consumerIndex;
             int f = consumed;
             int m = length() - 1;
@@ -225,7 +228,7 @@ final class FlowableMapAsync<T, U, R> extends Flowable<R> implements FlowableTra
             for (;;) {
                 long r = requested.get();
 
-                while (ci != r) {
+                while (e != r) {
                     if (cancelled) {
                         clear();
                         return;
@@ -283,6 +286,7 @@ final class FlowableMapAsync<T, U, R> extends Flowable<R> implements FlowableTra
 
                                 if (v != null) {
                                     a.onNext(v);
+                                    e++;
                                 }
                             } else {
                                 InnerSubscriber<U> inner = new InnerSubscriber<U>(this);
@@ -318,6 +322,7 @@ final class FlowableMapAsync<T, U, R> extends Flowable<R> implements FlowableTra
 
                             if (v != null) {
                                 a.onNext(v);
+                                e++;
                             }
                         }
 
@@ -333,7 +338,7 @@ final class FlowableMapAsync<T, U, R> extends Flowable<R> implements FlowableTra
                     }
                 }
 
-                if (ci == r) {
+                if (e == r) {
                     if (cancelled) {
                         clear();
                         return;
@@ -360,6 +365,7 @@ final class FlowableMapAsync<T, U, R> extends Flowable<R> implements FlowableTra
                 if (missed == w) {
                     consumed = f;
                     consumerIndex = ci;
+                    emitted = e;
                     missed = wip.addAndGet(-missed);
                     if (missed == 0) {
                         break;

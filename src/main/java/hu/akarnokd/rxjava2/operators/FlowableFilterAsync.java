@@ -100,6 +100,8 @@ final class FlowableFilterAsync<T> extends Flowable<T> implements FlowableTransf
         volatile boolean cancelled;
 
         Boolean innerResult;
+        
+        long emitted;
 
         volatile int state;
         static final int STATE_FRESH = 0;
@@ -201,6 +203,7 @@ final class FlowableFilterAsync<T> extends Flowable<T> implements FlowableTransf
 
             int missed = 1;
             int limit = bufferSize - (bufferSize >> 2);
+            long e = emitted;
             long ci = consumerIndex;
             int f = consumed;
             int m = length() - 1;
@@ -209,7 +212,7 @@ final class FlowableFilterAsync<T> extends Flowable<T> implements FlowableTransf
             for (;;) {
                 long r = requested.get();
 
-                while (ci != r) {
+                while (e != r) {
                     if (cancelled) {
                         clear();
                         return;
@@ -261,6 +264,7 @@ final class FlowableFilterAsync<T> extends Flowable<T> implements FlowableTransf
 
                                 if (u != null && u) {
                                     a.onNext(t);
+                                    e++;
                                 }
                             } else {
                                 InnerSubscriber<Boolean> inner = new InnerSubscriber<Boolean>(this);
@@ -284,6 +288,7 @@ final class FlowableFilterAsync<T> extends Flowable<T> implements FlowableTransf
                         innerResult = null;
 
                         if (u != null && u) {
+                            e++;
                             a.onNext(t);
                         }
 
@@ -299,7 +304,7 @@ final class FlowableFilterAsync<T> extends Flowable<T> implements FlowableTransf
                     }
                 }
 
-                if (ci == r) {
+                if (e == r) {
                     if (cancelled) {
                         clear();
                         return;
@@ -326,6 +331,7 @@ final class FlowableFilterAsync<T> extends Flowable<T> implements FlowableTransf
                 if (missed == w) {
                     consumed = f;
                     consumerIndex = ci;
+                    emitted = e;
                     missed = wip.addAndGet(-missed);
                     if (missed == 0) {
                         break;

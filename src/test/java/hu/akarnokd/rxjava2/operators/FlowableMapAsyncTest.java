@@ -23,9 +23,11 @@ import java.util.concurrent.TimeUnit;
 import org.junit.*;
 import org.reactivestreams.*;
 
+import hu.akarnokd.rxjava2.basetypes.*;
 import hu.akarnokd.rxjava2.test.TestHelper;
 import io.reactivex.Flowable;
 import io.reactivex.functions.*;
+import io.reactivex.internal.functions.Functions;
 import io.reactivex.internal.subscriptions.BooleanSubscription;
 import io.reactivex.plugins.RxJavaPlugins;
 import io.reactivex.processors.PublishProcessor;
@@ -426,5 +428,29 @@ public class FlowableMapAsyncTest {
         } finally {
             RxJavaPlugins.reset();
         }
+    }
+
+    @Test
+    public void filterAllOut() {
+        final int[] calls = { 0 };
+
+        Flowable.range(1, 1000)
+        .doOnNext(new Consumer<Integer>() {
+            @Override
+            public void accept(Integer v) throws Exception {
+                calls[0]++;
+            }
+        })
+        .compose(FlowableTransformers.mapAsync(new Function<Integer, Publisher<Boolean>>() {
+            @Override
+            public Publisher<Boolean> apply(Integer v) throws Exception {
+                return Perhaps.empty();
+            }
+        }, 16))
+        .flatMap(Functions.justFunction(Flowable.just(0)))
+        .test()
+        .assertResult();
+
+        Assert.assertEquals(1000, calls[0]);
     }
 }

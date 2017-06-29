@@ -23,9 +23,11 @@ import java.util.concurrent.*;
 import org.junit.*;
 import org.reactivestreams.*;
 
+import hu.akarnokd.rxjava2.basetypes.Solo;
 import hu.akarnokd.rxjava2.test.TestHelper;
 import io.reactivex.Flowable;
-import io.reactivex.functions.Function;
+import io.reactivex.functions.*;
+import io.reactivex.internal.functions.Functions;
 import io.reactivex.internal.subscriptions.BooleanSubscription;
 import io.reactivex.plugins.RxJavaPlugins;
 import io.reactivex.processors.PublishProcessor;
@@ -373,4 +375,51 @@ public class FlowableFilterAsyncTest {
         Assert.assertFalse(pp.hasSubscribers());
     }
 
+    @Test
+    public void filterAllOut() {
+        final int[] calls = { 0 };
+
+        Flowable.range(1, 1000)
+        .doOnNext(new Consumer<Integer>() {
+            @Override
+            public void accept(Integer v) throws Exception {
+                calls[0]++;
+            }
+        })
+        .compose(FlowableTransformers.filterAsync(new Function<Integer, Publisher<Boolean>>() {
+            @Override
+            public Publisher<Boolean> apply(Integer v) throws Exception {
+                return Solo.just(false);
+            }
+        }, 16))
+        .flatMap(Functions.justFunction(Flowable.just(0)))
+        .test()
+        .assertResult();
+
+        Assert.assertEquals(1000, calls[0]);
+    }
+
+    @Test
+    public void filterAllOutHidden() {
+        final int[] calls = { 0 };
+
+        Flowable.range(1, 1000)
+        .doOnNext(new Consumer<Integer>() {
+            @Override
+            public void accept(Integer v) throws Exception {
+                calls[0]++;
+            }
+        })
+        .compose(FlowableTransformers.filterAsync(new Function<Integer, Publisher<Boolean>>() {
+            @Override
+            public Publisher<Boolean> apply(Integer v) throws Exception {
+                return Solo.just(false).hide();
+            }
+        }, 16))
+        .flatMap(Functions.justFunction(Flowable.just(0)))
+        .test()
+        .assertResult();
+
+        Assert.assertEquals(1000, calls[0]);
+    }
 }
