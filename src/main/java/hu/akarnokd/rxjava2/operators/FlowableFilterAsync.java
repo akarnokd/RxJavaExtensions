@@ -100,7 +100,7 @@ final class FlowableFilterAsync<T> extends Flowable<T> implements FlowableTransf
         volatile boolean cancelled;
 
         Boolean innerResult;
-        
+
         long emitted;
 
         volatile int state;

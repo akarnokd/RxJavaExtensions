@@ -13,7 +13,7 @@ RxJava 2.x implementation of extra sources, operators and components and ports o
 
 ```
 dependencies {
-    compile "com.github.akarnokd:rxjava2-extensions:0.17.2"
+    compile "com.github.akarnokd:rxjava2-extensions:0.17.3"
 }
 ```
 
@@ -45,7 +45,7 @@ Maven search:
     - [debounceFirst()](#flowabletransformersdebouncefirst), [switchFlatMap()](#flowabletransformersswitchflatmap), [flatMapSync()](#flowabletransformersflatmapsync),
     - [flatMapAsync()](#flowabletransformersflatmapasync), [switchIfEmpty()](#flowabletransformersswitchifempty--switchifemptyarray),
     - [expand()](#flowabletransformersexpand), [mapAsync()](#flowabletransformersmapasync), [filterAsync()](#flowabletransformerfilterasync),
-    - [refCount()](#flowabletransformersrefcount)
+    - [refCount()](#flowabletransformersrefcount), [zipLatest()](#flowablesziplatest)
   - [Custom parallel operators and transformers](#custom-parallel-operators-and-transformers)
     - [sumX()](#paralleltransformerssumx)
   - [Special Publisher implementations](#special-publisher-implementations)
@@ -1043,6 +1043,46 @@ Thread.sleep(1200);
 
 assertFalse(pp.hasSubscribers());
 ```
+
+### Flowables.zipLatest()
+
+Zips the latest values from multiple sources and calls a combiner function for them.
+If one of the sources is faster then the others, its unconsumed values will be overwritten by newer
+values. 
+Unlike `combineLatest`, source items are participating in the combination at most once; i.e., the 
+operator emits only if all sources have produced an item.
+The emission speed of this operator is determined by the slowest emitting source and the speed of the downstream consumer.
+There are several overloads available: methods taking 2-4 sources and the respective combiner functions, a method taking a
+varargs of sources and a method taking an `Iterable` of source `Publisher`s.
+The operator supports combining and scheduling the emission of the result via a custom `Scheduler`, thus
+allows avoiding the buffering effects of the `observeOn` operator.
+The operator terminates if any of the sources runs out of items and terminates by itself. 
+The operator works with asynchronous sources the best; synchronous sources may get consumed fully
+in order they appear among the parameters and possibly never emit more than one combined result even
+if the last source has more than one item.
+
+```java
+TestScheduler scheduler = new TestScheduler();
+
+TestSubscriber<String> ts = Flowables.zipLatest(toString,
+        Flowable.intervalRange(1, 6, 99, 100, TimeUnit.MILLISECONDS, scheduler),
+        Flowable.intervalRange(4, 3, 200, 200, TimeUnit.MILLISECONDS, scheduler)
+)
+.test();
+
+scheduler.advanceTimeBy(200, TimeUnit.MILLISECONDS);
+
+ts.assertValue("[2, 4]");
+
+scheduler.advanceTimeBy(200, TimeUnit.MILLISECONDS);
+
+ts.assertValues("[2, 4]", "[4, 5]");
+
+scheduler.advanceTimeBy(200, TimeUnit.MILLISECONDS);
+
+ts.assertResult("[2, 4]", "[4, 5]", "[6, 6]");
+```
+
 
 
 ## Custom parallel operators and transformers

@@ -1062,7 +1062,7 @@ public abstract class Nono implements Publisher<Void> {
     }
 
     /**
-     * Retry a failed Nono if the predicate return true
+     * Retry a failed Nono if the predicate return true.
      * @param predicate the predicate receiving the failure Throwable and
      * returns true to trigger a retry.
      * @return the new Nono instance

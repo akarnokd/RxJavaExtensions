@@ -278,7 +278,7 @@ public enum TestHelper {
         try {
             final CountDownLatch cdl = new CountDownLatch(1);
 
-            source.subscribe(new Subscriber<Object>() {
+            source.subscribe(new FlowableSubscriber<Object>() {
 
                 @Override
                 public void onSubscribe(Subscription s) {

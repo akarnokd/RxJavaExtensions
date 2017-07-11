@@ -23,7 +23,9 @@ import org.reactivestreams.Publisher;
 
 import io.reactivex.*;
 import io.reactivex.annotations.*;
+import io.reactivex.functions.*;
 import io.reactivex.internal.functions.*;
+import io.reactivex.internal.schedulers.ImmediateThinScheduler;
 import io.reactivex.plugins.RxJavaPlugins;
 import io.reactivex.schedulers.Schedulers;
 
@@ -376,7 +378,7 @@ public final class Flowables {
      *  no emission is lost, however, the timing of the reception of the
      *  values is now dependent on the downstream backpressure.</dd>
      *  <dt><b>Scheduler:</b></dt>
-     *  <dd>The operator uses the{@link Scheduler} provided to time
+     *  <dd>The operator uses the {@link Scheduler} provided to time
      *  the emission and likely deliver the value (unless backpressured).</dd>
      * </dl>
      * 
@@ -392,5 +394,436 @@ public final class Flowables {
     @SchedulerSupport(SchedulerSupport.CUSTOM)
     public static Flowable<Long> intervalBackpressure(long initialDelay, long period, TimeUnit unit, Scheduler scheduler) {
         return RxJavaPlugins.onAssembly(new FlowableIntervalBackpressure(initialDelay, period, unit, scheduler));
+    }
+
+    /**
+     * Zips the latest available values of the source Publishers via a combiner function where the
+     * emission rate is determined by the slowest Publisher and the downstream consumption rate.
+     * <p>
+     * Non-consumed source values are overwritten by newer values. Unlike {@combineLatest}, source
+     * values are not reused to form new combinations.
+     * <p>
+     * If any of the sources runs out of items, the other sources are cancelled and the sequence completes.
+     * <pre><code>
+     * A: ---o-o-o------o-o----o---o-|-------
+     * B: ---------x-x--x-------x-----x--x---
+     * ======= zipLatest (o, x -&gt; M) ========
+     * R: ---------M----M-------M-----M|-----
+     * </code></pre>
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The operator honors the backpressure of the downstream and consumes
+     *  the source Publishers in an unbounded manner, keeping only their latest values temporarily.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>The operator doesn't run on any particular {@link Scheduler}
+     *  and the combined item emission happens on the thread that won the internal emission-right race.</dd>
+     * </dl>
+     * 
+     * @param <T> the common source value type
+     * @param <R> the result type
+     * @param combiner the function receiving the latest values of the sources and returns a value
+     *                 to be emitted to the downstream.
+     * @param sources the array of source Publishers to zip/combine
+     * @return the new Flowable instance.
+     */
+    @BackpressureSupport(BackpressureKind.UNBOUNDED_IN)
+    @SchedulerSupport(SchedulerSupport.NONE)
+    public static <T, R> Flowable<R> zipLatest(Function<? super Object[], ? extends R> combiner, Publisher<? extends T>... sources) {
+        return zipLatest(combiner, ImmediateThinScheduler.INSTANCE, sources);
+    }
+
+
+    /**
+     * Zips the latest available values of the source Publishers via a combiner function where the
+     * emission rate is determined by the slowest Publisher and the downstream consumption rate.
+     * <p>
+     * Non-consumed source values are overwritten by newer values. Unlike {@combineLatest}, source
+     * values are not reused to form new combinations.
+     * <p>
+     * If any of the sources runs out of items, the other sources are cancelled and the sequence completes.
+     * <pre><code>
+     * A: ---o-o-o------o-o----o---o-|-------
+     * B: ---------x-x--x-------x-----x--x---
+     * ======= zipLatest (o, x -&gt; M) ========
+     * R: ---------M----M-------M-----M|-----
+     * </code></pre>
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The operator honors the backpressure of the downstream and consumes
+     *  the source Publishers in an unbounded manner, keeping only their latest values temporarily.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>The operator emits the combined items on the {@link Scheduler} provided.</dd>
+     * </dl>
+     * 
+     * @param <T> the common source value type
+     * @param <R> the result type
+     * @param combiner the function receiving the latest values of the sources and returns a value
+     *                 to be emitted to the downstream.
+     * @param sources the array of source Publishers to zip/combine
+     * @param scheduler the Scheduler to use for emitting items and/or terminal signals
+     * @return the new Flowable instance.
+     */
+    @BackpressureSupport(BackpressureKind.UNBOUNDED_IN)
+    @SchedulerSupport(SchedulerSupport.CUSTOM)
+    public static <T, R> Flowable<R> zipLatest(Function<? super Object[], ? extends R> combiner, Scheduler scheduler, Publisher<? extends T>... sources) {
+        ObjectHelper.requireNonNull(combiner, "combiner is null");
+        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
+        ObjectHelper.requireNonNull(sources, "sources is null");
+        return RxJavaPlugins.onAssembly(new FlowableZipLatest<T, R>(sources, null, combiner, scheduler));
+    }
+
+
+    /**
+     * Zips the latest available values of the source Publishers via a combiner function where the
+     * emission rate is determined by the slowest Publisher and the downstream consumption rate.
+     * <p>
+     * Non-consumed source values are overwritten by newer values. Unlike {@combineLatest}, source
+     * values are not reused to form new combinations.
+     * <p>
+     * If any of the sources runs out of items, the other sources are cancelled and the sequence completes.
+     * <pre><code>
+     * A: ---o-o-o------o-o----o---o-|-------
+     * B: ---------x-x--x-------x-----x--x---
+     * ======= zipLatest (o, x -&gt; M) ========
+     * R: ---------M----M-------M-----M|-----
+     * </code></pre>
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The operator honors the backpressure of the downstream and consumes
+     *  the source Publishers in an unbounded manner, keeping only their latest values temporarily.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>The operator doesn't run on any particular {@link Scheduler} scheduler
+     *  and the combined item emission happens on the thread that won the internal emission-right race.</dd>
+     * </dl>
+     * 
+     * @param <T> the common source value type
+     * @param <R> the result type
+     * @param combiner the function receiving the latest values of the sources and returns a value
+     *                 to be emitted to the downstream.
+     * @param sources the array of source Publishers to zip/combine
+     * @return the new Flowable instance.
+     */
+    @BackpressureSupport(BackpressureKind.UNBOUNDED_IN)
+    @SchedulerSupport(SchedulerSupport.NONE)
+    public static <T, R> Flowable<R> zipLatest(Iterable<? extends Publisher<? extends T>> sources, Function<? super Object[], ? extends R> combiner) {
+        return zipLatest(sources, combiner, ImmediateThinScheduler.INSTANCE);
+    }
+
+
+    /**
+     * Zips the latest available values of the source Publishers via a combiner function where the
+     * emission rate is determined by the slowest Publisher and the downstream consumption rate.
+     * <p>
+     * Non-consumed source values are overwritten by newer values. Unlike {@combineLatest}, source
+     * values are not reused to form new combinations.
+     * <p>
+     * If any of the sources runs out of items, the other sources are cancelled and the sequence completes.
+     * <pre><code>
+     * A: ---o-o-o------o-o----o---o-|-------
+     * B: ---------x-x--x-------x-----x--x---
+     * ======= zipLatest (o, x -&gt; M) ========
+     * R: ---------M----M-------M-----M|-----
+     * </code></pre>
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The operator honors the backpressure of the downstream and consumes
+     *  the source Publishers in an unbounded manner, keeping only their latest values temporarily.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>The operator emits the combined items on the {@link Scheduler} provided.</dd>
+     * </dl>
+     * 
+     * @param <T> the common source value type
+     * @param <R> the result type
+     * @param combiner the function receiving the latest values of the sources and returns a value
+     *                 to be emitted to the downstream.
+     * @param sources the array of source Publishers to zip/combine
+     * @param scheduler the Scheduler to use for emitting items and/or terminal signals
+     * @return the new Flowable instance.
+     */
+    @BackpressureSupport(BackpressureKind.UNBOUNDED_IN)
+    @SchedulerSupport(SchedulerSupport.CUSTOM)
+    public static <T, R> Flowable<R> zipLatest(Iterable<? extends Publisher<? extends T>> sources, Function<? super Object[], ? extends R> combiner, Scheduler scheduler) {
+        ObjectHelper.requireNonNull(sources, "sources is null");
+        ObjectHelper.requireNonNull(combiner, "combiner is null");
+        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
+        return RxJavaPlugins.onAssembly(new FlowableZipLatest<T, R>(null, sources, combiner, scheduler));
+    }
+
+
+    /**
+     * Zips the latest available values of the source Publishers via a combiner function where the
+     * emission rate is determined by the slowest Publisher and the downstream consumption rate.
+     * <p>
+     * Non-consumed source values are overwritten by newer values. Unlike {@combineLatest}, source
+     * values are not reused to form new combinations.
+     * <p>
+     * If any of the sources runs out of items, the other sources are cancelled and the sequence completes.
+     * <pre><code>
+     * A: ---o-o-o------o-o----o---o-|-------
+     * B: ---------x-x--x-------x-----x--x---
+     * ======= zipLatest (o, x -&gt; M) ========
+     * R: ---------M----M-------M-----M|-----
+     * </code></pre>
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The operator honors the backpressure of the downstream and consumes
+     *  the source Publishers in an unbounded manner, keeping only their latest values temporarily.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>The operator doesn't run on any particular {@link Scheduler} scheduler
+     *  and the combined item emission happens on the thread that won the internal emission-right race.</dd>
+     * </dl>
+     * 
+     * @param <T1> the value type of the first source Publisher
+     * @param <T2> the value type of the second source Publisher
+     * @param <R> the result type
+     * @param combiner the function receiving the latest values of the sources and returns a value
+     *                 to be emitted to the downstream.
+     * @param source1 the first source Publisher instance
+     * @param source2 the second source Publisher instance
+     * @return the new Flowable instance.
+     */
+    @BackpressureSupport(BackpressureKind.UNBOUNDED_IN)
+    @SchedulerSupport(SchedulerSupport.NONE)
+    public static <T1, T2, R> Flowable<R> zipLatest(Publisher<T1> source1, Publisher<T2> source2, BiFunction<? super T1, ? super T2, ? extends R> combiner) {
+        return zipLatest(source1, source2, combiner, ImmediateThinScheduler.INSTANCE);
+    }
+
+
+    /**
+     * Zips the latest available values of the source Publishers via a combiner function where the
+     * emission rate is determined by the slowest Publisher and the downstream consumption rate.
+     * <p>
+     * Non-consumed source values are overwritten by newer values. Unlike {@combineLatest}, source
+     * values are not reused to form new combinations.
+     * <p>
+     * If any of the sources runs out of items, the other sources are cancelled and the sequence completes.
+     * <pre><code>
+     * A: ---o-o-o------o-o----o---o-|-------
+     * B: ---------x-x--x-------x-----x--x---
+     * ======= zipLatest (o, x -&gt; M) ========
+     * R: ---------M----M-------M-----M|-----
+     * </code></pre>
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The operator honors the backpressure of the downstream and consumes
+     *  the source Publishers in an unbounded manner, keeping only their latest values temporarily.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>The operator emits the combined items on the {@link Scheduler} provided.</dd>
+     * </dl>
+     * 
+     * @param <T1> the value type of the first source Publisher
+     * @param <T2> the value type of the second source Publisher
+     * @param <R> the result type
+     * @param combiner the function receiving the latest values of the sources and returns a value
+     *                 to be emitted to the downstream.
+     * @param source1 the first source Publisher instance
+     * @param source2 the second source Publisher instance
+     * @param scheduler the Scheduler to use for emitting items and/or terminal signals
+     * @return the new Flowable instance.
+     */
+    @BackpressureSupport(BackpressureKind.UNBOUNDED_IN)
+    @SchedulerSupport(SchedulerSupport.CUSTOM)
+    @SuppressWarnings("unchecked")
+    public static <T1, T2, R> Flowable<R> zipLatest(Publisher<T1> source1, Publisher<T2> source2, BiFunction<? super T1, ? super T2, ? extends R> combiner, Scheduler scheduler) {
+        ObjectHelper.requireNonNull(source1, "source1 is null");
+        ObjectHelper.requireNonNull(source2, "source2 is null");
+        ObjectHelper.requireNonNull(combiner, "combiner is null");
+        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
+        return RxJavaPlugins.onAssembly(new FlowableZipLatest<Object, R>(
+                new Publisher[] { source1, source2 }, null,
+                Functions.toFunction(combiner), scheduler));
+    }
+
+
+    /**
+     * Zips the latest available values of the source Publishers via a combiner function where the
+     * emission rate is determined by the slowest Publisher and the downstream consumption rate.
+     * <p>
+     * Non-consumed source values are overwritten by newer values. Unlike {@combineLatest}, source
+     * values are not reused to form new combinations.
+     * <p>
+     * If any of the sources runs out of items, the other sources are cancelled and the sequence completes.
+     * <pre><code>
+     * A: ---o-o-o------o-o----o---o-|-------
+     * B: ---------x-x--x-------x-----x--x---
+     * ======= zipLatest (o, x -&gt; M) ========
+     * R: ---------M----M-------M-----M|-----
+     * </code></pre>
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The operator honors the backpressure of the downstream and consumes
+     *  the source Publishers in an unbounded manner, keeping only their latest values temporarily.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>The operator doesn't run on any particular {@link Scheduler} scheduler
+     *  and the combined item emission happens on the thread that won the internal emission-right race.</dd>
+     * </dl>
+     * 
+     * @param <T1> the value type of the first source Publisher
+     * @param <T2> the value type of the second source Publisher
+     * @param <T3> the value type of the third source Publisher
+     * @param <R> the result type
+     * @param combiner the function receiving the latest values of the sources and returns a value
+     *                 to be emitted to the downstream.
+     * @param source1 the first source Publisher instance
+     * @param source2 the second source Publisher instance
+     * @param source3 the third source Publisher instance
+     * @return the new Flowable instance.
+     */
+    @BackpressureSupport(BackpressureKind.UNBOUNDED_IN)
+    @SchedulerSupport(SchedulerSupport.NONE)
+    public static <T1, T2, T3, R> Flowable<R> zipLatest(Publisher<T1> source1, Publisher<T2> source2,
+            Publisher<T3> source3, Function3<? super T1, ? super T2, ? super T3, ? extends R> combiner) {
+        return zipLatest(source1, source2, source3, combiner, ImmediateThinScheduler.INSTANCE);
+    }
+
+
+    /**
+     * Zips the latest available values of the source Publishers via a combiner function where the
+     * emission rate is determined by the slowest Publisher and the downstream consumption rate.
+     * <p>
+     * Non-consumed source values are overwritten by newer values. Unlike {@combineLatest}, source
+     * values are not reused to form new combinations.
+     * <p>
+     * If any of the sources runs out of items, the other sources are cancelled and the sequence completes.
+     * <pre><code>
+     * A: ---o-o-o------o-o----o---o-|-------
+     * B: ---------x-x--x-------x-----x--x---
+     * ======= zipLatest (o, x -&gt; M) ========
+     * R: ---------M----M-------M-----M|-----
+     * </code></pre>
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The operator honors the backpressure of the downstream and consumes
+     *  the source Publishers in an unbounded manner, keeping only their latest values temporarily.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>The operator emits the combined items on the {@link Scheduler} provided.</dd>
+     * </dl>
+     * 
+     * @param <T1> the value type of the first source Publisher
+     * @param <T2> the value type of the second source Publisher
+     * @param <T3> the value type of the third source Publisher
+     * @param <R> the result type
+     * @param combiner the function receiving the latest values of the sources and returns a value
+     *                 to be emitted to the downstream.
+     * @param source1 the first source Publisher instance
+     * @param source2 the second source Publisher instance
+     * @param source3 the third source Publisher instance
+     * @param scheduler the Scheduler to use for emitting items and/or terminal signals
+     * @return the new Flowable instance.
+     */
+    @BackpressureSupport(BackpressureKind.UNBOUNDED_IN)
+    @SchedulerSupport(SchedulerSupport.CUSTOM)
+    @SuppressWarnings("unchecked")
+    public static <T1, T2, T3, R> Flowable<R> zipLatest(Publisher<T1> source1, Publisher<T2> source2,
+            Publisher<T3> source3, Function3<? super T1, ? super T2, ? super T3, ? extends R> combiner,
+            Scheduler scheduler) {
+        ObjectHelper.requireNonNull(source1, "source1 is null");
+        ObjectHelper.requireNonNull(source2, "source2 is null");
+        ObjectHelper.requireNonNull(source3, "source3 is null");
+        ObjectHelper.requireNonNull(combiner, "combiner is null");
+        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
+        return RxJavaPlugins.onAssembly(new FlowableZipLatest<Object, R>(
+                new Publisher[] { source1, source2, source3 }, null,
+                Functions.toFunction(combiner), scheduler));
+    }
+
+
+    /**
+     * Zips the latest available values of the source Publishers via a combiner function where the
+     * emission rate is determined by the slowest Publisher and the downstream consumption rate.
+     * <p>
+     * Non-consumed source values are overwritten by newer values. Unlike {@combineLatest}, source
+     * values are not reused to form new combinations.
+     * <p>
+     * If any of the sources runs out of items, the other sources are cancelled and the sequence completes.
+     * <pre><code>
+     * A: ---o-o-o------o-o----o---o-|-------
+     * B: ---------x-x--x-------x-----x--x---
+     * ======= zipLatest (o, x -&gt; M) ========
+     * R: ---------M----M-------M-----M|-----
+     * </code></pre>
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The operator honors the backpressure of the downstream and consumes
+     *  the source Publishers in an unbounded manner, keeping only their latest values temporarily.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>The operator doesn't run on any particular {@link Scheduler} scheduler
+     *  and the combined item emission happens on the thread that won the internal emission-right race.</dd>
+     * </dl>
+     * 
+     * @param <T1> the value type of the first source Publisher
+     * @param <T2> the value type of the second source Publisher
+     * @param <T3> the value type of the third source Publisher
+     * @param <T4> the value type of the fourth source Publisher
+     * @param <R> the result type
+     * @param combiner the function receiving the latest values of the sources and returns a value
+     *                 to be emitted to the downstream.
+     * @param source1 the first source Publisher instance
+     * @param source2 the second source Publisher instance
+     * @param source3 the third source Publisher instance
+     * @param source4 the fourth source Publisher instance
+     * @return the new Flowable instance.
+     */
+    @BackpressureSupport(BackpressureKind.UNBOUNDED_IN)
+    @SchedulerSupport(SchedulerSupport.NONE)
+    public static <T1, T2, T3, T4, R> Flowable<R> zipLatest(Publisher<T1> source1, Publisher<T2> source2,
+            Publisher<T3> source3, Publisher<T4> source4,
+            Function4<? super T1, ? super T2, ? super T3, ? super T4, ? extends R> combiner) {
+        return zipLatest(source1, source2, source3, source4, combiner, ImmediateThinScheduler.INSTANCE);
+    }
+
+
+    /**
+     * Zips the latest available values of the source Publishers via a combiner function where the
+     * emission rate is determined by the slowest Publisher and the downstream consumption rate.
+     * <p>
+     * Non-consumed source values are overwritten by newer values. Unlike {@combineLatest}, source
+     * values are not reused to form new combinations.
+     * <p>
+     * If any of the sources runs out of items, the other sources are cancelled and the sequence completes.
+     * <pre><code>
+     * A: ---o-o-o------o-o----o---o-|-------
+     * B: ---------x-x--x-------x-----x--x---
+     * ======= zipLatest (o, x -&gt; M) ========
+     * R: ---------M----M-------M-----M|-----
+     * </code></pre>
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The operator honors the backpressure of the downstream and consumes
+     *  the source Publishers in an unbounded manner, keeping only their latest values temporarily.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>The operator emits the combined items on the {@link Scheduler} provided.</dd>
+     * </dl>
+     * 
+     * @param <T1> the value type of the first source Publisher
+     * @param <T2> the value type of the second source Publisher
+     * @param <T3> the value type of the third source Publisher
+     * @param <T4> the value type of the fourth source Publisher
+     * @param <R> the result type
+     * @param combiner the function receiving the latest values of the sources and returns a value
+     *                 to be emitted to the downstream.
+     * @param source1 the first source Publisher instance
+     * @param source2 the second source Publisher instance
+     * @param source3 the third source Publisher instance
+     * @param source4 the fourth source Publisher instance
+     * @param scheduler the Scheduler to use for emitting items and/or terminal signals
+     * @return the new Flowable instance.
+     */
+    @BackpressureSupport(BackpressureKind.UNBOUNDED_IN)
+    @SchedulerSupport(SchedulerSupport.CUSTOM)
+    @SuppressWarnings("unchecked")
+    public static <T1, T2, T3, T4, R> Flowable<R> zipLatest(Publisher<T1> source1, Publisher<T2> source2,
+            Publisher<T3> source3, Publisher<T4> source4,
+            Function4<? super T1, ? super T2, ? super T3, ? super T4, ? extends R> combiner,
+            Scheduler scheduler) {
+        ObjectHelper.requireNonNull(source1, "source1 is null");
+        ObjectHelper.requireNonNull(source2, "source2 is null");
+        ObjectHelper.requireNonNull(source3, "source3 is null");
+        ObjectHelper.requireNonNull(source4, "source4 is null");
+        ObjectHelper.requireNonNull(combiner, "combiner is null");
+        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
+        return RxJavaPlugins.onAssembly(new FlowableZipLatest<Object, R>(
+                new Publisher[] { source1, source2, source3, source4 }, null,
+                Functions.toFunction(combiner), scheduler));
     }
 }
