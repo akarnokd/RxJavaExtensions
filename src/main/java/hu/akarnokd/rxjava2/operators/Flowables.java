@@ -400,7 +400,7 @@ public final class Flowables {
      * Zips the latest available values of the source Publishers via a combiner function where the
      * emission rate is determined by the slowest Publisher and the downstream consumption rate.
      * <p>
-     * Non-consumed source values are overwritten by newer values. Unlike {@combineLatest}, source
+     * Non-consumed source values are overwritten by newer values. Unlike {@code combineLatest}, source
      * values are not reused to form new combinations.
      * <p>
      * If any of the sources runs out of items, the other sources are cancelled and the sequence completes.
@@ -437,7 +437,7 @@ public final class Flowables {
      * Zips the latest available values of the source Publishers via a combiner function where the
      * emission rate is determined by the slowest Publisher and the downstream consumption rate.
      * <p>
-     * Non-consumed source values are overwritten by newer values. Unlike {@combineLatest}, source
+     * Non-consumed source values are overwritten by newer values. Unlike {@code combineLatest}, source
      * values are not reused to form new combinations.
      * <p>
      * If any of the sources runs out of items, the other sources are cancelled and the sequence completes.
@@ -477,7 +477,7 @@ public final class Flowables {
      * Zips the latest available values of the source Publishers via a combiner function where the
      * emission rate is determined by the slowest Publisher and the downstream consumption rate.
      * <p>
-     * Non-consumed source values are overwritten by newer values. Unlike {@combineLatest}, source
+     * Non-consumed source values are overwritten by newer values. Unlike {@code combineLatest}, source
      * values are not reused to form new combinations.
      * <p>
      * If any of the sources runs out of items, the other sources are cancelled and the sequence completes.
@@ -514,7 +514,7 @@ public final class Flowables {
      * Zips the latest available values of the source Publishers via a combiner function where the
      * emission rate is determined by the slowest Publisher and the downstream consumption rate.
      * <p>
-     * Non-consumed source values are overwritten by newer values. Unlike {@combineLatest}, source
+     * Non-consumed source values are overwritten by newer values. Unlike {@code combineLatest}, source
      * values are not reused to form new combinations.
      * <p>
      * If any of the sources runs out of items, the other sources are cancelled and the sequence completes.
@@ -554,7 +554,7 @@ public final class Flowables {
      * Zips the latest available values of the source Publishers via a combiner function where the
      * emission rate is determined by the slowest Publisher and the downstream consumption rate.
      * <p>
-     * Non-consumed source values are overwritten by newer values. Unlike {@combineLatest}, source
+     * Non-consumed source values are overwritten by newer values. Unlike {@code combineLatest}, source
      * values are not reused to form new combinations.
      * <p>
      * If any of the sources runs out of items, the other sources are cancelled and the sequence completes.
@@ -593,7 +593,7 @@ public final class Flowables {
      * Zips the latest available values of the source Publishers via a combiner function where the
      * emission rate is determined by the slowest Publisher and the downstream consumption rate.
      * <p>
-     * Non-consumed source values are overwritten by newer values. Unlike {@combineLatest}, source
+     * Non-consumed source values are overwritten by newer values. Unlike {@code combineLatest}, source
      * values are not reused to form new combinations.
      * <p>
      * If any of the sources runs out of items, the other sources are cancelled and the sequence completes.
@@ -639,7 +639,7 @@ public final class Flowables {
      * Zips the latest available values of the source Publishers via a combiner function where the
      * emission rate is determined by the slowest Publisher and the downstream consumption rate.
      * <p>
-     * Non-consumed source values are overwritten by newer values. Unlike {@combineLatest}, source
+     * Non-consumed source values are overwritten by newer values. Unlike {@code combineLatest}, source
      * values are not reused to form new combinations.
      * <p>
      * If any of the sources runs out of items, the other sources are cancelled and the sequence completes.
@@ -681,7 +681,7 @@ public final class Flowables {
      * Zips the latest available values of the source Publishers via a combiner function where the
      * emission rate is determined by the slowest Publisher and the downstream consumption rate.
      * <p>
-     * Non-consumed source values are overwritten by newer values. Unlike {@combineLatest}, source
+     * Non-consumed source values are overwritten by newer values. Unlike {@code combineLatest}, source
      * values are not reused to form new combinations.
      * <p>
      * If any of the sources runs out of items, the other sources are cancelled and the sequence completes.
@@ -732,7 +732,7 @@ public final class Flowables {
      * Zips the latest available values of the source Publishers via a combiner function where the
      * emission rate is determined by the slowest Publisher and the downstream consumption rate.
      * <p>
-     * Non-consumed source values are overwritten by newer values. Unlike {@combineLatest}, source
+     * Non-consumed source values are overwritten by newer values. Unlike {@code combineLatest}, source
      * values are not reused to form new combinations.
      * <p>
      * If any of the sources runs out of items, the other sources are cancelled and the sequence completes.
@@ -777,7 +777,7 @@ public final class Flowables {
      * Zips the latest available values of the source Publishers via a combiner function where the
      * emission rate is determined by the slowest Publisher and the downstream consumption rate.
      * <p>
-     * Non-consumed source values are overwritten by newer values. Unlike {@combineLatest}, source
+     * Non-consumed source values are overwritten by newer values. Unlike {@code combineLatest}, source
      * values are not reused to form new combinations.
      * <p>
      * If any of the sources runs out of items, the other sources are cancelled and the sequence completes.
