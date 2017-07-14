@@ -45,7 +45,7 @@ Maven search:
     - [debounceFirst()](#flowabletransformersdebouncefirst), [switchFlatMap()](#flowabletransformersswitchflatmap), [flatMapSync()](#flowabletransformersflatmapsync),
     - [flatMapAsync()](#flowabletransformersflatmapasync), [switchIfEmpty()](#flowabletransformersswitchifempty--switchifemptyarray),
     - [expand()](#flowabletransformersexpand), [mapAsync()](#flowabletransformersmapasync), [filterAsync()](#flowabletransformerfilterasync),
-    - [refCount()](#flowabletransformersrefcount), [zipLatest()](#flowablesziplatest)
+    - [refCount()](#flowabletransformersrefcount), [zipLatest()](#flowablesziplatest), [coalesce()](#flowabletransformerscoalesce)
   - [Custom parallel operators and transformers](#custom-parallel-operators-and-transformers)
     - [sumX()](#paralleltransformerssumx)
   - [Special Publisher implementations](#special-publisher-implementations)
@@ -1083,7 +1083,22 @@ scheduler.advanceTimeBy(200, TimeUnit.MILLISECONDS);
 ts.assertResult("[2, 4]", "[4, 5]", "[6, 6]");
 ```
 
+### FlowableTransformers.coalesce()
 
+Coalesces items from upstream into a container via a consumer and emits the container if
+there is a downstream demand, otherwise it keeps coalescing into the same container. Note
+that the operator keeps an internal unbounded buffer to collect up upstream values before
+the coalescing happens and thus a computational heavy upstream hogging the emission thread
+may lead to excessive memory usage. It is recommended to use `observeOn` in this case.
+
+```java
+Flowable.range(1, 5)
+.compose(FlowableTransformers.coalesce(ArrayList::new, (a, b) -> a.add(b))
+.test(1)
+.assertValue(Arrays.asList(1))
+.requestMore(1)
+.assertResult(Arrays.asList(1), Arrays.asList(2, 3, 4, 5));
+```
 
 ## Custom parallel operators and transformers
 
