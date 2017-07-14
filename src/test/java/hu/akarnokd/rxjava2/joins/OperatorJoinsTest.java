@@ -17,7 +17,6 @@
 package hu.akarnokd.rxjava2.joins;
 
 import static org.junit.Assert.fail;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
 import java.util.concurrent.Callable;
