@@ -1088,7 +1088,7 @@ ts.assertResult("[2, 4]", "[4, 5]", "[6, 6]");
 Coalesces items from upstream into a container via a consumer and emits the container if
 there is a downstream demand, otherwise it keeps coalescing into the same container. Note
 that the operator keeps an internal unbounded buffer to collect up upstream values before
-the coalescing happens and thus a computational heavy upstream hogging the emission thread
+the coalescing happens and thus a computational heavy downstream hogging the emission thread
 may lead to excessive memory usage. It is recommended to use `observeOn` in this case.
 
 ```java
