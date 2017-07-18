@@ -13,7 +13,7 @@ RxJava 2.x implementation of extra sources, operators and components and ports o
 
 ```
 dependencies {
-    compile "com.github.akarnokd:rxjava2-extensions:0.17.3"
+    compile "com.github.akarnokd:rxjava2-extensions:0.17.4"
 }
 ```
 
@@ -31,6 +31,7 @@ Maven search:
   - [Computational expressions](#computational-expressions)
   - [Join patterns](#join-patterns)
   - [Debug support](#debug-support)
+    - [Function tagging](#function-tagging)
   - Custom Processors and Subjects
     - [SoloProcessor, PerhapsProcessor and NonoProcessor](#soloprocessor-perhapsprocessor-and-nonoprocessor)
     - [MulticastProcessor](#multicastprocessor)
@@ -396,6 +397,39 @@ if (assembled != null) {
     System.err.println(assembled.stacktrace());
 }
 ```
+
+### Function tagging
+
+Often, when a function throws or returns null, there is not enough information to
+locate said function in the codebase. The `FunctionTagging` utility class offers
+static wrappers for RxJava funtion types that when fail or return null, a custom
+string tag is added or appended to the exception and allows locating that function
+in your codebase. Since added logic has overhead, the tagging process has to be
+enabled and can be disabled as necessary.
+
+```java
+FunctionTagging.enable();
+
+Function<Integer, Integer> tagged = FunctionTagging.tagFunction(v -> null, "F1");
+
+FunctionTagging.disable();
+
+Function<Integer, Integer> notTagged = FunctionTagging.tagFunction(v -> null, "F2");
+
+assertNull(notTagged.apply(1));
+
+try {
+   tagged.apply(1);
+   fail("Should have thrown");
+} catch (NullPointerException ex) {
+   assertTrue(ex.getMessage().contains("F2"));
+}
+```
+
+To avoid lambda ambiguity, the methods are named `tagX` where `X` is the functional type name such as `BiFunction`, `Function3` etc.
+
+The wrappers check for `null` parameters and if the wrapped function returns a `null` and throw a `NullPointerException` containing the parameter
+name (t1 .. t9) and the tag provided.
 
 ## SoloProcessor, PerhapsProcessor and NonoProcessor
 
