@@ -32,6 +32,7 @@ Maven search:
   - [Join patterns](#join-patterns)
   - [Debug support](#debug-support)
     - [Function tagging](#function-tagging)
+    - [Protocol validation](#protocol-validation)
   - Custom Processors and Subjects
     - [SoloProcessor, PerhapsProcessor and NonoProcessor](#soloprocessor-perhapsprocessor-and-nonoprocessor)
     - [MulticastProcessor](#multicastprocessor)
@@ -430,6 +431,52 @@ To avoid lambda ambiguity, the methods are named `tagX` where `X` is the functio
 
 The wrappers check for `null` parameters and if the wrapped function returns a `null` and throw a `NullPointerException` containing the parameter
 name (t1 .. t9) and the tag provided.
+
+### Protocol validation
+
+Custom operators and sources sometimes contain bugs that manifest themselves in odd sequence behavior or crashes 
+from within the standard operators. Since the revealing stacktraces is often missing or incomplete, diagnosing 
+such failures can be tiresome. Therefore, the `hu.akarnokd.rxjava2.debug.validator.RxJavaProtocolValidator` 
+class offers assembly hooks for the standard reactive base types.
+
+The validation hooks can be enabled via `RxJavaProtocolValidator.enable()` and disabled via `RxJavaProtocolValidator.disable()`.
+The validator also supports chaining with existing hooks via `enableAndChain()` which returns a `SavedHooks` instance
+to restore the original hooks specifically:
+
+```java
+SavedHooks hooks = RxJavaProtocolValidator.enableAndChain();
+
+// assemble and run flows
+// ...
+
+hooks.restore();
+```
+
+By default, the violations, subclasses of `ProtocolNonConformanceException`, are reported to the `RxJavaHooks.onError`
+handler but can be overridden via `RxJavaProtocolValidator.setOnViolationHandler`.
+
+```java
+RxJavaProtocolValidator.setOnViolationHandler(e -> e.printStackTrace());
+
+RxJavaProtocolValidator.enable();
+
+// ...
+```
+
+The following error violations are detected:
+
+| Exception | Violation description |
+|-----------|-----------------------|
+| MultipleTerminationsException | When multiple calls to `onError` or `onComplete` happened. |
+| MultipleOnSubscribeCallsException | When multiple calls to `onSubscribe` happened |
+| NullOnErrorParameterException | When the `onError` was called with a `null` `Throwable`. |
+| NullOnNextParameterException | When the `onNext` was called with a `null` value. |
+| NullOnSubscribeParameterException | When the `onSubscribe` was called with a `null` `Disposable` or `Subscription`. |
+| NullOnSuccessParameterException | When the `onSuccess` was called with a `null` value. |
+| OnNextAfterTerminationException | Wen the `onNext` was called after `onError` or `onComplete`. |
+| OnSubscribeNotCalledException | When any of the `onNext`, `onSuccess`, `onError` or `onComplete` is invoked without invoking `onSubscribe` first. |
+| OnSuccessAfterTerminationException | Wen the `onSuccess` was called after `onError` or `onComplete`. |
+
 
 ## SoloProcessor, PerhapsProcessor and NonoProcessor
 
