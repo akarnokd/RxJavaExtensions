@@ -16,8 +16,6 @@
 
 package hu.akarnokd.rxjava2.string;
 
-import java.util.concurrent.atomic.AtomicLongFieldUpdater;
-
 import org.reactivestreams.Subscriber;
 
 import io.reactivex.Flowable;
@@ -55,10 +53,6 @@ final class FlowableCharSequence extends Flowable<Integer> {
         int index;
 
         volatile boolean cancelled;
-
-        volatile long requested;
-        static final AtomicLongFieldUpdater<CharSequenceSubscription> REQUESTED =
-                AtomicLongFieldUpdater.newUpdater(CharSequenceSubscription.class, "requested");
 
         CharSequenceSubscription(Subscriber<? super Integer> actual, CharSequence string) {
             this.actual = actual;
@@ -129,13 +123,14 @@ final class FlowableCharSequence extends Flowable<Integer> {
                     return;
                 }
 
-                r = requested;
+                r = get();
                 if (e == r) {
                     index = i;
-                    r = REQUESTED.addAndGet(this, -e);
+                    r = addAndGet(-e);
                     if (r == 0L) {
                         break;
                     }
+                    e = 0L;
                 }
             }
         }
@@ -157,7 +152,7 @@ final class FlowableCharSequence extends Flowable<Integer> {
 
         @Override
         public boolean isEmpty() {
-            return index != end;
+            return index == end;
         }
 
         @Override
