@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2017 Martin Nowak
+ * Copyright 2016-2017 David Karnok, Martin Nowak
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,8 @@
  */
 
 package hu.akarnokd.rxjava2.operators;
+
+import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
 
@@ -73,7 +75,8 @@ final class FlowableWindowPredicate<T> extends Flowable<Flowable<T>> implements 
     }
 
     static final class WindowPredicateSubscriber<T>
-    implements ConditionalSubscriber<T>, Subscription {
+    extends AtomicInteger
+    implements ConditionalSubscriber<T>, Subscription, Runnable {
 
         final Subscriber<? super Flowable<T>> actual;
 
@@ -83,6 +86,8 @@ final class FlowableWindowPredicate<T> extends Flowable<Flowable<T>> implements 
 
         final int bufferSize;
 
+        final AtomicBoolean cancelOnce;
+
         Subscription s;
 
         UnicastProcessor<T> window;
@@ -90,10 +95,12 @@ final class FlowableWindowPredicate<T> extends Flowable<Flowable<T>> implements 
         WindowPredicateSubscriber(Subscriber<? super Flowable<T>> actual,
                 Predicate<? super T> predicate, Mode mode,
                 int bufferSize) {
+            super(1);
             this.actual = actual;
             this.predicate = predicate;
             this.mode = mode;
             this.bufferSize = bufferSize;
+            this.cancelOnce = new AtomicBoolean();
         }
 
         @Override
@@ -115,8 +122,7 @@ final class FlowableWindowPredicate<T> extends Flowable<Flowable<T>> implements 
         public boolean tryOnNext(T t) {
             UnicastProcessor<T> w = window;
             if (w == null) {
-                window = w = UnicastProcessor.<T>create(bufferSize);
-                actual.onNext(w);
+                w = newWindow();
             }
 
             boolean b;
@@ -131,12 +137,13 @@ final class FlowableWindowPredicate<T> extends Flowable<Flowable<T>> implements 
             }
 
             if (b) {
-                if (mode == Mode.AFTER)
+                if (mode == Mode.AFTER) {
                     w.onNext(t);
-                window = w = UnicastProcessor.<T>create(bufferSize);
-                actual.onNext(w);
-                if (mode == Mode.BEFORE)
+                }
+                w = newWindow();
+                if (mode == Mode.BEFORE) {
                     w.onNext(t);
+                }
             } else {
                 w.onNext(t);
             }
@@ -172,7 +179,28 @@ final class FlowableWindowPredicate<T> extends Flowable<Flowable<T>> implements 
 
         @Override
         public void cancel() {
-            s.cancel();
+            if (cancelOnce.compareAndSet(false, true)) {
+                s.cancel();
+            }
+        }
+
+        @Override
+        public void run() {
+            if (decrementAndGet() == 0) {
+                s.cancel();
+            }
+        }
+
+        private UnicastProcessor<T> newWindow() {
+            UnicastProcessor<T> w = window;
+            if (w != null) {
+                w.onComplete();
+            }
+            getAndIncrement();
+            w = UnicastProcessor.<T>create(bufferSize, this);
+            window = w;
+            actual.onNext(w);
+            return w;
         }
     }
 }
