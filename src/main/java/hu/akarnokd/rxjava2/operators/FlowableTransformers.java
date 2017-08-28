@@ -1186,14 +1186,7 @@ public final class FlowableTransformers {
     @SchedulerSupport(SchedulerSupport.NONE)
     @BackpressureSupport(BackpressureKind.FULL)
     public static <T> FlowableTransformer<T, Flowable<T>> windowWhile(final Predicate<? super T> predicate, int bufferSize) {
-        Predicate<T> negated = new Predicate<T>() {
-            @Override
-            final public boolean test(T t) throws Exception {
-                return !predicate.test(t);
-            }
-        };
-
-        return new FlowableWindowPredicate<T>(null, negated, FlowableWindowPredicate.Mode.BEFORE, bufferSize);
+        return new FlowableWindowPredicate<T>(null, predicate, FlowableWindowPredicate.Mode.BEFORE, bufferSize);
     }
 
     /**

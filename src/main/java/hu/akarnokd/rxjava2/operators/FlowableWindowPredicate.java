@@ -30,7 +30,8 @@ import io.reactivex.plugins.RxJavaPlugins;
 import io.reactivex.processors.UnicastProcessor;
 
 /**
- * Emit into the same window until the predicate returns true.
+ * Emit into the same window while the predicate returns true or
+ * emit into the same window until the predicate returns true.
  *
  * @param <T> the source value type
  * @author Martin Nowak
@@ -127,7 +128,8 @@ final class FlowableWindowPredicate<T> extends Flowable<Flowable<T>> implements 
             boolean b;
 
             try {
-                b = predicate.test(t);
+                // negate predicate for windowWhile
+                b = predicate.test(t) ^ mode == Mode.BEFORE;
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
                 s.cancel();
