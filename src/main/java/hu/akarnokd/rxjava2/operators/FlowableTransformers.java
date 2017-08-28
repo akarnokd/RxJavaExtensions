@@ -1155,4 +1155,105 @@ public final class FlowableTransformers {
         ObjectHelper.verifyPositive(bufferSize, "bufferSize");
         return new FlowableCoalesce<T, R>(null, containerSupplier, coalescer, bufferSize);
     }
+
+    /**
+     * Emits elements into a Flowable window while the given predicate returns true. If the
+     * predicate returns false, a new Flowable window is emitted.
+     * @param <T> the source value type
+     * @param predicate the predicate receiving the current value and if returns false,
+     *                  a new window is created with the specified item
+     * @return the new FlowableTransformer instance
+     *
+     * @since 0.17.7
+     */
+    @SchedulerSupport(SchedulerSupport.NONE)
+    @BackpressureSupport(BackpressureKind.FULL)
+    public static <T> FlowableTransformer<T, Flowable<T>> windowWhile(Predicate<? super T> predicate) {
+        return windowWhile(predicate, Flowable.bufferSize());
+    }
+
+    /**
+     * Emits elements into a Flowable window while the given predicate returns true. If the
+     * predicate returns false, a new Flowable window is emitted.
+     * @param <T> the source value type
+     * @param predicate the predicate receiving the current value and if returns false,
+     *                  a new window is created with the specified item
+     * @param bufferSize the buffer size hint (the chunk size of the underlying unbounded buffer)
+     * @return the new FlowableTransformer instance
+     *
+     * @since 0.17.7
+     */
+    @SchedulerSupport(SchedulerSupport.NONE)
+    @BackpressureSupport(BackpressureKind.FULL)
+    public static <T> FlowableTransformer<T, Flowable<T>> windowWhile(final Predicate<? super T> predicate, int bufferSize) {
+        return new FlowableWindowPredicate<T>(null, predicate, FlowableWindowPredicate.Mode.BEFORE, bufferSize);
+    }
+
+    /**
+     * Emits elements into a Flowable window until the given predicate returns true at which
+     * point a new Flowable window is emitted.
+     * @param <T> the source value type
+     * @param predicate the predicate receiving the current item and if returns true,
+     *                  the current window is completed and a new window is emitted
+     * @return the new FlowableTransformer instance
+     *
+     * @since 0.17.7
+     */
+    @SchedulerSupport(SchedulerSupport.NONE)
+    @BackpressureSupport(BackpressureKind.FULL)
+    public static <T> FlowableTransformer<T, Flowable<T>> windowUntil(Predicate<? super T> predicate) {
+        return windowUntil(predicate, Flowable.bufferSize());
+    }
+
+
+    /**
+     * Emits elements into a Flowable window until the given predicate returns true at which
+     * point a new Flowable window is emitted.
+     * @param <T> the source value type
+     * @param predicate the predicate receiving the current item and if returns true,
+     *                  the current window is completed and a new window is emitted
+     * @param bufferSize the buffer size hint (the chunk size of the underlying unbounded buffer)
+     * @return the new Flowable instance
+     *
+     * @since 0.17.7
+     */
+    @SchedulerSupport(SchedulerSupport.NONE)
+    @BackpressureSupport(BackpressureKind.FULL)
+    public static <T> FlowableTransformer<T, Flowable<T>> windowUntil(Predicate<? super T> predicate, int bufferSize) {
+        return new FlowableWindowPredicate<T>(null, predicate, FlowableWindowPredicate.Mode.AFTER, bufferSize);
+    }
+
+    /**
+     * Emits elements into a Flowable window until the given predicate returns true at which
+     * point a new Flowable window is emitted; the particular item will be dropped.
+     * @param <T> the source value type
+     * @param predicate the predicate receiving the current item and if returns true,
+     *                  the current window is completed and a new window is emitted
+     * @return the new FlowableTransformer instance
+     *
+     * @since 0.17.7
+     */
+    @SchedulerSupport(SchedulerSupport.NONE)
+    @BackpressureSupport(BackpressureKind.FULL)
+    public static <T> FlowableTransformer<T, Flowable<T>> windowSplit(Predicate<? super T> predicate) {
+        return windowSplit(predicate, Flowable.bufferSize());
+    }
+
+
+    /**
+     * Emits elements into a Flowable window until the given predicate returns true at which
+     * point a new Flowable window is emitted; the particular item will be dropped.
+     * @param <T> the source value type
+     * @param predicate the predicate receiving the current item and if returns true,
+     *                  the current window is completed and a new window is emitted
+     * @param bufferSize the buffer size hint (the chunk size of the underlying unbounded buffer)
+     * @return the new Flowable instance
+     *
+     * @since 0.17.7
+     */
+    @SchedulerSupport(SchedulerSupport.NONE)
+    @BackpressureSupport(BackpressureKind.FULL)
+    public static <T> FlowableTransformer<T, Flowable<T>> windowSplit(Predicate<? super T> predicate, int bufferSize) {
+        return new FlowableWindowPredicate<T>(null, predicate, FlowableWindowPredicate.Mode.SPLIT, bufferSize);
+    }
 }
