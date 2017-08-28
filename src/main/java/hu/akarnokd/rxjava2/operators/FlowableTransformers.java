@@ -1157,14 +1157,14 @@ public final class FlowableTransformers {
     }
 
     /**
-     * Emits elements into a UnicastProcessor while the given predicate returns true. If the
-     * predicate returns false, a new empty UnicastProcessor is emitted.
+     * Emits elements into a Flowable window while the given predicate returns true. If the
+     * predicate returns false, a new Flowable window is emitted.
      * @param <T> the source value type
      * @param predicate the predicate receiving the current value and if returns false,
-     *                  a new buffer is created with the specified item
+     *                  a new window is created with the specified item
      * @return the new FlowableTransformer instance
      *
-     * @since 0.17.4
+     * @since 0.17.7
      */
     @SchedulerSupport(SchedulerSupport.NONE)
     @BackpressureSupport(BackpressureKind.FULL)
@@ -1173,15 +1173,15 @@ public final class FlowableTransformers {
     }
 
     /**
-     * Emits elements into a UnicastProcessor while the given predicate returns true. If the
-     * predicate returns false, a new empty UnicastProcessor is emitted.
+     * Emits elements into a Flowable window while the given predicate returns true. If the
+     * predicate returns false, a new Flowable window is emitted.
      * @param <T> the source value type
      * @param predicate the predicate receiving the current value and if returns false,
-     *                  a new collection is created with the specified item
+     *                  a new window is created with the specified item
      * @param bufferSize the buffer size hint (the chunk size of the underlying unbounded buffer)
      * @return the new FlowableTransformer instance
      *
-     * @since 0.17.4
+     * @since 0.17.7
      */
     @SchedulerSupport(SchedulerSupport.NONE)
     @BackpressureSupport(BackpressureKind.FULL)
@@ -1197,14 +1197,14 @@ public final class FlowableTransformers {
     }
 
     /**
-     * Emits elements into a UnicastProcessor until the given predicate returns true at which
-     * point a new empty UnicastProcessor is emitted.
+     * Emits elements into a Flowable window until the given predicate returns true at which
+     * point a new Flowable window is emitted.
      * @param <T> the source value type
      * @param predicate the predicate receiving the current item and if returns true,
-     *                  the current buffer is emitted and a fresh empty buffer is created
+     *                  the current window is completed and a new window is emitted
      * @return the new FlowableTransformer instance
      *
-     * @since 0.17.4
+     * @since 0.17.7
      */
     @SchedulerSupport(SchedulerSupport.NONE)
     @BackpressureSupport(BackpressureKind.FULL)
@@ -1214,15 +1214,15 @@ public final class FlowableTransformers {
 
 
     /**
-     * Emits elements into a UnicastProcessor until the given predicate returns true at which
-     * point a new empty UnicastProcessor is emitted.
+     * Emits elements into a Flowable window until the given predicate returns true at which
+     * point a new Flowable window is emitted.
      * @param <T> the source value type
      * @param predicate the predicate receiving the current item and if returns true,
-     *                  the current collection is emitted and a fresh empty collection is created
+     *                  the current window is completed and a new window is emitted
      * @param bufferSize the buffer size hint (the chunk size of the underlying unbounded buffer)
      * @return the new Flowable instance
      *
-     * @since 0.17.4
+     * @since 0.17.7
      */
     @SchedulerSupport(SchedulerSupport.NONE)
     @BackpressureSupport(BackpressureKind.FULL)
@@ -1231,14 +1231,14 @@ public final class FlowableTransformers {
     }
 
     /**
-     * Emits elements into a UnicastProcessor until the given predicate returns true at which
-     * point a new empty UnicastProcessor is emitted; the particular item will be dropped.
+     * Emits elements into a Flowable window until the given predicate returns true at which
+     * point a new Flowable window is emitted; the particular item will be dropped.
      * @param <T> the source value type
      * @param predicate the predicate receiving the current item and if returns true,
-     *                  the current buffer is emitted and a fresh empty buffer is created
+     *                  the current window is completed and a new window is emitted
      * @return the new FlowableTransformer instance
      *
-     * @since 0.17.4
+     * @since 0.17.7
      */
     @SchedulerSupport(SchedulerSupport.NONE)
     @BackpressureSupport(BackpressureKind.FULL)
@@ -1248,15 +1248,15 @@ public final class FlowableTransformers {
 
 
     /**
-     * Emits elements into a UnicastProcessor until the given predicate returns true at which
-     * point a new empty UnicastProcessor is emitted; the particular item will be dropped.
+     * Emits elements into a Flowable window until the given predicate returns true at which
+     * point a new Flowable window is emitted; the particular item will be dropped.
      * @param <T> the source value type
      * @param predicate the predicate receiving the current item and if returns true,
-     *                  the current collection is emitted and a fresh empty collection is created
+     *                  the current window is completed and a new window is emitted
      * @param bufferSize the buffer size hint (the chunk size of the underlying unbounded buffer)
      * @return the new Flowable instance
      *
-     * @since 0.17.4
+     * @since 0.17.7
      */
     @SchedulerSupport(SchedulerSupport.NONE)
     @BackpressureSupport(BackpressureKind.FULL)

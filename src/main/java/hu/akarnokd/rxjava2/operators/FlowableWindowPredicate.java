@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2017 David Karnok, Martin Nowak
+ * Copyright 2016-2017 David Karnok
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,9 +33,8 @@ import io.reactivex.processors.UnicastProcessor;
  * Emit into the same window until the predicate returns true.
  *
  * @param <T> the source value type
- * @param <C> the buffer type
- *
- * @since 0.8.0
+ * @author Martin Nowak
+ * @since 0.17.7
  */
 final class FlowableWindowPredicate<T> extends Flowable<Flowable<T>> implements FlowableTransformer<T, Flowable<T>> {
 
@@ -133,6 +132,8 @@ final class FlowableWindowPredicate<T> extends Flowable<Flowable<T>> implements 
                 Exceptions.throwIfFatal(ex);
                 s.cancel();
                 actual.onError(ex);
+                w.onError(ex);
+                window = null;
                 return true;
             }
 
