@@ -86,7 +86,7 @@ final class FlowableWindowPredicate<T> extends Flowable<Flowable<T>> implements 
 
         final int bufferSize;
 
-        final AtomicBoolean cancelOnce;
+        final AtomicBoolean cancelled;
 
         Subscription s;
 
@@ -100,7 +100,7 @@ final class FlowableWindowPredicate<T> extends Flowable<Flowable<T>> implements 
             this.predicate = predicate;
             this.mode = mode;
             this.bufferSize = bufferSize;
-            this.cancelOnce = new AtomicBoolean();
+            this.cancelled = new AtomicBoolean();
         }
 
         @Override
@@ -122,6 +122,11 @@ final class FlowableWindowPredicate<T> extends Flowable<Flowable<T>> implements 
         public boolean tryOnNext(T t) {
             UnicastProcessor<T> w = window;
             if (w == null) {
+                // ignore additional items after last window is completed
+                if (cancelled.get()) {
+                    return true;
+                }
+                // create initial window
                 w = newWindow();
             }
 
@@ -143,9 +148,15 @@ final class FlowableWindowPredicate<T> extends Flowable<Flowable<T>> implements 
                 if (mode == Mode.AFTER) {
                     w.onNext(t);
                 }
-                w = newWindow();
-                if (mode == Mode.BEFORE) {
-                    w.onNext(t);
+                if (cancelled.get()) {
+                    w.onComplete();
+                    window = null;
+                } else {
+                    w.onComplete();
+                    w = newWindow();
+                    if (mode == Mode.BEFORE) {
+                        w.onNext(t);
+                    }
                 }
             } else {
                 w.onNext(t);
@@ -182,8 +193,8 @@ final class FlowableWindowPredicate<T> extends Flowable<Flowable<T>> implements 
 
         @Override
         public void cancel() {
-            if (cancelOnce.compareAndSet(false, true)) {
-                s.cancel();
+            if (cancelled.compareAndSet(false, true)) {
+                run();
             }
         }
 
@@ -195,12 +206,8 @@ final class FlowableWindowPredicate<T> extends Flowable<Flowable<T>> implements 
         }
 
         private UnicastProcessor<T> newWindow() {
-            UnicastProcessor<T> w = window;
-            if (w != null) {
-                w.onComplete();
-            }
             getAndIncrement();
-            w = UnicastProcessor.<T>create(bufferSize, this);
+            UnicastProcessor<T> w = UnicastProcessor.<T>create(bufferSize, this);
             window = w;
             actual.onNext(w);
             return w;
