@@ -389,4 +389,30 @@ public class FlowableWindowPredicateTest {
                 Arrays.asList(6)
         );
     }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void cancellation() {
+        Flowable.just(1, 2, -1, 3, 4, 5, -1, -1, 6)
+        .compose(FlowableTransformers.windowSplit(new Predicate<Integer>() {
+            @Override
+            public boolean test(Integer v) throws Exception {
+                return v == -1;
+            }
+        }))
+        .map(new Function<Flowable<Integer>, Flowable<Integer>>() {
+            @Override
+            public Flowable<Integer> apply(Flowable<Integer> f) {
+                return f.take(1);
+            }
+        })
+        .flatMapSingle(toList)
+        .test()
+        .assertResult(
+                Arrays.asList(1),
+                Arrays.asList(3),
+                Arrays.<Integer>asList(),
+                Arrays.asList(6)
+        );
+    }
 }
