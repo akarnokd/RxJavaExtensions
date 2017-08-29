@@ -114,6 +114,26 @@ public class FlowableWindowPredicateTest {
 
     @SuppressWarnings("unchecked")
     @Test
+    public void whileNormalBackpressuredWindowEmitting() {
+        Flowable.just(1, 2, -1, 3, 4, 5, -1, -1, 6)
+        .compose(FlowableTransformers.windowWhile(new Predicate<Integer>() {
+            @Override
+            public boolean test(Integer v) throws Exception {
+                return v != -1;
+            }
+        }))
+        .test(0)
+        .assertNoValues()
+        .requestMore(1)
+        .assertValueCount(1)
+        .requestMore(2)
+        .assertValueCount(3)
+        .requestMore(1)
+        .assertValueCount(4);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
     public void untilNormal() {
         Flowable.just(1, 2, -1, 3, 4, 5, -1, -1, 6)
         .compose(FlowableTransformers.windowUntil(new Predicate<Integer>() {
@@ -182,6 +202,26 @@ public class FlowableWindowPredicateTest {
 
     @SuppressWarnings("unchecked")
     @Test
+    public void untilNormalBackpressuredWindowEmitting() {
+        Flowable.just(1, 2, -1, 3, 4, 5, -1, -1, 6)
+        .compose(FlowableTransformers.windowUntil(new Predicate<Integer>() {
+            @Override
+            public boolean test(Integer v) throws Exception {
+                return v == -1;
+            }
+        }))
+        .test(0)
+        .assertNoValues()
+        .requestMore(1)
+        .assertValueCount(1)
+        .requestMore(2)
+        .assertValueCount(3)
+        .requestMore(1)
+        .assertValueCount(4);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
     public void emptyWhile() {
         Flowable.<Integer>empty()
         .compose(FlowableTransformers.windowWhile(new Predicate<Integer>() {
@@ -190,9 +230,8 @@ public class FlowableWindowPredicateTest {
                 return v != -1;
             }
         }))
-        .flatMapSingle(toList)
         .test()
-        .assertResult();
+        .assertNoValues();
     }
 
     @SuppressWarnings("unchecked")
@@ -205,9 +244,8 @@ public class FlowableWindowPredicateTest {
                 return v == -1;
             }
         }))
-        .flatMapSingle(toList)
         .test()
-        .assertResult();
+        .assertNoValues();
     }
 
     @SuppressWarnings("unchecked")
@@ -388,6 +426,26 @@ public class FlowableWindowPredicateTest {
                 Arrays.<Integer>asList(),
                 Arrays.asList(6)
         );
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void splitNormalBackpressuredWindowEmitting() {
+        Flowable.just(1, 2, -1, 3, 4, 5, -1, -1, 6)
+        .compose(FlowableTransformers.windowSplit(new Predicate<Integer>() {
+            @Override
+            public boolean test(Integer v) throws Exception {
+                return v == -1;
+            }
+        }))
+        .test(0)
+        .assertNoValues()
+        .requestMore(1)
+        .assertValueCount(1)
+        .requestMore(2)
+        .assertValueCount(3)
+        .requestMore(1)
+        .assertValueCount(4);
     }
 
     @SuppressWarnings("unchecked")

@@ -92,6 +92,8 @@ final class FlowableWindowPredicate<T> extends Flowable<Flowable<T>> implements 
 
         UnicastProcessor<T> window;
 
+        T pending; // look-ahead element for Mode.BEFORE
+
         WindowPredicateSubscriber(Subscriber<? super Flowable<T>> actual,
                 Predicate<? super T> predicate, Mode mode,
                 int bufferSize) {
@@ -120,14 +122,21 @@ final class FlowableWindowPredicate<T> extends Flowable<Flowable<T>> implements 
 
         @Override
         public boolean tryOnNext(T t) {
+            boolean emittedWindow = false;
             UnicastProcessor<T> w = window;
             if (w == null) {
                 // ignore additional items after last window is completed
                 if (cancelled.get()) {
                     return true;
                 }
-                // create initial window
+                // emit next window
                 w = newWindow();
+                emittedWindow = true;
+                // emit pending element that triggered the predicate
+                if (mode == Mode.BEFORE && pending != null) {
+                    w.onNext(pending);
+                    pending = null;
+                }
             }
 
             boolean b;
@@ -145,23 +154,21 @@ final class FlowableWindowPredicate<T> extends Flowable<Flowable<T>> implements 
             }
 
             if (b) {
+                // element goes into current window
                 if (mode == Mode.AFTER) {
                     w.onNext(t);
                 }
-                if (cancelled.get()) {
-                    w.onComplete();
-                    window = null;
-                } else {
-                    w.onComplete();
-                    w = newWindow();
-                    if (mode == Mode.BEFORE) {
-                        w.onNext(t);
-                    }
+                // finish current window
+                w.onComplete();
+                window = null;
+                // element goes into the next requested window
+                if (mode == Mode.BEFORE) {
+                    pending = t;
                 }
             } else {
                 w.onNext(t);
             }
-            return b;
+            return emittedWindow;
         }
 
         @Override
