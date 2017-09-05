@@ -135,6 +135,24 @@ public class FlowableWindowPredicateTest {
 
     @SuppressWarnings("unchecked")
     @Test
+    public void whileMatchBegin() {
+        Flowable.just(-1, 1, 2)
+        .compose(FlowableTransformers.windowWhile(new Predicate<Integer>() {
+            @Override
+            public boolean test(Integer v) throws Exception {
+                return v != -1;
+            }
+        }))
+        .flatMapSingle(toList)
+        .test()
+        .assertResult(
+                Arrays.<Integer>asList(),
+                Arrays.asList(-1, 1, 2)
+        );
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
     public void untilNormal() {
         Flowable.just(1, 2, -1, 3, 4, 5, -1, -1, 6)
         .compose(FlowableTransformers.windowUntil(new Predicate<Integer>() {
@@ -219,6 +237,25 @@ public class FlowableWindowPredicateTest {
         .assertValueCount(3)
         .requestMore(1)
         .assertValueCount(4);
+    }
+
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void untilMatchBegin() {
+        Flowable.just(-1, 1, 2)
+        .compose(FlowableTransformers.windowUntil(new Predicate<Integer>() {
+            @Override
+            public boolean test(Integer v) throws Exception {
+                return v == -1;
+            }
+        }))
+        .flatMapSingle(toList)
+        .test()
+        .assertResult(
+                Arrays.asList(-1),
+                Arrays.asList(1, 2)
+        );
     }
 
     @SuppressWarnings("unchecked")
@@ -447,6 +484,25 @@ public class FlowableWindowPredicateTest {
         .assertValueCount(3)
         .requestMore(1)
         .assertValueCount(4);
+    }
+
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void splitMatchBegin() {
+        Flowable.just(-1, 1, 2)
+        .compose(FlowableTransformers.windowSplit(new Predicate<Integer>() {
+            @Override
+            public boolean test(Integer v) throws Exception {
+                return v == -1;
+            }
+        }))
+        .flatMapSingle(toList)
+        .test()
+        .assertResult(
+                Arrays.<Integer>asList(),
+                Arrays.asList(1, 2)
+        );
     }
 
     @SuppressWarnings("unchecked")
