@@ -19,6 +19,7 @@ package hu.akarnokd.rxjava2.operators;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.Test;
 import org.reactivestreams.Subscriber;
@@ -472,5 +473,24 @@ public class FlowableWindowPredicateTest {
                 Arrays.<Integer>asList(),
                 Arrays.asList(6)
         );
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void whileDrainQueue() {
+        // test that window is emitted right away, not when next value arrives
+        Flowable.concat(Flowable.just(1L, 2L, -1L), Flowable.timer(1, TimeUnit.SECONDS))
+        .compose(FlowableTransformers.windowWhile(new Predicate<Long>() {
+            @Override
+            public boolean test(Long v) throws Exception {
+                return v != -1L;
+            }
+        }))
+        .test(0)
+        .assertNoValues()
+        .requestMore(1)
+        .assertValueCount(1)
+        .requestMore(1)
+        .assertValueCount(2);
     }
 }
