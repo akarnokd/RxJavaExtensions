@@ -19,6 +19,7 @@ package hu.akarnokd.rxjava2.operators;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.Test;
 import org.reactivestreams.Subscriber;
@@ -114,6 +115,44 @@ public class FlowableWindowPredicateTest {
 
     @SuppressWarnings("unchecked")
     @Test
+    public void whileNormalBackpressuredWindowEmitting() {
+        Flowable.just(1, 2, -1, 3, 4, 5, -1, -1, 6)
+        .compose(FlowableTransformers.windowWhile(new Predicate<Integer>() {
+            @Override
+            public boolean test(Integer v) throws Exception {
+                return v != -1;
+            }
+        }))
+        .test(0)
+        .assertNoValues()
+        .requestMore(1)
+        .assertValueCount(1)
+        .requestMore(2)
+        .assertValueCount(3)
+        .requestMore(1)
+        .assertValueCount(4);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void whileMatchBegin() {
+        Flowable.just(-1, 1, 2)
+        .compose(FlowableTransformers.windowWhile(new Predicate<Integer>() {
+            @Override
+            public boolean test(Integer v) throws Exception {
+                return v != -1;
+            }
+        }))
+        .flatMapSingle(toList)
+        .test()
+        .assertResult(
+                Arrays.<Integer>asList(),
+                Arrays.asList(-1, 1, 2)
+        );
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
     public void untilNormal() {
         Flowable.just(1, 2, -1, 3, 4, 5, -1, -1, 6)
         .compose(FlowableTransformers.windowUntil(new Predicate<Integer>() {
@@ -182,6 +221,45 @@ public class FlowableWindowPredicateTest {
 
     @SuppressWarnings("unchecked")
     @Test
+    public void untilNormalBackpressuredWindowEmitting() {
+        Flowable.just(1, 2, -1, 3, 4, 5, -1, -1, 6)
+        .compose(FlowableTransformers.windowUntil(new Predicate<Integer>() {
+            @Override
+            public boolean test(Integer v) throws Exception {
+                return v == -1;
+            }
+        }))
+        .test(0)
+        .assertNoValues()
+        .requestMore(1)
+        .assertValueCount(1)
+        .requestMore(2)
+        .assertValueCount(3)
+        .requestMore(1)
+        .assertValueCount(4);
+    }
+
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void untilMatchBegin() {
+        Flowable.just(-1, 1, 2)
+        .compose(FlowableTransformers.windowUntil(new Predicate<Integer>() {
+            @Override
+            public boolean test(Integer v) throws Exception {
+                return v == -1;
+            }
+        }))
+        .flatMapSingle(toList)
+        .test()
+        .assertResult(
+                Arrays.asList(-1),
+                Arrays.asList(1, 2)
+        );
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
     public void emptyWhile() {
         Flowable.<Integer>empty()
         .compose(FlowableTransformers.windowWhile(new Predicate<Integer>() {
@@ -190,9 +268,8 @@ public class FlowableWindowPredicateTest {
                 return v != -1;
             }
         }))
-        .flatMapSingle(toList)
         .test()
-        .assertResult();
+        .assertNoValues();
     }
 
     @SuppressWarnings("unchecked")
@@ -205,9 +282,8 @@ public class FlowableWindowPredicateTest {
                 return v == -1;
             }
         }))
-        .flatMapSingle(toList)
         .test()
-        .assertResult();
+        .assertNoValues();
     }
 
     @SuppressWarnings("unchecked")
@@ -392,6 +468,45 @@ public class FlowableWindowPredicateTest {
 
     @SuppressWarnings("unchecked")
     @Test
+    public void splitNormalBackpressuredWindowEmitting() {
+        Flowable.just(1, 2, -1, 3, 4, 5, -1, -1, 6)
+        .compose(FlowableTransformers.windowSplit(new Predicate<Integer>() {
+            @Override
+            public boolean test(Integer v) throws Exception {
+                return v == -1;
+            }
+        }))
+        .test(0)
+        .assertNoValues()
+        .requestMore(1)
+        .assertValueCount(1)
+        .requestMore(2)
+        .assertValueCount(3)
+        .requestMore(1)
+        .assertValueCount(4);
+    }
+
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void splitMatchBegin() {
+        Flowable.just(-1, 1, 2)
+        .compose(FlowableTransformers.windowSplit(new Predicate<Integer>() {
+            @Override
+            public boolean test(Integer v) throws Exception {
+                return v == -1;
+            }
+        }))
+        .flatMapSingle(toList)
+        .test()
+        .assertResult(
+                Arrays.<Integer>asList(),
+                Arrays.asList(1, 2)
+        );
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
     public void cancellation() {
         Flowable.just(1, 2, -1, 3, 4, 5, -1, -1, 6)
         .compose(FlowableTransformers.windowSplit(new Predicate<Integer>() {
@@ -414,5 +529,24 @@ public class FlowableWindowPredicateTest {
                 Arrays.<Integer>asList(),
                 Arrays.asList(6)
         );
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void whileDrainQueue() {
+        // test that window is emitted right away, not when next value arrives
+        Flowable.concat(Flowable.just(1L, 2L, -1L), Flowable.timer(1, TimeUnit.SECONDS))
+        .compose(FlowableTransformers.windowWhile(new Predicate<Long>() {
+            @Override
+            public boolean test(Long v) throws Exception {
+                return v != -1L;
+            }
+        }))
+        .test(0)
+        .assertNoValues()
+        .requestMore(1)
+        .assertValueCount(1)
+        .requestMore(1)
+        .assertValueCount(2);
     }
 }

@@ -26,6 +26,7 @@ import io.reactivex.functions.Predicate;
 import io.reactivex.internal.functions.ObjectHelper;
 import io.reactivex.internal.fuseable.ConditionalSubscriber;
 import io.reactivex.internal.subscriptions.*;
+import io.reactivex.internal.util.BackpressureHelper;
 import io.reactivex.plugins.RxJavaPlugins;
 import io.reactivex.processors.UnicastProcessor;
 
@@ -86,11 +87,15 @@ final class FlowableWindowPredicate<T> extends Flowable<Flowable<T>> implements 
 
         final int bufferSize;
 
-        final AtomicBoolean cancelled;
+        final AtomicBoolean cancelled = new AtomicBoolean();
 
         Subscription s;
 
         UnicastProcessor<T> window;
+
+        final AtomicLong requestedWindows;
+
+        final AtomicReference<UnicastProcessor<T>> pending; // 1-element drain queue for Mode.BEFORE
 
         WindowPredicateSubscriber(Subscriber<? super Flowable<T>> actual,
                 Predicate<? super T> predicate, Mode mode,
@@ -100,7 +105,14 @@ final class FlowableWindowPredicate<T> extends Flowable<Flowable<T>> implements 
             this.predicate = predicate;
             this.mode = mode;
             this.bufferSize = bufferSize;
-            this.cancelled = new AtomicBoolean();
+            // In Mode.BEFORE windows are opened earlier and added to the 1-element drain "queue"
+            if (mode == Mode.BEFORE) {
+                requestedWindows = new AtomicLong();
+                pending = new AtomicReference<UnicastProcessor<T>>();
+            } else {
+                requestedWindows = null;
+                pending = null;
+            }
         }
 
         @Override
@@ -120,14 +132,21 @@ final class FlowableWindowPredicate<T> extends Flowable<Flowable<T>> implements 
 
         @Override
         public boolean tryOnNext(T t) {
+            boolean emittedWindow = false;
             UnicastProcessor<T> w = window;
             if (w == null) {
                 // ignore additional items after last window is completed
                 if (cancelled.get()) {
                     return true;
                 }
-                // create initial window
-                w = newWindow();
+                // emit next window
+                w = UnicastProcessor.<T>create(bufferSize, this);
+                window = w;
+                getAndIncrement();
+                if (mode == Mode.BEFORE) {
+                    requestedWindows.getAndDecrement();
+                }
+                actual.onNext(w);
             }
 
             boolean b;
@@ -145,18 +164,24 @@ final class FlowableWindowPredicate<T> extends Flowable<Flowable<T>> implements 
             }
 
             if (b) {
+                // element goes into current window
                 if (mode == Mode.AFTER) {
                     w.onNext(t);
                 }
-                if (cancelled.get()) {
-                    w.onComplete();
-                    window = null;
+                // finish current window
+                w.onComplete();
+                // element goes into the next requested window
+                if (mode == Mode.BEFORE) {
+                    w = UnicastProcessor.<T>create(bufferSize, this);
+                    window = w;
+                    w.onNext(t);
+                    // add window to drain queue
+                    pending.set(w);
+                    // try emitting right away
+                    drain();
                 } else {
-                    w.onComplete();
-                    w = newWindow();
-                    if (mode == Mode.BEFORE) {
-                        w.onNext(t);
-                    }
+                    // new window emitted on next upstream item
+                    window = null;
                 }
             } else {
                 w.onNext(t);
@@ -188,6 +213,10 @@ final class FlowableWindowPredicate<T> extends Flowable<Flowable<T>> implements 
 
         @Override
         public void request(long n) {
+            if (mode == Mode.BEFORE && SubscriptionHelper.validate(n)) {
+                BackpressureHelper.add(requestedWindows, n);
+                drain();
+            }
             s.request(n);
         }
 
@@ -205,12 +234,17 @@ final class FlowableWindowPredicate<T> extends Flowable<Flowable<T>> implements 
             }
         }
 
-        private UnicastProcessor<T> newWindow() {
+        private void drain() {
+            if (requestedWindows.get() <= 0) {
+                return;
+            }
+            UnicastProcessor<T> w = pending.getAndSet(null);
+            if (w == null) {
+                return;
+            }
             getAndIncrement();
-            UnicastProcessor<T> w = UnicastProcessor.<T>create(bufferSize, this);
-            window = w;
+            requestedWindows.getAndDecrement();
             actual.onNext(w);
-            return w;
         }
     }
 }

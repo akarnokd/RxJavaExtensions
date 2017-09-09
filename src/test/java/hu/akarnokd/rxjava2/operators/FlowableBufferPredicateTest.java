@@ -98,6 +98,23 @@ public class FlowableBufferPredicateTest {
 
     @SuppressWarnings("unchecked")
     @Test
+    public void whileMatchBegin() {
+        Flowable.just(-1, 1, 2)
+        .compose(FlowableTransformers.bufferWhile(new Predicate<Integer>() {
+            @Override
+            public boolean test(Integer v) throws Exception {
+                return v != -1;
+            }
+        }))
+        .test()
+        .assertResult(
+                Arrays.<Integer>asList(),
+                Arrays.asList(-1, 1, 2)
+        );
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
     public void untilNormal() {
         Flowable.just(1, 2, -1, 3, 4, 5, -1, -1, 6)
         .compose(FlowableTransformers.bufferUntil(new Predicate<Integer>() {
@@ -158,6 +175,23 @@ public class FlowableBufferPredicateTest {
                 Arrays.asList(3, 4, 5, -1),
                 Arrays.asList(-1),
                 Arrays.asList(6)
+        );
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void untilMatchBegin() {
+        Flowable.just(-1, 1, 2)
+        .compose(FlowableTransformers.bufferUntil(new Predicate<Integer>() {
+            @Override
+            public boolean test(Integer v) throws Exception {
+                return v == -1;
+            }
+        }))
+        .test()
+        .assertResult(
+                Arrays.asList(-1),
+                Arrays.asList(1, 2)
         );
     }
 
@@ -448,4 +482,20 @@ public class FlowableBufferPredicateTest {
         );
     }
 
+    @SuppressWarnings("unchecked")
+    @Test
+    public void splitMatchBegin() {
+        Flowable.just(-1, 1, 2)
+        .compose(FlowableTransformers.bufferSplit(new Predicate<Integer>() {
+            @Override
+            public boolean test(Integer v) throws Exception {
+                return v == -1;
+            }
+        }))
+        .test()
+        .assertResult(
+                Arrays.<Integer>asList(),
+                Arrays.asList(1, 2)
+        );
+    }
 }
