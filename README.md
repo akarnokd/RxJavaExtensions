@@ -47,7 +47,8 @@ Maven search:
     - [debounceFirst()](#flowabletransformersdebouncefirst), [switchFlatMap()](#flowabletransformersswitchflatmap), [flatMapSync()](#flowabletransformersflatmapsync),
     - [flatMapAsync()](#flowabletransformersflatmapasync), [switchIfEmpty()](#flowabletransformersswitchifempty--switchifemptyarray),
     - [expand()](#flowabletransformersexpand), [mapAsync()](#flowabletransformersmapasync), [filterAsync()](#flowabletransformerfilterasync),
-    - [refCount()](#flowabletransformersrefcount), [zipLatest()](#flowablesziplatest), [coalesce()](#flowabletransformerscoalesce)
+    - [refCount()](#flowabletransformersrefcount), [zipLatest()](#flowablesziplatest), [coalesce()](#flowabletransformerscoalesce),
+    - [windowWhile()](#flowabletransformerswindowwhile), [windowUntil()](#flowabletransformerswindowuntil), [windowSplit()](#flowabletransformerswindowsplit)
   - [Custom parallel operators and transformers](#custom-parallel-operators-and-transformers)
     - [sumX()](#paralleltransformerssumx)
   - [Special Publisher implementations](#special-publisher-implementations)
@@ -1180,6 +1181,59 @@ Flowable.range(1, 5)
 .requestMore(1)
 .assertResult(Arrays.asList(1), Arrays.asList(2, 3, 4, 5));
 ```
+
+### FlowableTransformers.windowWhile
+
+Emits elements into a Flowable window while the given predicate returns true. 
+If the predicate returns false, a new Flowable window is emitted.
+
+```java
+Flowable.just("1", "2", "#", "3", "#", "4", "#")
+.compose(FlowableTransformers.windowWhile(v -> !"#".equals(v)))
+.flatMap(v -> v.toList())
+.test()
+.assertResult(
+    Arrays.asList("1", "2"),
+    Arrays.asList("#", "3"),
+    Arrays.asList("#", "4"),
+    Arrays.asList("#")
+);
+```
+
+### FlowableTransformers.windowUntil
+
+Emits elements into a Flowable window until the given predicate returns true 
+at which point a new Flowable window is emitted.
+
+```java
+Flowable.just("1", "2", "#", "3", "#", "4", "#")
+.compose(FlowableTransformers.windowUntil(v -> "#".equals(v)))
+.flatMap(v -> v.toList())
+.test()
+.assertResult(
+    Arrays.asList("1", "2", "#"),
+    Arrays.asList("3", "#"),
+    Arrays.asList("4", "#")
+);
+```
+
+### FlowableTransformers.windowSplit
+
+Emits elements into a Flowable window until the given predicate returns true at which
+point a new Flowable window is emitted; the particular item will be dropped.
+
+```java
+Flowable.just("1", "2", "#", "3", "#", "4", "#")
+.compose(FlowableTransformers.windowSplit(v -> "#".equals(v)))
+.flatMap(v -> v.toList())
+.test()
+.assertResult(
+    Arrays.asList("1", "2"),
+    Arrays.asList("3"),
+    Arrays.asList("4")
+);
+```
+
 
 ## Custom parallel operators and transformers
 

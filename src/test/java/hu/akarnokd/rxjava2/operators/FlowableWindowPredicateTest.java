@@ -18,7 +18,6 @@ package hu.akarnokd.rxjava2.operators;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.Test;
@@ -113,7 +112,6 @@ public class FlowableWindowPredicateTest {
         );
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void whileNormalBackpressuredWindowEmitting() {
         Flowable.just(1, 2, -1, 3, 4, 5, -1, -1, 6)
@@ -219,7 +217,6 @@ public class FlowableWindowPredicateTest {
         );
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void untilNormalBackpressuredWindowEmitting() {
         Flowable.just(1, 2, -1, 3, 4, 5, -1, -1, 6)
@@ -258,7 +255,6 @@ public class FlowableWindowPredicateTest {
         );
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void emptyWhile() {
         Flowable.<Integer>empty()
@@ -272,7 +268,6 @@ public class FlowableWindowPredicateTest {
         .assertNoValues();
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void emptyUntil() {
         Flowable.<Integer>empty()
@@ -466,7 +461,6 @@ public class FlowableWindowPredicateTest {
         );
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void splitNormalBackpressuredWindowEmitting() {
         Flowable.just(1, 2, -1, 3, 4, 5, -1, -1, 6)
@@ -531,7 +525,6 @@ public class FlowableWindowPredicateTest {
         );
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void whileDrainQueue() {
         // test that window is emitted right away, not when next value arrives

@@ -23,11 +23,9 @@ import org.reactivestreams.*;
 import io.reactivex.*;
 import io.reactivex.exceptions.Exceptions;
 import io.reactivex.functions.Predicate;
-import io.reactivex.internal.functions.ObjectHelper;
 import io.reactivex.internal.fuseable.ConditionalSubscriber;
 import io.reactivex.internal.subscriptions.*;
 import io.reactivex.internal.util.BackpressureHelper;
-import io.reactivex.plugins.RxJavaPlugins;
 import io.reactivex.processors.UnicastProcessor;
 
 /**
@@ -78,6 +76,8 @@ final class FlowableWindowPredicate<T> extends Flowable<Flowable<T>> implements 
     static final class WindowPredicateSubscriber<T>
     extends AtomicInteger
     implements ConditionalSubscriber<T>, Subscription, Runnable {
+
+        private static final long serialVersionUID = 2749959965593866309L;
 
         final Subscriber<? super Flowable<T>> actual;
 
@@ -132,7 +132,6 @@ final class FlowableWindowPredicate<T> extends Flowable<Flowable<T>> implements 
 
         @Override
         public boolean tryOnNext(T t) {
-            boolean emittedWindow = false;
             UnicastProcessor<T> w = window;
             if (w == null) {
                 // ignore additional items after last window is completed
