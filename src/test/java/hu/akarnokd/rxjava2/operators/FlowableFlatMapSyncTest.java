@@ -120,7 +120,7 @@ public class FlowableFlatMapSyncTest {
     }
 
     @Test(timeout = 10000)
-    public void breath() {
+    public void breadth() {
         for (final int n : new int[] { 0, 1, 2, 10, 100, 1000 }) {
             Flowable.range(1, 1000)
             .compose(FlowableTransformers.flatMapSync(new Function<Integer, Publisher<Integer>>() {
@@ -137,7 +137,7 @@ public class FlowableFlatMapSyncTest {
     }
 
     @Test(timeout = 10000)
-    public void breathHidden() {
+    public void breadthHidden() {
         for (final int n : new int[] { 0, 1, 2, 10, 100, 1000 }) {
             Flowable.range(1, 1000)
             .compose(FlowableTransformers.flatMapSync(new Function<Integer, Publisher<Integer>>() {
@@ -154,7 +154,7 @@ public class FlowableFlatMapSyncTest {
     }
 
     @Test(timeout = 10000)
-    public void breathAsync() {
+    public void breadthAsync() {
         for (final int n : new int[] { 0, 1, 2, 10, 100, 1000 }) {
             Flowable.range(1, 1000)
             .compose(FlowableTransformers.flatMapSync(new Function<Integer, Publisher<Integer>>() {
@@ -172,7 +172,7 @@ public class FlowableFlatMapSyncTest {
     }
 
     @Test(timeout = 10000)
-    public void breathAsyncHidden() {
+    public void breadthAsyncHidden() {
         for (final int n : new int[] { 0, 1, 2, 10, 100, 1000 }) {
             Flowable.range(1, 1000)
             .compose(FlowableTransformers.flatMapSync(new Function<Integer, Publisher<Integer>>() {
@@ -190,7 +190,7 @@ public class FlowableFlatMapSyncTest {
     }
 
     @Test(timeout = 1000000)
-    public void breathAsyncHidden2() {
+    public void breadthAsyncHidden2() {
         for (int m = 1; m < 1011; m = m < 16 ? m + 1 : m + 10) {
 //            System.out.println(m);
             for (final int n : new int[] { 0, 1, 2, 10, 100, 1000 }) {

@@ -55,8 +55,8 @@ final class FlowableExpand<T> extends Flowable<T> implements FlowableTransformer
 
     @Override
     protected void subscribeActual(Subscriber<? super T> s) {
-        if (strategy == ExpandStrategy.BREATH_FIRST) {
-            ExpandBreathSubscriber<T> parent = new ExpandBreathSubscriber<T>(s, expander, capacityHint);
+        if (strategy != ExpandStrategy.DEPTH_FIRST) {
+            ExpandBreadthSubscriber<T> parent = new ExpandBreadthSubscriber<T>(s, expander, capacityHint);
             parent.queue.offer(source);
             s.onSubscribe(parent);
             parent.drainQueue();
@@ -72,7 +72,7 @@ final class FlowableExpand<T> extends Flowable<T> implements FlowableTransformer
         return new FlowableExpand<T>(upstream, expander, strategy, capacityHint);
     }
 
-    static final class ExpandBreathSubscriber<T> extends SubscriptionArbiter implements FlowableSubscriber<T> {
+    static final class ExpandBreadthSubscriber<T> extends SubscriptionArbiter implements FlowableSubscriber<T> {
 
         private static final long serialVersionUID = -8200116117441115256L;
 
@@ -88,7 +88,7 @@ final class FlowableExpand<T> extends Flowable<T> implements FlowableTransformer
 
         long produced;
 
-        ExpandBreathSubscriber(Subscriber<? super T> actual,
+        ExpandBreadthSubscriber(Subscriber<? super T> actual,
                 Function<? super T, ? extends Publisher<? extends T>> expander, int capacityHint) {
             this.actual = actual;
             this.expander = expander;

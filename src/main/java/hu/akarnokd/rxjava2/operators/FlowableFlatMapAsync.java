@@ -90,7 +90,7 @@ final class FlowableFlatMapAsync<T, R> extends Flowable<R> implements FlowableTr
             if (depthFirst) {
                 depthFirst();
             } else {
-                breathFirst();
+                breadthFirst();
             }
         }
 
