@@ -58,9 +58,9 @@ public class FlowableExpandTest {
     }
 
     @Test
-    public void recursiveCountdownBreath() {
+    public void recursiveCountdownBreadth() {
         Flowable.just(10)
-        .compose(FlowableTransformers.<Integer>expand(countDown, ExpandStrategy.BREATH_FIRST))
+        .compose(FlowableTransformers.<Integer>expand(countDown, ExpandStrategy.BREADTH_FIRST))
         .test()
         .assertResult(10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0);
     }
@@ -294,7 +294,7 @@ public class FlowableExpandTest {
     }
 
     @Test(timeout = 5000)
-    public void breathFirst() {
+    public void breadthFirst() {
         Node root = createTest();
 
         Flowable.just(root)
@@ -303,7 +303,7 @@ public class FlowableExpandTest {
             public Publisher<Node> apply(Node v) throws Exception {
                 return Flowable.fromIterable(v.children);
             }
-        }, ExpandStrategy.BREATH_FIRST))
+        }, ExpandStrategy.BREADTH_FIRST))
         .map(new Function<Node, String>() {
             @Override
             public String apply(Node v) throws Exception {
@@ -321,7 +321,7 @@ public class FlowableExpandTest {
     }
 
     @Test(timeout = 5000)
-    public void breathFirstAsync() {
+    public void breadthFirstAsync() {
         Node root = createTest();
 
         Flowable.just(root)
@@ -330,7 +330,7 @@ public class FlowableExpandTest {
             public Publisher<Node> apply(Node v) throws Exception {
                 return Flowable.fromIterable(v.children).subscribeOn(Schedulers.computation());
             }
-        }, ExpandStrategy.BREATH_FIRST))
+        }, ExpandStrategy.BREADTH_FIRST))
         .map(new Function<Node, String>() {
             @Override
             public String apply(Node v) throws Exception {

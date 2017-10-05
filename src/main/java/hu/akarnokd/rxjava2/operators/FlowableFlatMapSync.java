@@ -384,7 +384,7 @@ final class FlowableFlatMapSync<T, R> extends Flowable<R> implements FlowableTra
             }
         }
 
-        final void breathFirst() {
+        final void breadthFirst() {
             int missed = 1;
             long e = emitted;
             AtomicReferenceArray<FlatMapInnerSubscriber<T, R>> s = subscribers;
@@ -550,7 +550,7 @@ final class FlowableFlatMapSync<T, R> extends Flowable<R> implements FlowableTra
             if (depthFirst) {
                 depthFirst();
             } else {
-                breathFirst();
+                breadthFirst();
             }
         }
 

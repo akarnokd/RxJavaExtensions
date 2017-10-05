@@ -28,6 +28,12 @@ public enum ExpandStrategy {
     DEPTH_FIRST,
     /**
      * Walk the first level of items, then walk the second level items recursively.
+     * @deprecated misspelled, use {@link #BREADTH_FIRST}, will be removed with <b>0.18</b>.
      */
-    BREATH_FIRST
+    @Deprecated
+    BREATH_FIRST,
+    /**
+     * Walk the first level of items, then walk the second level items recursively.
+     */
+    BREADTH_FIRST
 }

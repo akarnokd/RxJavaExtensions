@@ -873,7 +873,7 @@ public final class FlowableTransformers {
      * @param expander the function that converts an element into a Publisher to be expanded
      * @param strategy the expansion strategy; depth-first will recursively expand the first item until there is no
      *                 more expansion possible, then the second items, and so on;
-     *                 breath-first will first expand the main source, then runs the expaned
+     *                 breadth-first will first expand the main source, then runs the expaned
      *                 Publishers in sequence, then the 3rd level, and so on.
      * @return the new FlwoableTransformer instance
      *
@@ -890,9 +890,9 @@ public final class FlowableTransformers {
      * @param expander the function that converts an element into a Publisher to be expanded
      * @param strategy the expansion strategy; depth-first will recursively expand the first item until there is no
      *                 more expansion possible, then the second items, and so on;
-     *                 breath-first will first expand the main source, then runs the expaned
+     *                 breadth-first will first expand the main source, then runs the expaned
      *                 Publishers in sequence, then the 3rd level, and so on.
-     * @param capacityHint the capacity hint for the breath-first expansion
+     * @param capacityHint the capacity hint for the breadth-first expansion
      * @return the new FlwoableTransformer instance
      *
      * @since 0.16.1
