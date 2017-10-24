@@ -24,6 +24,14 @@ import hu.akarnokd.rxjava2.operators.BasicMergeSubscription;
 import io.reactivex.Flowable;
 import io.reactivex.parallel.ParallelFlowable;
 
+/**
+ * Merges the individual 'rails' of the source ParallelFlowable by picking the next smallest
+ * available element from any of the sources based on a comparator.
+ * 
+ * @param <T> the source value types
+ * @author Simon Wimmesberger
+ * @since 0.17.9
+ */
 final class ParallelOrderedMerge<T> extends Flowable<T> {
 
   final ParallelFlowable<T> source;
