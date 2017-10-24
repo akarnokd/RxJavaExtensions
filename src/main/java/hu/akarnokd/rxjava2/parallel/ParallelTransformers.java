@@ -43,7 +43,7 @@ public final class ParallelTransformers {
      * @return the new Flowable instance
      */
     public static <T extends Comparable<? super T>> Flowable<T> orderedMerge(ParallelFlowable<T> source) {
-        return orderedMerge(Functions.naturalOrder(), false, Flowable.bufferSize(), source);
+        return orderedMerge(source, Functions.naturalOrder(), false, Flowable.bufferSize());
     }
 
 
@@ -55,8 +55,8 @@ public final class ParallelTransformers {
      * @param delayErrors if true, source errors are delayed until all sources terminate in some way
      * @return the new Flowable instance
      */
-    public static <T extends Comparable<? super T>> Flowable<T> orderedMerge(boolean delayErrors, ParallelFlowable<T> source) {
-        return orderedMerge(Functions.naturalOrder(), delayErrors, Flowable.bufferSize(), source);
+    public static <T extends Comparable<? super T>> Flowable<T> orderedMerge(ParallelFlowable<T> source, boolean delayErrors) {
+        return orderedMerge(source, Functions.naturalOrder(), delayErrors, Flowable.bufferSize());
     }
 
 
@@ -70,8 +70,8 @@ public final class ParallelTransformers {
      * @param prefetch the number of items to prefetch from the sources
      * @return the new Flowable instance
      */
-    public static <T extends Comparable<? super T>> Flowable<T> orderedMerge(boolean delayErrors, int prefetch, ParallelFlowable<T> source) {
-        return orderedMerge(Functions.naturalOrder(), delayErrors, prefetch, source);
+    public static <T extends Comparable<? super T>> Flowable<T> orderedMerge(ParallelFlowable<T> source, boolean delayErrors, int prefetch) {
+        return orderedMerge(source, Functions.naturalOrder(), delayErrors, prefetch);
     }
 
 
@@ -84,8 +84,8 @@ public final class ParallelTransformers {
      *                   it is called with the last known smallest in its first argument
      * @return the new Flowable instance
      */
-    public static <T> Flowable<T> orderedMerge(Comparator<? super T> comparator, ParallelFlowable<T> source) {
-        return orderedMerge(comparator, false, Flowable.bufferSize(), source);
+    public static <T> Flowable<T> orderedMerge(ParallelFlowable<T> source, Comparator<? super T> comparator) {
+        return orderedMerge(source, comparator, false, Flowable.bufferSize());
     }
 
 
@@ -100,8 +100,8 @@ public final class ParallelTransformers {
      * @return the new Flowable instance
      * 
      */
-    public static <T> Flowable<T> orderedMerge(Comparator<? super T> comparator, boolean delayErrors, ParallelFlowable<T> source) {
-        return orderedMerge(comparator, delayErrors, Flowable.bufferSize(), source);
+    public static <T> Flowable<T> orderedMerge(ParallelFlowable<T> source, Comparator<? super T> comparator, boolean delayErrors) {
+        return orderedMerge(source, comparator, delayErrors, Flowable.bufferSize());
     }
 
 
@@ -118,7 +118,7 @@ public final class ParallelTransformers {
      * @return the new Flowable instance
      * 
      */
-    public static <T> Flowable<T> orderedMerge(Comparator<? super T> comparator, boolean delayErrors, int prefetch, ParallelFlowable<T> source) {
+    public static <T> Flowable<T> orderedMerge(ParallelFlowable<T> source, Comparator<? super T> comparator, boolean delayErrors, int prefetch) {
         ObjectHelper.requireNonNull(comparator, "comparator is null");
         ObjectHelper.requireNonNull(source, "sources is null");
         ObjectHelper.verifyPositive(prefetch, "prefetch");

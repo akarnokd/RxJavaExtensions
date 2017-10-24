@@ -1,6 +1,6 @@
 package hu.akarnokd.rxjava2.parallel;
 
-import java.util.SplittableRandom;
+import java.util.Random;
 
 import org.junit.Test;
 
@@ -11,7 +11,7 @@ import io.reactivex.schedulers.Schedulers;
 public class ParallelOrderedMergeTest {
   @Test
   public void testBasicOrder() throws InterruptedException {
-    final SplittableRandom rnd = new SplittableRandom();
+    final Random rnd = new Random();
     ParallelTransformers.orderedMerge(Flowable.range(1, 5).parallel(4).runOn(Schedulers.computation()).map(new Function<Integer, Integer>() {
       @Override
       public Integer apply(Integer t) throws Exception {

@@ -22,7 +22,6 @@ import java.util.Comparator;
 import org.reactivestreams.Publisher;
 import org.reactivestreams.Subscriber;
 
-import hu.akarnokd.rxjava2.basetypes.BasicMergeSubscription;
 import io.reactivex.Flowable;
 import io.reactivex.exceptions.Exceptions;
 import io.reactivex.internal.functions.ObjectHelper;
