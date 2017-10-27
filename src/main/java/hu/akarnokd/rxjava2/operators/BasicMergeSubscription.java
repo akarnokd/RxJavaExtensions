@@ -36,6 +36,13 @@ import io.reactivex.internal.util.BackpressureHelper;
 import io.reactivex.parallel.ParallelFlowable;
 import io.reactivex.plugins.RxJavaPlugins;
 
+/**
+ * Subscription coordinator that merges items from a fixed set of source Publishers by
+ * picking the smallest available next item from them based on a Comparator.
+ *
+ * @param <T> the value type
+ * @since 0.17.9
+ */
 public final class BasicMergeSubscription<T>
 extends AtomicInteger
 implements Subscription, InnerQueuedSubscriberSupport<T> {

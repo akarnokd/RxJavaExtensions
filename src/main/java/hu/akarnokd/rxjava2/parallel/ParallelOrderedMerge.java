@@ -35,27 +35,27 @@ import io.reactivex.parallel.ParallelFlowable;
  */
 final class ParallelOrderedMerge<T> extends Flowable<T> {
 
-  final ParallelFlowable<T> source;
+    final ParallelFlowable<T> source;
 
-  final Comparator<? super T> comparator;
+    final Comparator<? super T> comparator;
 
-  final boolean delayErrors;
+    final boolean delayErrors;
 
-  final int prefetch;
+    final int prefetch;
 
-  ParallelOrderedMerge(ParallelFlowable<T> source,
-          Comparator<? super T> comparator,
-          boolean delayErrors, int prefetch) {
-      this.source = source;
-      this.comparator = comparator;
-      this.delayErrors = delayErrors;
-      this.prefetch = prefetch;
-  }
+    ParallelOrderedMerge(ParallelFlowable<T> source,
+            Comparator<? super T> comparator,
+            boolean delayErrors, int prefetch) {
+        this.source = source;
+        this.comparator = comparator;
+        this.delayErrors = delayErrors;
+        this.prefetch = prefetch;
+    }
 
-  @Override
-  protected void subscribeActual(Subscriber<? super T> s) {
-      final BasicMergeSubscription<T> parent = new BasicMergeSubscription<T>(s, comparator, this.source.parallelism(), prefetch, delayErrors);
-      s.onSubscribe(parent);
-      parent.subscribe(this.source);
-  }
+    @Override
+    protected void subscribeActual(Subscriber<? super T> s) {
+        final BasicMergeSubscription<T> parent = new BasicMergeSubscription<T>(s, comparator, this.source.parallelism(), prefetch, delayErrors);
+        s.onSubscribe(parent);
+        parent.subscribe(this.source);
+    }
 }

@@ -9,7 +9,7 @@ buildscript {
     dependencies {
         classpath 'gradle.plugin.nl.javadude.gradle.plugins:license-gradle-plugin:0.13.1'
         classpath "me.champeau.gradle:jmh-gradle-plugin:0.2.0"
-        classpath 'ru.vyarus:gradle-animalsniffer-plugin:1.1.0'
+        classpath 'ru.vyarus:gradle-animalsniffer-plugin:1.2.0'
     }
 }
 
@@ -49,10 +49,10 @@ dependencies {
     signature 'org.codehaus.mojo.signature:java16:1.1@signature'
 
     compile "org.reactivestreams:reactive-streams:1.0.1"
-    compile "io.reactivex.rxjava2:rxjava:2.1.5"
+    compile "io.reactivex.rxjava2:rxjava:2.1.6"
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
-    
+
     testCompile 'org.mockito:mockito-core:2.5.0'
 }
 
