@@ -48,9 +48,10 @@ Maven search:
     - [flatMapAsync()](#flowabletransformersflatmapasync), [switchIfEmpty()](#flowabletransformersswitchifempty--switchifemptyarray),
     - [expand()](#flowabletransformersexpand), [mapAsync()](#flowabletransformersmapasync), [filterAsync()](#flowabletransformerfilterasync),
     - [refCount()](#flowabletransformersrefcount), [zipLatest()](#flowablesziplatest), [coalesce()](#flowabletransformerscoalesce),
-    - [windowWhile()](#flowabletransformerswindowwhile), [windowUntil()](#flowabletransformerswindowuntil), [windowSplit()](#flowabletransformerswindowsplit)
+    - [windowWhile()](#flowabletransformerswindowwhile), [windowUntil()](#flowabletransformerswindowuntil), [windowSplit()](#flowabletransformerswindowsplit),
   - [Custom parallel operators and transformers](#custom-parallel-operators-and-transformers)
     - [sumX()](#paralleltransformerssumx)
+    - [orderedMerge()](#paralleltransformersorderedmerge)
   - [Special Publisher implementations](#special-publisher-implementations)
 
 ## Extra functional interfaces
@@ -1263,6 +1264,23 @@ Flowable.range(1, 5)
 .test()
 .assertResult(15d);
 ```
+
+### ParallelTransformers.orderedMerge()
+
+Merges the source ParallelFlowable rails in an ordered fashion picking the smallest of the available value from
+them (determined by their natural order or via a `Comparator`). The operator supports delaying error and setting
+the internal prefetch amount.
+
+```java
+ParallelFlowable.fromArray(
+    Flowable.just(1, 3, 5, 7),
+    Flowable.just(0, 2, 4, 6, 8, 10)
+)
+.to(p -> ParallelTransformers.orderedMerge(p, (a, b) -> a.compareTo(b)))
+.test()
+.assertResult(0, 1, 2, 3, 4, 5, 6, 7, 8, 10);
+```
+
 
 ## Special Publisher implementations
 
