@@ -14,20 +14,21 @@
  * limitations under the License.
  */
 
-package hu.akarnokd.rxjava2.operators;
+package hu.akarnokd.rxjava2.functions;
+
+import io.reactivex.functions.BiConsumer;
 
 /**
- * Represents the strategies for recursive expansion with the {@code expand()} operator.
- * @since 0.16.1
+ * A {@link BiConsumer} with suppressed exception on its
+ * {@link #accept(Object, Object)} method.
+ *
+ * @param <T1> the first argument type
+ * @param <T2> the second argument type
+ * @since 0.18.0
  */
-public enum ExpandStrategy {
+public interface PlainBiConsumer<T1, T2>
+extends BiConsumer<T1, T2> {
 
-    /**
-     * Expands the first item recursively before expanding the second.
-     */
-    DEPTH_FIRST,
-    /**
-     * Walk the first level of items, then walk the second level items recursively.
-     */
-    BREADTH_FIRST
+    @Override
+    void accept(T1 t1, T2 t2);
 }

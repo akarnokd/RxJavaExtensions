@@ -33,6 +33,7 @@ Maven search:
   - [Debug support](#debug-support)
     - [Function tagging](#function-tagging)
     - [Protocol validation](#protocol-validation)
+    - [Multi-hook handlers](#multihook-handlers)
   - Custom Processors and Subjects
     - [SoloProcessor, PerhapsProcessor and NonoProcessor](#soloprocessor-perhapsprocessor-and-nonoprocessor)
     - [MulticastProcessor](#multicastprocessor)
@@ -479,6 +480,25 @@ The following error violations are detected:
 | OnSubscribeNotCalledException | When any of the `onNext`, `onSuccess`, `onError` or `onComplete` is invoked without invoking `onSubscribe` first. |
 | OnSuccessAfterTerminationException | Wen the `onSuccess` was called after `onError` or `onComplete`. |
 
+### Multi-hook handlers
+
+The standard `RxJavaPlugins` allows only one hook to be associated with each main intercept option.
+If multiple hooks should be invoked, that option is not directly supported by `RxJavaPlugins` but
+can be built upon the single hook scheme.
+
+The `hu.akarnokd.rxjava2.debug.multihook` package offers hook managers that can work with multiple hooks
+themselves.
+
+The various multi-hook managers are built upon the generic `MultiHandlerManager<H>` class. The class offers the `register`
+method to register a particular hook for which a `Disposable` is returned. This allows removing a particular
+hook without the need to remember the hook instance or the manager class.
+
+#### `OnScheduleMultiHookManager`
+
+Offers multi-hook management for the `RxJavaPlugins.setScheduleHandler` and `onSchedule` hooks.
+
+The `enable()` method will install the instance as the main hook, the `disable()` will restore the default no-hook.
+The convenience `append()` will take any existing hook, register it with the manager and install the manager as the main hook.
 
 ## SoloProcessor, PerhapsProcessor and NonoProcessor
 

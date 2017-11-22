@@ -34,7 +34,7 @@ public final class ParallelTransformers {
     private ParallelTransformers() {
         throw new IllegalStateException("No instances!");
     }
-    
+
     /**
      * Merges the source ParallelFlowable rails in an ordered fashion picking the smallest of the available value from
      * them (determined by their natural order).

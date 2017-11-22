@@ -78,7 +78,7 @@ implements Subscription, InnerQueuedSubscriberSupport<T> {
         this.errors = new AtomicThrowable();
         this.latest = new Object[n];
     }
-    
+
     public void subscribe(Publisher<T>[] sources, int n) {
       InnerQueuedSubscriber<T>[] subs = subscribers;
       for (int i = 0; i < n && !cancelled; i++) {
@@ -93,7 +93,7 @@ implements Subscription, InnerQueuedSubscriberSupport<T> {
           }
       }
     }
-    
+
     public void subscribe(ParallelFlowable<T> source) {
       source.subscribe(subscribers);
     }

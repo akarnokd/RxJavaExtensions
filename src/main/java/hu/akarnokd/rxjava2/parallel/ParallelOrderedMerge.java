@@ -25,8 +25,8 @@ import io.reactivex.Flowable;
 import io.reactivex.parallel.ParallelFlowable;
 
 /**
- * Merges the individual 'rails' of the source ParallelFlowable by picking 
- * the next smallest available element from any 'rail' based on a comparator 
+ * Merges the individual 'rails' of the source ParallelFlowable by picking
+ * the next smallest available element from any 'rail' based on a comparator
  * into a single regular Publisher sequence (exposed as Flowable).
  * 
  * @param <T> the source value types
