@@ -16,13 +16,14 @@
 
 package hu.akarnokd.rxjava2.debug.multihook;
 
-import java.util.*;
+import java.util.Iterator;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicReference;
 
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.*;
+import io.reactivex.internal.functions.ObjectHelper;
 
 /**
  * Manages an array of handlers.
@@ -57,7 +58,7 @@ public class MultiHandlerManager<H> {
      */
     @NonNull
     public final Disposable register(@NonNull H handler) {
-        Objects.requireNonNull(handler, "handler is null");
+        ObjectHelper.requireNonNull(handler, "handler is null");
         HandlerRegistration<H> hr = new HandlerRegistration<H>(this, handler);
         handlers.add(hr);
         return hr;
@@ -78,7 +79,7 @@ public class MultiHandlerManager<H> {
      * @param consumer the consumer to invoke
      */
     public final void forEach(@NonNull Consumer<H> consumer) {
-        Objects.requireNonNull(consumer, "consumer is null");
+        ObjectHelper.requireNonNull(consumer, "consumer is null");
         Iterator<HandlerRegistration<H>> it = handlers.iterator();
         while (it.hasNext()) {
             try {
@@ -108,7 +109,7 @@ public class MultiHandlerManager<H> {
      * @param consumer the consumer to invoke
      */
     public final <S> void forEach(S state, @NonNull BiConsumer<S, H> consumer) {
-        Objects.requireNonNull(consumer, "consumer is null");
+        ObjectHelper.requireNonNull(consumer, "consumer is null");
         Iterator<HandlerRegistration<H>> it = handlers.iterator();
         while (it.hasNext()) {
             try {
