@@ -33,7 +33,7 @@ Maven search:
   - [Debug support](#debug-support)
     - [Function tagging](#function-tagging)
     - [Protocol validation](#protocol-validation)
-    - [Multi-hook handlers](#multihook-handlers)
+    - [Multi-hook handlers](#multi-hook-handlers)
   - Custom Processors and Subjects
     - [SoloProcessor, PerhapsProcessor and NonoProcessor](#soloprocessor-perhapsprocessor-and-nonoprocessor)
     - [MulticastProcessor](#multicastprocessor)
