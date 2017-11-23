@@ -13,7 +13,7 @@ RxJava 2.x implementation of extra sources, operators and components and ports o
 
 ```
 dependencies {
-    compile "com.github.akarnokd:rxjava2-extensions:0.17.9"
+    compile "com.github.akarnokd:rxjava2-extensions:0.18.0"
 }
 ```
 
@@ -54,6 +54,12 @@ Maven search:
     - [sumX()](#paralleltransformerssumx)
     - [orderedMerge()](#paralleltransformersorderedmerge)
   - [Special Publisher implementations](#special-publisher-implementations)
+  - Custom consumers
+    - [FlowableConsumers](#flowableconsumers)
+    - [ObservableConsumers](#observableconsumers)
+    - [SingleConsumers](#singleconsumers)
+    - [MaybeConsumers](#maybeconsumers)
+    - [CompletableConsumers](#completableconsumers)
 
 ## Extra functional interfaces
 
@@ -1430,3 +1436,66 @@ ph.onComplete();
 ts.assertResult(1);
 ```
 
+## Custom consumers
+
+The utility classes can be found in `hu.akarnokd.rxjava2.consumers` package.
+
+
+### FlowableConsumers
+
+#### `subscribeAutoRelease`
+
+Wraps the given `onXXX` callbacks into a `Disposable` `Subscriber`,
+adds it to the given `CompositeDisposable` and ensures, that if the upstream
+completes or this particlular `Disposable` is disposed, the `Subscriber` is removed
+from the given composite.
+
+The Subscriber will be removed *after* the callback for the terminal event has been invoked.
+
+```java
+CompositeDisposable composite = new CompositeDisposable();
+
+Disposable d = FlowableSubscribers.subscribeAutoRelease(
+    Flowable.just(1), composite,
+    System.out::println, Throwable::printStackTrace, () -> System.out.println("Done")
+);
+
+assertEquals(0, composite.size());
+
+// --------------------------
+
+Disposable d2 = FlowableSubscribers.subscribeAutoRelease(
+    Flowable.never(), composite,
+    System.out::println, Throwable::printStackTrace, () -> System.out.println("Done")
+);
+
+assertEquals(1, composite.size());
+
+d2.dispose();
+
+assertEquals(0, composite.size());
+```
+
+The Subscriber will be removed after the callback for the terminal event has been invoked.
+
+### ObservableConsumers
+
+#### `subscribeAutoRelease`
+
+Similar to `FlowableConsumers.subscribeAutoRelease()` but targeting `Observable`s and `Observer`s-like
+consumers.
+
+### SingleConsumers
+
+Similar to `FlowableConsumers.subscribeAutoRelease()` but targeting `Single`s and `SingleObserver`s-like
+consumers.
+
+### MaybeConsumers
+
+Similar to `FlowableConsumers.subscribeAutoRelease()` but targeting `Maybe`s and `MaybeObserver`s-like
+consumers.
+
+### CompletableConsumers
+
+Similar to `FlowableConsumers.subscribeAutoRelease()` but targeting `Completable`s and `CompletableObserver`s-like
+consumers.
