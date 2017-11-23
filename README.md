@@ -56,6 +56,7 @@ Maven search:
   - [Special Publisher implementations](#special-publisher-implementations)
   - Custom consumers
     - [FlowableConsumers](#flowableconsumers)
+      - [subscribeAutoRelease()](#subscribeautorelease)
     - [ObservableConsumers](#observableconsumers)
     - [SingleConsumers](#singleconsumers)
     - [MaybeConsumers](#maybeconsumers)
@@ -1480,22 +1481,20 @@ The Subscriber will be removed after the callback for the terminal event has bee
 
 ### ObservableConsumers
 
-#### `subscribeAutoRelease`
-
-Similar to `FlowableConsumers.subscribeAutoRelease()` but targeting `Observable`s and `Observer`s-like
+- `subscribeAutoRelease`: Similar to `FlowableConsumers.subscribeAutoRelease()` but targeting `Observable`s and `Observer`s-like
 consumers.
 
 ### SingleConsumers
 
-Similar to `FlowableConsumers.subscribeAutoRelease()` but targeting `Single`s and `SingleObserver`s-like
+- `subscribeAutoRelease`: Similar to `FlowableConsumers.subscribeAutoRelease()` but targeting `Single`s and `SingleObserver`s-like
 consumers.
 
 ### MaybeConsumers
 
-Similar to `FlowableConsumers.subscribeAutoRelease()` but targeting `Maybe`s and `MaybeObserver`s-like
+- `subscribeAutoRelease`: Similar to `FlowableConsumers.subscribeAutoRelease()` but targeting `Maybe`s and `MaybeObserver`s-like
 consumers.
 
 ### CompletableConsumers
 
-Similar to `FlowableConsumers.subscribeAutoRelease()` but targeting `Completable`s and `CompletableObserver`s-like
+- `subscribeAutoRelease`: Similar to `FlowableConsumers.subscribeAutoRelease()` but targeting `Completable`s and `CompletableObserver`s-like
 consumers.
