@@ -50,6 +50,7 @@ Maven search:
     - [expand()](#flowabletransformersexpand), [mapAsync()](#flowabletransformersmapasync), [filterAsync()](#flowabletransformerfilterasync),
     - [refCount()](#flowabletransformersrefcount), [zipLatest()](#flowablesziplatest), [coalesce()](#flowabletransformerscoalesce),
     - [windowWhile()](#flowabletransformerswindowwhile), [windowUntil()](#flowabletransformerswindowuntil), [windowSplit()](#flowabletransformerswindowsplit),
+    - [indexOf()](#flowabletransformersindexof)
   - [Custom parallel operators and transformers](#custom-parallel-operators-and-transformers)
     - [sumX()](#paralleltransformerssumx)
     - [orderedMerge()](#paralleltransformersorderedmerge)
@@ -1260,6 +1261,18 @@ Flowable.just("1", "2", "#", "3", "#", "4", "#")
     Arrays.asList("3"),
     Arrays.asList("4")
 );
+```
+
+### FlowableTransformers.indexOf
+
+Returns the first index of an element that matches a predicate or -1L if no elements match.
+(Also available for `Observable`s as `ObservableTransformers.indexOf()`.)
+
+```java
+Flowable.range(1, 5)
+.compose(FlowableTransformers.indexOf(v -> v == 5))
+.test()
+.assertResult(4);
 ```
 
 
