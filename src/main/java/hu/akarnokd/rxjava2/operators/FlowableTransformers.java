@@ -1247,7 +1247,7 @@ public final class FlowableTransformers {
      * @param predicate the predicate receiving the current item and if returns true,
      *                  the current window is completed and a new window is emitted
      * @param bufferSize the buffer size hint (the chunk size of the underlying unbounded buffer)
-     * @return the new Flowable instance
+     * @return the new FlowableTransformer instance
      *
      * @since 0.17.7
      */
@@ -1255,5 +1255,20 @@ public final class FlowableTransformers {
     @BackpressureSupport(BackpressureKind.FULL)
     public static <T> FlowableTransformer<T, Flowable<T>> windowSplit(Predicate<? super T> predicate, int bufferSize) {
         return new FlowableWindowPredicate<T>(null, predicate, FlowableWindowPredicate.Mode.SPLIT, bufferSize);
+    }
+
+    /**
+     * Returns the first index of an element that matches a predicate or -1L if no elements match.
+     * @param <T> the upstream element type
+     * @param predicate the predicate called to test each item, returning true will
+     * stop the sequence and return the current item index
+     * @return the new FlowableTransformer instance
+     * 
+     * @since 0.18.2
+     */
+    @SchedulerSupport(SchedulerSupport.NONE)
+    @BackpressureSupport(BackpressureKind.UNBOUNDED_IN)
+    public static <T> FlowableTransformer<T, Long> indexOf(Predicate<? super T> predicate) {
+        return new FlowableIndexOf<T>(null, predicate);
     }
 }
