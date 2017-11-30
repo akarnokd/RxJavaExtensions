@@ -17,6 +17,8 @@
 package hu.akarnokd.rxjava2.operators;
 
 import io.reactivex.*;
+import io.reactivex.annotations.*;
+import io.reactivex.functions.Predicate;
 
 /**
  * Additional operators in the form of {@link ObservableTransformer},
@@ -32,5 +34,20 @@ public final class ObservableTransformers {
      */
     private ObservableTransformers() {
         throw new IllegalStateException("No instances!");
+    }
+
+    /**
+     * Returns the first index of an element that matches a predicate or -1L if no elements match.
+     * @param <T> the upstream element type
+     * @param predicate the predicate called to test each item, returning true will
+     * stop the sequence and return the current item index
+     * @return the new ObservableTransformer instance
+     * 
+     * @since 0.18.2
+     */
+    @SchedulerSupport(SchedulerSupport.NONE)
+    @BackpressureSupport(BackpressureKind.UNBOUNDED_IN)
+    public static <T> ObservableTransformer<T, Long> indexOf(Predicate<? super T> predicate) {
+        return new ObservableIndexOf<T>(null, predicate);
     }
 }
