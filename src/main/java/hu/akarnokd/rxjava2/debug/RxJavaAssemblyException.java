@@ -103,6 +103,8 @@ public final class RxJavaAssemblyException extends RuntimeException {
     @Override
     public synchronized Throwable fillInStackTrace() {
         // don't store own stacktrace
+        // empty stacktrace prevents crashes on some JVMs when `getStackTrace()` is invoked
+        setStackTrace(new StackTraceElement[0]);
         return this;
     }
 
