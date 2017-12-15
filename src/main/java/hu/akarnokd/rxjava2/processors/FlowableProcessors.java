@@ -18,8 +18,9 @@ package hu.akarnokd.rxjava2.processors;
 
 import org.reactivestreams.Processor;
 
+import io.reactivex.annotations.*;
 import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.processors.FlowableProcessor;
+import io.reactivex.processors.*;
 
 /**
  * Utility methods to work with Reactive-Streams Processors and RxJava 2 FlowableProcessors.
@@ -44,5 +45,26 @@ public final class FlowableProcessors {
             return (FlowableProcessor<T>)processor;
         }
         return new FlowableProcessorWrap<T>(ObjectHelper.requireNonNull(processor, "processor is null"));
+    }
+
+    /**
+     * Wraps a FlowableProcessor and makes sure if all subscribers cancel
+     * their subscriptions, the upstream's Subscription gets cancelled as well.
+     * <p>
+     * This operator is similar to {@link io.reactivex.flowables.ConnectableFlowable#refCount()}
+     * except the first Subscriber doesn't trigger any sort of connection; that happens
+     * when the resulting FlowableProcessor is subscribed to a Publisher manually.
+     * @param <T> the input and output value type
+     * @param processor the processor to wrap, not null
+     * @return the wrapped and reference-counted FlowableProcessor
+     * @since 0.18.2
+     */
+    @NonNull
+    @CheckReturnValue
+    public static <T> FlowableProcessor<T> refCount(FlowableProcessor<T> processor) {
+        if (processor instanceof RefCountProcessor) {
+            return processor;
+        }
+        return new RefCountProcessor<T>(ObjectHelper.requireNonNull(processor, "processor is null"));
     }
 }

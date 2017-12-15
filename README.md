@@ -13,7 +13,7 @@ RxJava 2.x implementation of extra sources, operators and components and ports o
 
 ```
 dependencies {
-    compile "com.github.akarnokd:rxjava2-extensions:0.18.1"
+    compile "com.github.akarnokd:rxjava2-extensions:0.18.2"
 }
 ```
 
@@ -38,6 +38,7 @@ Maven search:
     - [SoloProcessor, PerhapsProcessor and NonoProcessor](#soloprocessor-perhapsprocessor-and-nonoprocessor)
     - [MulticastProcessor](#multicastprocessor)
   - [FlowableProcessor utils](#flowableprocessor-utils)
+    - [wrap](#wrap), [refCount](#refcount)
   - [Custom Schedulers](#custom-schedulers)
   - [Custom operators and transformers](#custom-operators-and-transformers)
     - [valve()](#flowabletransflormersvalve), [orderedMerge()](#flowablesorderedmerge), [bufferWhile()](#flowabletransformersbufferwhile),
@@ -584,11 +585,17 @@ mp2.test().assertResult(1, 2, 3, 4);
 
 ## FlowableProcessor utils
 
-### FlowableProcessors
+An utility class that helps working with Reactive-Streams `Processor`, `FlowableProcessor`
+`Subject` instances via static methods.
 
-An utility class that helps working with Reactive-Streams `Processor` and `FlowableProcessor` instances.
+### wrap
 
-- `wrap`: wraps an arbitrary `Processor` into a `FlowableProcessor`
+Wraps an arbitrary `Processor` into a `FlowableProcessor`
+
+### refCount
+
+Wraps a `FlowableProcessor`/`Subject` and makes sure if all subscribers/observer cancel/dispose
+their subscriptions, the upstream's `Subscription`/`Disposable` gets cancelled/disposed as well.
 
 ## Custom Schedulers
 
