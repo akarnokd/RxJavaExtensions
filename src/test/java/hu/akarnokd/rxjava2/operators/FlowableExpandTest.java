@@ -71,6 +71,18 @@ public class FlowableExpandTest {
             Flowable.<Integer>error(new IOException())
             .compose(FlowableTransformers.expand(countDown, strategy))
             .test()
+            .withTag(strategy.toString())
+            .assertFailure(IOException.class);
+        }
+    }
+
+    @Test
+    public void errorDelayed() {
+        for (ExpandStrategy strategy : ExpandStrategy.values()) {
+            Flowable.<Integer>error(new IOException())
+            .compose(FlowableTransformers.expandDelayError(countDown, strategy))
+            .test()
+            .withTag(strategy.toString())
             .assertFailure(IOException.class);
         }
     }
@@ -508,5 +520,85 @@ public class FlowableExpandTest {
 
             Assert.assertTrue(cdl.await(5, TimeUnit.SECONDS));
         }
+    }
+
+    @Test
+    public void multipleRoots() {
+        Flowable.just(10, 5)
+        .compose(FlowableTransformers.expand(new Function<Integer, Publisher<Integer>>() {
+            @Override
+            public Publisher<Integer> apply(Integer v)
+                    throws Exception {
+                        if (v == 9) {
+                            return Flowable.error(new IOException("error"));
+                        } else if (v == 0) {
+                            return Flowable.empty();
+                        } else {
+                            return Flowable.just(v - 1);
+                        }
+                    }
+        }, ExpandStrategy.DEPTH_FIRST))
+        .test()
+        .assertFailureAndMessage(IOException.class, "error", 10, 9);
+    }
+
+    @Test
+    public void multipleRootsDelayError() {
+        Flowable.just(10, 5)
+        .compose(FlowableTransformers.expandDelayError(new Function<Integer, Publisher<Integer>>() {
+            @Override
+            public Publisher<Integer> apply(Integer v)
+                    throws Exception {
+                        if (v == 9) {
+                            return Flowable.error(new IOException("error"));
+                        } else if (v == 0) {
+                            return Flowable.empty();
+                        } else {
+                            return Flowable.just(v - 1);
+                        }
+                    }
+        }, ExpandStrategy.DEPTH_FIRST))
+        .test()
+        .assertFailureAndMessage(IOException.class, "error", 10, 9, 5, 4, 3, 2, 1, 0);
+    }
+
+    @Test
+    public void multipleRootsBreadth() {
+        Flowable.just(10, 5)
+        .compose(FlowableTransformers.expand(new Function<Integer, Publisher<Integer>>() {
+            @Override
+            public Publisher<Integer> apply(Integer v)
+                    throws Exception {
+                        if (v == 9) {
+                            return Flowable.error(new IOException("error"));
+                        } else if (v == 0) {
+                            return Flowable.empty();
+                        } else {
+                            return Flowable.just(v - 1);
+                        }
+                    }
+        }, ExpandStrategy.BREADTH_FIRST))
+        .test()
+        .assertFailureAndMessage(IOException.class, "error", 10, 5, 9, 4);
+    }
+
+    @Test
+    public void multipleRootsDelayErrorBreadth() {
+        Flowable.just(10, 5)
+        .compose(FlowableTransformers.expandDelayError(new Function<Integer, Publisher<Integer>>() {
+            @Override
+            public Publisher<Integer> apply(Integer v)
+                    throws Exception {
+                        if (v == 9) {
+                            return Flowable.error(new IOException("error"));
+                        } else if (v == 0) {
+                            return Flowable.empty();
+                        } else {
+                            return Flowable.just(v - 1);
+                        }
+                    }
+        }, ExpandStrategy.BREADTH_FIRST))
+        .test()
+        .assertFailureAndMessage(IOException.class, "error", 10, 5, 9, 4, 3, 2, 1, 0);
     }
 }

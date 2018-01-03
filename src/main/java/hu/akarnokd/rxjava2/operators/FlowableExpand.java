@@ -45,23 +45,26 @@ final class FlowableExpand<T> extends Flowable<T> implements FlowableTransformer
 
     final int capacityHint;
 
+    final boolean delayErrors;
+
     FlowableExpand(Flowable<T> source, Function<? super T, ? extends Publisher<? extends T>> expander,
-            ExpandStrategy strategy, int capacityHint) {
+            ExpandStrategy strategy, int capacityHint, boolean delayErrors) {
         this.source = source;
         this.expander = expander;
         this.strategy = strategy;
         this.capacityHint = capacityHint;
+        this.delayErrors = delayErrors;
     }
 
     @Override
     protected void subscribeActual(Subscriber<? super T> s) {
         if (strategy != ExpandStrategy.DEPTH_FIRST) {
-            ExpandBreadthSubscriber<T> parent = new ExpandBreadthSubscriber<T>(s, expander, capacityHint);
+            ExpandBreadthSubscriber<T> parent = new ExpandBreadthSubscriber<T>(s, expander, capacityHint, delayErrors);
             parent.queue.offer(source);
             s.onSubscribe(parent);
             parent.drainQueue();
         } else {
-            ExpandDepthSubscription<T> parent = new ExpandDepthSubscription<T>(s, expander, capacityHint);
+            ExpandDepthSubscription<T> parent = new ExpandDepthSubscription<T>(s, expander, capacityHint, delayErrors);
             parent.source = source;
             s.onSubscribe(parent);
         }
@@ -69,7 +72,7 @@ final class FlowableExpand<T> extends Flowable<T> implements FlowableTransformer
 
     @Override
     public Publisher<T> apply(Flowable<T> upstream) {
-        return new FlowableExpand<T>(upstream, expander, strategy, capacityHint);
+        return new FlowableExpand<T>(upstream, expander, strategy, capacityHint, delayErrors);
     }
 
     static final class ExpandBreadthSubscriber<T> extends SubscriptionArbiter implements FlowableSubscriber<T> {
@@ -84,16 +87,22 @@ final class FlowableExpand<T> extends Flowable<T> implements FlowableTransformer
 
         final AtomicInteger wip;
 
+        final boolean delayErrors;
+
+        final AtomicThrowable errors;
+
         volatile boolean active;
 
         long produced;
 
         ExpandBreadthSubscriber(Subscriber<? super T> actual,
-                Function<? super T, ? extends Publisher<? extends T>> expander, int capacityHint) {
+                Function<? super T, ? extends Publisher<? extends T>> expander, int capacityHint, boolean delayErrors) {
             this.actual = actual;
             this.expander = expander;
             this.wip = new AtomicInteger();
             this.queue = new SpscLinkedArrayQueue<Publisher<? extends T>>(capacityHint);
+            this.errors = new AtomicThrowable();
+            this.delayErrors = delayErrors;
         }
 
         @Override
@@ -123,8 +132,13 @@ final class FlowableExpand<T> extends Flowable<T> implements FlowableTransformer
         @Override
         public void onError(Throwable t) {
             setSubscription(SubscriptionHelper.CANCELLED);
-            super.cancel();
-            actual.onError(t);
+            if (delayErrors) {
+                errors.addThrowable(t);
+                active = false;
+            } else {
+                super.cancel();
+                actual.onError(t);
+            }
             drainQueue();
         }
 
@@ -151,7 +165,12 @@ final class FlowableExpand<T> extends Flowable<T> implements FlowableTransformer
                             if (q.isEmpty()) {
                                 setSubscription(SubscriptionHelper.CANCELLED);
                                 super.cancel();
-                                actual.onComplete();
+                                Throwable ex = errors.terminate();
+                                if (ex == null) {
+                                    actual.onComplete();
+                                } else {
+                                    actual.onError(ex);
+                                }
                             } else {
                                 Publisher<? extends T> p = q.poll();
                                 long c = produced;
@@ -187,6 +206,8 @@ final class FlowableExpand<T> extends Flowable<T> implements FlowableTransformer
 
         final AtomicReference<Object> current;
 
+        final boolean delayErrors;
+
         ArrayDeque<ExpandDepthSubscriber> subscriptionStack;
 
         volatile boolean cancelled;
@@ -197,7 +218,7 @@ final class FlowableExpand<T> extends Flowable<T> implements FlowableTransformer
 
         ExpandDepthSubscription(Subscriber<? super T> actual,
                 Function<? super T, ? extends Publisher<? extends T>> expander,
-                        int capacityHint) {
+                        int capacityHint, boolean delayErrors) {
             this.actual = actual;
             this.expander = expander;
             this.subscriptionStack = new ArrayDeque<ExpandDepthSubscriber>();
@@ -205,6 +226,7 @@ final class FlowableExpand<T> extends Flowable<T> implements FlowableTransformer
             this.active = new AtomicInteger();
             this.requested = new AtomicLong();
             this.current = new AtomicReference<Object>();
+            this.delayErrors = delayErrors;
         }
 
         @Override
@@ -307,6 +329,13 @@ final class FlowableExpand<T> extends Flowable<T> implements FlowableTransformer
                 } else {
 
                     boolean currentDone = curr.done;
+
+                    if (!delayErrors && error.get() != null) {
+                        cancel();
+                        a.onError(error.terminate());
+                        return;
+                    }
+
                     T v = curr.value;
 
                     boolean newSource = false;
