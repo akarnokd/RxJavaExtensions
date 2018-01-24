@@ -51,7 +51,6 @@ implements ObservableTransformer<T, Long> {
 
     static final class IndexOfObserver<T> extends DeferredScalarObserver<T, Long> {
 
-        /** */
         private static final long serialVersionUID = 4809092721669178986L;
 
         final Predicate<? super T> predicate;
@@ -84,7 +83,7 @@ implements ObservableTransformer<T, Long> {
                 return;
             }
         }
-        
+
         @Override
         public void onComplete() {
             if (!found) {

@@ -27,7 +27,7 @@ import io.reactivex.internal.queue.SpscLinkedArrayQueue;
 import io.reactivex.internal.subscriptions.SubscriptionHelper;
 
 /**
- * Makes sure there is at least the given amount of time between emissions of the upstream elements:
+ * Makes sure there is at least the given amount of time between emissions of the upstream elements.
  * <pre><code>
  * a-b-c-d-e--f----g-|
  * spanout(---)

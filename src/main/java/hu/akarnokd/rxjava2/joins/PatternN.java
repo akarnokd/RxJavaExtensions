@@ -37,7 +37,8 @@ public final class PatternN {
     }
 
     /**
-     * @return the number of observables in this pattern.
+     * The number of observables in this pattern.
+     * @return the number of observables in this pattern
      */
     int size() {
         return observables.size();

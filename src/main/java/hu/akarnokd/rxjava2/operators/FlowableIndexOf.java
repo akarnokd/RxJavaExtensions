@@ -53,7 +53,6 @@ implements FlowableTransformer<T, Long> {
 
     static final class IndexOfSubscriber<T> extends DeferredScalarSubscriber<T, Long> {
 
-        /** */
         private static final long serialVersionUID = 4809092721669178986L;
 
         final Predicate<? super T> predicate;
@@ -86,7 +85,7 @@ implements FlowableTransformer<T, Long> {
                 return;
             }
         }
-        
+
         @Override
         public void onComplete() {
             if (!found) {
