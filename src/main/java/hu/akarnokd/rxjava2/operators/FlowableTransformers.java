@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2017 David Karnok
+ * Copyright 2016-2018 David Karnok
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1324,5 +1324,36 @@ public final class FlowableTransformers {
     @BackpressureSupport(BackpressureKind.UNBOUNDED_IN)
     public static <T> FlowableTransformer<T, Long> indexOf(Predicate<? super T> predicate) {
         return new FlowableIndexOf<T>(null, predicate);
+    }
+
+    /**
+     * Requests items one-by-one from the upstream from the given {@link Scheduler} and
+     * emits those items received on the same {@code Scheduler}, allowing a more interleaved
+     * usage of the target {@code Scheduler} (aka "fair" use).
+     * <p>
+     * It behaves similar to {@link Flowable#observeOn(Scheduler)} except it requests items
+     * one-by-one from the upstream and this request is issued from the give {@code Scheduler} thread
+     * as an individual {@code Runnable} task. Each item received from the upstream will
+     * also run on the given {@code Scheduler} as individual {@code Runnable} tasks which
+     * should maximize the possibility of work interleaved on a threadpool-backed {@code Scheduler}
+     * such as {@link io.reactivex.schedulers.Schedulers#computation()}.
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The operator requests one item at a time and requests the next item once the downstream
+     *  has been notified of the previous one. If the upstream ignores backpressure, this operator
+     *  will randomly drop items similar to {@link Flowable#onBackpressureLatest()}.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>You specify the {@link Scheduler} this operator should use.</dd>
+     * </dl>
+     * @param <T> the item type
+     * @param scheduler the scheduler to use for requesting from the upstream and re-emitting
+     *                  those items from
+     * @return the new FlowableTransformer instance
+     * @since 0.18.6
+     */
+    @SchedulerSupport(SchedulerSupport.CUSTOM)
+    @BackpressureSupport(BackpressureKind.FULL)
+    public static <T> FlowableTransformer<T, T> requestObserveOn(Scheduler scheduler) {
+        return new FlowableRequestObserveOn<T>(null, ObjectHelper.requireNonNull(scheduler, "scheduler == null"));
     }
 }

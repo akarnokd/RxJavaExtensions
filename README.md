@@ -40,6 +40,9 @@ Maven search:
   - [FlowableProcessor utils](#flowableprocessor-utils)
     - [wrap](#wrap), [refCount](#refcount)
   - [Custom Schedulers](#custom-schedulers)
+    - [SharedScheduler](#sharedscheduler)
+    - [ParallelScheduler](#parallelscheduler)
+    - [BlockingScheduler](#blockingscheduler)
   - [Custom operators and transformers](#custom-operators-and-transformers)
     - [valve()](#flowabletransflormersvalve), [orderedMerge()](#flowablesorderedmerge), [bufferWhile()](#flowabletransformersbufferwhile),
     - [bufferUntil()](#flowabletransformersbufferuntil), [bufferSplit()](#flowabletransformersbuffersplit), [spanout()](#flowabletransformersspanout),
@@ -51,7 +54,7 @@ Maven search:
     - [expand()](#flowabletransformersexpand), [mapAsync()](#flowabletransformersmapasync), [filterAsync()](#flowabletransformerfilterasync),
     - [refCount()](#flowabletransformersrefcount), [zipLatest()](#flowablesziplatest), [coalesce()](#flowabletransformerscoalesce),
     - [windowWhile()](#flowabletransformerswindowwhile), [windowUntil()](#flowabletransformerswindowuntil), [windowSplit()](#flowabletransformerswindowsplit),
-    - [indexOf()](#flowabletransformersindexof)
+    - [indexOf()](#flowabletransformersindexof), [requestObserveOn()](#flowabletransformersrequestobserveon)
   - [Custom parallel operators and transformers](#custom-parallel-operators-and-transformers)
     - [sumX()](#paralleltransformerssumx)
     - [orderedMerge()](#paralleltransformersorderedmerge)
@@ -1282,6 +1285,19 @@ Flowable.range(1, 5)
 .assertResult(4);
 ```
 
+### FlowableTransformers.requestObserveOn
+
+Requests items one-by-one from the upstream on the specified `Scheduler` and emits the received items from the
+given `Scheduler` as well in a fashion that allows tasks to be interleaved on the target `Scheduler` (aka "fair" use)
+on a much more granular basis than `Flowable.observeOn`.
+
+```java
+Flowable.range(1, 5)
+.compose(FlowableTransformers.requestObserveOn(Schedulers.single()))
+.test()
+awaitDone(5, TimeUnit.SECONDS)
+.assertResult(1, 2, 3, 4, 5)
+;
 
 ## Custom parallel operators and transformers
 
