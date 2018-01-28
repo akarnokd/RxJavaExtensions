@@ -1492,7 +1492,7 @@ The Subscriber will be removed *after* the callback for the terminal event has b
 ```java
 CompositeDisposable composite = new CompositeDisposable();
 
-Disposable d = FlowableSubscribers.subscribeAutoRelease(
+Disposable d = FlowableConsumers.subscribeAutoRelease(
     Flowable.just(1), composite,
     System.out::println, Throwable::printStackTrace, () -> System.out.println("Done")
 );
@@ -1501,7 +1501,7 @@ assertEquals(0, composite.size());
 
 // --------------------------
 
-Disposable d2 = FlowableSubscribers.subscribeAutoRelease(
+Disposable d2 = FlowableConsumers.subscribeAutoRelease(
     Flowable.never(), composite,
     System.out::println, Throwable::printStackTrace, () -> System.out.println("Done")
 );
