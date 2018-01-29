@@ -1327,6 +1327,7 @@ Flowables.repeatCallable(() -> 1)
 .awaitDone(10, TimeUnit.SECONDS)
 .assertResult(1, 1, 1, 1, 1);
 )
+```
 
 ## Custom parallel operators and transformers
 
