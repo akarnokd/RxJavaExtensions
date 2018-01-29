@@ -1406,4 +1406,29 @@ public final class FlowableTransformers {
     public static <T> FlowableTransformer<T, T> requestSample(long initialDelay, long period, TimeUnit unit,Scheduler scheduler) {
         return new FlowableRequestSampleTime<T>(null, initialDelay, period, unit, scheduler);
     }
+
+    /**
+     * Issues a {@code request(1)} to the upstream when the other {@link Publisher} signals an {@code onNext}.
+     * <p>
+     * If the other {@code Publisher} signals an {@code onError} or {@code onComplete}, the flow is terminated
+     * with the respective signal as well.
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The operator issues {@code request(1)} when the other {@code Publisher} signals an {@code onNext} and expects the downstream
+     *  to be ready to consume the items. If the downstream is not ready at that moment,
+     *  a {@link io.reactivex.exceptions.MissingBackpressureException MissingBackpressureException} is signalled
+     *  and the flow is cancelled. The other {@code Publisher} is consumed in an unbounded manner.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>This operator doesn't run on any particular {@link Scheduler}.</dd>
+     * </dl>
+     * @param <T> the item type
+     * @param <U> the item type of the other source, the items are ignored and dropped
+     * @param other the other {@code Publisher} instance that should signal {@code onNext} to request
+     * 1 item from the main source.
+     * @return the new FlowableTransformer instance
+     * @since 0.18.6
+     */
+    public static <T, U> FlowableTransformer<T, T> requestSample(Publisher<U> other) {
+        return new FlowableRequestSample<T>(null, other);
+    }
 }

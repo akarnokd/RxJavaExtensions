@@ -13,7 +13,7 @@ RxJava 2.x implementation of extra sources, operators and components and ports o
 
 ```
 dependencies {
-    compile "com.github.akarnokd:rxjava2-extensions:0.18.5"
+    compile "com.github.akarnokd:rxjava2-extensions:0.18.6"
 }
 ```
 
@@ -1313,6 +1313,20 @@ Flowables.repeatCallable(() -> 1)
 .awaitDone(7, TimeUnit.SECONDS)
 .assertResult(1, 1, 1, 1, 1);
 ```
+
+The sampling can be of a more complex pattern by using another `Publisher` as the indicator when to request:
+
+```java
+Flowables.repeatCallable(() -> 1)
+.compose(FlowableTransformers.requestSample(
+    Flowable.fromArray(100, 500, 1000, 2000, 5000)
+    .concatMap(delay -> Flowable.timer(delay, TimeUnit.MILLISECONDS))
+))
+.take(5)
+.test()
+.awaitDone(7, TimeUnit.SECONDS)
+.assertResult(1, 1, 1, 1, 1);
+)
 
 ## Custom parallel operators and transformers
 
