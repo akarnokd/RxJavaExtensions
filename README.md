@@ -1324,7 +1324,7 @@ Flowables.repeatCallable(() -> 1)
 ))
 .take(5)
 .test()
-.awaitDone(7, TimeUnit.SECONDS)
+.awaitDone(10, TimeUnit.SECONDS)
 .assertResult(1, 1, 1, 1, 1);
 )
 
