@@ -54,7 +54,7 @@ Maven search:
     - [expand()](#flowabletransformersexpand), [mapAsync()](#flowabletransformersmapasync), [filterAsync()](#flowabletransformerfilterasync),
     - [refCount()](#flowabletransformersrefcount), [zipLatest()](#flowablesziplatest), [coalesce()](#flowabletransformerscoalesce),
     - [windowWhile()](#flowabletransformerswindowwhile), [windowUntil()](#flowabletransformerswindowuntil), [windowSplit()](#flowabletransformerswindowsplit),
-    - [indexOf()](#flowabletransformersindexof), [requestObserveOn()](#flowabletransformersrequestobserveon)
+    - [indexOf()](#flowabletransformersindexof), [requestObserveOn()](#flowabletransformersrequestobserveon), [requestSample()](#flowabletransformersrequestsample)
   - [Custom parallel operators and transformers](#custom-parallel-operators-and-transformers)
     - [sumX()](#paralleltransformerssumx)
     - [orderedMerge()](#paralleltransformersorderedmerge)
@@ -1295,9 +1295,24 @@ on a much more granular basis than `Flowable.observeOn`.
 Flowable.range(1, 5)
 .compose(FlowableTransformers.requestObserveOn(Schedulers.single()))
 .test()
-awaitDone(5, TimeUnit.SECONDS)
+.awaitDone(5, TimeUnit.SECONDS)
 .assertResult(1, 2, 3, 4, 5)
 ;
+```
+
+### Flowabletransformers.requestSample
+
+Periodically (and after an optional initial delay) issues a single `request(1)` to the upstream and forwards the
+items to a downstream that must be ready to receive them.
+
+```java
+Flowables.repeatCallable(() -> 1)
+.compose(FlowableTransformers.requestSample(1, TimeUnit.SECONDS, Schedulers.single()))
+.take(5)
+.test()
+.awaitDone(7, TimeUnit.SECONDS)
+.assertResult(1, 1, 1, 1, 1);
+```
 
 ## Custom parallel operators and transformers
 

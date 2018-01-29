@@ -1356,4 +1356,54 @@ public final class FlowableTransformers {
     public static <T> FlowableTransformer<T, T> requestObserveOn(Scheduler scheduler) {
         return new FlowableRequestObserveOn<T>(null, ObjectHelper.requireNonNull(scheduler, "scheduler == null"));
     }
+
+    /**
+     * Issues a {@code request(1)} to the upstream repeatedly after the given period time elapses (including
+     * the very first {@code request(1)}).
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The operator issues {@code request(1)} to its upstream periodically and expects the downstream
+     *  to be ready to consume the items. If the downstream is not ready at that moment,
+     *  a {@link io.reactivex.exceptions.MissingBackpressureException MissingBackpressureException} is signalled
+     *  and the flow is cancelled.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>You specify the {@link Scheduler} this operator should use for issuing each {@code request(1)} call.
+     *  Note that this may trigger the item creation on the specified scheduler.</dd>
+     * </dl>
+     * @param <T> the item type
+     * @param period the time between the request(1) calls
+     * @param unit the unit of measure
+     * @param scheduler the source of the period ticks that issue each request(1) calls
+     * @return the new FlowableTransformer instance
+     * @since 0.18.6
+     */
+    @SchedulerSupport(SchedulerSupport.CUSTOM)
+    @BackpressureSupport(BackpressureKind.ERROR)
+    public static <T> FlowableTransformer<T, T> requestSample(long period, TimeUnit unit, Scheduler scheduler) {
+        return requestSample(period, period, unit, scheduler);
+    }
+
+    /**
+     * Issues a {@code request(1)} to the upstream after an initial delay, then repeatedly by given period.
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The operator issues {@code request(1)} to its upstream after an initial delay, then periodically and expects the downstream
+     *  to be ready to consume the items. If the downstream is not ready at that moment,
+     *  a {@link io.reactivex.exceptions.MissingBackpressureException MissingBackpressureException} is signalled
+     *  and the flow is cancelled.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>You specify the {@link Scheduler} this operator should use for issuing each {@code request(1)} call.
+     *  Note that this may trigger the item creation on the specified scheduler.</dd>
+     * </dl>
+     * @param <T> the item type
+     * @param initialDelay the initial delay before the very first {@code request(1)}.
+     * @param period the time between the subsequent {@code request(1)} calls
+     * @param unit the unit of measure
+     * @param scheduler the source of the period ticks that issue each request(1) calls
+     * @return the new FlowableTransformer instance
+     * @since 0.18.6
+     */
+    public static <T> FlowableTransformer<T, T> requestSample(long initialDelay, long period, TimeUnit unit,Scheduler scheduler) {
+        return new FlowableRequestSampleTime<T>(null, initialDelay, period, unit, scheduler);
+    }
 }
