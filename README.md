@@ -55,6 +55,7 @@ Maven search:
     - [refCount()](#flowabletransformersrefcount), [zipLatest()](#flowablesziplatest), [coalesce()](#flowabletransformerscoalesce),
     - [windowWhile()](#flowabletransformerswindowwhile), [windowUntil()](#flowabletransformerswindowuntil), [windowSplit()](#flowabletransformerswindowsplit),
     - [indexOf()](#flowabletransformersindexof), [requestObserveOn()](#flowabletransformersrequestobserveon), [requestSample()](#flowabletransformersrequestsample)
+    - [observeOnDrop()](#observabletransformersobserveondrop), [observeOnLatest()](#observabletransformersobserveonlatest)
   - [Custom parallel operators and transformers](#custom-parallel-operators-and-transformers)
     - [sumX()](#paralleltransformerssumx)
     - [orderedMerge()](#paralleltransformersorderedmerge)
@@ -1300,7 +1301,7 @@ Flowable.range(1, 5)
 ;
 ```
 
-### Flowabletransformers.requestSample
+### FlowableTransformers.requestSample
 
 Periodically (and after an optional initial delay) issues a single `request(1)` to the upstream and forwards the
 items to a downstream that must be ready to receive them.
@@ -1326,6 +1327,43 @@ Flowables.repeatCallable(() -> 1)
 .test()
 .awaitDone(10, TimeUnit.SECONDS)
 .assertResult(1, 1, 1, 1, 1);
+```
+
+### ObservableTransformers.observeOnDrop
+
+Drop upstream items while the downstream is working on an item in its `onNext` method on an `Scheduler`.
+This is similar to `Flowable.onBackpressureDrop` but instead dropping on a lack of requests, items
+from upstream are dropped while a work indicator is active during the execution of the downstream's
+`onNext` method.
+
+```java
+Observable.range(1, 1000000)
+.compose(ObservableTransformers.observeOnDrop(Schedulers.io()))
+.doOnNext(v -> Thread.sleep(1))
+.test()
+.awaitDone(5, TimeUnit.SECONDS)
+.assertOf(to -> {
+    assertTrue(to.getValueCount() >= 1 && to.getValueCount() <= 1000000); 
+});
+```
+
+### ObservableTransformers.observeOnLatest
+
+Keeps the latest item from the upstream while the downstream working on the current item in its `onNext`
+methdo on a `Scheduler`, so that when it finishes with the current item, it can continue immediately
+with the latest item from the upstream.
+This is similar to `Flowable.onBackpressureLatest` except that the latest item is always picked up, not just when
+there is also a downstream demand for items.
+
+```java
+Observable.range(1, 1000000)
+.compose(ObservableTransformers.observeOnLatest(Schedulers.io()))
+.doOnNext(v -> Thread.sleep(1))
+.test()
+.awaitDone(5, TimeUnit.SECONDS)
+.assertOf(to -> {
+    assertTrue(to.getValueCount() >= 1 && to.getValueCount() <= 1000000); 
+});
 ```
 
 ## Custom parallel operators and transformers

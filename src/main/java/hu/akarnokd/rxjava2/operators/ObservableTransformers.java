@@ -19,6 +19,7 @@ package hu.akarnokd.rxjava2.operators;
 import io.reactivex.*;
 import io.reactivex.annotations.*;
 import io.reactivex.functions.Predicate;
+import io.reactivex.internal.functions.ObjectHelper;
 
 /**
  * Additional operators in the form of {@link ObservableTransformer},
@@ -46,8 +47,47 @@ public final class ObservableTransformers {
      * @since 0.18.2
      */
     @SchedulerSupport(SchedulerSupport.NONE)
-    @BackpressureSupport(BackpressureKind.UNBOUNDED_IN)
-    public static <T> ObservableTransformer<T, Long> indexOf(Predicate<? super T> predicate) {
+    @CheckReturnValue
+    @NonNull
+    public static <T> ObservableTransformer<T, Long> indexOf(@NonNull Predicate<? super T> predicate) {
+        ObjectHelper.requireNonNull(predicate, "predicate is null");
         return new ObservableIndexOf<T>(null, predicate);
+    }
+
+    /**
+     * Schedules the event emission on a {@link Scheduler} and drops upstream values while
+     * the {@code onNext} with the current item is executing on that scheduler.
+     * <p>
+     * Errors are delayed until all items that weren't dropped have been delivered.
+     * @param <T> the element type
+     * @param scheduler the scheduler to use for emitting events on
+     * @return the new ObservableTransformer instance
+     * @see #observeOnLatest(Scheduler)
+     */
+    @SchedulerSupport(SchedulerSupport.CUSTOM)
+    @CheckReturnValue
+    @NonNull
+    public static <T> ObservableTransformer<T, T> observeOnDrop(@NonNull Scheduler scheduler) {
+        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
+        return new ObservableObserveOnDrop<T>(null, scheduler);
+    }
+
+    /**
+     * Schedules the event emission on a {@link Scheduler} and keeps the latest upstream item
+     * while the downstream's {@code onNext} is executing so that it will resume
+     * with that latest value.
+     * <p>
+     * Errors are delayed until the very last item has been delivered.
+     * @param <T> the element type
+     * @param scheduler the scheduler to use for emitting events on
+     * @return the new ObservableTransformer instance
+     * @see #observeOnLatest(Scheduler)
+     */
+    @SchedulerSupport(SchedulerSupport.CUSTOM)
+    @CheckReturnValue
+    @NonNull
+    public static <T> ObservableTransformer<T, T> observeOnLatest(@NonNull Scheduler scheduler) {
+        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
+        return new ObservableObserveOnLatest<T>(null, scheduler);
     }
 }
