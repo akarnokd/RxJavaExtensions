@@ -44,7 +44,7 @@ Maven search:
     - [ParallelScheduler](#parallelscheduler)
     - [BlockingScheduler](#blockingscheduler)
   - [Custom operators and transformers](#custom-operators-and-transformers)
-    - [valve()](#flowabletransflormersvalve), [orderedMerge()](#flowablesorderedmerge), [bufferWhile()](#flowabletransformersbufferwhile),
+    - [valve()](#flowabletransformersvalve), [orderedMerge()](#flowablesorderedmerge), [bufferWhile()](#flowabletransformersbufferwhile),
     - [bufferUntil()](#flowabletransformersbufferuntil), [bufferSplit()](#flowabletransformersbuffersplit), [spanout()](#flowabletransformersspanout),
     - [mapFilter()](#flowabletransformersmapfilter), [onBackpressureTimeout()](#flowabletransformersonbackpressuretimeout), [repeat()](#flowablesrepeat),
     - [repeatCallable()](#flowablesrepeatcallable), [every()](#flowabletransformersevery), [intervalBackpressure()](#flowablesintervalbackpressure),
