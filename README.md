@@ -13,7 +13,7 @@ RxJava 2.x implementation of extra sources, operators and components and ports o
 
 ```
 dependencies {
-    compile "com.github.akarnokd:rxjava2-extensions:0.18.7"
+    compile "com.github.akarnokd:rxjava2-extensions:0.18.8"
 }
 ```
 
@@ -36,7 +36,9 @@ Maven search:
     - [Multi-hook handlers](#multi-hook-handlers)
   - Custom Processors and Subjects
     - [SoloProcessor, PerhapsProcessor and NonoProcessor](#soloprocessor-perhapsprocessor-and-nonoprocessor)
-    - [MulticastProcessor](#multicastprocessor)
+    - [MulticastProcessor](#multicastprocessor),
+    - [UnicastWorkSubject](#unicastworksubject),
+    - [DispatchWorkSubject](#dispatchworksubject),
   - [FlowableProcessor utils](#flowableprocessor-utils)
     - [wrap](#wrap), [refCount](#refcount)
   - [Custom Schedulers](#custom-schedulers)
@@ -585,6 +587,51 @@ assertFalse(mp2.offer(5));
 mp2.onComplete();
 
 mp2.test().assertResult(1, 2, 3, 4);
+```
+
+### UnicastWorkSubject
+
+A `Subject` variant that buffers items and allows one `Observer` to consume it at a time, but unlike `UnicastSubject`,
+once the previous `Observer` disposes, a new `Observer` can subscribe and resume consuming the items.
+
+```java
+UnicastWorkSubject<Integer> uws = UnicastWorkSubject.create();
+
+uws.onNext(1);
+uws.onNext(2);
+uws.onNext(3);
+uws.onNext(4);
+
+uws.take(2).test().assertResult(1, 2);
+uws.take(2).test().assertResult(3, 4);
+
+uws.onComplete();
+uws.test().assertResult();
+```
+
+### DispatchWorkSubject
+
+A `Subject` variant that buffers items and allows one or more `Observer`s to exclusively consume one of the items in the buffer
+asynchronously. If there are no `Observer`s (or they all disposed), the `DispatchWorkSubject` will keep buffering and later
+`Observer`s can resume the consumption of the buffer.
+
+```java
+DispatchWorkSubject<Integer> dws = DispatchWorkSubject.create();
+
+Single<List<Integer>> asList = dws.toList();
+
+TestObserver<List<Integer>> to = Single
+    .zip(asList, asList, (a, b) -> a.addAll(b))
+    .test();
+    
+Observable.range(1, 1000000).subscribe(dws);
+
+to.awaitDone(5, TimeUnit.SECONDS)
+.assertValueCount(1000000)
+.assertComplete()
+.assertNoErrors();
+
+assertEquals(1000000, to.values().get().size());
 ```
 
 ## FlowableProcessor utils
