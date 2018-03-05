@@ -18,6 +18,7 @@ package hu.akarnokd.rxjava2.processors;
 
 import org.junit.Test;
 
+import hu.akarnokd.rxjava2.subjects.Subjects;
 import hu.akarnokd.rxjava2.test.TestHelper;
 
 public class SubjectsTest {

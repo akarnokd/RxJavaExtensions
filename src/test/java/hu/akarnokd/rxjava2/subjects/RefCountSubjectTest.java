@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package hu.akarnokd.rxjava2.processors;
+package hu.akarnokd.rxjava2.subjects;
 
 import static org.junit.Assert.*;
 

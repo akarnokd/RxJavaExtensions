@@ -627,7 +627,7 @@ TestObserver<List<Integer>> to = Single
 Observable.range(1, 1000000).subscribe(dws);
 
 to.awaitDone(5, TimeUnit.SECONDS)
-.assertValueCount(1000000)
+.assertValueCount(1 )
 .assertComplete()
 .assertNoErrors();
 

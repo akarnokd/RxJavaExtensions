@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package hu.akarnokd.rxjava2.processors;
+package hu.akarnokd.rxjava2.subjects;
 
 import io.reactivex.annotations.*;
 import io.reactivex.internal.functions.ObjectHelper;
