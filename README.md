@@ -39,6 +39,7 @@ Maven search:
     - [MulticastProcessor](#multicastprocessor),
     - [UnicastWorkSubject](#unicastworksubject),
     - [DispatchWorkSubject](#dispatchworksubject),
+    - [DispatchWorkProcessor](#dispatchworkprocessor)
   - [FlowableProcessor utils](#flowableprocessor-utils)
     - [wrap](#wrap), [refCount](#refcount)
   - [Custom Schedulers](#custom-schedulers)
@@ -627,7 +628,32 @@ TestObserver<List<Integer>> to = Single
 Observable.range(1, 1000000).subscribe(dws);
 
 to.awaitDone(5, TimeUnit.SECONDS)
-.assertValueCount(1 )
+.assertValueCount(1)
+.assertComplete()
+.assertNoErrors();
+
+assertEquals(1000000, to.values().get().size());
+```
+
+### DispatchWorkProcessor
+
+A `FlowableProcessor` variant that buffers items and allows one or more `Subscriber`s to exclusively consume one of the items in the buffer
+asynchronously. If there are no `Subscriber`s (or they all disposed), the `DispatchWorkSubscriber` will keep buffering and later
+`Subscriber`s can resume the consumption of the buffer.
+
+```java
+DispatchWorkSubscriber<Integer> dws = DispatchWorkSubscriber.create();
+
+Single<List<Integer>> asList = dws.toList();
+
+TestObserver<List<Integer>> to = Single
+    .zip(asList, asList, (a, b) -> a.addAll(b))
+    .test();
+    
+Flowable.range(1, 1000000).subscribe(dws);
+
+to.awaitDone(5, TimeUnit.SECONDS)
+.assertValueCount(1)
 .assertComplete()
 .assertNoErrors();
 
