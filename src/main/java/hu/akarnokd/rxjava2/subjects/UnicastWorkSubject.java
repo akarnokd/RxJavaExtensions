@@ -44,7 +44,7 @@ import io.reactivex.subjects.Subject;
 public final class UnicastWorkSubject<T> extends Subject<T> implements Disposable {
 
     /**
-     * Constructs an empty {@lin UnicastWorkSubject} with the default capacity hint
+     * Constructs an empty {@link UnicastWorkSubject} with the default capacity hint
      * (expected number of cached items) of {@link Flowable#bufferSize()} and error delaying behavior.
      * @param <T> the input and output value type
      * @return the new UnicastWorkSubject instance
@@ -55,7 +55,7 @@ public final class UnicastWorkSubject<T> extends Subject<T> implements Disposabl
     }
 
     /**
-     * Constructs an empty {@lin UnicastWorkSubject} with the given capacity hint
+     * Constructs an empty {@link UnicastWorkSubject} with the given capacity hint
      * (expected number of cached items) and error delaying behavior.
      * @param <T> the input and output value type
      * @param capacityHint the number of items expected to be cached, larger number
@@ -68,7 +68,7 @@ public final class UnicastWorkSubject<T> extends Subject<T> implements Disposabl
     }
 
     /**
-     * Constructs an empty {@lin UnicastWorkSubject} with the given capacity hint
+     * Constructs an empty {@link UnicastWorkSubject} with the given capacity hint
      * (expected number of cached items) of {@link Flowable#bufferSize()} and
      * optional error delaying behavior.
      * @param <T> the input and output value type
@@ -81,7 +81,7 @@ public final class UnicastWorkSubject<T> extends Subject<T> implements Disposabl
     }
 
     /**
-     * Constructs an empty {@lin UnicastWorkSubject} with the given capacity hint
+     * Constructs an empty {@link UnicastWorkSubject} with the given capacity hint
      * (expected number of cached items) and optional error delaying behavior.
      * @param <T> the input and output value type
      * @param capacityHint the number of items expected to be cached, larger number
