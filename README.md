@@ -642,9 +642,9 @@ asynchronously. If there are no `Subscriber`s (or they all disposed), the `Dispa
 `Subscriber`s can resume the consumption of the buffer.
 
 ```java
-DispatchWorkSubscriber<Integer> dws = DispatchWorkSubscriber.create();
+DispatchWorkProcessor<Integer> dwp = DispatchWorkProcessor.create();
 
-Single<List<Integer>> asList = dws.toList();
+Single<List<Integer>> asList = dwp.toList();
 
 TestObserver<List<Integer>> to = Single
     .zip(asList, asList, (a, b) -> a.addAll(b))
