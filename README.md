@@ -1303,7 +1303,7 @@ If the predicate returns false, a new Flowable window is emitted.
 ```java
 Flowable.just("1", "2", "#", "3", "#", "4", "#")
 .compose(FlowableTransformers.windowWhile(v -> !"#".equals(v)))
-.flatMap(v -> v.toList())
+.flatMapSingle(v -> v.toList())
 .test()
 .assertResult(
     Arrays.asList("1", "2"),
@@ -1321,7 +1321,7 @@ at which point a new Flowable window is emitted.
 ```java
 Flowable.just("1", "2", "#", "3", "#", "4", "#")
 .compose(FlowableTransformers.windowUntil(v -> "#".equals(v)))
-.flatMap(v -> v.toList())
+.flatMapSingle(v -> v.toList())
 .test()
 .assertResult(
     Arrays.asList("1", "2", "#"),
@@ -1338,7 +1338,7 @@ point a new Flowable window is emitted; the particular item will be dropped.
 ```java
 Flowable.just("1", "2", "#", "3", "#", "4", "#")
 .compose(FlowableTransformers.windowSplit(v -> "#".equals(v)))
-.flatMap(v -> v.toList())
+.flatMapSingle(v -> v.toList())
 .test()
 .assertResult(
     Arrays.asList("1", "2"),
