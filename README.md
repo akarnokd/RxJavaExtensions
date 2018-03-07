@@ -1472,7 +1472,7 @@ An instance of this API can be obtained on demand, thus the state of this operat
 a ` Flowable`  as follows:
 
 ```java
-Flowable<Integer> source = Flowable.<Integer, AsyncAPI<Integer>>generateAsync(
+Flowable<Integer> source = Flowables.<Integer, AsyncAPI<Integer>>generateAsync(
 
     // create a fresh API instance for each individual Subscriber
     () -> new AsyncAPIImpl<Integer>(),
