@@ -58,7 +58,7 @@ Maven search:
     - [refCount()](#flowabletransformersrefcount), [zipLatest()](#flowablesziplatest), [coalesce()](#flowabletransformerscoalesce),
     - [windowWhile()](#flowabletransformerswindowwhile), [windowUntil()](#flowabletransformerswindowuntil), [windowSplit()](#flowabletransformerswindowsplit),
     - [indexOf()](#flowabletransformersindexof), [requestObserveOn()](#flowabletransformersrequestobserveon), [requestSample()](#flowabletransformersrequestsample)
-    - [observeOnDrop()](#observabletransformersobserveondrop), [observeOnLatest()](#observabletransformersobserveonlatest)
+    - [observeOnDrop()](#observabletransformersobserveondrop), [observeOnLatest()](#observabletransformersobserveonlatest), [generateAsync()](#flowablesgenerateasync)
   - [Custom parallel operators and transformers](#custom-parallel-operators-and-transformers)
     - [sumX()](#paralleltransformerssumx)
     - [orderedMerge()](#paralleltransformersorderedmerge)
@@ -1437,6 +1437,91 @@ Observable.range(1, 1000000)
 .assertOf(to -> {
     assertTrue(to.getValueCount() >= 1 && to.getValueCount() <= 1000000); 
 });
+```
+
+### Flowables.generateAsync
+
+A source operator to bridge async APIs that can be repeatedly called to produce the next item 
+(or terminate in some way) asynchronously and only call the API again once the result has 
+been received and delivered to the downstream, while honoring the backpressure of the downstream.
+This means if the downstream stops requesting, the API won't be called until the latest result has 
+been requested and consumed by the downstream.
+
+Example APIs could be [AsyncEnumerable](https://github.com/akarnokd/async-enumerable#async-enumerable)
+style, coroutine style or [async-await](https://github.com/electronicarts/ea-async).
+
+Let's assume there is an async API with the following interface definition:
+
+```java
+interface AsyncAPI<T> extends AutoCloseable {
+
+    CompletableFuture<Void> nextValue(Consumer<? super T> onValue);
+
+}
+```
+
+When the call succeeds, the `onValue` is invoked with it. If there are no more items, the
+` CompletableFuture`  returned by the last ` nextValue`  is completed (with ` null` ).
+If there is an error, the same ` CompletableFuture`  is completed exceptionally. Each
+` nextValue`  invocation creates a fresh ` CompletableFuture`  which can be cancelled
+if necesary. ` nextValue`  should not be invoked again until the ` onValue`  callback
+has been notified.
+
+An instance of this API can be obtained on demand, thus the state of this operator consists of the
+` AsyncAPI`  instance supplied for each individual {@code Subscriber}. The API can be transformed into
+a ` Flowable`  as follows:
+
+```java
+Flowable<Integer> source = Flowable.<Integer, AsyncAPI<Integer>>generateAsync(
+
+    // create a fresh API instance for each individual Subscriber
+    () -> new AsyncAPIImpl<Integer>(),
+
+    // this BiFunction will be called once the operator is ready to receive the next item
+    // and will invoke it again only when that item is delivered via emitter.onNext()
+    (state, emitter) -> {
+        // issue the async API call
+        CompletableFuture<Void> f = state.nextValue(
+
+            // handle the value received
+            value -> {
+
+                // we have the option to signal that item
+                if (value % 2 == 0) {
+                    emitter.onNext(value);
+                } else if (value == 101) {
+                    // or stop altogether, which will also trigger a cleanup
+                    emitter.onComplete();
+                } else {
+                    // or drop it and have the operator start a new call
+                    emitter.onNothing();
+                }
+            }
+        );
+
+        // This API call may not produce further items or fail
+        f.whenComplete((done, error) -> {
+            // As per the CompletableFuture API, error != null is the error outcome,
+            // done is always null due to the Void type
+            if (error != null) {
+                emitter.onError(error);
+            } else {
+                emitter.onComplete();
+            }
+        });
+
+        // In case the downstream cancels, the current API call
+        // should be cancelled as well
+        emitter.replaceCancellable(() -> f.cancel(true));
+
+        // some sources may want to create a fresh state object
+        // after each invocation of this generator
+        return state;
+    },
+
+    // cleanup the state object
+    state -> { state.close(); }
+);
 ```
 
 ## Custom parallel operators and transformers
