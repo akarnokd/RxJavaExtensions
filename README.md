@@ -58,7 +58,8 @@ Maven search:
     - [refCount()](#flowabletransformersrefcount), [zipLatest()](#flowablesziplatest), [coalesce()](#flowabletransformerscoalesce),
     - [windowWhile()](#flowabletransformerswindowwhile), [windowUntil()](#flowabletransformerswindowuntil), [windowSplit()](#flowabletransformerswindowsplit),
     - [indexOf()](#flowabletransformersindexof), [requestObserveOn()](#flowabletransformersrequestobserveon), [requestSample()](#flowabletransformersrequestsample)
-    - [observeOnDrop()](#observabletransformersobserveondrop), [observeOnLatest()](#observabletransformersobserveonlatest), [generateAsync()](#flowablesgenerateasync)
+    - [observeOnDrop()](#observabletransformersobserveondrop), [observeOnLatest()](#observabletransformersobserveonlatest), [generateAsync()](#flowablesgenerateasync),
+    - [partialCollect()](#flowabletransformerspartialcollect)
   - [Custom parallel operators and transformers](#custom-parallel-operators-and-transformers)
     - [sumX()](#paralleltransformerssumx)
     - [orderedMerge()](#paralleltransformersorderedmerge)
@@ -1523,6 +1524,101 @@ Flowable<Integer> source = Flowables.<Integer, AsyncAPI<Integer>>generateAsync(
     state -> { state.close(); }
 );
 ```
+
+### FlowableTransformers.partialCollect
+
+Allows converting upstream items into output objects where an upstream item
+may represent such output objects partially or may represent more than one
+output object.
+
+For example, given a stream of {@code byte[]} where each array could contain part
+of a larger object, and thus more than one subsequent arrays are required to construct
+the output object. The same array could also contain more than one output items, therefore,
+it should be kept around in case the output is backpressured.
+
+This example shows, given a flow of `String`s with embedded separator `|`, how one
+can split them along the separator and have invidiual items returned, even when
+they span multiple subsequent items (`cdefgh`) or more than one is present in a source item (`mno||pqr|s`). 
+
+```java
+Flowable.just("ab|cdef", "gh|ijkl|", "mno||pqr|s", "|", "tuv|xy", "|z")
+.compose(FlowableTransformers.partialCollect(new Consumer<PartialCollectEmitter<String, Integer, StringBuilder, String>>() {
+    @Override
+    public void accept(
+            PartialCollectEmitter<String, Integer, StringBuilder, String> emitter)
+            throws Exception {
+        Integer idx = emitter.getIndex();
+        if (idx == null) {
+            idx = 0;
+        }
+        StringBuilder sb = emitter.getAccumulator();
+        if (sb == null) {
+            sb = new StringBuilder();
+            emitter.setAccumulator(sb);
+        }
+
+        if (emitter.demand() != 0) {
+
+            boolean d = emitter.isComplete();
+            if (emitter.size() != 0) {
+                String str = emitter.getItem(0);
+
+                int j = str.indexOf('|', idx);
+
+                if (j >= 0) {
+                    sb.append(str.substring(idx, j));
+                    emitter.next(sb.toString());
+                    sb.setLength(0);
+                    idx = j + 1;
+                } else {
+                    sb.append(str.substring(idx));
+                    emitter.dropItems(1);
+                    idx = 0;
+                }
+            } else if (d) {
+                if (sb.length() != 0) {
+                    emitter.next(sb.toString());
+                }
+                emitter.complete();
+                return;
+            }
+        }
+
+        emitter.setIndex(idx);
+    }
+}, Functions.emptyConsumer(), 128))
+.test()
+.assertResult(
+        "ab",
+        "cdefgh",
+        "ijkl",
+        "mno",
+        "",
+        "pqr",
+        "s",
+        "tuv",
+        "xy",
+        "z"
+);
+```
+
+Note that the resulting sequence completes only when the handler calls `emitter.complete()` because
+the upstream's termination may not mean all output has been generated.
+
+The operator allows generating more than one item per invocation of the handler, but the handler should
+always check `emitter.demand()` if the downstream is ready to receive and `emitter.size()` to
+see if there are more upstream items to produce. The operator will call the handler again if it
+detects an item has been produced, therefore, there is no need to exhaustively process all source
+items on one call (which may not be possible if only partial data is available).
+
+The cleanup callback is called to release the source items if necessary (such as pooled `ByteBuffer`s)
+when it is dropped via `emitter.dropItems()` or when the operator gets cancelled.
+
+The `emitter.dropItems()` has an additional function, indicate that the upstream can send more items
+as the previous ones have been consumed by the handler. Note though that the operator uses a low
+watermark algorithm to replenish items from upstream (also called stable prefetch), that is, when
+more than 75% of the `prefetch` parameter has been consumed, that many items are requested from
+the upstream. This reduces an overhead the one-by-one requesting would have.
 
 ## Custom parallel operators and transformers
 

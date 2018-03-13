@@ -1431,4 +1431,36 @@ public final class FlowableTransformers {
     public static <T, U> FlowableTransformer<T, T> requestSample(Publisher<U> other) {
         return new FlowableRequestSample<T>(null, other);
     }
+
+    /**
+     * Allows converting upstream items into output objects where an upstream item
+     * may represent such output objects partially or may represent more than one
+     * output object.
+     * <p>
+     * For example, given a stream of {@code byte[]} where each array could contain part
+     * of a larger object, and thus more than one subsequent arrays are required to construct
+     * the output object. The same array could also contain more than one output items, therefore,
+     * it should be kept around in case the output is backpressured.
+     * @param <T> the upstream value type
+     * @param <I> the type that indicates where the first cached item should be read from
+     * @param <A> the accumulator type used to collect up partial data
+     * @param <R> the output type
+     * @param handler the handler called when there was a change in the operators state:
+     *                new upstream items became available or the downstream requested
+     * @param cleaner called to clean up the upstream items consumed
+     * @param prefetch The number of items to fetch from the upstream to keep the operator
+     *                 busy. Note that if more than this number of items are required
+     *                 by the handler to create an output item, the operator may hang
+     *                 if the handler doesn't consume the upstream items containing the
+     *                 partial items.
+     * @return the new FlowableTransformer instance
+     * @since 0.18.9
+     */
+    public static <T, I, A, R> FlowableTransformer<T, R> partialCollect(
+            Consumer<? super PartialCollectEmitter<T, I, A, R>> handler,
+            Consumer<? super T> cleaner,
+            int prefetch
+    ) {
+        return new FlowablePartialCollect<T, I, A, R>(null, handler, cleaner, prefetch);
+    }
 }
