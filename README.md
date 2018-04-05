@@ -443,7 +443,7 @@ try {
    tagged.apply(1);
    fail("Should have thrown");
 } catch (NullPointerException ex) {
-   assertTrue(ex.getMessage().contains("F2"));
+   assertTrue(ex.getMessage().contains("F1"));
 }
 ```
 
@@ -472,7 +472,7 @@ SavedHooks hooks = RxJavaProtocolValidator.enableAndChain();
 hooks.restore();
 ```
 
-By default, the violations, subclasses of `ProtocolNonConformanceException`, are reported to the `RxJavaHooks.onError`
+By default, the violations, subclasses of `ProtocolNonConformanceException`, are reported to the `RxJavaPlugins.onError`
 handler but can be overridden via `RxJavaProtocolValidator.setOnViolationHandler`.
 
 ```java
