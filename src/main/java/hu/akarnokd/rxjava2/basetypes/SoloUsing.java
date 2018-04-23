@@ -29,6 +29,8 @@ import io.reactivex.plugins.RxJavaPlugins;
 
 /**
  * Use a resource while the actual Solo is running.
+ * @param <T> the element type of the supplied Solo
+ * @param <R> the resource type
  */
 final class SoloUsing<T, R> extends Solo<T> {
 

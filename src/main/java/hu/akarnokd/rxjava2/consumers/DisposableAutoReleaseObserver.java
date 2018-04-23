@@ -25,6 +25,7 @@ import io.reactivex.internal.disposables.DisposableHelper;
 /**
  * Wraps lambda callbacks and when the upstream terminates or this observer gets disposed,
  * removes itself from a {@link io.reactivex.disposables.CompositeDisposable}.
+ * @param <T> the element type consumed
  * @since 0.18.0
  */
 final class DisposableAutoReleaseObserver<T>

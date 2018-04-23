@@ -24,6 +24,7 @@ import io.reactivex.internal.subscriptions.SubscriptionHelper;
 
 /**
  * Convert to an empty Maybe.
+ * @param <T> the input and output element type
  */
 final class NonoToMaybe<T> extends Maybe<T> {
 

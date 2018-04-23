@@ -27,6 +27,7 @@ import io.reactivex.plugins.RxJavaPlugins;
 /**
  * Execute an action exactly once after the upstream terminates or the
  * downstream cancels.
+ * @param <T> the input and output element type
  */
 final class SoloDoFinally<T> extends Solo<T> {
 

@@ -30,6 +30,7 @@ import io.reactivex.plugins.RxJavaPlugins;
 
 /**
  * Default implementation of a join observer.
+ * @param <T> the input element type
  */
 final class JoinObserver1<T> implements Observer<Notification<T>>, JoinObserver {
     private Object gate;

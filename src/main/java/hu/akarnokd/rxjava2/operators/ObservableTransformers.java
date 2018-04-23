@@ -18,7 +18,7 @@ package hu.akarnokd.rxjava2.operators;
 
 import io.reactivex.*;
 import io.reactivex.annotations.*;
-import io.reactivex.functions.Predicate;
+import io.reactivex.functions.*;
 import io.reactivex.internal.functions.ObjectHelper;
 
 /**
@@ -89,5 +89,42 @@ public final class ObservableTransformers {
     public static <T> ObservableTransformer<T, T> observeOnLatest(@NonNull Scheduler scheduler) {
         ObjectHelper.requireNonNull(scheduler, "scheduler is null");
         return new ObservableObserveOnLatest<T>(null, scheduler);
+    }
+
+    /**
+     * FlatMap only one {@link ObservableSource} at a time and ignore upstream values until it terminates.
+     * <p>
+     * Errors are delayed until both the upstream and the active inner {@code ObservableSource} terminate.
+     * @param <T> the upstream value type
+     * @param <R> the output type
+     * @param mapper the function that takes an upstream item and returns a {@link ObservableSource}
+     * to be run exclusively until it finishes
+     * @return the new ObservableTransformer instance
+     * @since 0.19.0
+     */
+    @SchedulerSupport(SchedulerSupport.NONE)
+    @CheckReturnValue
+    @NonNull
+    public static <T, R> ObservableTransformer<T, R> flatMapDrop(Function<? super T, ? extends ObservableSource<? extends R>> mapper) {
+        return new ObservableFlatMapDrop<T, R>(null, mapper);
+    }
+
+    /**
+ * FlatMap only one {@link ObservableSource} at a time and keep the latest upstream value until it terminates
+ * and resume with the {@code ObservableSource} mapped for that latest upstream value.
+     * <p>
+     * Errors are delayed until both the upstream and the active inner {@code ObservableSource} terminate.
+     * @param <T> the upstream value type
+     * @param <R> the output type
+     * @param mapper the function that takes an upstream item and returns a {@link ObservableSource}
+     * to be run exclusively until it finishes
+     * @return the new ObservableTransformer instance
+     * @since 0.19.0
+     */
+    @SchedulerSupport(SchedulerSupport.NONE)
+    @CheckReturnValue
+    @NonNull
+    public static <T, R> ObservableTransformer<T, R> flatMapLatest(Function<? super T, ? extends ObservableSource<? extends R>> mapper) {
+        return new ObservableFlatMapLatest<T, R>(null, mapper);
     }
 }

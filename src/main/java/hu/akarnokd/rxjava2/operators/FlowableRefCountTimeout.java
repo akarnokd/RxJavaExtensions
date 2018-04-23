@@ -32,6 +32,7 @@ import io.reactivex.internal.subscriptions.SubscriptionHelper;
  * A refCount implementation that allows connecting to the source after the specified
  * number of Subscribers subscribed and allows disconnecting after a specified
  * grace period.
+ * @param <T> the input and output element type
  * @since 0.17.0
  */
 final class FlowableRefCountTimeout<T> extends Flowable<T> implements FlowableTransformer<T, T> {

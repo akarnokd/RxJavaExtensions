@@ -46,7 +46,7 @@ final class FlowableGenerateAsync<T, S> extends Flowable<T> {
 
     final Consumer<? super S> stateCleanup;
 
-    public FlowableGenerateAsync(Callable<S> initialState,
+    FlowableGenerateAsync(Callable<S> initialState,
             BiFunction<? super S, ? super FlowableAsyncEmitter<T>, ? extends S> asyncGenerator,
             Consumer<? super S> stateCleanup) {
         this.initialState = initialState;

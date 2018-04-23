@@ -25,6 +25,7 @@ import io.reactivex.parallel.ParallelTransformer;
 
 /**
  * Sums numbers as integers on each parallel rail, or empty if the rail doesn't produce any data.
+ * @param <T> the input element type extending Number
  * @since 0.16.3
  */
 final class ParallelSumInteger<T extends Number> extends ParallelFlowable<Integer> implements ParallelTransformer<T, Integer> {

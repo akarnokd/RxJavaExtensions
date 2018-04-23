@@ -28,6 +28,7 @@ import io.reactivex.plugins.RxJavaPlugins;
 
 /**
  * Use a resource while the actual Nono is running.
+ * @param <R> the resource type
  */
 final class NonoUsing<R> extends Nono {
 

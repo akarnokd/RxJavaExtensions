@@ -29,6 +29,8 @@ import io.reactivex.plugins.RxJavaPlugins;
 
 /**
  * Use a resource while the actual Perhaps is running.
+ * @param <T> the element type of the supplied Perhaps
+ * @param <R> the resource type
  */
 final class PerhapsUsing<T, R> extends Perhaps<T> {
 

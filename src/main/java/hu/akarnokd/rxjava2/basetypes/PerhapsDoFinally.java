@@ -24,6 +24,7 @@ import io.reactivex.functions.Action;
 /**
  * Execute an action exactly once after the upstream terminates or the
  * downstream cancels.
+ * @param <T> the input and output element type
  */
 final class PerhapsDoFinally<T> extends Perhaps<T> {
 

@@ -29,6 +29,7 @@ import io.reactivex.internal.subscriptions.*;
  * Maps the success value of this Solo into another Solo and
  * emits its signals.
  * @param <T> the value type
+ * @param <R> the output type
  */
 final class SoloFlatMap<T, R> extends Solo<R> {
 

@@ -13,7 +13,7 @@ RxJava 2.x implementation of extra sources, operators and components and ports o
 
 ```
 dependencies {
-    compile "com.github.akarnokd:rxjava2-extensions:0.18.9"
+    compile "com.github.akarnokd:rxjava2-extensions:0.19.0"
 }
 ```
 
@@ -59,7 +59,7 @@ Maven search:
     - [windowWhile()](#flowabletransformerswindowwhile), [windowUntil()](#flowabletransformerswindowuntil), [windowSplit()](#flowabletransformerswindowsplit),
     - [indexOf()](#flowabletransformersindexof), [requestObserveOn()](#flowabletransformersrequestobserveon), [requestSample()](#flowabletransformersrequestsample)
     - [observeOnDrop()](#observabletransformersobserveondrop), [observeOnLatest()](#observabletransformersobserveonlatest), [generateAsync()](#flowablesgenerateasync),
-    - [partialCollect()](#flowabletransformerspartialcollect)
+    - [partialCollect()](#flowabletransformerspartialcollect), [flatMapDrop()](#observabletransformersflatmapdrop), [flatMapLatest()](#observabletransformersflatmaplatest),
   - [Custom parallel operators and transformers](#custom-parallel-operators-and-transformers)
     - [sumX()](#paralleltransformerssumx)
     - [orderedMerge()](#paralleltransformersorderedmerge)
@@ -1619,6 +1619,47 @@ as the previous ones have been consumed by the handler. Note though that the ope
 watermark algorithm to replenish items from upstream (also called stable prefetch), that is, when
 more than 75% of the `prefetch` parameter has been consumed, that many items are requested from
 the upstream. This reduces an overhead the one-by-one requesting would have.
+
+### ObservableTransformers.flatMapDrop
+
+FlatMap only one `ObservableSource` at a time and ignore upstream values until it terminates.
+In the following example, click events are practically ignored while the `requestData`
+is active.
+
+```java
+Observable<ClickEvent> clicks = ...
+
+clicks.compose(
+    ObservableTransformers.flatMapDrop(click -> 
+        service.requestData()
+        .subscribeOn(Schedulers.io())
+    )
+)
+.observeOn(mainThread())
+.subscribe(data -> { /* ... */ });
+```
+
+### ObservableTransformers.flatMapLatest
+
+FlatMap only one `ObservableSource` at a time and keep the latest upstream value until it terminates
+and resume with the `ObservableSource` mapped for that latest upstream value.
+
+Unlike `flatMapDrop`, this operator will resume with the latest upstream value and not wait for the upstream
+to signal a fresh item.
+
+```java
+Observable<ClickEvent> clicks = ...
+
+clicks.compose(
+    ObservableTransformers.flatMapLatest(click -> 
+        service.requestData()
+        .subscribeOn(Schedulers.io())
+    )
+)
+.observeOn(mainThread())
+.subscribe(data -> { /* ... */ });
+```
+
 
 ## Custom parallel operators and transformers
 

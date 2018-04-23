@@ -39,6 +39,8 @@ import io.reactivex.plugins.RxJavaPlugins;
  * of the downstream.
  * <p>
  * This operator is lossy; non-consumed items from sources are overwrittern with newer values.
+ * @param <T> the element type of the sources
+ * @param <R> the result type
  * @since 0.17.3
  */
 final class FlowableZipLatest<T, R> extends Flowable<R> {

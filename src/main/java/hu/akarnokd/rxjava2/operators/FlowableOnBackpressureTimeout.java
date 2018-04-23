@@ -33,6 +33,7 @@ import io.reactivex.plugins.RxJavaPlugins;
 /**
  * If the downstream doesn't request, it buffers events and times out
  * old elements from the front of the buffer.
+ * @param <T> the input and output element type
  */
 final class FlowableOnBackpressureTimeout<T> extends Flowable<T>
 implements FlowableTransformer<T, T> {
