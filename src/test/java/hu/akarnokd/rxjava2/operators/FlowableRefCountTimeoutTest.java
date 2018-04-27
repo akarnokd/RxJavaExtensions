@@ -16,14 +16,18 @@
 
 package hu.akarnokd.rxjava2.operators;
 
+import static org.junit.Assert.assertTrue;
+
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
+import java.lang.management.ManagementFactory;
+import java.util.concurrent.*;
 
 import org.junit.*;
 import org.reactivestreams.Subscription;
 
 import hu.akarnokd.rxjava2.test.TestHelper;
 import io.reactivex.Flowable;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.processors.PublishProcessor;
 import io.reactivex.schedulers.Schedulers;
@@ -203,5 +207,68 @@ public class FlowableRefCountTimeoutTest {
             .withTag("Round: " + i)
             .assertResult(1, 2, 3, 4, 5);
         }
+    }
+
+    Flowable<Object> source;
+
+    @Test
+    public void replayNoLeak() throws Exception {
+        System.gc();
+        Thread.sleep(100);
+
+        long start = ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getUsed();
+
+        source = Flowable.fromCallable(new Callable<Object>() {
+            @Override
+            public Object call() throws Exception {
+                return new byte[100 * 1000 * 1000];
+            }
+        })
+        .replay(1)
+        .compose(FlowableTransformers.<Object>refCount(1));
+
+        source.subscribe();
+
+        System.gc();
+        Thread.sleep(100);
+
+        long after = ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getUsed();
+
+        source = null;
+        assertTrue(String.format("%,3d -> %,3d%n", start, after), start + 20 * 1000 * 1000 > after);
+    }
+
+    @Test
+    public void replayNoLeak2() throws Exception {
+        System.gc();
+        Thread.sleep(100);
+
+        long start = ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getUsed();
+
+        source = Flowable.fromCallable(new Callable<Object>() {
+            @Override
+            public Object call() throws Exception {
+                return new byte[100 * 1000 * 1000];
+            }
+        }).concatWith(Flowable.never())
+        .replay(1)
+        .compose(FlowableTransformers.<Object>refCount(1));
+
+        Disposable s1 = source.subscribe();
+        Disposable s2 = source.subscribe();
+
+        s1.dispose();
+        s2.dispose();
+
+        s1 = null;
+        s2 = null;
+
+        System.gc();
+        Thread.sleep(100);
+
+        long after = ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getUsed();
+
+        source = null;
+        assertTrue(String.format("%,3d -> %,3d%n", start, after), start + 20 * 1000 * 1000 > after);
     }
 }
