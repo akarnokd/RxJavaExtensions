@@ -106,6 +106,7 @@ public final class ObservableTransformers {
     @CheckReturnValue
     @NonNull
     public static <T, R> ObservableTransformer<T, R> flatMapDrop(Function<? super T, ? extends ObservableSource<? extends R>> mapper) {
+        ObjectHelper.requireNonNull(mapper, "mapper is null");
         return new ObservableFlatMapDrop<T, R>(null, mapper);
     }
 
@@ -125,6 +126,21 @@ public final class ObservableTransformers {
     @CheckReturnValue
     @NonNull
     public static <T, R> ObservableTransformer<T, R> flatMapLatest(Function<? super T, ? extends ObservableSource<? extends R>> mapper) {
+        ObjectHelper.requireNonNull(mapper, "mapper is null");
         return new ObservableFlatMapLatest<T, R>(null, mapper);
+    }
+
+    /**
+     * Allows an upstream error to jump over an inner transformation and is
+     * then reapplied once the inner transformation's returned Flowable terminates.
+     * @param <T> the upstream value type
+     * @param <R> the downstream value type
+     * @param transformer the transformation applied to the flow on a per-Subscriber basis
+     * @return the new FlowableTransformer instance
+     * @since 0.19.1
+     */
+    public static <T, R> ObservableTransformer<T, R> errorJump(ObservableTransformer<T, R> transformer) {
+        ObjectHelper.requireNonNull(transformer, "transformer");
+        return new ObservableErrorJump<T, R>(null, transformer);
     }
 }

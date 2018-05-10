@@ -29,6 +29,7 @@ import io.reactivex.processors.PublishProcessor;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subscribers.TestSubscriber;
 
+@SuppressWarnings("deprecation")
 public class FlowableRefCountTimeoutTest {
 
     @Test

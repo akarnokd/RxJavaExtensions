@@ -1091,7 +1091,9 @@ public final class FlowableTransformers {
      * @param subscriberCount the number of subscribers required to connect to the upstream
      * @return the new FlowableTransformer instance
      * @since 0.17.0
+     * @deprecated Part of RxJava now since 2.1.14: {@code ConnectableFlowable#refCount(int)}. Will be removed in 0.20.0.
      */
+    @Deprecated
     public static <T> FlowableTransformer<T, T> refCount(int subscriberCount) {
         ObjectHelper.verifyPositive(subscriberCount, "subscriberCount");
         return refCount(subscriberCount, 0, TimeUnit.NANOSECONDS, Schedulers.computation());
@@ -1111,7 +1113,9 @@ public final class FlowableTransformers {
      * @param unit the time unit of the timeout
      * @return the new FlowableTransformer instance
      * @since 0.17.0
+     * @deprecated Part of RxJava now since 2.1.14: {@code ConnectableFlowable#refCount(long, TimeUnit)}. Will be removed in 0.20.0.
      */
+    @Deprecated
     public static <T> FlowableTransformer<T, T> refCount(long timeout, TimeUnit unit) {
         return refCount(1, timeout, unit, Schedulers.computation());
     }
@@ -1131,7 +1135,9 @@ public final class FlowableTransformers {
      * @param scheduler the target scheduler to wait on before disconnecting
      * @return the new FlowableTransformer instance
      * @since 0.17.0
+     * @deprecated Part of RxJava now since 2.1.14: {@code ConnectableFlowable#refCount(long, TimeUnit, Scheduler)}. Will be removed in 0.20.0.
      */
+    @Deprecated
     public static <T> FlowableTransformer<T, T> refCount(long timeout, TimeUnit unit, Scheduler scheduler) {
         return refCount(1, timeout, unit, scheduler);
     }
@@ -1151,7 +1157,9 @@ public final class FlowableTransformers {
      * @param unit the time unit of the timeout
      * @return the new FlowableTransformer instance
      * @since 0.17.0
+     * @deprecated Part of RxJava now since 2.1.14: {@code ConnectableFlowable#refCount(int, long, TimeUnit)}. Will be removed in 0.20.0.
      */
+    @Deprecated
     public static <T> FlowableTransformer<T, T> refCount(int subscriberCount, long timeout, TimeUnit unit) {
         return refCount(subscriberCount, timeout, unit, Schedulers.computation());
     }
@@ -1171,7 +1179,9 @@ public final class FlowableTransformers {
      * @param scheduler the target scheduler to wait on before disconnecting
      * @return the new FlowableTransformer instance
      * @since 0.17.0
+     * @deprecated Part of RxJava now since 2.1.14: {@code ConnectableFlowable#refCount(int, long, TimeUnit, Scheduler)}. Will be removed in 0.20.0.
      */
+    @Deprecated
     public static <T> FlowableTransformer<T, T> refCount(int subscriberCount, long timeout, TimeUnit unit, Scheduler scheduler) {
         ObjectHelper.requireNonNull(unit, "unit is null");
         ObjectHelper.requireNonNull(scheduler, "scheduler is null");
@@ -1461,6 +1471,23 @@ public final class FlowableTransformers {
             Consumer<? super T> cleaner,
             int prefetch
     ) {
+        ObjectHelper.requireNonNull(handler, "handler is null");
+        ObjectHelper.requireNonNull(cleaner, "cleaner is null");
+        ObjectHelper.verifyPositive(prefetch, "prefetch");
         return new FlowablePartialCollect<T, I, A, R>(null, handler, cleaner, prefetch);
+    }
+
+    /**
+     * Allows an upstream error to jump over an inner transformation and is
+     * then reapplied once the inner transformation's returned Flowable terminates.
+     * @param <T> the upstream value type
+     * @param <R> the downstream value type
+     * @param transformer the transformation applied to the flow on a per-Subscriber basis
+     * @return the new FlowableTransformer instance
+     * @since 0.19.1
+     */
+    public static <T, R> FlowableTransformer<T, R> errorJump(FlowableTransformer<T, R> transformer) {
+        ObjectHelper.requireNonNull(transformer, "transformer");
+        return new FlowableErrorJump<T, R>(null, transformer);
     }
 }

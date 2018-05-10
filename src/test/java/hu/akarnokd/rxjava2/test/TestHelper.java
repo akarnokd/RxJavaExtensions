@@ -2267,10 +2267,10 @@ public enum TestHelper {
 
         List<Throwable> list = compositeList(ts.errors().get(0));
 
-        assertEquals(classes.length, list.size());
+        assertEquals(classes.length, list.size() * 2);
 
         for (int i = 0; i < classes.length; i += 2) {
-            assertError(list, i, (Class<Throwable>)classes[i], (String)classes[i + 1]);
+            assertError(list, i >> 1, (Class<Throwable>)classes[i], (String)classes[i + 1]);
         }
     }
 
@@ -2311,10 +2311,10 @@ public enum TestHelper {
 
         List<Throwable> list = compositeList(ts.errors().get(0));
 
-        assertEquals(classes.length, list.size());
+        assertEquals(classes.length, list.size() * 2);
 
         for (int i = 0; i < classes.length; i += 2) {
-            assertError(list, i, (Class<Throwable>)classes[i], (String)classes[i + 1]);
+            assertError(list, i >> 1, (Class<Throwable>)classes[i], (String)classes[i + 1]);
         }
     }
 

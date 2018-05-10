@@ -13,7 +13,7 @@ RxJava 2.x implementation of extra sources, operators and components and ports o
 
 ```
 dependencies {
-    compile "com.github.akarnokd:rxjava2-extensions:0.19.0"
+    compile "com.github.akarnokd:rxjava2-extensions:0.19.1"
 }
 ```
 
@@ -60,6 +60,7 @@ Maven search:
     - [indexOf()](#flowabletransformersindexof), [requestObserveOn()](#flowabletransformersrequestobserveon), [requestSample()](#flowabletransformersrequestsample)
     - [observeOnDrop()](#observabletransformersobserveondrop), [observeOnLatest()](#observabletransformersobserveonlatest), [generateAsync()](#flowablesgenerateasync),
     - [partialCollect()](#flowabletransformerspartialcollect), [flatMapDrop()](#observabletransformersflatmapdrop), [flatMapLatest()](#observabletransformersflatmaplatest),
+    - [errorJump()](#flowabletransformerserrorjump),
   - [Custom parallel operators and transformers](#custom-parallel-operators-and-transformers)
     - [sumX()](#paralleltransformerssumx)
     - [orderedMerge()](#paralleltransformersorderedmerge)
@@ -1660,6 +1661,26 @@ clicks.compose(
 .subscribe(data -> { /* ... */ });
 ```
 
+### FlowableTransformers.errorJump
+
+Allows an upstream error to jump over an inner transformation and is
+then re-applied once the inner transformation's returned `Flowable` terminates.
+
+
+```java
+Flowable.range(1, 5)
+    .concatWith(Flowable.<Integer>error(new TestException()))
+    .compose(FlowableTransformers.errorJump(new FlowableTransformer<Integer, List<Integer>>() {
+        @Override
+        public Publisher<List<Integer>> apply(Flowable<Integer> v) {
+            return v.buffer(3);
+        }
+    }))
+    .test()
+    .assertFailure(TestException.class, Arrays.asList(1, 2, 3), Arrays.asList(4, 5));
+```
+
+Available also: `ObservableTransformers.errorJump()`
 
 ## Custom parallel operators and transformers
 
