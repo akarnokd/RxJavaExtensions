@@ -127,6 +127,9 @@ final class FlowableRefCountTimeout<T> extends Flowable<T> implements FlowableTr
         synchronized (this) {
             if (!rc.terminated) {
                 rc.terminated = true;
+                if (source instanceof Disposable) {
+                    ((Disposable)source).dispose();
+                }
                 connection = null;
             }
         }
@@ -200,18 +203,18 @@ final class FlowableRefCountTimeout<T> extends Flowable<T> implements FlowableTr
 
         @Override
         public void onError(Throwable t) {
-            actual.onError(t);
             if (compareAndSet(false, true)) {
                 parent.terminated(connection);
             }
+            actual.onError(t);
         }
 
         @Override
         public void onComplete() {
-            actual.onComplete();
             if (compareAndSet(false, true)) {
                 parent.terminated(connection);
             }
+            actual.onComplete();
         }
 
         @Override
