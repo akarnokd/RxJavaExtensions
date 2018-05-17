@@ -17,6 +17,7 @@
 package hu.akarnokd.rxjava2.joins;
 
 import static org.junit.Assert.fail;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import java.util.concurrent.Callable;
@@ -24,6 +25,7 @@ import java.util.concurrent.Callable;
 import org.junit.*;
 import org.mockito.*;
 
+import hu.akarnokd.rxjava2.test.TestException;
 import io.reactivex.*;
 import io.reactivex.functions.*;
 import io.reactivex.internal.functions.Functions;
@@ -1357,5 +1359,22 @@ public class OperatorJoinsTest {
             }
             verifyError(JoinObservable.when(p.then(throwFunc)));
         }
+    }
+
+    @Test
+    public void sameSource() {
+        Observable<Integer> source = Observable.range(1, 5);
+        JoinObservable.when(
+                JoinObservable.from(source).and(source).and(source)
+                .then(new Function3<Integer, Integer, Integer, Integer>() {
+                    @Override
+                    public Integer apply(Integer t1, Integer t2, Integer t3)
+                            throws Exception {
+                        return t1 + t2 + t3;
+                    }
+                })
+        ).toObservable()
+        .test()
+        .assertResult(3, 6, 9, 12, 15);
     }
 }
