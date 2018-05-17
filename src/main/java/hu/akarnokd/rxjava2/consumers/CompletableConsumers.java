@@ -22,7 +22,7 @@ import io.reactivex.functions.*;
 import io.reactivex.internal.functions.*;
 
 /**
- * Utility methods for creating and using consumers {@link io.reactivex.Maybe}s.
+ * Utility methods for creating and using consumers {@link io.reactivex.Completable}s.
  * @since 0.18.0
  */
 public final class CompletableConsumers {
@@ -39,13 +39,12 @@ public final class CompletableConsumers {
      * from the given composite.
      * <p>
      * The CompletableObserver will be removed after the callback for the terminal event has been invoked.
-     * @param <T> the value type
-     * @param source the source Maybe to subscribe to.
+     * @param source the source Completable to subscribe to.
      * @param composite the composite Disposable to add and remove the created Disposable CompletableObserver
      * @param onComplete the callback for when the upstream completes
      * @return the Disposable that allows disposing the particular subscription.
      */
-    public static <T> Disposable subscribeAutoDispose(
+    public static Disposable subscribeAutoDispose(
             Completable source,
             CompositeDisposable composite,
             Action onComplete) {
@@ -53,7 +52,7 @@ public final class CompletableConsumers {
         ObjectHelper.requireNonNull(composite, "composite is null");
         ObjectHelper.requireNonNull(onComplete, "onComplete is null");
 
-        DisposableAutoReleaseMultiObserver<T> observer = new DisposableAutoReleaseMultiObserver<T>(
+        DisposableAutoReleaseMultiObserver<Void> observer = new DisposableAutoReleaseMultiObserver<Void>(
                 composite, Functions.emptyConsumer(), null, onComplete);
         composite.add(observer);
         source.subscribe(observer);
@@ -67,14 +66,13 @@ public final class CompletableConsumers {
      * from the given composite.
      * <p>
      * The CompletableObserver will be removed after the callback for the terminal event has been invoked.
-     * @param <T> the value type
-     * @param source the source Maybe to subscribe to.
+     * @param source the source Completable to subscribe to.
      * @param composite the composite Disposable to add and remove the created Disposable CompletableObserver
      * @param onComplete the callback for when the upstream completes
      * @param onError the callback for an upstream error if any
      * @return the Disposable that allows disposing the particular subscription.
      */
-    public static <T> Disposable subscribeAutoDispose(
+    public static Disposable subscribeAutoDispose(
             Completable source,
             CompositeDisposable composite,
             Action onComplete,
@@ -84,7 +82,7 @@ public final class CompletableConsumers {
         ObjectHelper.requireNonNull(onComplete, "onSuccess is null");
         ObjectHelper.requireNonNull(onError, "onError is null");
 
-        DisposableAutoReleaseMultiObserver<T> observer = new DisposableAutoReleaseMultiObserver<T>(
+        DisposableAutoReleaseMultiObserver<Void> observer = new DisposableAutoReleaseMultiObserver<Void>(
                 composite, Functions.emptyConsumer(), onError, onComplete);
         composite.add(observer);
         source.subscribe(observer);
