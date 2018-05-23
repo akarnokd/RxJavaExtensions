@@ -13,7 +13,7 @@ RxJava 2.x implementation of extra sources, operators and components and ports o
 
 ```
 dependencies {
-    compile "com.github.akarnokd:rxjava2-extensions:0.19.1"
+    compile "com.github.akarnokd:rxjava2-extensions:0.19.2"
 }
 ```
 
@@ -36,7 +36,7 @@ Maven search:
     - [Multi-hook handlers](#multi-hook-handlers)
   - Custom Processors and Subjects
     - [SoloProcessor, PerhapsProcessor and NonoProcessor](#soloprocessor-perhapsprocessor-and-nonoprocessor)
-    - [MulticastProcessor](#multicastprocessor),
+    - [MulticastProcessor](#multicastprocessor) *(Deprecated in 0.19.2!)*,
     - [UnicastWorkSubject](#unicastworksubject),
     - [DispatchWorkSubject](#dispatchworksubject),
     - [DispatchWorkProcessor](#dispatchworkprocessor)
@@ -563,6 +563,9 @@ to3.assertResult(1);
 Note that calling `onComplete` after `onNext` is optional with `SoloProcessor` but calling `onComplete` without calling `onNext` terminates the `SoloProcessor` with a `NoSuchElementException`.
 
 ### MulticastProcessor
+
+*Deprecated in 0.19.2; will be removed in 0.20.0. Use the standard 
+[`io.reactivex.processors.MulticastProcessor`](http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/processors/MulticastProcessor.html) instead*.
 
 Works similarly to `publish(Function)` and multicasts items to subscribers if all of them are ready to receive the items.
 In addition, it supports a mode where the last subscriber cancelling will trigger a cancellation to the upstream.

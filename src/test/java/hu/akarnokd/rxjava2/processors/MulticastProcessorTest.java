@@ -33,6 +33,7 @@ import io.reactivex.plugins.RxJavaPlugins;
 import io.reactivex.processors.UnicastProcessor;
 import io.reactivex.subscribers.TestSubscriber;
 
+@SuppressWarnings("deprecation")
 public class MulticastProcessorTest {
 
     @Test

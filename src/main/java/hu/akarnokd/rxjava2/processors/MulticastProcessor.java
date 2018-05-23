@@ -33,7 +33,9 @@ import io.reactivex.processors.FlowableProcessor;
  * subscribers have cancelled.
  * @param <T> the input and output value type
  * @since 0.16.4
+ * @deprecated in 0.19.2 - will be removed in 0.20. Use the standard {@link io.reactivex.processors.MulticastProcessor} from now on.
  */
+@Deprecated
 public final class MulticastProcessor<T> extends FlowableProcessor<T> {
 
     final AtomicInteger wip;
