@@ -17,6 +17,8 @@ dependencies {
 }
 ```
 
+Javadoc: https://akarnokd.github.com/RxJava2Extensions/javadoc/index.html
+
 
 Maven search:
 

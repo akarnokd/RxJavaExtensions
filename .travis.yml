@@ -8,6 +8,7 @@ before_install:
  
 after_success:
   - bash <(curl -s https://codecov.io/bash)
+  - bash ./push.sh
  
  # cache between builds
 cache:
