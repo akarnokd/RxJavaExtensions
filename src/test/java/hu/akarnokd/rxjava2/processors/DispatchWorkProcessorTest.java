@@ -21,12 +21,13 @@ import static org.junit.Assert.*;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.Test;
 
 import hu.akarnokd.rxjava2.test.*;
 import io.reactivex.*;
-import io.reactivex.functions.BiFunction;
+import io.reactivex.functions.*;
 import io.reactivex.internal.subscriptions.BooleanSubscription;
 import io.reactivex.observers.TestObserver;
 import io.reactivex.plugins.RxJavaPlugins;
@@ -418,6 +419,54 @@ public class DispatchWorkProcessorTest {
         Flowable.range(0, n).subscribeOn(Schedulers.single()).subscribe(dws);
 
         to.awaitDone(10, TimeUnit.SECONDS)
+        .assertValueCount(1)
+        .assertNoErrors()
+        .assertComplete();
+
+        HashSet<Integer> set = to.values().get(0);
+
+        assertEquals(n, set.size());
+
+        for (int i = 0; i < n; i++) {
+            assertTrue("" + i, set.remove(i));
+        }
+
+        assertTrue(set.isEmpty());
+    }
+
+    @Test
+    public void longBackpressured3() {
+        final DispatchWorkProcessor<Integer> dws = DispatchWorkProcessor.create(Schedulers.computation(), true);
+
+        final AtomicInteger counter = new AtomicInteger();
+        
+        Single<List<Integer>> o = dws
+                .doOnNext(new Consumer<Integer>() {
+                    @Override
+                    public void accept(Integer v) throws Exception {
+                        counter.incrementAndGet();
+                    }
+                })
+                .toList();
+
+        TestObserver<HashSet<Integer>> to = Single.zip(o, o, new BiFunction<List<Integer>, List<Integer>, HashSet<Integer>>() {
+            @Override
+            public HashSet<Integer> apply(List<Integer> a, List<Integer> b)
+                    throws Exception {
+                HashSet<Integer> set = new HashSet<Integer>();
+                set.addAll(a);
+                set.addAll(b);
+                return set;
+            }
+        })
+        .test();
+
+        int n = 1000000;
+
+        Flowable.range(0, n).subscribeOn(Schedulers.single()).subscribe(dws);
+
+        to.awaitDone(10, TimeUnit.SECONDS)
+        .withTag("Received: " + counter.get())
         .assertValueCount(1)
         .assertNoErrors()
         .assertComplete();
