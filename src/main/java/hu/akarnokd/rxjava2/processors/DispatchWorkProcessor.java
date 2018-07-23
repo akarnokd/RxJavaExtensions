@@ -135,7 +135,9 @@ public final class DispatchWorkProcessor<T> extends FlowableProcessor<T> impleme
 
     final long prefetch;
 
-    final AtomicLong requested;
+    final AtomicLong requestedDownstream;
+    
+    final AtomicLong requestedUpstream;
 
     @SuppressWarnings("rawtypes")
     static final WorkDisposable[] EMPTY = new WorkDisposable[0];
@@ -152,7 +154,8 @@ public final class DispatchWorkProcessor<T> extends FlowableProcessor<T> impleme
         this.observers = new AtomicReference<WorkDisposable<T>[]>(EMPTY);
         this.scheduler = scheduler;
         this.prefetch = unbounded ? Long.MAX_VALUE : capacityHint;
-        this.requested = new AtomicLong();
+        this.requestedUpstream = new AtomicLong();
+        this.requestedDownstream = new AtomicLong();
     }
 
     @Override
@@ -296,18 +299,20 @@ public final class DispatchWorkProcessor<T> extends FlowableProcessor<T> impleme
         Subscription s = upstream.get();
         if (pf != Long.MAX_VALUE && s != null) {
             long limit = pf - (pf >> 2);
-            AtomicLong requested = this.requested;
+
+            AtomicLong requestedDownstream = this.requestedDownstream;
+            BackpressureHelper.add(requestedDownstream, n);
+
+            AtomicLong requestedUpstream = this.requestedUpstream;
             for (;;) {
-                long curr = requested.get();
-                long next = BackpressureHelper.addCap(curr, n);
-                boolean req = next >= limit;
-                if (req) {
-                    next -= limit;
-                }
-                if (requested.compareAndSet(curr, next)) {
-                    if (req) {
+                long rd = requestedDownstream.get();
+                long ru = requestedUpstream.get();
+                if (rd - ru >= limit) {
+                    long next = BackpressureHelper.addCap(ru, limit);
+                    if (requestedUpstream.compareAndSet(ru, next)) {
                         s.request(limit);
                     }
+                } else {
                     break;
                 }
             }
