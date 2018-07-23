@@ -379,7 +379,7 @@ public class DispatchWorkProcessorTest {
 
         Flowable.range(0, n).subscribe(dws);
 
-        to.awaitDone(5, TimeUnit.SECONDS)
+        to.awaitDone(10, TimeUnit.SECONDS)
         .assertValueCount(1)
         .assertNoErrors()
         .assertComplete();
@@ -417,7 +417,7 @@ public class DispatchWorkProcessorTest {
 
         Flowable.range(0, n).subscribeOn(Schedulers.single()).subscribe(dws);
 
-        to.awaitDone(5, TimeUnit.SECONDS)
+        to.awaitDone(10, TimeUnit.SECONDS)
         .assertValueCount(1)
         .assertNoErrors()
         .assertComplete();
