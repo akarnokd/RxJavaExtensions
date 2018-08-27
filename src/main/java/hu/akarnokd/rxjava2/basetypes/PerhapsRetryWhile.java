@@ -54,7 +54,7 @@ final class PerhapsRetryWhile<T> extends Perhaps<T> {
 
         final AtomicInteger wip;
 
-        final AtomicReference<Subscription> s;
+        final AtomicReference<Subscription> upstream;
 
         final Perhaps<T> source;
 
@@ -67,12 +67,12 @@ final class PerhapsRetryWhile<T> extends Perhaps<T> {
             this.predicate = predicate;
             this.source = source;
             this.wip = new AtomicInteger();
-            this.s = new AtomicReference<Subscription>();
+            this.upstream = new AtomicReference<Subscription>();
         }
 
         @Override
         public void onSubscribe(Subscription s) {
-            if (SubscriptionHelper.replace(this.s, s)) {
+            if (SubscriptionHelper.replace(this.upstream, s)) {
                 s.request(Long.MAX_VALUE);
             }
         }
@@ -91,7 +91,7 @@ final class PerhapsRetryWhile<T> extends Perhaps<T> {
                 b = predicate.test(t);
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
-                actual.onError(new CompositeException(t, ex));
+                downstream.onError(new CompositeException(t, ex));
                 return;
             }
 
@@ -99,14 +99,14 @@ final class PerhapsRetryWhile<T> extends Perhaps<T> {
                 active = false;
                 subscribeNext();
             } else {
-                actual.onError(t);
+                downstream.onError(t);
             }
         }
 
         void subscribeNext() {
             if (wip.getAndIncrement() == 0) {
                 do {
-                    if (SubscriptionHelper.isCancelled(s.get())) {
+                    if (SubscriptionHelper.isCancelled(upstream.get())) {
                         return;
                     }
 
@@ -125,14 +125,14 @@ final class PerhapsRetryWhile<T> extends Perhaps<T> {
                 value = null;
                 complete(v);
             } else {
-                actual.onComplete();
+                downstream.onComplete();
             }
         }
 
         @Override
         public void cancel() {
             super.cancel();
-            SubscriptionHelper.cancel(s);
+            SubscriptionHelper.cancel(upstream);
         }
     }
 }

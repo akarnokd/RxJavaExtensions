@@ -256,11 +256,11 @@ public final class PerhapsProcessor<T> extends Perhaps<T> implements Processor<T
         }
 
         void error(Throwable ex) {
-            actual.onError(ex);
+            downstream.onError(ex);
         }
 
         void complete() {
-            actual.onComplete();
+            downstream.onComplete();
         }
     }
 }

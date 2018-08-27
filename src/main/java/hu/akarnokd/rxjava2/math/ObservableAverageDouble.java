@@ -55,7 +55,7 @@ public class ObservableAverageDouble extends ObservableWithSource<Number, Double
             if (c != 0) {
                 complete(accumulator / c);
             } else {
-                actual.onComplete();
+                downstream.onComplete();
             }
         }
 

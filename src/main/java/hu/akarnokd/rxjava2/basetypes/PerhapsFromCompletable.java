@@ -45,7 +45,7 @@ final class PerhapsFromCompletable<T> extends Perhaps<T> {
 
         private static final long serialVersionUID = 1184208074074285424L;
 
-        Disposable d;
+        Disposable upstream;
 
         FromCompletableObserver(Subscriber<? super T> actual) {
             super(actual);
@@ -53,27 +53,27 @@ final class PerhapsFromCompletable<T> extends Perhaps<T> {
 
         @Override
         public void onSubscribe(Disposable d) {
-            if (DisposableHelper.validate(this.d, d)) {
-                this.d = d;
+            if (DisposableHelper.validate(this.upstream, d)) {
+                this.upstream = d;
 
-                actual.onSubscribe(this);
+                downstream.onSubscribe(this);
             }
         }
 
         @Override
         public void onError(Throwable e) {
-            actual.onError(e);
+            downstream.onError(e);
         }
 
         @Override
         public void onComplete() {
-            actual.onComplete();
+            downstream.onComplete();
         }
 
         @Override
         public void cancel() {
             super.cancel();
-            d.dispose();
+            upstream.dispose();
         }
     }
 }

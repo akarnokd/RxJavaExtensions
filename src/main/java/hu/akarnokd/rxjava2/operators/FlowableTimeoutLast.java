@@ -89,7 +89,7 @@ implements FlowableTransformer<T, T> {
 
         final AtomicReference<T> value;
 
-        Subscription s;
+        Subscription upstream;
 
         TimeoutLast(Subscriber<? super T> actual, long timeout, TimeUnit unit, Worker worker) {
             super(actual);
@@ -103,10 +103,10 @@ implements FlowableTransformer<T, T> {
 
         @Override
         public void onSubscribe(Subscription s) {
-            if (SubscriptionHelper.validate(this.s, s)) {
-                this.s = s;
+            if (SubscriptionHelper.validate(this.upstream, s)) {
+                this.upstream = s;
 
-                actual.onSubscribe(this);
+                downstream.onSubscribe(this);
 
                 scheduleTimeout(0L);
 
@@ -135,7 +135,7 @@ implements FlowableTransformer<T, T> {
                 @Override
                 public void run() {
                     if (index.compareAndSet(idx, Long.MIN_VALUE)) {
-                        s.cancel();
+                        upstream.cancel();
                         emitLast();
                     }
                 }
@@ -145,7 +145,7 @@ implements FlowableTransformer<T, T> {
         @Override
         public void onError(Throwable t) {
             index.getAndSet(Long.MIN_VALUE);
-            actual.onError(t);
+            downstream.onError(t);
             worker.dispose();
             value.lazySet(null);
         }
@@ -163,7 +163,7 @@ implements FlowableTransformer<T, T> {
             if (v != null) {
                 complete(v);
             } else {
-                actual.onComplete();
+                downstream.onComplete();
             }
             worker.dispose();
         }
@@ -171,7 +171,7 @@ implements FlowableTransformer<T, T> {
         @Override
         public void cancel() {
             if (index.getAndSet(Long.MIN_VALUE) != Long.MIN_VALUE) {
-                s.cancel();
+                upstream.cancel();
                 worker.dispose();
                 value.lazySet(null);
             }
@@ -213,7 +213,7 @@ implements FlowableTransformer<T, T> {
             if (SubscriptionHelper.validate(this.s, s)) {
                 this.s = s;
 
-                actual.onSubscribe(this);
+                downstream.onSubscribe(this);
 
                 scheduleTimeout(0L);
 
@@ -241,7 +241,7 @@ implements FlowableTransformer<T, T> {
         @Override
         public void onError(Throwable t) {
             if (once.compareAndSet(false, true)) {
-                actual.onError(t);
+                downstream.onError(t);
                 task.dispose();
                 value.lazySet(null);
             }
@@ -260,7 +260,7 @@ implements FlowableTransformer<T, T> {
             if (v != null) {
                 complete(v);
             } else {
-                actual.onComplete();
+                downstream.onComplete();
             }
             task.dispose();
         }

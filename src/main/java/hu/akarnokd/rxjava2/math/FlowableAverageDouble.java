@@ -55,7 +55,7 @@ final class FlowableAverageDouble extends FlowableSource<Number, Double> {
             if (c != 0) {
                 complete(accumulator / c);
             } else {
-                actual.onComplete();
+                downstream.onComplete();
             }
         }
 

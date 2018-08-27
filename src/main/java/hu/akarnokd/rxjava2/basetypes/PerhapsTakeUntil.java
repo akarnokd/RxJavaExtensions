@@ -55,20 +55,20 @@ final class PerhapsTakeUntil<T> extends Perhaps<T> {
 
         final AtomicBoolean once;
 
-        final AtomicReference<Subscription> s;
+        final AtomicReference<Subscription> upstream;
 
         final OtherSubscriber other;
 
         TakeUntilSubscriber(Subscriber<? super T> actual) {
             super(actual);
             this.other = new OtherSubscriber();
-            this.s = new AtomicReference<Subscription>();
+            this.upstream = new AtomicReference<Subscription>();
             this.once = new AtomicBoolean();
         }
 
         @Override
         public void onSubscribe(Subscription s) {
-            if (SubscriptionHelper.setOnce(this.s, s)) {
+            if (SubscriptionHelper.setOnce(this.upstream, s)) {
                 s.request(Long.MAX_VALUE);
             }
         }
@@ -85,7 +85,7 @@ final class PerhapsTakeUntil<T> extends Perhaps<T> {
         public void onError(Throwable t) {
             if (once.compareAndSet(false, true)) {
                 SubscriptionHelper.cancel(other);
-                actual.onError(t);
+                downstream.onError(t);
             } else {
                 RxJavaPlugins.onError(t);
             }
@@ -95,21 +95,21 @@ final class PerhapsTakeUntil<T> extends Perhaps<T> {
         public void onComplete() {
             if (!once.get() && once.compareAndSet(false, true)) {
                 SubscriptionHelper.cancel(other);
-                actual.onComplete();
+                downstream.onComplete();
             }
         }
 
         void otherSignal() {
             if (once.compareAndSet(false, true)) {
-                SubscriptionHelper.cancel(s);
-                actual.onComplete();
+                SubscriptionHelper.cancel(upstream);
+                downstream.onComplete();
             }
         }
 
         void otherError(Throwable e) {
             if (once.compareAndSet(false, true)) {
-                SubscriptionHelper.cancel(s);
-                actual.onError(e);
+                SubscriptionHelper.cancel(upstream);
+                downstream.onError(e);
             } else {
                 RxJavaPlugins.onError(e);
             }
@@ -118,7 +118,7 @@ final class PerhapsTakeUntil<T> extends Perhaps<T> {
         @Override
         public void cancel() {
             super.cancel();
-            SubscriptionHelper.cancel(s);
+            SubscriptionHelper.cancel(upstream);
             SubscriptionHelper.cancel(other);
         }
 

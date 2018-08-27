@@ -103,7 +103,7 @@ final class SoloUsing<T, R> extends Solo<T> {
 
         final AtomicBoolean once;
 
-        Subscription s;
+        Subscription upstream;
 
         R resource;
 
@@ -133,10 +133,10 @@ final class SoloUsing<T, R> extends Solo<T> {
 
         @Override
         public void onSubscribe(Subscription s) {
-            if (SubscriptionHelper.validate(this.s, s)) {
-                this.s = s;
+            if (SubscriptionHelper.validate(this.upstream, s)) {
+                this.upstream = s;
 
-                actual.onSubscribe(this);
+                downstream.onSubscribe(this);
 
                 s.request(Long.MAX_VALUE);
             }
@@ -160,7 +160,7 @@ final class SoloUsing<T, R> extends Solo<T> {
                 }
             }
 
-            actual.onError(t);
+            downstream.onError(t);
 
             if (!eager) {
                 if (once.compareAndSet(false, true)) {
@@ -177,7 +177,7 @@ final class SoloUsing<T, R> extends Solo<T> {
                         disposer.accept(resource);
                     } catch (Throwable ex) {
                         Exceptions.throwIfFatal(ex);
-                        actual.onError(ex);
+                        downstream.onError(ex);
                         return;
                     }
                 }
@@ -185,7 +185,7 @@ final class SoloUsing<T, R> extends Solo<T> {
 
             T v = value;
             if (v == null) {
-                actual.onComplete();
+                downstream.onComplete();
             } else {
                 complete(v);
             }

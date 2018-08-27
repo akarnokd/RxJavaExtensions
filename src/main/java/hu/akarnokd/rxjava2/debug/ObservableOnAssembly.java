@@ -52,17 +52,17 @@ final class ObservableOnAssembly<T> extends Observable<T> {
 
         @Override
         public void onNext(T t) {
-            actual.onNext(t);
+            downstream.onNext(t);
         }
 
         @Override
         public void onError(Throwable t) {
-            actual.onError(assembled.appendLast(t));
+            downstream.onError(assembled.appendLast(t));
         }
 
         @Override
         public int requestFusion(int mode) {
-            QueueDisposable<T> qs = this.qs;
+            QueueDisposable<T> qs = this.qd;
             if (qs != null) {
                 int m = qs.requestFusion(mode);
                 sourceMode = m;
@@ -73,7 +73,7 @@ final class ObservableOnAssembly<T> extends Observable<T> {
 
         @Override
         public T poll() throws Exception {
-            return qs.poll();
+            return qd.poll();
         }
     }
 }

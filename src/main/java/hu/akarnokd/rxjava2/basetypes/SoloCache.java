@@ -182,7 +182,7 @@ final class SoloCache<T> extends Solo<T> implements Subscriber<T> {
         }
 
         void error(Throwable ex) {
-            actual.onError(ex);
+            downstream.onError(ex);
         }
     }
 }

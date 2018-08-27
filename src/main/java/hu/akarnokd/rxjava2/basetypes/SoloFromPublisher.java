@@ -55,7 +55,7 @@ final class SoloFromPublisher<T> extends Solo<T> {
         public void onNext(T t) {
             if (!done) {
                 if (hasValue) {
-                    s.cancel();
+                    upstream.cancel();
                     onError(new IndexOutOfBoundsException());
                 } else {
                     hasValue = true;
@@ -71,7 +71,7 @@ final class SoloFromPublisher<T> extends Solo<T> {
             } else {
                 value = null;
                 done = true;
-                actual.onError(t);
+                downstream.onError(t);
             }
         }
 

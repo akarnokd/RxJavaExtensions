@@ -65,7 +65,7 @@ final class PerhapsFilter<T> extends Perhaps<T> {
                     return;
                 }
             }
-            actual.onNext(t);
+            downstream.onNext(t);
         }
 
         @Override

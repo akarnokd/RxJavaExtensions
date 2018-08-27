@@ -53,7 +53,7 @@ final class SoloAndThen<T> extends Solo<T> {
 
         final Nono other;
 
-        Subscription s;
+        Subscription upstream;
 
         AndThenSubscriber(Subscriber<? super T> actual, Nono other) {
             super(actual);
@@ -69,10 +69,10 @@ final class SoloAndThen<T> extends Solo<T> {
 
         @Override
         public void onSubscribe(Subscription s) {
-            if (SubscriptionHelper.validate(this.s, s)) {
-                this.s = s;
+            if (SubscriptionHelper.validate(this.upstream, s)) {
+                this.upstream = s;
 
-                actual.onSubscribe(this);
+                downstream.onSubscribe(this);
 
                 s.request(Long.MAX_VALUE);
             }
@@ -86,7 +86,7 @@ final class SoloAndThen<T> extends Solo<T> {
         @Override
         public void onError(Throwable t) {
             value = null;
-            actual.onError(t);
+            downstream.onError(t);
         }
 
         @Override
@@ -111,7 +111,7 @@ final class SoloAndThen<T> extends Solo<T> {
 
             @Override
             public void onError(Throwable t) {
-                actual.onError(t);
+                downstream.onError(t);
             }
 
             @Override

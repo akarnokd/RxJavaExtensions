@@ -72,7 +72,7 @@ final class PerhapsFlatMapSignal<T, R> extends Perhaps<R> {
 
         final InnerSubscriber inner;
 
-        Subscription s;
+        Subscription upstream;
 
         boolean hasValue;
 
@@ -89,10 +89,10 @@ final class PerhapsFlatMapSignal<T, R> extends Perhaps<R> {
 
         @Override
         public void onSubscribe(Subscription s) {
-            if (SubscriptionHelper.validate(this.s, s)) {
-                this.s = s;
+            if (SubscriptionHelper.validate(this.upstream, s)) {
+                this.upstream = s;
 
-                actual.onSubscribe(this);
+                downstream.onSubscribe(this);
 
                 s.request(Long.MAX_VALUE);
             }
@@ -107,7 +107,7 @@ final class PerhapsFlatMapSignal<T, R> extends Perhaps<R> {
                 ph = ObjectHelper.requireNonNull(onSuccessMapper.apply(t), "The onSuccessMapper returned a null Perhaps");
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
-                actual.onError(ex);
+                downstream.onError(ex);
                 return;
             }
 
@@ -121,7 +121,7 @@ final class PerhapsFlatMapSignal<T, R> extends Perhaps<R> {
                 ph = ObjectHelper.requireNonNull(onErrorMapper.apply(t), "The onErrorMapper returned a null Perhaps");
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
-                actual.onError(ex);
+                downstream.onError(ex);
                 return;
             }
             ph.subscribe(inner);
@@ -135,7 +135,7 @@ final class PerhapsFlatMapSignal<T, R> extends Perhaps<R> {
                     ph = ObjectHelper.requireNonNull(onCompleteMapper.call(), "The onCompleteMapper returned a null Perhaps");
                 } catch (Throwable ex) {
                     Exceptions.throwIfFatal(ex);
-                    actual.onError(ex);
+                    downstream.onError(ex);
                     return;
                 }
                 ph.subscribe(inner);
@@ -147,7 +147,7 @@ final class PerhapsFlatMapSignal<T, R> extends Perhaps<R> {
         }
 
         void innerError(Throwable ex) {
-            actual.onError(ex);
+            downstream.onError(ex);
         }
 
         void innerComplete() {
@@ -155,14 +155,14 @@ final class PerhapsFlatMapSignal<T, R> extends Perhaps<R> {
             if (v != null) {
                 complete(v);
             } else {
-                actual.onComplete();
+                downstream.onComplete();
             }
         }
 
         @Override
         public void cancel() {
             super.cancel();
-            s.cancel();
+            upstream.cancel();
             SubscriptionHelper.cancel(inner);
         }
 

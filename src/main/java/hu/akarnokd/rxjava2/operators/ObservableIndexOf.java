@@ -70,7 +70,7 @@ implements ObservableTransformer<T, Long> {
                 long idx = index;
                 if (predicate.test(t)) {
                     found = true;
-                    s.dispose();
+                    upstream.dispose();
                     complete(idx);
                     return;
                 }
@@ -78,7 +78,7 @@ implements ObservableTransformer<T, Long> {
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
                 found = true;
-                s.dispose();
+                upstream.dispose();
                 onError(ex);
                 return;
             }

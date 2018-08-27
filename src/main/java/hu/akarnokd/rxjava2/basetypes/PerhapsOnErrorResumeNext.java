@@ -56,7 +56,7 @@ final class PerhapsOnErrorResumeNext<T> extends Perhaps<T> {
 
         final OtherSubscriber otherSubscriber;
 
-        Subscription s;
+        Subscription upstream;
 
         OnErrorResumeNextSubscriber(Subscriber<? super T> actual, Function<? super Throwable, ? extends Perhaps<? extends T>> fallbackSupplier) {
             super(actual);
@@ -66,10 +66,10 @@ final class PerhapsOnErrorResumeNext<T> extends Perhaps<T> {
 
         @Override
         public void onSubscribe(Subscription s) {
-            if (SubscriptionHelper.validate(this.s, s)) {
-                this.s = s;
+            if (SubscriptionHelper.validate(this.upstream, s)) {
+                this.upstream = s;
 
-                actual.onSubscribe(this);
+                downstream.onSubscribe(this);
 
                 s.request(Long.MAX_VALUE);
             }
@@ -88,7 +88,7 @@ final class PerhapsOnErrorResumeNext<T> extends Perhaps<T> {
                 ph = ObjectHelper.requireNonNull(fallbackSupplier.apply(t), "The fallbackSupplier returned a null Perhaps");
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
-                actual.onError(new CompositeException(t, ex));
+                downstream.onError(new CompositeException(t, ex));
                 return;
             }
 
@@ -101,7 +101,7 @@ final class PerhapsOnErrorResumeNext<T> extends Perhaps<T> {
             if (v != null) {
                 complete(v);
             } else {
-                actual.onComplete();
+                downstream.onComplete();
             }
         }
 
@@ -110,17 +110,17 @@ final class PerhapsOnErrorResumeNext<T> extends Perhaps<T> {
         }
 
         void otherError(Throwable t) {
-            actual.onError(t);
+            downstream.onError(t);
         }
 
         void otherComplete() {
-            actual.onComplete();
+            downstream.onComplete();
         }
 
         @Override
         public void cancel() {
             super.cancel();
-            s.cancel();
+            upstream.cancel();
             SubscriptionHelper.cancel(otherSubscriber);
         }
 

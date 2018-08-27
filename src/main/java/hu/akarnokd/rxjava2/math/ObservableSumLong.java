@@ -56,7 +56,7 @@ public class ObservableSumLong extends ObservableWithSource<Long, Long> {
             if (hasValue) {
                 complete(accumulator);
             } else {
-                actual.onComplete();
+                downstream.onComplete();
             }
         }
 

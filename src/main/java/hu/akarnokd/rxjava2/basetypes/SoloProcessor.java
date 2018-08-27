@@ -247,7 +247,7 @@ public final class SoloProcessor<T> extends Solo<T> implements Processor<T, T> {
         }
 
         void error(Throwable ex) {
-            actual.onError(ex);
+            downstream.onError(ex);
         }
     }
 }

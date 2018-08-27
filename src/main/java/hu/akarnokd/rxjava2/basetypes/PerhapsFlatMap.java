@@ -73,7 +73,7 @@ final class PerhapsFlatMap<T, R> extends Perhaps<R> {
             if (SubscriptionHelper.validate(this.s, s)) {
                 this.s = s;
 
-                actual.onSubscribe(this);
+                downstream.onSubscribe(this);
 
                 s.request(Long.MAX_VALUE);
             }
@@ -88,7 +88,7 @@ final class PerhapsFlatMap<T, R> extends Perhaps<R> {
                 ph = ObjectHelper.requireNonNull(mapper.apply(t), "The mapper returned a null Perhaps");
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
-                actual.onError(ex);
+                downstream.onError(ex);
                 return;
             }
 
@@ -97,13 +97,13 @@ final class PerhapsFlatMap<T, R> extends Perhaps<R> {
 
         @Override
         public void onError(Throwable t) {
-            actual.onError(t);
+            downstream.onError(t);
         }
 
         @Override
         public void onComplete() {
             if (!hasValue) {
-                actual.onComplete();
+                downstream.onComplete();
             }
         }
 
@@ -112,7 +112,7 @@ final class PerhapsFlatMap<T, R> extends Perhaps<R> {
         }
 
         void innerError(Throwable ex) {
-            actual.onError(ex);
+            downstream.onError(ex);
         }
 
         void innerComplete() {
@@ -120,7 +120,7 @@ final class PerhapsFlatMap<T, R> extends Perhaps<R> {
             if (v != null) {
                 complete(v);
             } else {
-                actual.onComplete();
+                downstream.onComplete();
             }
         }
 

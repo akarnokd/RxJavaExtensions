@@ -66,9 +66,9 @@ final class SoloMap<T, R> extends Solo<R> {
                         return;
                     }
 
-                    actual.onNext(v);
+                    downstream.onNext(v);
                 } else {
-                    actual.onNext(null);
+                    downstream.onNext(null);
                 }
             }
         }

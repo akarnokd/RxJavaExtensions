@@ -70,7 +70,7 @@ final class PerhapsDelay<T> extends Perhaps<T> {
             if (SubscriptionHelper.validate(this.s, s)) {
                 this.s = s;
 
-                actual.onSubscribe(this);
+                downstream.onSubscribe(this);
 
                 s.request(Long.MAX_VALUE);
             }
@@ -102,23 +102,23 @@ final class PerhapsDelay<T> extends Perhaps<T> {
         void otherNext() {
             Throwable ex = error;
             if (ex != null) {
-                actual.onError(ex);
+                downstream.onError(ex);
                 return;
             }
             T v = value;
             if (v != null) {
                 complete(v);
             } else {
-                actual.onComplete();
+                downstream.onComplete();
             }
         }
 
         void otherError(Throwable ex) {
             Throwable ex0 = error;
             if (ex0 != null) {
-                actual.onError(new CompositeException(ex0, ex));
+                downstream.onError(new CompositeException(ex0, ex));
             } else {
-                actual.onError(ex);
+                downstream.onError(ex);
             }
         }
 

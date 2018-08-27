@@ -85,7 +85,7 @@ final class SoloRetry<T> extends Solo<T> {
             long c = times;
             if (c != Long.MAX_VALUE) {
                 if (--c == 0L) {
-                    actual.onError(t);
+                    downstream.onError(t);
                     return;
                 } else {
                     times = c;
@@ -118,7 +118,7 @@ final class SoloRetry<T> extends Solo<T> {
                 value = null;
                 complete(v);
             } else {
-                actual.onComplete();
+                downstream.onComplete();
             }
         }
 

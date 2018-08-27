@@ -68,8 +68,8 @@ final class FlowableMinMax<T> extends FlowableSource<T, T> {
                 }
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
-                s.cancel();
-                actual.onError(ex);
+                upstream.cancel();
+                downstream.onError(ex);
             }
         }
 

@@ -52,7 +52,7 @@ final class SoloTimeout<T> extends Solo<T> {
 
         private static final long serialVersionUID = -2613153829201889588L;
 
-        final AtomicReference<Subscription> s;
+        final AtomicReference<Subscription> upstream;
 
         final Solo<T> fallback;
 
@@ -64,7 +64,7 @@ final class SoloTimeout<T> extends Solo<T> {
 
         TimeoutSubscriber(Subscriber<? super T> actual, Solo<T> fallback) {
             super(actual);
-            this.s = new AtomicReference<Subscription>();
+            this.upstream = new AtomicReference<Subscription>();
             this.fallback = fallback;
             this.once = new AtomicBoolean();
             this.other = new OtherSubscriber();
@@ -73,7 +73,7 @@ final class SoloTimeout<T> extends Solo<T> {
 
         @Override
         public void onSubscribe(Subscription s) {
-            if (SubscriptionHelper.setOnce(this.s, s)) {
+            if (SubscriptionHelper.setOnce(this.upstream, s)) {
                 s.request(Long.MAX_VALUE);
             }
         }
@@ -87,7 +87,7 @@ final class SoloTimeout<T> extends Solo<T> {
         public void onError(Throwable t) {
             SubscriptionHelper.cancel(other);
             if (once.compareAndSet(false, true)) {
-                actual.onError(t);
+                downstream.onError(t);
             } else {
                 RxJavaPlugins.onError(t);
             }
@@ -102,21 +102,21 @@ final class SoloTimeout<T> extends Solo<T> {
         }
 
         void otherComplete() {
-            SubscriptionHelper.cancel(s);
+            SubscriptionHelper.cancel(upstream);
             if (once.compareAndSet(false, true)) {
                 Solo<T> f = fallback;
                 if (f != null) {
                     f.subscribe(fallbackSubscriber);
                 } else {
-                    actual.onError(new TimeoutException());
+                    downstream.onError(new TimeoutException());
                 }
             }
         }
 
         void otherError(Throwable ex) {
-            SubscriptionHelper.cancel(s);
+            SubscriptionHelper.cancel(upstream);
             if (once.compareAndSet(false, true)) {
-                actual.onError(ex);
+                downstream.onError(ex);
             } else {
                 RxJavaPlugins.onError(ex);
             }
@@ -125,7 +125,7 @@ final class SoloTimeout<T> extends Solo<T> {
         @Override
         public void cancel() {
             super.cancel();
-            SubscriptionHelper.cancel(s);
+            SubscriptionHelper.cancel(upstream);
             SubscriptionHelper.cancel(other);
             AtomicReference<Subscription> fs = this.fallbackSubscriber;
             if (fs != null) {
@@ -138,7 +138,7 @@ final class SoloTimeout<T> extends Solo<T> {
         }
 
         void fallbackError(Throwable ex) {
-            actual.onError(ex);
+            downstream.onError(ex);
         }
 
         final class OtherSubscriber extends AtomicReference<Subscription>

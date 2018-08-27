@@ -56,7 +56,7 @@ public class ObservableSumFloat extends ObservableWithSource<Float, Float> {
             if (hasValue) {
                 complete(accumulator);
             } else {
-                actual.onComplete();
+                downstream.onComplete();
             }
         }
 

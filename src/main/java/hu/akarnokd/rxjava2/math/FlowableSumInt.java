@@ -55,7 +55,7 @@ final class FlowableSumInt extends FlowableSource<Integer, Integer> {
             if (hasValue) {
                 complete(accumulator);
             } else {
-                actual.onComplete();
+                downstream.onComplete();
             }
         }
 

@@ -90,7 +90,7 @@ final class PerhapsCreate<T> extends Perhaps<T> {
         public boolean tryOnError(Throwable t) {
             Disposable d = resource.getAndSet(DisposableHelper.DISPOSED);
             if (d != DisposableHelper.DISPOSED) {
-                actual.onError(t);
+                downstream.onError(t);
 
                 if (d != null) {
                     d.dispose();
@@ -105,7 +105,7 @@ final class PerhapsCreate<T> extends Perhaps<T> {
             Disposable d = resource.getAndSet(DisposableHelper.DISPOSED);
             if (d != DisposableHelper.DISPOSED) {
 
-                actual.onComplete();
+                downstream.onComplete();
 
                 if (d != null) {
                     d.dispose();

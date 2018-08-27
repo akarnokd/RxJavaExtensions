@@ -85,7 +85,7 @@ final class ParallelSumInteger<T extends Number> extends ParallelFlowable<Intege
 
         @Override
         public void onError(Throwable t) {
-            actual.onError(t);
+            downstream.onError(t);
         }
 
         @Override
@@ -93,7 +93,7 @@ final class ParallelSumInteger<T extends Number> extends ParallelFlowable<Intege
             if (hasValue) {
                 complete(sum);
             } else {
-                actual.onComplete();
+                downstream.onComplete();
             }
         }
 
@@ -102,7 +102,7 @@ final class ParallelSumInteger<T extends Number> extends ParallelFlowable<Intege
             if (SubscriptionHelper.validate(upstream, s)) {
                 upstream = s;
 
-                actual.onSubscribe(this);
+                downstream.onSubscribe(this);
 
                 s.request(Long.MAX_VALUE);
             }

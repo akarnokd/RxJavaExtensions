@@ -56,7 +56,7 @@ final class ObservableSumInt extends ObservableWithSource<Integer, Integer> {
             if (hasValue) {
                 complete(accumulator);
             } else {
-                actual.onComplete();
+                downstream.onComplete();
             }
         }
 

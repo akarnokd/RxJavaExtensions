@@ -45,7 +45,7 @@ final class PerhapsToObservable<T> extends Observable<T> {
 
         private static final long serialVersionUID = -1626180231890768109L;
 
-        Subscription s;
+        Subscription upstream;
 
         ToFlowableSubscriber(Observer<? super T> actual) {
             super(actual);
@@ -53,10 +53,10 @@ final class PerhapsToObservable<T> extends Observable<T> {
 
         @Override
         public void onSubscribe(Subscription s) {
-            if (SubscriptionHelper.validate(this.s, s)) {
-                this.s = s;
+            if (SubscriptionHelper.validate(this.upstream, s)) {
+                this.upstream = s;
 
-                actual.onSubscribe(this);
+                downstream.onSubscribe(this);
 
                 s.request(Long.MAX_VALUE);
             }
@@ -69,7 +69,7 @@ final class PerhapsToObservable<T> extends Observable<T> {
 
         @Override
         public void onError(Throwable t) {
-            actual.onError(t);
+            downstream.onError(t);
         }
 
         @Override
@@ -78,7 +78,7 @@ final class PerhapsToObservable<T> extends Observable<T> {
             if (v != null) {
                 complete(v);
             } else {
-                actual.onComplete();
+                downstream.onComplete();
             }
         }
     }

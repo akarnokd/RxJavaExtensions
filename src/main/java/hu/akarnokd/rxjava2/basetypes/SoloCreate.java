@@ -90,7 +90,7 @@ final class SoloCreate<T> extends Solo<T> {
         public boolean tryOnError(Throwable t) {
             Disposable d = resource.getAndSet(DisposableHelper.DISPOSED);
             if (d != DisposableHelper.DISPOSED) {
-                actual.onError(t);
+                downstream.onError(t);
 
                 if (d != null) {
                     d.dispose();

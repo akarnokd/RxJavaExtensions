@@ -69,7 +69,7 @@ final class PerhapsDelayPublisher<T> extends Perhaps<T> {
             if (SubscriptionHelper.validate(this.s, s)) {
                 this.s = s;
 
-                actual.onSubscribe(this);
+                downstream.onSubscribe(this);
 
                 s.request(Long.MAX_VALUE);
             }
@@ -94,14 +94,14 @@ final class PerhapsDelayPublisher<T> extends Perhaps<T> {
         void otherSignal() {
             Throwable ex = error;
             if (ex != null) {
-                actual.onError(ex);
+                downstream.onError(ex);
                 return;
             }
             T v = value;
             if (v != null) {
                 complete(v);
             } else {
-                actual.onComplete();
+                downstream.onComplete();
             }
         }
 
@@ -110,7 +110,7 @@ final class PerhapsDelayPublisher<T> extends Perhaps<T> {
             if (ex != null) {
                 t = new CompositeException(ex, t);
             }
-            actual.onError(t);
+            downstream.onError(t);
         }
 
         @Override

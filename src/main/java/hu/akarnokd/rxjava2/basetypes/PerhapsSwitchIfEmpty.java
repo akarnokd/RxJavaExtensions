@@ -53,7 +53,7 @@ final class PerhapsSwitchIfEmpty<T> extends Perhaps<T> {
 
         final OtherSubscriber otherSubscriber;
 
-        Subscription s;
+        Subscription upstream;
 
         SwitchIfEmptySubscriber(Subscriber<? super T> actual, Perhaps<? extends T> other) {
             super(actual);
@@ -63,10 +63,10 @@ final class PerhapsSwitchIfEmpty<T> extends Perhaps<T> {
 
         @Override
         public void onSubscribe(Subscription s) {
-            if (SubscriptionHelper.validate(this.s, s)) {
-                this.s = s;
+            if (SubscriptionHelper.validate(this.upstream, s)) {
+                this.upstream = s;
 
-                actual.onSubscribe(this);
+                downstream.onSubscribe(this);
 
                 s.request(Long.MAX_VALUE);
             }
@@ -79,7 +79,7 @@ final class PerhapsSwitchIfEmpty<T> extends Perhaps<T> {
 
         @Override
         public void onError(Throwable t) {
-            actual.onError(t);
+            downstream.onError(t);
         }
 
         @Override
@@ -97,17 +97,17 @@ final class PerhapsSwitchIfEmpty<T> extends Perhaps<T> {
         }
 
         void otherError(Throwable t) {
-            actual.onError(t);
+            downstream.onError(t);
         }
 
         void otherComplete() {
-            actual.onComplete();
+            downstream.onComplete();
         }
 
         @Override
         public void cancel() {
             super.cancel();
-            s.cancel();
+            upstream.cancel();
             SubscriptionHelper.cancel(otherSubscriber);
         }
 

@@ -58,7 +58,7 @@ final class PerhapsTimeout<T> extends Perhaps<T> {
 
         private static final long serialVersionUID = -2613153829201889588L;
 
-        final AtomicReference<Subscription> s;
+        final AtomicReference<Subscription> upstream;
 
         final Perhaps<? extends T> fallback;
 
@@ -70,7 +70,7 @@ final class PerhapsTimeout<T> extends Perhaps<T> {
 
         TimeoutSubscriber(Subscriber<? super T> actual, Perhaps<? extends T> fallback) {
             super(actual);
-            this.s = new AtomicReference<Subscription>();
+            this.upstream = new AtomicReference<Subscription>();
             this.fallback = fallback;
             this.once = new AtomicBoolean();
             this.other = new OtherSubscriber();
@@ -79,7 +79,7 @@ final class PerhapsTimeout<T> extends Perhaps<T> {
 
         @Override
         public void onSubscribe(Subscription s) {
-            if (SubscriptionHelper.setOnce(this.s, s)) {
+            if (SubscriptionHelper.setOnce(this.upstream, s)) {
                 s.request(Long.MAX_VALUE);
             }
         }
@@ -94,7 +94,7 @@ final class PerhapsTimeout<T> extends Perhaps<T> {
             if (once.compareAndSet(false, true)) {
                 SubscriptionHelper.cancel(other);
 
-                actual.onError(t);
+                downstream.onError(t);
             } else {
                 RxJavaPlugins.onError(t);
             }
@@ -109,28 +109,28 @@ final class PerhapsTimeout<T> extends Perhaps<T> {
                 if (v != null) {
                     complete(value);
                 } else {
-                    actual.onComplete();
+                    downstream.onComplete();
                 }
             }
         }
 
         void otherComplete() {
-            SubscriptionHelper.cancel(s);
+            SubscriptionHelper.cancel(upstream);
             if (once.compareAndSet(false, true)) {
                 Perhaps<? extends T> f = fallback;
                 if (f != null) {
                     f.subscribe(fallbackSubscriber);
                 } else {
-                    actual.onError(new TimeoutException());
+                    downstream.onError(new TimeoutException());
                 }
             }
         }
 
         void otherError(Throwable ex) {
             if (once.compareAndSet(false, true)) {
-                SubscriptionHelper.cancel(s);
+                SubscriptionHelper.cancel(upstream);
 
-                actual.onError(ex);
+                downstream.onError(ex);
             } else {
                 RxJavaPlugins.onError(ex);
             }
@@ -139,7 +139,7 @@ final class PerhapsTimeout<T> extends Perhaps<T> {
         @Override
         public void cancel() {
             super.cancel();
-            SubscriptionHelper.cancel(s);
+            SubscriptionHelper.cancel(upstream);
             SubscriptionHelper.cancel(other);
             AtomicReference<Subscription> fs = this.fallbackSubscriber;
             if (fs != null) {
@@ -148,14 +148,14 @@ final class PerhapsTimeout<T> extends Perhaps<T> {
         }
 
         void fallbackError(Throwable ex) {
-            actual.onError(ex);
+            downstream.onError(ex);
         }
 
         void fallbackComplete(T v) {
             if (v != null) {
                 complete(v);
             } else {
-                actual.onComplete();
+                downstream.onComplete();
             }
         }
 

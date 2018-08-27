@@ -85,7 +85,7 @@ final class SoloTakeUntil<T> extends Solo<T> {
             SubscriptionHelper.cancel(other);
             if (once.compareAndSet(false, true)) {
                 value = null;
-                actual.onError(t);
+                downstream.onError(t);
             } else {
                 RxJavaPlugins.onError(t);
             }
@@ -100,7 +100,7 @@ final class SoloTakeUntil<T> extends Solo<T> {
                     value = null;
                     complete(v);
                 } else {
-                    actual.onComplete();
+                    downstream.onComplete();
                 }
             }
         }
@@ -109,7 +109,7 @@ final class SoloTakeUntil<T> extends Solo<T> {
             SubscriptionHelper.cancel(s);
             if (once.compareAndSet(false, true)) {
                 value = null;
-                actual.onError(t);
+                downstream.onError(t);
             } else {
                 RxJavaPlugins.onError(t);
             }

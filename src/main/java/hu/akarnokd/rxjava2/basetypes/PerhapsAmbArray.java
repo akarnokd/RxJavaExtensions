@@ -87,7 +87,7 @@ final class PerhapsAmbArray<T> extends Perhaps<T> {
             if (once.compareAndSet(false, true)) {
                 set.cancel();
 
-                actual.onError(t);
+                downstream.onError(t);
             } else {
                 RxJavaPlugins.onError(t);
             }
@@ -98,7 +98,7 @@ final class PerhapsAmbArray<T> extends Perhaps<T> {
             if (once.compareAndSet(false, true)) {
                 set.cancel();
 
-                actual.onComplete();
+                downstream.onComplete();
             }
         }
 

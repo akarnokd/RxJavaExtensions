@@ -56,7 +56,7 @@ public class ObservableSumDouble extends ObservableWithSource<Double, Double> {
             if (hasValue) {
                 complete(accumulator);
             } else {
-                actual.onComplete();
+                downstream.onComplete();
             }
         }
 

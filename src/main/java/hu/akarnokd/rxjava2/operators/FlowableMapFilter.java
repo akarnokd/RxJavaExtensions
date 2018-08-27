@@ -75,14 +75,14 @@ final class FlowableMapFilter<T, R> extends Flowable<R> implements FlowableTrans
         @Override
         public void onNext(T t) {
             if (!tryOnNext(t)) {
-                s.request(1);
+                upstream.request(1);
             }
         }
 
         @Override
         public boolean tryOnNext(T t) {
             if (sourceMode != NONE) {
-                actual.onNext(null);
+                downstream.onNext(null);
                 return true;
             }
             boolean b;
@@ -90,13 +90,13 @@ final class FlowableMapFilter<T, R> extends Flowable<R> implements FlowableTrans
                 consumer.accept(t, this);
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
-                s.cancel();
+                upstream.cancel();
                 Throwable e = outError;
                 outError = null;
                 if (e != null) {
-                    actual.onError(new CompositeException(e, ex));
+                    downstream.onError(new CompositeException(e, ex));
                 } else {
-                    actual.onError(ex);
+                    downstream.onError(ex);
                 }
                 return true;
             }
@@ -106,15 +106,15 @@ final class FlowableMapFilter<T, R> extends Flowable<R> implements FlowableTrans
             if (b) {
                 R v = outValue;
                 outValue = null;
-                actual.onNext(v);
+                downstream.onNext(v);
             }
             if (done) {
                 Throwable e = outError;
                 outError = null;
                 if (e != null) {
-                    actual.onError(e);
+                    downstream.onError(e);
                 } else {
-                    actual.onComplete();
+                    downstream.onComplete();
                 }
                 return true;
             }
@@ -128,7 +128,7 @@ final class FlowableMapFilter<T, R> extends Flowable<R> implements FlowableTrans
                 RxJavaPlugins.onError(t);
             } else {
                 done = true;
-                actual.onError(t);
+                downstream.onError(t);
             }
         }
 
@@ -136,18 +136,18 @@ final class FlowableMapFilter<T, R> extends Flowable<R> implements FlowableTrans
         public void onComplete() {
             if (!done) {
                 done = true;
-                actual.onComplete();
+                downstream.onComplete();
             }
         }
 
         @Override
         public void request(long n) {
-            s.request(n);
+            upstream.request(n);
         }
 
         @Override
         public void cancel() {
-            s.cancel();
+            upstream.cancel();
         }
 
         @Override
@@ -165,7 +165,7 @@ final class FlowableMapFilter<T, R> extends Flowable<R> implements FlowableTrans
             if (done) {
                 RxJavaPlugins.onError(t);
             } else {
-                s.cancel();
+                upstream.cancel();
                 done = true;
                 outError = t;
             }
@@ -174,7 +174,7 @@ final class FlowableMapFilter<T, R> extends Flowable<R> implements FlowableTrans
         @Override
         public void doComplete() {
             if (!done) {
-                s.cancel();
+                upstream.cancel();
                 done = true;
             }
         }
@@ -216,7 +216,7 @@ final class FlowableMapFilter<T, R> extends Flowable<R> implements FlowableTrans
                 }
 
                 if (sourceMode != SYNC) {
-                    s.request(1);
+                    upstream.request(1);
                 }
             }
         }
@@ -251,27 +251,27 @@ final class FlowableMapFilter<T, R> extends Flowable<R> implements FlowableTrans
         @Override
         public void onNext(T t) {
             if (!tryOnNext(t)) {
-                s.request(1);
+                upstream.request(1);
             }
         }
 
         @Override
         public boolean tryOnNext(T t) {
             if (sourceMode != NONE) {
-                return actual.tryOnNext(null);
+                return downstream.tryOnNext(null);
             }
             boolean b;
             try {
                 consumer.accept(t, this);
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
-                s.cancel();
+                upstream.cancel();
                 Throwable e = outError;
                 outError = null;
                 if (e != null) {
-                    actual.onError(new CompositeException(e, ex));
+                    downstream.onError(new CompositeException(e, ex));
                 } else {
-                    actual.onError(ex);
+                    downstream.onError(ex);
                 }
                 return true;
             }
@@ -281,15 +281,15 @@ final class FlowableMapFilter<T, R> extends Flowable<R> implements FlowableTrans
             if (b) {
                 R v = outValue;
                 outValue = null;
-                b = actual.tryOnNext(v);
+                b = downstream.tryOnNext(v);
             }
             if (done) {
                 Throwable e = outError;
                 outError = null;
                 if (e != null) {
-                    actual.onError(e);
+                    downstream.onError(e);
                 } else {
-                    actual.onComplete();
+                    downstream.onComplete();
                 }
                 return true;
             }
@@ -303,7 +303,7 @@ final class FlowableMapFilter<T, R> extends Flowable<R> implements FlowableTrans
                 RxJavaPlugins.onError(t);
             } else {
                 done = true;
-                actual.onError(t);
+                downstream.onError(t);
             }
         }
 
@@ -311,18 +311,18 @@ final class FlowableMapFilter<T, R> extends Flowable<R> implements FlowableTrans
         public void onComplete() {
             if (!done) {
                 done = true;
-                actual.onComplete();
+                downstream.onComplete();
             }
         }
 
         @Override
         public void request(long n) {
-            s.request(n);
+            upstream.request(n);
         }
 
         @Override
         public void cancel() {
-            s.cancel();
+            upstream.cancel();
         }
 
         @Override
@@ -340,7 +340,7 @@ final class FlowableMapFilter<T, R> extends Flowable<R> implements FlowableTrans
             if (done) {
                 RxJavaPlugins.onError(t);
             } else {
-                s.cancel();
+                upstream.cancel();
                 done = true;
                 outError = t;
             }
@@ -349,7 +349,7 @@ final class FlowableMapFilter<T, R> extends Flowable<R> implements FlowableTrans
         @Override
         public void doComplete() {
             if (!done) {
-                s.cancel();
+                upstream.cancel();
                 done = true;
             }
         }
@@ -391,7 +391,7 @@ final class FlowableMapFilter<T, R> extends Flowable<R> implements FlowableTrans
                 }
 
                 if (sourceMode != SYNC) {
-                    s.request(1);
+                    upstream.request(1);
                 }
             }
         }

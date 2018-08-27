@@ -55,7 +55,7 @@ final class FlowableAverageFloat extends FlowableSource<Number, Float> {
             if (c != 0) {
                 complete(accumulator / c);
             } else {
-                actual.onComplete();
+                downstream.onComplete();
             }
         }
 

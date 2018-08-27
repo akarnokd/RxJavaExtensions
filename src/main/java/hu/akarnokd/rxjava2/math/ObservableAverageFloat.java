@@ -55,7 +55,7 @@ public class ObservableAverageFloat extends ObservableWithSource<Number, Float> 
             if (c != 0) {
                 complete(accumulator / c);
             } else {
-                actual.onComplete();
+                downstream.onComplete();
             }
         }
 

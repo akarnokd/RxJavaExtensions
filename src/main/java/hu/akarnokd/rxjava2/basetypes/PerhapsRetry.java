@@ -52,7 +52,7 @@ final class PerhapsRetry<T> extends Perhaps<T> {
 
         final AtomicInteger wip;
 
-        final AtomicReference<Subscription> s;
+        final AtomicReference<Subscription> upstream;
 
         final Perhaps<T> source;
 
@@ -65,12 +65,12 @@ final class PerhapsRetry<T> extends Perhaps<T> {
             this.times = times;
             this.source = source;
             this.wip = new AtomicInteger();
-            this.s = new AtomicReference<Subscription>();
+            this.upstream = new AtomicReference<Subscription>();
         }
 
         @Override
         public void onSubscribe(Subscription s) {
-            if (SubscriptionHelper.replace(this.s, s)) {
+            if (SubscriptionHelper.replace(this.upstream, s)) {
                 s.request(Long.MAX_VALUE);
             }
         }
@@ -85,7 +85,7 @@ final class PerhapsRetry<T> extends Perhaps<T> {
             long c = times;
             if (c != Long.MAX_VALUE) {
                 if (--c == 0L) {
-                    actual.onError(t);
+                    downstream.onError(t);
                     return;
                 } else {
                     times = c;
@@ -99,7 +99,7 @@ final class PerhapsRetry<T> extends Perhaps<T> {
         void subscribeNext() {
             if (wip.getAndIncrement() == 0) {
                 do {
-                    if (SubscriptionHelper.isCancelled(s.get())) {
+                    if (SubscriptionHelper.isCancelled(upstream.get())) {
                         return;
                     }
 
@@ -118,14 +118,14 @@ final class PerhapsRetry<T> extends Perhaps<T> {
                 value = null;
                 complete(v);
             } else {
-                actual.onComplete();
+                downstream.onComplete();
             }
         }
 
         @Override
         public void cancel() {
             super.cancel();
-            SubscriptionHelper.cancel(s);
+            SubscriptionHelper.cancel(upstream);
         }
     }
 }

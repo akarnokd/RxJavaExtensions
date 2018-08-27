@@ -67,8 +67,8 @@ final class ObservableMinMax<T> extends ObservableWithSource<T, T> {
                 }
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
-                s.dispose();
-                actual.onError(ex);
+                upstream.dispose();
+                downstream.onError(ex);
             }
         }
 

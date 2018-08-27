@@ -104,7 +104,7 @@ final class SoloZipArray<T, R> extends Solo<R> {
                 } catch (Throwable ex) {
                     Exceptions.throwIfFatal(ex);
                     Arrays.fill(values, null);
-                    actual.onError(ex);
+                    downstream.onError(ex);
                     return;
                 }
 
@@ -119,7 +119,7 @@ final class SoloZipArray<T, R> extends Solo<R> {
                 for (ZipSubscriber<T, R> inner : subscribers) {
                     inner.cancel();
                 }
-                actual.onError(t);
+                downstream.onError(t);
             } else {
                 RxJavaPlugins.onError(t);
             }

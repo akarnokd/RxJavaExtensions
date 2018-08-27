@@ -52,7 +52,7 @@ final class SoloOnErrorResumeWith<T> extends Solo<T> {
 
         final NextSubscriber nextSubscriber;
 
-        Subscription s;
+        Subscription upstream;
 
         OnErrorResumeWithSubscriber(Subscriber<? super T> actual, Solo<T> next) {
             super(actual);
@@ -62,10 +62,10 @@ final class SoloOnErrorResumeWith<T> extends Solo<T> {
 
         @Override
         public void onSubscribe(Subscription s) {
-            if (SubscriptionHelper.validate(this.s, s)) {
-                this.s = s;
+            if (SubscriptionHelper.validate(this.upstream, s)) {
+                this.upstream = s;
 
-                actual.onSubscribe(this);
+                downstream.onSubscribe(this);
 
                 s.request(Long.MAX_VALUE);
             }
@@ -87,14 +87,14 @@ final class SoloOnErrorResumeWith<T> extends Solo<T> {
             if (v != null) {
                 complete(v);
             } else {
-                actual.onComplete();
+                downstream.onComplete();
             }
         }
 
         @Override
         public void cancel() {
             super.cancel();
-            s.cancel();
+            upstream.cancel();
             SubscriptionHelper.cancel(nextSubscriber);
         }
 
@@ -117,7 +117,7 @@ final class SoloOnErrorResumeWith<T> extends Solo<T> {
 
             @Override
             public void onError(Throwable t) {
-                actual.onError(t);
+                downstream.onError(t);
             }
 
             @Override

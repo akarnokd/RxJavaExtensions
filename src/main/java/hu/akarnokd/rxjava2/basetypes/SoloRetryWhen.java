@@ -149,7 +149,7 @@ final class SoloRetryWhen<T> extends Solo<T> {
         void otherError(Throwable ex) {
             SubscriptionHelper.cancel(s);
             if (once.compareAndSet(false, true)) {
-                actual.onError(ex);
+                downstream.onError(ex);
             } else {
                 RxJavaPlugins.onError(ex);
             }
@@ -158,7 +158,7 @@ final class SoloRetryWhen<T> extends Solo<T> {
         void otherComplete() {
             SubscriptionHelper.cancel(s);
             if (once.compareAndSet(false, true)) {
-                actual.onError(new NoSuchElementException());
+                downstream.onError(new NoSuchElementException());
             }
         }
 

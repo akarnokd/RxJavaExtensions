@@ -72,7 +72,7 @@ implements FlowableTransformer<T, Long> {
                 long idx = index;
                 if (predicate.test(t)) {
                     found = true;
-                    s.cancel();
+                    upstream.cancel();
                     complete(idx);
                     return;
                 }
@@ -80,7 +80,7 @@ implements FlowableTransformer<T, Long> {
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
                 found = true;
-                s.cancel();
+                upstream.cancel();
                 onError(ex);
                 return;
             }

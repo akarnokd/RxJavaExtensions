@@ -56,7 +56,7 @@ final class SoloToObservable<T> extends Observable<T> {
             if (SubscriptionHelper.validate(this.s, s)) {
                 this.s = s;
 
-                actual.onSubscribe(this);
+                downstream.onSubscribe(this);
 
                 s.request(Long.MAX_VALUE);
             }
@@ -69,7 +69,7 @@ final class SoloToObservable<T> extends Observable<T> {
 
         @Override
         public void onError(Throwable t) {
-            actual.onError(t);
+            downstream.onError(t);
         }
 
         @Override

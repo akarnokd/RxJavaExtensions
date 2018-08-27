@@ -45,7 +45,7 @@ final class SoloFromSingle<T> extends Solo<T> {
 
         private static final long serialVersionUID = 1184208074074285424L;
 
-        Disposable d;
+        Disposable upstream;
 
         FromSingleObserver(Subscriber<? super T> actual) {
             super(actual);
@@ -53,10 +53,10 @@ final class SoloFromSingle<T> extends Solo<T> {
 
         @Override
         public void onSubscribe(Disposable d) {
-            if (DisposableHelper.validate(this.d, d)) {
-                this.d = d;
+            if (DisposableHelper.validate(this.upstream, d)) {
+                this.upstream = d;
 
-                actual.onSubscribe(this);
+                downstream.onSubscribe(this);
             }
         }
 
@@ -67,13 +67,13 @@ final class SoloFromSingle<T> extends Solo<T> {
 
         @Override
         public void onError(Throwable e) {
-            actual.onError(e);
+            downstream.onError(e);
         }
 
         @Override
         public void cancel() {
             super.cancel();
-            d.dispose();
+            upstream.dispose();
         }
     }
 }

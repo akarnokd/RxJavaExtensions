@@ -56,7 +56,7 @@ final class SoloFlatMap<T, R> extends Solo<R> {
 
         final NextSubscriber nextSubscriber;
 
-        Subscription s;
+        Subscription upstream;
 
         FlatMapSubscriber(Subscriber<? super R> actual, Function<? super T, ? extends Solo<? extends R>> mapper) {
             super(actual);
@@ -66,10 +66,10 @@ final class SoloFlatMap<T, R> extends Solo<R> {
 
         @Override
         public void onSubscribe(Subscription s) {
-            if (SubscriptionHelper.validate(this.s, s)) {
-                this.s = s;
+            if (SubscriptionHelper.validate(this.upstream, s)) {
+                this.upstream = s;
 
-                actual.onSubscribe(this);
+                downstream.onSubscribe(this);
 
                 s.request(Long.MAX_VALUE);
             }
@@ -83,7 +83,7 @@ final class SoloFlatMap<T, R> extends Solo<R> {
                 sp = ObjectHelper.requireNonNull(mapper.apply(t), "The mapper returned a null Solo");
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
-                actual.onError(ex);
+                downstream.onError(ex);
                 return;
             }
 
@@ -92,7 +92,7 @@ final class SoloFlatMap<T, R> extends Solo<R> {
 
         @Override
         public void onError(Throwable t) {
-            actual.onError(t);
+            downstream.onError(t);
         }
 
         @Override
@@ -103,7 +103,7 @@ final class SoloFlatMap<T, R> extends Solo<R> {
         @Override
         public void cancel() {
             super.cancel();
-            s.cancel();
+            upstream.cancel();
             SubscriptionHelper.cancel(nextSubscriber);
         }
 
@@ -130,7 +130,7 @@ final class SoloFlatMap<T, R> extends Solo<R> {
 
             @Override
             public void onError(Throwable t) {
-                actual.onError(t);
+                downstream.onError(t);
             }
 
             @Override

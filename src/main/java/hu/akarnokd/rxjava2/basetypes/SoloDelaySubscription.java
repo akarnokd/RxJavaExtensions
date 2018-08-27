@@ -76,14 +76,14 @@ final class SoloDelaySubscription<T> extends Solo<T> {
 
         @Override
         public void onError(Throwable t) {
-            actual.onError(t);
+            downstream.onError(t);
         }
 
         @Override
         public void onComplete() {
             T v = value;
             if (v == null) {
-                actual.onComplete();
+                downstream.onComplete();
             } else {
                 complete(v);
             }
@@ -95,7 +95,7 @@ final class SoloDelaySubscription<T> extends Solo<T> {
         }
 
         void otherError(Throwable t) {
-            actual.onError(t);
+            downstream.onError(t);
         }
 
         void otherComplete() {

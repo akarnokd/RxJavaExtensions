@@ -53,7 +53,7 @@ final class PerhapsFromPublisher<T> extends Perhaps<T> {
         public void onNext(T t) {
             if (!done) {
                 if (hasValue) {
-                    s.cancel();
+                    upstream.cancel();
                     onError(new IndexOutOfBoundsException());
                 } else {
                     hasValue = true;
@@ -69,7 +69,7 @@ final class PerhapsFromPublisher<T> extends Perhaps<T> {
             } else {
                 value = null;
                 done = true;
-                actual.onError(t);
+                downstream.onError(t);
             }
         }
 
@@ -80,7 +80,7 @@ final class PerhapsFromPublisher<T> extends Perhaps<T> {
                     done = true;
                     complete(value);
                 } else {
-                    actual.onComplete();
+                    downstream.onComplete();
                 }
             }
         }

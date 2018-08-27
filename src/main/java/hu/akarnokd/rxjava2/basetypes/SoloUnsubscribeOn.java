@@ -55,7 +55,7 @@ final class SoloUnsubscribeOn<T> extends Solo<T> {
 
         @Override
         public void onNext(T t) {
-            actual.onNext(t);
+            downstream.onNext(t);
         }
 
         @Override

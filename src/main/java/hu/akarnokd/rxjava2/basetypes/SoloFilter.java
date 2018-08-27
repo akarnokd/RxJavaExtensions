@@ -64,10 +64,10 @@ final class SoloFilter<T> extends Perhaps<T> {
                 }
 
                 if (b) {
-                    actual.onNext(t);
+                    downstream.onNext(t);
                 }
             } else {
-                actual.onNext(null);
+                downstream.onNext(null);
             }
         }
 

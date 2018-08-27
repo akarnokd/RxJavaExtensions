@@ -48,7 +48,7 @@ final class PerhapsOnErrorReturnItem<T> extends Perhaps<T> {
 
         final T item;
 
-        Subscription s;
+        Subscription upstream;
 
         OnErrorReturnItemSubscriber(Subscriber<? super T> actual, T item) {
             super(actual);
@@ -57,10 +57,10 @@ final class PerhapsOnErrorReturnItem<T> extends Perhaps<T> {
 
         @Override
         public void onSubscribe(Subscription s) {
-            if (SubscriptionHelper.validate(this.s, s)) {
-                this.s = s;
+            if (SubscriptionHelper.validate(this.upstream, s)) {
+                this.upstream = s;
 
-                actual.onSubscribe(this);
+                downstream.onSubscribe(this);
 
                 s.request(Long.MAX_VALUE);
             }
@@ -77,7 +77,7 @@ final class PerhapsOnErrorReturnItem<T> extends Perhaps<T> {
             if (v != null) {
                 complete(v);
             } else {
-                actual.onComplete();
+                downstream.onComplete();
             }
         }
 
@@ -87,7 +87,7 @@ final class PerhapsOnErrorReturnItem<T> extends Perhaps<T> {
             if (v != null) {
                 complete(v);
             } else {
-                actual.onComplete();
+                downstream.onComplete();
             }
         }
     }

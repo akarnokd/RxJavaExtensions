@@ -194,11 +194,11 @@ final class PerhapsCache<T> extends Perhaps<T> implements Subscriber<T> {
         }
 
         void error(Throwable ex) {
-            actual.onError(ex);
+            downstream.onError(ex);
         }
 
         void complete() {
-            actual.onComplete();
+            downstream.onComplete();
         }
     }
 }

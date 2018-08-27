@@ -53,7 +53,7 @@ final class PerhapsDelaySubscription<T> extends Perhaps<T> {
 
         final SourceSubscriber sourceSubscriber;
 
-        Subscription s;
+        Subscription upstream;
 
         DelaySubscriber(Subscriber<? super T> actual, Perhaps<T> source) {
             super(actual);
@@ -63,10 +63,10 @@ final class PerhapsDelaySubscription<T> extends Perhaps<T> {
 
         @Override
         public void onSubscribe(Subscription s) {
-            if (SubscriptionHelper.validate(this.s, s)) {
-                this.s = s;
+            if (SubscriptionHelper.validate(this.upstream, s)) {
+                this.upstream = s;
 
-                actual.onSubscribe(this);
+                downstream.onSubscribe(this);
 
                 s.request(Long.MAX_VALUE);
             }
@@ -74,9 +74,9 @@ final class PerhapsDelaySubscription<T> extends Perhaps<T> {
 
         @Override
         public void onNext(Object t) {
-            if (s != SubscriptionHelper.CANCELLED) {
-                s.cancel();
-                s = SubscriptionHelper.CANCELLED;
+            if (upstream != SubscriptionHelper.CANCELLED) {
+                upstream.cancel();
+                upstream = SubscriptionHelper.CANCELLED;
 
                 source.subscribe(sourceSubscriber);
             }
@@ -84,17 +84,17 @@ final class PerhapsDelaySubscription<T> extends Perhaps<T> {
 
         @Override
         public void onError(Throwable t) {
-            if (s == SubscriptionHelper.CANCELLED) {
+            if (upstream == SubscriptionHelper.CANCELLED) {
                 RxJavaPlugins.onError(t);
             } else {
-                actual.onError(t);
+                downstream.onError(t);
             }
         }
 
         @Override
         public void onComplete() {
-            if (s != SubscriptionHelper.CANCELLED) {
-                s = SubscriptionHelper.CANCELLED;
+            if (upstream != SubscriptionHelper.CANCELLED) {
+                upstream = SubscriptionHelper.CANCELLED;
 
                 source.subscribe(sourceSubscriber);
             }
@@ -105,7 +105,7 @@ final class PerhapsDelaySubscription<T> extends Perhaps<T> {
         }
 
         void otherError(Throwable t) {
-            actual.onError(t);
+            downstream.onError(t);
         }
 
         void otherComplete() {
@@ -113,14 +113,14 @@ final class PerhapsDelaySubscription<T> extends Perhaps<T> {
             if (v != null) {
                 complete(v);
             } else {
-                actual.onComplete();
+                downstream.onComplete();
             }
         }
 
         @Override
         public void cancel() {
             super.cancel();
-            s.cancel();
+            upstream.cancel();
             SubscriptionHelper.cancel(sourceSubscriber);
         }
 

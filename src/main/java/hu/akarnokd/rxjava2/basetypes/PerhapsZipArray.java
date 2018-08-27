@@ -99,7 +99,7 @@ final class PerhapsZipArray<T, R> extends Perhaps<R> {
                     v = zipper.apply(values);
                 } catch (Throwable ex) {
                     Exceptions.throwIfFatal(ex);
-                    actual.onError(ex);
+                    downstream.onError(ex);
                     return;
                 }
 
@@ -113,7 +113,7 @@ final class PerhapsZipArray<T, R> extends Perhaps<R> {
             if (wip.getAndSet(0) > 0) {
                 cancel(index);
                 Arrays.fill(values, this);
-                actual.onError(error);
+                downstream.onError(error);
             } else {
                 RxJavaPlugins.onError(error);
             }
@@ -126,7 +126,7 @@ final class PerhapsZipArray<T, R> extends Perhaps<R> {
 
                     Arrays.fill(values, this);
 
-                    actual.onComplete();
+                    downstream.onComplete();
                 }
             }
         }
