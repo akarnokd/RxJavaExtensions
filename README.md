@@ -62,7 +62,7 @@ Maven search:
     - [indexOf()](#flowabletransformersindexof), [requestObserveOn()](#flowabletransformersrequestobserveon), [requestSample()](#flowabletransformersrequestsample)
     - [observeOnDrop()](#observabletransformersobserveondrop), [observeOnLatest()](#observabletransformersobserveonlatest), [generateAsync()](#flowablesgenerateasync),
     - [partialCollect()](#flowabletransformerspartialcollect), [flatMapDrop()](#observabletransformersflatmapdrop), [flatMapLatest()](#observabletransformersflatmaplatest),
-    - [errorJump()](#flowabletransformerserrorjump),
+    - [errorJump()](#flowabletransformerserrorjump), [flatMap on signal type](#flatmapsignal)
   - [Custom parallel operators and transformers](#custom-parallel-operators-and-transformers)
     - [sumX()](#paralleltransformerssumx)
     - [orderedMerge()](#paralleltransformersorderedmerge)
@@ -756,6 +756,8 @@ reactive classes (will) follow the usual naming scheme.
 ### FlowableTransformers.valve()
 
 Pauses and resumes a main flow if the secondary flow signals false and true respectively.
+
+Also available as `ObservableTransformers.valve()`.
 
 ```java
 PublishProcessor<Boolean> valveSource = PublishProcessor.create();
@@ -1686,6 +1688,35 @@ Flowable.range(1, 5)
 ```
 
 Available also: `ObservableTransformers.errorJump()`
+
+### flatMap signal
+
+Map the upstream signals onto some reactive type and relay its events to the downstream.
+
+Availability:
+
+- `Flowables.flatMap{Completable|Single|Maybe}`
+- `Observables.flatMap{Completable|Single|Maybe}`
+- `Single`
+  - `SingleTransformers.flatMap` (use with `Single.compose()`)
+  - `Singles.flatMapSingle` (use with `Single.as()`)
+  - `Singles.flatMapMaybe` (use with `Single.as()`)
+  - `Singles.flatMapObservable` (use with `Single.as()`)
+  - `Singles.flatMapFlowable` (use with `Single.as()`)
+- `Maybe`
+  - `MaybeTransformers.flatMap` (use with `Maybe.compose()`)
+  - `Maybes.flatMapCompletable` (use with `Maybe.as()`)
+  - `Maybes.flatMapSingle` (use with `Maybe.as()`)
+  - `Maybes.flatMapObservable` (use with `Maybe.as()`)
+  - `Maybes.flatMapFlowable` (use with `Maybe.as()`)
+- `Completable`
+  - `CompletableTransformers.flatMap` (use with `Completable.compose()`)
+  - `Completables.flatMapSingle` (use with `Completable.as()`)
+  - `Completables.flatMapMaybe` (use with `Completable.as()`)
+  - `Completables.flatMapObservable` (use with `Completable.as()`)
+  - `Completables.flatMapFlowable` (use with `Completable.as()`)
+
+Note: same-type transformations for [Flowable.flatMap](http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Flowable.html#flatMap-io.reactivex.functions.Function-io.reactivex.functions.Function-java.util.concurrent.Callable-), [Observable.flatMap](http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Observable.html#flatMap-io.reactivex.functions.Function-io.reactivex.functions.Function-java.util.concurrent.Callable-) already exist in RxJava.
 
 ## Custom parallel operators and transformers
 

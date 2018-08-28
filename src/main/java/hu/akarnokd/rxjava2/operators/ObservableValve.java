@@ -18,12 +18,11 @@ package hu.akarnokd.rxjava2.operators;
 
 import java.util.concurrent.atomic.*;
 
-import org.reactivestreams.*;
-
 import io.reactivex.*;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.internal.disposables.DisposableHelper;
 import io.reactivex.internal.fuseable.SimplePlainQueue;
 import io.reactivex.internal.queue.SpscLinkedArrayQueue;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
 import io.reactivex.internal.util.AtomicThrowable;
 import io.reactivex.plugins.RxJavaPlugins;
 
@@ -33,19 +32,19 @@ import io.reactivex.plugins.RxJavaPlugins;
  *
  * @param <T> the main source's value type
  * 
- * @since 0.7.2
+ * @since 0.20.2
  */
-final class FlowableValve<T> extends Flowable<T> implements FlowableOperator<T, T>, FlowableTransformer<T, T> {
+final class ObservableValve<T> extends Observable<T> implements ObservableTransformer<T, T> {
 
-    final Publisher<? extends T> source;
+    final Observable<? extends T> source;
 
-    final Publisher<Boolean> other;
+    final ObservableSource<Boolean> other;
 
     final boolean defaultOpen;
 
     final int bufferSize;
 
-    FlowableValve(Publisher<? extends T> source, Publisher<Boolean> other, boolean defaultOpen, int bufferSize) {
+    ObservableValve(Observable<? extends T> source, ObservableSource<Boolean> other, boolean defaultOpen, int bufferSize) {
         this.source = source;
         this.other = other;
         this.defaultOpen = defaultOpen;
@@ -53,34 +52,27 @@ final class FlowableValve<T> extends Flowable<T> implements FlowableOperator<T, 
     }
 
     @Override
-    protected void subscribeActual(Subscriber<? super T> s) {
-        source.subscribe(apply(s));
-    }
-
-    @Override
-    public Subscriber<? super T> apply(Subscriber<? super T> observer) {
-        ValveMainSubscriber<T> parent = new ValveMainSubscriber<T>(observer, bufferSize, defaultOpen);
+    protected void subscribeActual(Observer<? super T> observer) {
+        ValveMainObserver<T> parent = new ValveMainObserver<T>(observer, bufferSize, defaultOpen);
         observer.onSubscribe(parent);
         other.subscribe(parent.other);
-        return parent;
+        source.subscribe(parent);
     }
 
     @Override
-    public Publisher<T> apply(Flowable<T> upstream) {
-        return new FlowableValve<T>(upstream, other, defaultOpen, bufferSize);
+    public Observable<T> apply(Observable<T> upstream) {
+        return new ObservableValve<T>(upstream, other, defaultOpen, bufferSize);
     }
 
-    static final class ValveMainSubscriber<T>
+    static final class ValveMainObserver<T>
     extends AtomicInteger
-    implements Subscriber<T>, Subscription {
+    implements Observer<T>, Disposable {
 
         private static final long serialVersionUID = -2233734924340471378L;
 
-        final Subscriber<? super T> downstream;
+        final Observer<? super T> actual;
 
-        final AtomicReference<Subscription> upstream;
-
-        final AtomicLong requested;
+        final AtomicReference<Disposable> upstream;
 
         final SimplePlainQueue<T> queue;
 
@@ -94,19 +86,18 @@ final class FlowableValve<T> extends Flowable<T> implements FlowableOperator<T, 
 
         volatile boolean cancelled;
 
-        ValveMainSubscriber(Subscriber<? super T> actual, int bufferSize, boolean defaultOpen) {
-            this.downstream = actual;
+        ValveMainObserver(Observer<? super T> actual, int bufferSize, boolean defaultOpen) {
+            this.actual = actual;
             this.queue = new SpscLinkedArrayQueue<T>(bufferSize);
             this.gate = defaultOpen;
             this.other = new OtherSubscriber();
-            this.requested = new AtomicLong();
             this.error = new AtomicThrowable();
-            this.upstream = new AtomicReference<Subscription>();
+            this.upstream = new AtomicReference<Disposable>();
         }
 
         @Override
-        public void onSubscribe(Subscription s) {
-            SubscriptionHelper.deferredSetOnce(this.upstream, requested, s);
+        public void onSubscribe(Disposable d) {
+            DisposableHelper.setOnce(upstream, d);
         }
 
         @Override
@@ -131,15 +122,15 @@ final class FlowableValve<T> extends Flowable<T> implements FlowableOperator<T, 
         }
 
         @Override
-        public void request(long n) {
-            SubscriptionHelper.deferredRequest(upstream, requested, n);
+        public boolean isDisposed() {
+            return cancelled;
         }
 
         @Override
-        public void cancel() {
+        public void dispose() {
             cancelled = true;
-            SubscriptionHelper.cancel(upstream);
-            SubscriptionHelper.cancel(other);
+            DisposableHelper.dispose(upstream);
+            DisposableHelper.dispose(other);
         }
 
         void drain() {
@@ -150,7 +141,7 @@ final class FlowableValve<T> extends Flowable<T> implements FlowableOperator<T, 
             int missed = 1;
 
             SimplePlainQueue<T> q = queue;
-            Subscriber<? super T> a = downstream;
+            Observer<? super T> a = actual;
             AtomicThrowable error = this.error;
 
             for (;;) {
@@ -163,8 +154,8 @@ final class FlowableValve<T> extends Flowable<T> implements FlowableOperator<T, 
                     if (error.get() != null) {
                         Throwable ex = error.terminate();
                         q.clear();
-                        SubscriptionHelper.cancel(upstream);
-                        SubscriptionHelper.cancel(other);
+                        DisposableHelper.dispose(upstream);
+                        DisposableHelper.dispose(other);
                         a.onError(ex);
                         return;
                     }
@@ -178,7 +169,7 @@ final class FlowableValve<T> extends Flowable<T> implements FlowableOperator<T, 
                     boolean empty = v == null;
 
                     if (d && empty) {
-                        SubscriptionHelper.cancel(other);
+                        DisposableHelper.dispose(other);
                         a.onComplete();
                         return;
                     }
@@ -212,15 +203,13 @@ final class FlowableValve<T> extends Flowable<T> implements FlowableOperator<T, 
             innerError(new IllegalStateException("The valve source completed unexpectedly."));
         }
 
-        final class OtherSubscriber extends AtomicReference<Subscription> implements FlowableSubscriber<Boolean> {
+        final class OtherSubscriber extends AtomicReference<Disposable> implements Observer<Boolean> {
 
             private static final long serialVersionUID = -3076915855750118155L;
 
             @Override
-            public void onSubscribe(Subscription s) {
-                if (SubscriptionHelper.setOnce(this, s)) {
-                    s.request(Long.MAX_VALUE);
-                }
+            public void onSubscribe(Disposable d) {
+                DisposableHelper.setOnce(this, d);
             }
 
             @Override

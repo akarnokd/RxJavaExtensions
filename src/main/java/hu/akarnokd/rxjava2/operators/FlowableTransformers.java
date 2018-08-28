@@ -69,7 +69,7 @@ public final class FlowableTransformers {
     /**
      * Relays values until the other Publisher signals false and resumes if the other
      * Publisher signals true again, like closing and opening a valve and not losing
-     * any items from the main source and starts with the specivied valve state.
+     * any items from the main source and starts with the specified valve state.
      * <p>Properties:
      * <ul>
      * <li>If the other Publisher completes, the sequence terminates with an {@code IllegalStateException}.</li>
@@ -94,7 +94,7 @@ public final class FlowableTransformers {
     /**
      * Relays values until the other Publisher signals false and resumes if the other
      * Publisher signals true again, like closing and opening a valve and not losing
-     * any items from the main source and starts with the specivied valve state and the specified
+     * any items from the main source and starts with the specified valve state and the specified
      * buffer size hint.
      * <p>Properties:
      * <ul>
