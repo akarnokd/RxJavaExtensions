@@ -32,15 +32,14 @@ public class ObservableSumFloat extends ObservableWithSource<Float, Float> {
 
     static final class SumFloatObserver extends DeferredScalarObserver<Float, Float> {
 
-
         private static final long serialVersionUID = -6344890278713820111L;
 
         float accumulator;
 
         boolean hasValue;
 
-        SumFloatObserver(Observer<? super Float> actual) {
-            super(actual);
+        SumFloatObserver(Observer<? super Float> downstream) {
+            super(downstream);
         }
 
         @Override

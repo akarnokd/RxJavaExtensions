@@ -244,8 +244,8 @@ public final class PerhapsProcessor<T> extends Perhaps<T> implements Processor<T
 
         private static final long serialVersionUID = -8241863418761502064L;
 
-        InnerSubscription(Subscriber<? super T> actual, PerhapsProcessor<T> parent) {
-            super(actual);
+        InnerSubscription(Subscriber<? super T> downstream, PerhapsProcessor<T> parent) {
+            super(downstream);
             this.parent = parent;
         }
 

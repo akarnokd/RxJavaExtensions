@@ -209,12 +209,12 @@ public final class NonoProcessor extends Nono implements Processor<Void, Void> {
 
         private static final long serialVersionUID = 8377121611843740196L;
 
-        final Subscriber<? super Void> actual;
+        final Subscriber<? super Void> downstream;
 
         final NonoProcessor parent;
 
-        NonoSubscription(Subscriber<? super Void> actual, NonoProcessor parent) {
-            this.actual = actual;
+        NonoSubscription(Subscriber<? super Void> downstream, NonoProcessor parent) {
+            this.downstream = downstream;
             this.parent = parent;
         }
 
@@ -227,13 +227,13 @@ public final class NonoProcessor extends Nono implements Processor<Void, Void> {
 
         void doError(Throwable t) {
             if (compareAndSet(0, 1)) {
-                actual.onError(t);
+                downstream.onError(t);
             }
         }
 
         void doComplete() {
             if (compareAndSet(0, 1)) {
-                actual.onComplete();
+                downstream.onComplete();
             }
         }
     }

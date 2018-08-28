@@ -58,7 +58,7 @@ final class SoloSubscribeOn<T> extends Solo<T> {
 
         private static final long serialVersionUID = 2047863608816341143L;
 
-        final Subscriber<? super T> actual;
+        final Subscriber<? super T> downstream;
 
         final Worker worker;
 
@@ -68,8 +68,8 @@ final class SoloSubscribeOn<T> extends Solo<T> {
 
         final AtomicBoolean requested;
 
-        SubscribeOnSubscriber(Subscriber<? super T> actual, Worker worker, Publisher<T> source) {
-            this.actual = actual;
+        SubscribeOnSubscriber(Subscriber<? super T> downstream, Worker worker, Publisher<T> source) {
+            this.downstream = downstream;
             this.worker = worker;
             this.source = source;
             this.task = new AtomicReference<Disposable>();
@@ -87,18 +87,18 @@ final class SoloSubscribeOn<T> extends Solo<T> {
 
         @Override
         public void onNext(T t) {
-            actual.onNext(t);
+            downstream.onNext(t);
         }
 
         @Override
         public void onError(Throwable t) {
-            actual.onError(t);
+            downstream.onError(t);
             worker.dispose();
         }
 
         @Override
         public void onComplete() {
-            actual.onComplete();
+            downstream.onComplete();
             worker.dispose();
         }
 

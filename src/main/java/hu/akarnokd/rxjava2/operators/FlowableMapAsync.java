@@ -84,7 +84,7 @@ final class FlowableMapAsync<T, U, R> extends Flowable<R> implements FlowableTra
 
         private static final long serialVersionUID = -1557840206706079339L;
 
-        final Subscriber<? super R> actual;
+        final Subscriber<? super R> downstream;
 
         final Function<? super T, ? extends Publisher<? extends U>> mapper;
 
@@ -124,11 +124,11 @@ final class FlowableMapAsync<T, U, R> extends Flowable<R> implements FlowableTra
         static final int STATE_RUNNING = 1;
         static final int STATE_RESULT = 2;
 
-        MapAsyncSubscriber(Subscriber<? super R> actual,
+        MapAsyncSubscriber(Subscriber<? super R> downstream,
                 Function<? super T, ? extends Publisher<? extends U>> mapper,
                 BiFunction<? super T, ? super U, ? extends R> combiner, int bufferSize) {
             super(Pow2.roundToPowerOfTwo(bufferSize));
-            this.actual = actual;
+            this.downstream = downstream;
             this.mapper = mapper;
             this.combiner = combiner;
             this.bufferSize = bufferSize;
@@ -206,7 +206,7 @@ final class FlowableMapAsync<T, U, R> extends Flowable<R> implements FlowableTra
             if (SubscriptionHelper.validate(upstream, s)) {
                 upstream = s;
 
-                actual.onSubscribe(this);
+                downstream.onSubscribe(this);
 
                 s.request(bufferSize);
             }
@@ -223,7 +223,7 @@ final class FlowableMapAsync<T, U, R> extends Flowable<R> implements FlowableTra
             long ci = consumerIndex;
             int f = consumed;
             int m = length() - 1;
-            Subscriber<? super R> a = actual;
+            Subscriber<? super R> a = downstream;
 
             for (;;) {
                 long r = requested.get();

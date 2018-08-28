@@ -27,6 +27,7 @@ import io.reactivex.internal.functions.ObjectHelper;
  * use {@link Maybe#compose(MaybeTransformer)}
  * to apply the operators to an existing sequence.
  * 
+ * @see Maybes
  * @since 0.20.2
  */
 public final class MaybeTransformers {

@@ -55,26 +55,26 @@ final class SoloFlatMapPublisher<T, R> extends Flowable<R> {
 
         private static final long serialVersionUID = -3958458353930920644L;
 
-        final Subscriber<? super R> actual;
+        final Subscriber<? super R> downstream;
 
         final InnerSubscriber requested;
 
         final Function<? super T, ? extends Publisher<? extends R>> mapper;
 
-        Subscription s;
+        Subscription upstream;
 
-        FlatMapPublisherSubscriber(Subscriber<? super R> actual, Function<? super T, ? extends Publisher<? extends R>> mapper) {
-            this.actual = actual;
+        FlatMapPublisherSubscriber(Subscriber<? super R> downstream, Function<? super T, ? extends Publisher<? extends R>> mapper) {
+            this.downstream = downstream;
             this.mapper = mapper;
-            this.requested = new InnerSubscriber(actual);
+            this.requested = new InnerSubscriber(downstream);
         }
 
         @Override
         public void onSubscribe(Subscription s) {
-            if (SubscriptionHelper.validate(this.s, s)) {
-                this.s = s;
+            if (SubscriptionHelper.validate(this.upstream, s)) {
+                this.upstream = s;
 
-                actual.onSubscribe(this);
+                downstream.onSubscribe(this);
 
                 s.request(Long.MAX_VALUE);
             }
@@ -88,7 +88,7 @@ final class SoloFlatMapPublisher<T, R> extends Flowable<R> {
                 p = ObjectHelper.requireNonNull(mapper.apply(t), "The mapper returned a null Publisher");
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
-                actual.onError(ex);
+                downstream.onError(ex);
                 return;
             }
 
@@ -97,7 +97,7 @@ final class SoloFlatMapPublisher<T, R> extends Flowable<R> {
 
         @Override
         public void onError(Throwable t) {
-            actual.onError(t);
+            downstream.onError(t);
         }
 
         @Override
@@ -107,7 +107,7 @@ final class SoloFlatMapPublisher<T, R> extends Flowable<R> {
 
         @Override
         public void cancel() {
-            s.cancel();
+            upstream.cancel();
             SubscriptionHelper.cancel(this);
         }
 
@@ -120,10 +120,10 @@ final class SoloFlatMapPublisher<T, R> extends Flowable<R> {
 
             private static final long serialVersionUID = 2003600104149898338L;
 
-            final Subscriber<? super R> actual;
+            final Subscriber<? super R> downstream;
 
-            InnerSubscriber(Subscriber<? super R> actual) {
-                this.actual = actual;
+            InnerSubscriber(Subscriber<? super R> downstream) {
+                this.downstream = downstream;
             }
 
             @Override
@@ -133,17 +133,17 @@ final class SoloFlatMapPublisher<T, R> extends Flowable<R> {
 
             @Override
             public void onNext(R t) {
-                actual.onNext(t);
+                downstream.onNext(t);
             }
 
             @Override
             public void onError(Throwable t) {
-                actual.onError(t);
+                downstream.onError(t);
             }
 
             @Override
             public void onComplete() {
-                actual.onComplete();
+                downstream.onComplete();
             }
         }
     }

@@ -45,7 +45,6 @@ public class FlowablesTest {
         .assertResult(1, 1, 1, 1, 1);
     }
 
-
     @Test
     public void repeatScalarConditional() {
         Flowables.repeat(1)

@@ -32,15 +32,14 @@ public class ObservableAverageDouble extends ObservableWithSource<Number, Double
 
     static final class AverageDoubleObserver extends DeferredScalarObserver<Number, Double> {
 
-
         private static final long serialVersionUID = 6990557227019180008L;
 
         double accumulator;
 
         long count;
 
-        AverageDoubleObserver(Observer<? super Double> actual) {
-            super(actual);
+        AverageDoubleObserver(Observer<? super Double> downstream) {
+            super(downstream);
         }
 
         @Override

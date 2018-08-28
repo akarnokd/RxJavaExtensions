@@ -59,7 +59,7 @@ final class FlowableRequestSample<T> extends Flowable<T> implements FlowableTran
     static final class RequestSample<T>
     implements FlowableSubscriber<T>, Subscription {
 
-        final Subscriber<? super T> actual;
+        final Subscriber<? super T> downstream;
 
         final AtomicLong downstreamRequests;
 
@@ -77,8 +77,8 @@ final class FlowableRequestSample<T> extends Flowable<T> implements FlowableTran
 
         boolean done;
 
-        RequestSample(Subscriber<? super T> actual) {
-            this.actual = actual;
+        RequestSample(Subscriber<? super T> downstream) {
+            this.downstream = downstream;
             this.downstreamRequests = new AtomicLong();
             this.upstreamRequests = new AtomicLong();
             this.upstream = new AtomicReference<Subscription>();
@@ -98,11 +98,11 @@ final class FlowableRequestSample<T> extends Flowable<T> implements FlowableTran
                 long e = emitted;
                 if (downstreamRequests.get() != e) {
                     emitted = e + 1;
-                    HalfSerializer.onNext(actual, t, wip, error);
+                    HalfSerializer.onNext(downstream, t, wip, error);
                 } else {
                     done = true;
                     cancel();
-                    HalfSerializer.onError(actual, new MissingBackpressureException("Downstream is not ready to receive the next upstream item."), wip, error);
+                    HalfSerializer.onError(downstream, new MissingBackpressureException("Downstream is not ready to receive the next upstream item."), wip, error);
                 }
             }
         }
@@ -113,7 +113,7 @@ final class FlowableRequestSample<T> extends Flowable<T> implements FlowableTran
                 done = true;
                 otherConsumer.cancel();
 
-                HalfSerializer.onError(actual, t, wip, error);
+                HalfSerializer.onError(downstream, t, wip, error);
             } else {
                 RxJavaPlugins.onError(t);
             }
@@ -124,7 +124,7 @@ final class FlowableRequestSample<T> extends Flowable<T> implements FlowableTran
             if (!done) {
                 done = true;
                 otherConsumer.cancel();
-                HalfSerializer.onComplete(actual, wip, error);
+                HalfSerializer.onComplete(downstream, wip, error);
             }
         }
 
@@ -134,12 +134,12 @@ final class FlowableRequestSample<T> extends Flowable<T> implements FlowableTran
 
         void otherError(Throwable t) {
             SubscriptionHelper.cancel(upstream);
-            HalfSerializer.onError(actual, t, wip, error);
+            HalfSerializer.onError(downstream, t, wip, error);
         }
 
         void otherComplete() {
             SubscriptionHelper.cancel(upstream);
-            HalfSerializer.onComplete(actual, wip, error);
+            HalfSerializer.onComplete(downstream, wip, error);
         }
 
         @Override

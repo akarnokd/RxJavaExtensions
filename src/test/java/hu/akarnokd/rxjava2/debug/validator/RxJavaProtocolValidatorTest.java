@@ -65,14 +65,14 @@ public class RxJavaProtocolValidatorTest implements PlainConsumer<ProtocolNonCon
         Completable source = new Completable() {
 
             @Override
-            protected void subscribeActual(CompletableObserver s) {
-                s.onComplete();
-                s.onError(null);
-                s.onError(new IOException());
-                s.onSubscribe(null);
-                s.onSubscribe(Disposables.empty());
-                s.onSubscribe(Disposables.empty());
-                s.onComplete();
+            protected void subscribeActual(CompletableObserver observer) {
+                observer.onComplete();
+                observer.onError(null);
+                observer.onError(new IOException());
+                observer.onSubscribe(null);
+                observer.onSubscribe(Disposables.empty());
+                observer.onSubscribe(Disposables.empty());
+                observer.onComplete();
             }
         };
 
@@ -109,17 +109,17 @@ public class RxJavaProtocolValidatorTest implements PlainConsumer<ProtocolNonCon
         Maybe<Integer> source = new Maybe<Integer>() {
 
             @Override
-            protected void subscribeActual(MaybeObserver<? super Integer> s) {
-                s.onComplete();
-                s.onError(null);
-                s.onError(new IOException());
-                s.onSuccess(null);
-                s.onSuccess(1);
-                s.onSubscribe(null);
-                s.onSubscribe(Disposables.empty());
-                s.onSubscribe(Disposables.empty());
-                s.onComplete();
-                s.onSuccess(2);
+            protected void subscribeActual(MaybeObserver<? super Integer> observer) {
+                observer.onComplete();
+                observer.onError(null);
+                observer.onError(new IOException());
+                observer.onSuccess(null);
+                observer.onSuccess(1);
+                observer.onSubscribe(null);
+                observer.onSubscribe(Disposables.empty());
+                observer.onSubscribe(Disposables.empty());
+                observer.onComplete();
+                observer.onSuccess(2);
             }
         };
 
@@ -167,15 +167,15 @@ public class RxJavaProtocolValidatorTest implements PlainConsumer<ProtocolNonCon
         Single<Integer> source = new Single<Integer>() {
 
             @Override
-            protected void subscribeActual(SingleObserver<? super Integer> s) {
-                s.onError(null);
-                s.onError(new IOException());
-                s.onSuccess(null);
-                s.onSuccess(1);
-                s.onSubscribe(null);
-                s.onSubscribe(Disposables.empty());
-                s.onSubscribe(Disposables.empty());
-                s.onSuccess(2);
+            protected void subscribeActual(SingleObserver<? super Integer> observer) {
+                observer.onError(null);
+                observer.onError(new IOException());
+                observer.onSuccess(null);
+                observer.onSuccess(1);
+                observer.onSubscribe(null);
+                observer.onSubscribe(Disposables.empty());
+                observer.onSubscribe(Disposables.empty());
+                observer.onSuccess(2);
             }
         };
 
@@ -219,17 +219,17 @@ public class RxJavaProtocolValidatorTest implements PlainConsumer<ProtocolNonCon
         Observable<Integer> source = new Observable<Integer>() {
 
             @Override
-            protected void subscribeActual(Observer<? super Integer> s) {
-                s.onComplete();
-                s.onError(null);
-                s.onError(new IOException());
-                s.onNext(null);
-                s.onNext(1);
-                s.onSubscribe(null);
-                s.onSubscribe(Disposables.empty());
-                s.onSubscribe(Disposables.empty());
-                s.onComplete();
-                s.onNext(2);
+            protected void subscribeActual(Observer<? super Integer> observer) {
+                observer.onComplete();
+                observer.onError(null);
+                observer.onError(new IOException());
+                observer.onNext(null);
+                observer.onNext(1);
+                observer.onSubscribe(null);
+                observer.onSubscribe(Disposables.empty());
+                observer.onSubscribe(Disposables.empty());
+                observer.onComplete();
+                observer.onNext(2);
             }
         };
 
@@ -245,9 +245,9 @@ public class RxJavaProtocolValidatorTest implements PlainConsumer<ProtocolNonCon
             Observable.error(new IOException()).test().assertFailure(IOException.class);
             TestHelper.checkDisposed(RxJavaPlugins.onAssembly(PublishSubject.create()));
 
-            Observable<Integer> c = RxJavaPlugins.onAssembly(source);
+            Observable<Integer> o = RxJavaPlugins.onAssembly(source);
 
-            c.test();
+            o.test();
 
             Assert.assertEquals(15, errors.size());
             TestHelper.assertError(errors, 0, OnSubscribeNotCalledException.class);
@@ -397,17 +397,17 @@ public class RxJavaProtocolValidatorTest implements PlainConsumer<ProtocolNonCon
         ConnectableObservable<Integer> source = new ConnectableObservable<Integer>() {
 
             @Override
-            protected void subscribeActual(Observer<? super Integer> s) {
-                s.onComplete();
-                s.onError(null);
-                s.onError(new IOException());
-                s.onNext(null);
-                s.onNext(1);
-                s.onSubscribe(null);
-                s.onSubscribe(Disposables.empty());
-                s.onSubscribe(Disposables.empty());
-                s.onComplete();
-                s.onNext(2);
+            protected void subscribeActual(Observer<? super Integer> observer) {
+                observer.onComplete();
+                observer.onError(null);
+                observer.onError(new IOException());
+                observer.onNext(null);
+                observer.onNext(1);
+                observer.onSubscribe(null);
+                observer.onSubscribe(Disposables.empty());
+                observer.onSubscribe(Disposables.empty());
+                observer.onComplete();
+                observer.onNext(2);
             }
 
             @Override
@@ -427,11 +427,11 @@ public class RxJavaProtocolValidatorTest implements PlainConsumer<ProtocolNonCon
             Observable.error(new IOException()).test().assertFailure(IOException.class);
             TestHelper.checkDisposed(RxJavaPlugins.onAssembly(PublishSubject.create()));
 
-            ConnectableObservable<Integer> c = RxJavaPlugins.onAssembly(source);
+            ConnectableObservable<Integer> co = RxJavaPlugins.onAssembly(source);
 
-            c.test();
+            co.test();
 
-            c.connect();
+            co.connect();
 
             Assert.assertEquals(15, errors.size());
             TestHelper.assertError(errors, 0, OnSubscribeNotCalledException.class);

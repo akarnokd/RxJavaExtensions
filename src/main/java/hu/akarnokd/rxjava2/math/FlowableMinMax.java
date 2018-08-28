@@ -36,12 +36,11 @@ final class FlowableMinMax<T> extends FlowableSource<T, T> {
     }
 
     @Override
-    protected void subscribeActual(Subscriber<? super T> observer) {
-        source.subscribe(new MinMaxSubscriber<T>(observer, comparator, flag));
+    protected void subscribeActual(Subscriber<? super T> subscriber) {
+        source.subscribe(new MinMaxSubscriber<T>(subscriber, comparator, flag));
     }
 
     static final class MinMaxSubscriber<T> extends DeferredScalarSubscriber<T, T> {
-
 
         private static final long serialVersionUID = 600979972678601618L;
 
@@ -49,8 +48,8 @@ final class FlowableMinMax<T> extends FlowableSource<T, T> {
 
         final int flag;
 
-        MinMaxSubscriber(Subscriber<? super T> actual, Comparator<? super T> comparator, int flag) {
-            super(actual);
+        MinMaxSubscriber(Subscriber<? super T> downstream, Comparator<? super T> comparator, int flag) {
+            super(downstream);
             this.comparator = comparator;
             this.flag = flag;
         }

@@ -54,10 +54,10 @@ final class NonoCreate extends Nono {
 
         private static final long serialVersionUID = -7351447810798891941L;
 
-        final Subscriber<? super Void> actual;
+        final Subscriber<? super Void> downstream;
 
-        NonoEmitter(Subscriber<? super Void> actual) {
-            this.actual = actual;
+        NonoEmitter(Subscriber<? super Void> downstream) {
+            this.downstream = downstream;
         }
 
         @Override
@@ -70,7 +70,7 @@ final class NonoCreate extends Nono {
             Disposable d = getAndSet(DisposableHelper.DISPOSED);
             if (d != DisposableHelper.DISPOSED) {
 
-                actual.onComplete();
+                downstream.onComplete();
 
                 if (d != null) {
                     d.dispose();
@@ -89,7 +89,7 @@ final class NonoCreate extends Nono {
         public boolean tryOnError(Throwable t) {
             Disposable d = getAndSet(DisposableHelper.DISPOSED);
             if (d != DisposableHelper.DISPOSED) {
-                actual.onError(t);
+                downstream.onError(t);
 
                 if (d != null) {
                     d.dispose();

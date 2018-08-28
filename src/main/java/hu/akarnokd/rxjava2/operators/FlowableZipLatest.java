@@ -95,7 +95,7 @@ final class FlowableZipLatest<T, R> extends Flowable<R> {
 
         private static final long serialVersionUID = -8321911708267957704L;
 
-        final Subscriber<? super R> actual;
+        final Subscriber<? super R> downstream;
 
         final InnerSubscriber<T>[] subscribers;
 
@@ -114,9 +114,9 @@ final class FlowableZipLatest<T, R> extends Flowable<R> {
         long emitted;
 
         @SuppressWarnings("unchecked")
-        ZipLatestCoordinator(Subscriber<? super R> actual, int n, Worker worker, Function<? super Object[], ? extends R> combiner) {
+        ZipLatestCoordinator(Subscriber<? super R> downstream, int n, Worker worker, Function<? super Object[], ? extends R> combiner) {
             super(n);
-            this.actual = actual;
+            this.downstream = downstream;
             this.subscribers = new InnerSubscriber[n];
             this.wip = new AtomicInteger();
             this.requested = new AtomicLong();
@@ -170,7 +170,7 @@ final class FlowableZipLatest<T, R> extends Flowable<R> {
             long e = emitted;
             InnerSubscriber<T>[] subs = subscribers;
             int n = subs.length;
-            Subscriber<? super R> a = actual;
+            Subscriber<? super R> a = downstream;
 
             for (;;) {
 

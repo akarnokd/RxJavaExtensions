@@ -168,7 +168,6 @@ public final class FlowableTransformers {
         return bufferUntil(predicate, Functions.<T>createArrayList(16));
     }
 
-
     /**
      * Buffers elements into a custom collection until the given predicate returns true at which
      * point a new empty custom collection is started.
@@ -202,7 +201,6 @@ public final class FlowableTransformers {
     public static <T> FlowableTransformer<T, List<T>> bufferSplit(Predicate<? super T> predicate) {
         return bufferSplit(predicate, Functions.<T>createArrayList(16));
     }
-
 
     /**
      * Buffers elements into a custom collection until the given predicate returns true at which
@@ -244,7 +242,6 @@ public final class FlowableTransformers {
         return spanout(0L, betweenDelay, unit, Schedulers.computation(), false);
     }
 
-
     /**
      * Inserts a time delay between emissions from the upstream source.
      * <dl>
@@ -267,7 +264,6 @@ public final class FlowableTransformers {
     public static <T> FlowableTransformer<T, T> spanout(long betweenDelay, TimeUnit unit, Scheduler scheduler) {
         return spanout(0L, betweenDelay, unit, scheduler, false);
     }
-
 
     /**
      * Inserts a time delay between emissions from the upstream source, including an initial delay.
@@ -339,7 +335,6 @@ public final class FlowableTransformers {
         return spanout(0L, betweenDelay, unit, Schedulers.computation(), delayError);
     }
 
-
     /**
      * Inserts a time delay between emissions from the upstream source, including an initial delay.
      * <dl>
@@ -363,7 +358,6 @@ public final class FlowableTransformers {
     public static <T> FlowableTransformer<T, T> spanout(long betweenDelay, TimeUnit unit, Scheduler scheduler, boolean delayError) {
         return spanout(0L, betweenDelay, unit, scheduler, delayError);
     }
-
 
     /**
      * Inserts a time delay between emissions from the upstream source, including an initial delay.
@@ -1160,7 +1154,6 @@ public final class FlowableTransformers {
         return windowUntil(predicate, Flowable.bufferSize());
     }
 
-
     /**
      * Emits elements into a Flowable window until the given predicate returns true at which
      * point a new Flowable window is emitted.
@@ -1193,7 +1186,6 @@ public final class FlowableTransformers {
     public static <T> FlowableTransformer<T, Flowable<T>> windowSplit(Predicate<? super T> predicate) {
         return windowSplit(predicate, Flowable.bufferSize());
     }
-
 
     /**
      * Emits elements into a Flowable window until the given predicate returns true at which

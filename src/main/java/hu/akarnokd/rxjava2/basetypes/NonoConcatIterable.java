@@ -61,7 +61,7 @@ final class NonoConcatIterable extends Nono {
 
         private static final long serialVersionUID = -4926738846855955051L;
 
-        final Subscriber<? super Void> actual;
+        final Subscriber<? super Void> downstream;
 
         final AtomicThrowable errors;
 
@@ -71,8 +71,8 @@ final class NonoConcatIterable extends Nono {
 
         volatile boolean active;
 
-        ConcatSubscriber(Subscriber<? super Void> actual, Iterator<? extends Nono> iterator, boolean delayError) {
-            this.actual = actual;
+        ConcatSubscriber(Subscriber<? super Void> downstream, Iterator<? extends Nono> iterator, boolean delayError) {
+            this.downstream = downstream;
             this.iterator = iterator;
             this.errors = delayError ? new AtomicThrowable() : null;
             this.wip = new AtomicInteger();
@@ -101,7 +101,7 @@ final class NonoConcatIterable extends Nono {
                 active = false;
                 drain();
             } else {
-                actual.onError(t);
+                downstream.onError(t);
             }
         }
 
@@ -134,18 +134,18 @@ final class NonoConcatIterable extends Nono {
                         Exceptions.throwIfFatal(ex);
                         if (errors != null) {
                             errors.addThrowable(ex);
-                            actual.onError(errors.terminate());
+                            downstream.onError(errors.terminate());
                         } else {
-                            actual.onError(ex);
+                            downstream.onError(ex);
                         }
                         return;
                     }
                     if (!b) {
                         Throwable ex = errors != null ? errors.terminate() : null;
                         if (ex != null) {
-                            actual.onError(ex);
+                            downstream.onError(ex);
                         } else {
-                            actual.onComplete();
+                            downstream.onComplete();
                         }
                         return;
                     }

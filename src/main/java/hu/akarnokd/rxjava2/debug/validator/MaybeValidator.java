@@ -37,13 +37,13 @@ final class MaybeValidator<T> extends Maybe<T> {
     }
 
     @Override
-    protected void subscribeActual(MaybeObserver<? super T> s) {
-        source.subscribe(new ValidatorConsumer<T>(s, onViolation));
+    protected void subscribeActual(MaybeObserver<? super T> observer) {
+        source.subscribe(new ValidatorConsumer<T>(observer, onViolation));
     }
 
     static final class ValidatorConsumer<T> implements MaybeObserver<T>, Disposable {
 
-        final MaybeObserver<? super T> actual;
+        final MaybeObserver<? super T> downstream;
 
         final PlainConsumer<ProtocolNonConformanceException> onViolation;
 
@@ -51,10 +51,10 @@ final class MaybeValidator<T> extends Maybe<T> {
 
         boolean done;
 
-        ValidatorConsumer(MaybeObserver<? super T> actual,
+        ValidatorConsumer(MaybeObserver<? super T> downstream,
                 PlainConsumer<ProtocolNonConformanceException> onViolation) {
             super();
-            this.actual = actual;
+            this.downstream = downstream;
             this.onViolation = onViolation;
         }
 
@@ -68,7 +68,7 @@ final class MaybeValidator<T> extends Maybe<T> {
                 onViolation.accept(new MultipleOnSubscribeCallsException());
             }
             upstream = d;
-            actual.onSubscribe(this);
+            downstream.onSubscribe(this);
         }
 
         @Override
@@ -83,7 +83,7 @@ final class MaybeValidator<T> extends Maybe<T> {
                 onViolation.accept(new OnSuccessAfterTerminationException());
             } else {
                 done = true;
-                actual.onSuccess(t);
+                downstream.onSuccess(t);
             }
         }
 
@@ -99,7 +99,7 @@ final class MaybeValidator<T> extends Maybe<T> {
                 onViolation.accept(new MultipleTerminationsException(e));
             } else {
                 done = true;
-                actual.onError(e);
+                downstream.onError(e);
             }
         }
 
@@ -113,7 +113,7 @@ final class MaybeValidator<T> extends Maybe<T> {
                 onViolation.accept(new MultipleTerminationsException());
             } else {
                 done = true;
-                actual.onComplete();
+                downstream.onComplete();
             }
         }
 

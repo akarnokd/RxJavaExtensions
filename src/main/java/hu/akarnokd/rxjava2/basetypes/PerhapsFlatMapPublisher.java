@@ -54,29 +54,29 @@ final class PerhapsFlatMapPublisher<T, R> extends Flowable<R> {
 
         private static final long serialVersionUID = 1417117475410404413L;
 
-        final Subscriber<? super R> actual;
+        final Subscriber<? super R> downstream;
 
         final Function<? super T, ? extends Publisher<? extends R>> mapper;
 
         final InnerSubscriber inner;
 
-        Subscription s;
+        Subscription upstream;
 
         boolean hasValue;
 
-        FlatMapSubscriber(Subscriber<? super R> actual,
+        FlatMapSubscriber(Subscriber<? super R> downstream,
                 Function<? super T, ? extends Publisher<? extends R>> mapper) {
-            this.actual = actual;
+            this.downstream = downstream;
             this.mapper = mapper;
-            this.inner = new InnerSubscriber(actual);
+            this.inner = new InnerSubscriber(downstream);
         }
 
         @Override
         public void onSubscribe(Subscription s) {
-            if (SubscriptionHelper.validate(this.s, s)) {
-                this.s = s;
+            if (SubscriptionHelper.validate(this.upstream, s)) {
+                this.upstream = s;
 
-                actual.onSubscribe(this);
+                downstream.onSubscribe(this);
 
                 s.request(Long.MAX_VALUE);
             }
@@ -91,7 +91,7 @@ final class PerhapsFlatMapPublisher<T, R> extends Flowable<R> {
                 ph = ObjectHelper.requireNonNull(mapper.apply(t), "The mapper returned a null Publisher");
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
-                actual.onError(ex);
+                downstream.onError(ex);
                 return;
             }
 
@@ -100,13 +100,13 @@ final class PerhapsFlatMapPublisher<T, R> extends Flowable<R> {
 
         @Override
         public void onError(Throwable t) {
-            actual.onError(t);
+            downstream.onError(t);
         }
 
         @Override
         public void onComplete() {
             if (!hasValue) {
-                actual.onComplete();
+                downstream.onComplete();
             }
         }
 
@@ -117,7 +117,7 @@ final class PerhapsFlatMapPublisher<T, R> extends Flowable<R> {
 
         @Override
         public void cancel() {
-            s.cancel();
+            upstream.cancel();
             SubscriptionHelper.cancel(inner);
         }
 
@@ -126,10 +126,10 @@ final class PerhapsFlatMapPublisher<T, R> extends Flowable<R> {
 
             private static final long serialVersionUID = -7407027791505806997L;
 
-            final Subscriber<? super R> actual;
+            final Subscriber<? super R> downstream;
 
-            InnerSubscriber(Subscriber<? super R> actual) {
-                this.actual = actual;
+            InnerSubscriber(Subscriber<? super R> downstream) {
+                this.downstream = downstream;
             }
 
             @Override
@@ -139,17 +139,17 @@ final class PerhapsFlatMapPublisher<T, R> extends Flowable<R> {
 
             @Override
             public void onNext(R t) {
-                actual.onNext(t);
+                downstream.onNext(t);
             }
 
             @Override
             public void onError(Throwable t) {
-                actual.onError(t);
+                downstream.onError(t);
             }
 
             @Override
             public void onComplete() {
-                actual.onComplete();
+                downstream.onComplete();
             }
         }
     }

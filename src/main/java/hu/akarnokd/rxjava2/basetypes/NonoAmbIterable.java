@@ -56,12 +56,12 @@ final class NonoAmbIterable extends Nono {
 
         private static final long serialVersionUID = 3576466667528056758L;
 
-        final Subscriber<? super Void> actual;
+        final Subscriber<? super Void> downstream;
 
         final CompositeSubscription set;
 
-        AmbSubscriber(Subscriber<? super Void> actual) {
-            this.actual = actual;
+        AmbSubscriber(Subscriber<? super Void> downstream) {
+            this.downstream = downstream;
             this.set = new CompositeSubscription();
         }
 
@@ -79,7 +79,7 @@ final class NonoAmbIterable extends Nono {
         public void onError(Throwable t) {
             if (compareAndSet(0, 1)) {
                 set.cancel();
-                actual.onError(t);
+                downstream.onError(t);
             } else {
                 RxJavaPlugins.onError(t);
             }
@@ -89,7 +89,7 @@ final class NonoAmbIterable extends Nono {
         public void onComplete() {
             if (compareAndSet(0, 1)) {
                 set.cancel();
-                actual.onComplete();
+                downstream.onComplete();
             }
         }
 

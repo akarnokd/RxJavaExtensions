@@ -114,13 +114,13 @@ public final class SharedScheduler extends Scheduler {
             SharedAction sa = new SharedAction(run, tasks);
             tasks.add(sa);
 
-            Disposable d;
+            Disposable task;
             if (delay <= 0L) {
-                d = worker.schedule(sa);
+                task = worker.schedule(sa);
             } else {
-                d = worker.schedule(sa, delay, unit);
+                task = worker.schedule(sa, delay, unit);
             }
-            sa.setFuture(d);
+            sa.setFuture(task);
 
             return sa;
         }

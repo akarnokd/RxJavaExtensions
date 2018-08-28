@@ -48,8 +48,8 @@ final class SoloUnsubscribeOn<T> extends Solo<T> {
 
         final Scheduler scheduler;
 
-        UnsubscribeOnSubscriber(Subscriber<? super T> actual, Scheduler scheduler) {
-            super(actual);
+        UnsubscribeOnSubscriber(Subscriber<? super T> downstream, Scheduler scheduler) {
+            super(downstream);
             this.scheduler = scheduler;
         }
 

@@ -76,7 +76,7 @@ implements FlowableTransformer<T, T> {
 
         private static final long serialVersionUID = 2264324530873250941L;
 
-        final Subscriber<? super T> actual;
+        final Subscriber<? super T> downstream;
 
         final AtomicLong requested;
 
@@ -90,7 +90,7 @@ implements FlowableTransformer<T, T> {
 
         final Consumer<? super T> onEvict;
 
-        Subscription s;
+        Subscription upstream;
 
         final ArrayDeque<Object> queue;
 
@@ -99,9 +99,9 @@ implements FlowableTransformer<T, T> {
 
         volatile boolean cancelled;
 
-        OnBackpressureTimeoutSubscriber(Subscriber<? super T> actual, int maxSize, long timeout, TimeUnit unit,
+        OnBackpressureTimeoutSubscriber(Subscriber<? super T> downstream, int maxSize, long timeout, TimeUnit unit,
                 Worker worker, Consumer<? super T> onEvict) {
-            this.actual = actual;
+            this.downstream = downstream;
             this.maxSizeDouble = maxSize << 1;
             this.timeout = timeout;
             this.unit = unit;
@@ -122,7 +122,7 @@ implements FlowableTransformer<T, T> {
         @Override
         public void cancel() {
             cancelled = true;
-            s.cancel();
+            upstream.cancel();
             worker.dispose();
 
             if (getAndIncrement() == 0) {
@@ -149,10 +149,10 @@ implements FlowableTransformer<T, T> {
 
         @Override
         public void onSubscribe(Subscription s) {
-            if (SubscriptionHelper.validate(this.s, s)) {
-                this.s = s;
+            if (SubscriptionHelper.validate(this.upstream, s)) {
+                this.upstream = s;
 
-                actual.onSubscribe(this);
+                downstream.onSubscribe(this);
 
                 s.request(Long.MAX_VALUE);
             }
@@ -269,9 +269,9 @@ implements FlowableTransformer<T, T> {
                     if (d && empty) {
                         Throwable ex = error;
                         if (ex != null) {
-                            actual.onError(ex);
+                            downstream.onError(ex);
                         } else {
-                            actual.onComplete();
+                            downstream.onComplete();
                         }
 
                         worker.dispose();
@@ -282,7 +282,7 @@ implements FlowableTransformer<T, T> {
                         break;
                     }
 
-                    actual.onNext(v);
+                    downstream.onNext(v);
 
                     e++;
                 }
@@ -302,9 +302,9 @@ implements FlowableTransformer<T, T> {
                     if (d && empty) {
                         Throwable ex = error;
                         if (ex != null) {
-                            actual.onError(ex);
+                            downstream.onError(ex);
                         } else {
-                            actual.onComplete();
+                            downstream.onComplete();
                         }
 
                         worker.dispose();

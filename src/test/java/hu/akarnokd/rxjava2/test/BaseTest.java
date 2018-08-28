@@ -25,13 +25,13 @@ import io.reactivex.subscribers.TestSubscriber;
 public abstract class BaseTest {
 
     public static <T> void assertResult(ObservableSource<T> source, T... array) {
-        TestObserver<T> ts = new TestObserver<T>();
+        TestObserver<T> to = new TestObserver<T>();
 
-        source.subscribe(ts);
+        source.subscribe(to);
 
-        ts.assertValues(array);
-        ts.assertNoErrors();
-        ts.assertComplete();
+        to.assertValues(array);
+        to.assertNoErrors();
+        to.assertComplete();
     }
 
     public static <T> void assertResult(Publisher<T> source, T... array) {
@@ -43,7 +43,6 @@ public abstract class BaseTest {
         .assertNoErrors()
         .assertComplete();
     }
-
 
     public static <T> Observable<T> observe(T... array) {
         return Observable.fromArray(array);

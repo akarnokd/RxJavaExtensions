@@ -45,8 +45,8 @@ implements ObservableTransformer<T, Long> {
     }
 
     @Override
-    protected void subscribeActual(Observer<? super Long> s) {
-        source.subscribe(new IndexOfObserver<T>(s, predicate));
+    protected void subscribeActual(Observer<? super Long> observer) {
+        source.subscribe(new IndexOfObserver<T>(observer, predicate));
     }
 
     static final class IndexOfObserver<T> extends DeferredScalarObserver<T, Long> {
@@ -58,9 +58,9 @@ implements ObservableTransformer<T, Long> {
         long index;
         boolean found;
 
-        IndexOfObserver(Observer<? super Long> actual,
+        IndexOfObserver(Observer<? super Long> downstream,
                 Predicate<? super T> predicate) {
-            super(actual);
+            super(downstream);
             this.predicate = predicate;
         }
 

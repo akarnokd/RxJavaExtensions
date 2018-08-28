@@ -37,8 +37,8 @@ final class ObservableOnAssemblyScalarCallable<T> extends Observable<T> implemen
     }
 
     @Override
-    protected void subscribeActual(Observer<? super T> s) {
-        source.subscribe(new OnAssemblyObserver<T>(s, assembled));
+    protected void subscribeActual(Observer<? super T> observer) {
+        source.subscribe(new OnAssemblyObserver<T>(observer, assembled));
     }
 
     @SuppressWarnings("unchecked")

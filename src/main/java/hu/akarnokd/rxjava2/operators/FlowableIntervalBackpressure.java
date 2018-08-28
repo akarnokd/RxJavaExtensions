@@ -60,7 +60,7 @@ final class FlowableIntervalBackpressure extends Flowable<Long> {
 
         private static final long serialVersionUID = -3871976901922172519L;
 
-        final Subscriber<? super Long> actual;
+        final Subscriber<? super Long> downstream;
 
         final SequentialDisposable task;
 
@@ -70,8 +70,8 @@ final class FlowableIntervalBackpressure extends Flowable<Long> {
 
         long emitted;
 
-        IntervalBackpressureSubscription(Subscriber<? super Long> actual) {
-            this.actual = actual;
+        IntervalBackpressureSubscription(Subscriber<? super Long> downstream) {
+            this.downstream = downstream;
             this.task = new SequentialDisposable();
             this.requested = new AtomicLong();
             this.available = new AtomicLong(-1L);
@@ -102,7 +102,7 @@ final class FlowableIntervalBackpressure extends Flowable<Long> {
                 SequentialDisposable t = task;
                 AtomicLong v = available;
                 long produced = emitted;
-                Subscriber<? super Long> a = actual;
+                Subscriber<? super Long> a = downstream;
 
                 for (;;) {
                     long r = requested.get();

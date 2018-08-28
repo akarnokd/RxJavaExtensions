@@ -91,8 +91,8 @@ implements FlowableTransformer<T, T> {
 
         Subscription upstream;
 
-        TimeoutLast(Subscriber<? super T> actual, long timeout, TimeUnit unit, Worker worker) {
-            super(actual);
+        TimeoutLast(Subscriber<? super T> downstream, long timeout, TimeUnit unit, Worker worker) {
+            super(downstream);
             this.timeout = timeout;
             this.unit = unit;
             this.worker = worker;
@@ -196,10 +196,10 @@ implements FlowableTransformer<T, T> {
 
         final AtomicReference<T> value;
 
-        Subscription s;
+        Subscription upstream;
 
-        TimeoutStartLast(Subscriber<? super T> actual, long timeout, TimeUnit unit, Scheduler scheduler) {
-            super(actual);
+        TimeoutStartLast(Subscriber<? super T> downstream, long timeout, TimeUnit unit, Scheduler scheduler) {
+            super(downstream);
             this.timeout = timeout;
             this.unit = unit;
             this.scheduler = scheduler;
@@ -210,8 +210,8 @@ implements FlowableTransformer<T, T> {
 
         @Override
         public void onSubscribe(Subscription s) {
-            if (SubscriptionHelper.validate(this.s, s)) {
-                this.s = s;
+            if (SubscriptionHelper.validate(this.upstream, s)) {
+                this.upstream = s;
 
                 downstream.onSubscribe(this);
 
@@ -231,7 +231,7 @@ implements FlowableTransformer<T, T> {
                 @Override
                 public void run() {
                     if (once.compareAndSet(false, true)) {
-                        s.cancel();
+                        upstream.cancel();
                         emitLast();
                     }
                 }
@@ -268,7 +268,7 @@ implements FlowableTransformer<T, T> {
         @Override
         public void cancel() {
             if (once.compareAndSet(false, true)) {
-                s.cancel();
+                upstream.cancel();
                 task.dispose();
                 value.lazySet(null);
             }

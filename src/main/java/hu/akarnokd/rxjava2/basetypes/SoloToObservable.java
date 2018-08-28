@@ -45,16 +45,16 @@ final class SoloToObservable<T> extends Observable<T> {
 
         private static final long serialVersionUID = 3162354714056564295L;
 
-        Subscription s;
+        Subscription upstream;
 
-        ToObservableSubscriber(Observer<? super T> actual) {
-            super(actual);
+        ToObservableSubscriber(Observer<? super T> downstream) {
+            super(downstream);
         }
 
         @Override
         public void onSubscribe(Subscription s) {
-            if (SubscriptionHelper.validate(this.s, s)) {
-                this.s = s;
+            if (SubscriptionHelper.validate(this.upstream, s)) {
+                this.upstream = s;
 
                 downstream.onSubscribe(this);
 
@@ -79,7 +79,7 @@ final class SoloToObservable<T> extends Observable<T> {
 
         @Override
         public void dispose() {
-            s.cancel();
+            upstream.cancel();
             super.dispose();
         }
     }

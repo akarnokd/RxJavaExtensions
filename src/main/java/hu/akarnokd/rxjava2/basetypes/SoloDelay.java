@@ -59,7 +59,7 @@ final class SoloDelay<T> extends Solo<T> {
 
         private static final long serialVersionUID = 511073038536312798L;
 
-        final Subscriber<? super T> actual;
+        final Subscriber<? super T> downstream;
 
         final long delay;
 
@@ -67,7 +67,7 @@ final class SoloDelay<T> extends Solo<T> {
 
         final Scheduler scheduler;
 
-        Subscription s;
+        Subscription upstream;
 
         T value;
         Throwable error;
@@ -75,8 +75,8 @@ final class SoloDelay<T> extends Solo<T> {
 
         boolean outputFused;
 
-        DelaySubscriber(Subscriber<? super T> actual, long delay, TimeUnit unit, Scheduler scheduler) {
-            this.actual = actual;
+        DelaySubscriber(Subscriber<? super T> downstream, long delay, TimeUnit unit, Scheduler scheduler) {
+            this.downstream = downstream;
             this.delay = delay;
             this.unit = unit;
             this.scheduler = scheduler;
@@ -113,21 +113,21 @@ final class SoloDelay<T> extends Solo<T> {
 
         @Override
         public void request(long n) {
-            s.request(n);
+            upstream.request(n);
         }
 
         @Override
         public void cancel() {
-            s.cancel();
+            upstream.cancel();
             DisposableHelper.dispose(this);
         }
 
         @Override
         public void onSubscribe(Subscription s) {
-            if (SubscriptionHelper.validate(this.s, s)) {
-                this.s = s;
+            if (SubscriptionHelper.validate(this.upstream, s)) {
+                this.upstream = s;
 
-                actual.onSubscribe(this);
+                downstream.onSubscribe(this);
             }
         }
 
@@ -151,17 +151,17 @@ final class SoloDelay<T> extends Solo<T> {
         public void run() {
             Throwable ex = error;
             if (ex != null) {
-                actual.onError(ex);
+                downstream.onError(ex);
             } else {
                 if (outputFused) {
                     available = true;
-                    actual.onNext(null);
+                    downstream.onNext(null);
                 } else {
                     T v = value;
                     value = null;
-                    actual.onNext(v);
+                    downstream.onNext(v);
                 }
-                actual.onComplete();
+                downstream.onComplete();
             }
         }
 

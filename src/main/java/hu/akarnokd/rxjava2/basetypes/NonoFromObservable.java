@@ -41,20 +41,20 @@ final class NonoFromObservable extends Nono {
     static final class FromCompletableObserver extends BasicEmptyQueueSubscription
     implements Observer<Object> {
 
-        final Subscriber<? super Void> actual;
+        final Subscriber<? super Void> downstream;
 
-        Disposable d;
+        Disposable upstream;
 
-        FromCompletableObserver(Subscriber<? super Void> actual) {
-            this.actual = actual;
+        FromCompletableObserver(Subscriber<? super Void> downstream) {
+            this.downstream = downstream;
         }
 
         @Override
         public void onSubscribe(Disposable d) {
-            if (DisposableHelper.validate(this.d, d)) {
-                this.d = d;
+            if (DisposableHelper.validate(this.upstream, d)) {
+                this.upstream = d;
 
-                actual.onSubscribe(this);
+                downstream.onSubscribe(this);
             }
         }
 
@@ -65,17 +65,17 @@ final class NonoFromObservable extends Nono {
 
         @Override
         public void onError(Throwable t) {
-            actual.onError(t);
+            downstream.onError(t);
         }
 
         @Override
         public void cancel() {
-            d.dispose();
+            upstream.dispose();
         }
 
         @Override
         public void onComplete() {
-            actual.onComplete();
+            downstream.onComplete();
         }
     }
 }

@@ -61,8 +61,8 @@ final class PerhapsCreate<T> extends Perhaps<T> {
 
         final AtomicReference<Disposable> resource;
 
-        PerhapsEmitter(Subscriber<? super T> actual) {
-            super(actual);
+        PerhapsEmitter(Subscriber<? super T> downstream) {
+            super(downstream);
             this.resource = new AtomicReference<Disposable>();
         }
 
@@ -114,8 +114,8 @@ final class PerhapsCreate<T> extends Perhaps<T> {
         }
 
         @Override
-        public void setDisposable(Disposable s) {
-            DisposableHelper.set(resource, s);
+        public void setDisposable(Disposable d) {
+            DisposableHelper.set(resource, d);
         }
 
         @Override

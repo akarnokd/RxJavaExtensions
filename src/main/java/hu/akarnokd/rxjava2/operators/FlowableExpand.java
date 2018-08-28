@@ -79,7 +79,7 @@ final class FlowableExpand<T> extends Flowable<T> implements FlowableTransformer
 
         private static final long serialVersionUID = -8200116117441115256L;
 
-        final Subscriber<? super T> actual;
+        final Subscriber<? super T> downstream;
 
         final Function<? super T, ? extends Publisher<? extends T>> expander;
 
@@ -95,9 +95,9 @@ final class FlowableExpand<T> extends Flowable<T> implements FlowableTransformer
 
         long produced;
 
-        ExpandBreadthSubscriber(Subscriber<? super T> actual,
+        ExpandBreadthSubscriber(Subscriber<? super T> downstream,
                 Function<? super T, ? extends Publisher<? extends T>> expander, int capacityHint, boolean delayErrors) {
-            this.actual = actual;
+            this.downstream = downstream;
             this.expander = expander;
             this.wip = new AtomicInteger();
             this.queue = new SpscLinkedArrayQueue<Publisher<? extends T>>(capacityHint);
@@ -113,7 +113,7 @@ final class FlowableExpand<T> extends Flowable<T> implements FlowableTransformer
         @Override
         public void onNext(T t) {
             produced++;
-            actual.onNext(t);
+            downstream.onNext(t);
 
             Publisher<? extends T> p;
             try {
@@ -121,7 +121,7 @@ final class FlowableExpand<T> extends Flowable<T> implements FlowableTransformer
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
                 super.cancel();
-                actual.onError(ex);
+                downstream.onError(ex);
                 drainQueue();
                 return;
             }
@@ -137,7 +137,7 @@ final class FlowableExpand<T> extends Flowable<T> implements FlowableTransformer
                 active = false;
             } else {
                 super.cancel();
-                actual.onError(t);
+                downstream.onError(t);
             }
             drainQueue();
         }
@@ -167,9 +167,9 @@ final class FlowableExpand<T> extends Flowable<T> implements FlowableTransformer
                                 super.cancel();
                                 Throwable ex = errors.terminate();
                                 if (ex == null) {
-                                    actual.onComplete();
+                                    downstream.onComplete();
                                 } else {
-                                    actual.onError(ex);
+                                    downstream.onError(ex);
                                 }
                             } else {
                                 Publisher<? extends T> p = q.poll();
@@ -194,7 +194,7 @@ final class FlowableExpand<T> extends Flowable<T> implements FlowableTransformer
 
         private static final long serialVersionUID = -2126738751597075165L;
 
-        final Subscriber<? super T> actual;
+        final Subscriber<? super T> downstream;
 
         final Function<? super T, ? extends Publisher<? extends T>> expander;
 
@@ -216,10 +216,10 @@ final class FlowableExpand<T> extends Flowable<T> implements FlowableTransformer
 
         long consumed;
 
-        ExpandDepthSubscription(Subscriber<? super T> actual,
+        ExpandDepthSubscription(Subscriber<? super T> downstream,
                 Function<? super T, ? extends Publisher<? extends T>> expander,
                         int capacityHint, boolean delayErrors) {
-            this.actual = actual;
+            this.downstream = downstream;
             this.expander = expander;
             this.subscriptionStack = new ArrayDeque<ExpandDepthSubscriber>();
             this.error = new AtomicThrowable();
@@ -300,7 +300,7 @@ final class FlowableExpand<T> extends Flowable<T> implements FlowableTransformer
             }
 
             int missed = 1;
-            Subscriber<? super T> a = actual;
+            Subscriber<? super T> a = downstream;
             long e = consumed;
             AtomicInteger n = active;
 

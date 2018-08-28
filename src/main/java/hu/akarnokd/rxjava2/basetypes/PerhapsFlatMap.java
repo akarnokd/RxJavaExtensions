@@ -57,21 +57,21 @@ final class PerhapsFlatMap<T, R> extends Perhaps<R> {
 
         final InnerSubscriber inner;
 
-        Subscription s;
+        Subscription upstream;
 
         boolean hasValue;
 
-        FlatMapSubscriber(Subscriber<? super R> actual,
+        FlatMapSubscriber(Subscriber<? super R> downstream,
                 Function<? super T, ? extends Perhaps<? extends R>> mapper) {
-            super(actual);
+            super(downstream);
             this.mapper = mapper;
             this.inner = new InnerSubscriber();
         }
 
         @Override
         public void onSubscribe(Subscription s) {
-            if (SubscriptionHelper.validate(this.s, s)) {
-                this.s = s;
+            if (SubscriptionHelper.validate(this.upstream, s)) {
+                this.upstream = s;
 
                 downstream.onSubscribe(this);
 
@@ -127,7 +127,7 @@ final class PerhapsFlatMap<T, R> extends Perhaps<R> {
         @Override
         public void cancel() {
             super.cancel();
-            s.cancel();
+            upstream.cancel();
             SubscriptionHelper.cancel(inner);
         }
 

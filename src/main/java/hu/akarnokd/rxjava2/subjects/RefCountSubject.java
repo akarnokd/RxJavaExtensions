@@ -49,8 +49,8 @@ import io.reactivex.subjects.Subject;
     }
 
     @Override
-    public void onSubscribe(Disposable s) {
-        if (DisposableHelper.setOnce(upstream, s)) {
+    public void onSubscribe(Disposable d) {
+        if (DisposableHelper.setOnce(upstream, d)) {
             actual.onSubscribe(this);
         }
     }
@@ -73,10 +73,10 @@ import io.reactivex.subjects.Subject;
     }
 
     @Override
-    protected void subscribeActual(Observer<? super T> s) {
-        RefCountObserver<T> rcs = new RefCountObserver<T>(s, this);
+    protected void subscribeActual(Observer<? super T> observer) {
+        RefCountObserver<T> rcs = new RefCountObserver<T>(observer, this);
         if (!add(rcs)) {
-            EmptyDisposable.error(new IllegalStateException("RefCountSubject terminated"), s);
+            EmptyDisposable.error(new IllegalStateException("RefCountSubject terminated"), observer);
             return;
         }
         actual.subscribe(rcs);
@@ -171,14 +171,14 @@ import io.reactivex.subjects.Subject;
 
         private static final long serialVersionUID = -4317488092687530631L;
 
-        final Observer<? super T> actual;
+        final Observer<? super T> downstream;
 
         final RefCountSubject<T> parent;
 
         Disposable upstream;
 
-        RefCountObserver(Observer<? super T> actual, RefCountSubject<T> parent) {
-            this.actual = actual;
+        RefCountObserver(Observer<? super T> downstream, RefCountSubject<T> parent) {
+            this.downstream = downstream;
             this.parent = parent;
         }
 
@@ -190,24 +190,24 @@ import io.reactivex.subjects.Subject;
         }
 
         @Override
-        public void onSubscribe(Disposable s) {
-            this.upstream = s;
-            actual.onSubscribe(this);
+        public void onSubscribe(Disposable d) {
+            this.upstream = d;
+            downstream.onSubscribe(this);
         }
 
         @Override
         public void onNext(T t) {
-            actual.onNext(t);
+            downstream.onNext(t);
         }
 
         @Override
         public void onError(Throwable t) {
-            actual.onError(t);
+            downstream.onError(t);
         }
 
         @Override
         public void onComplete() {
-            actual.onComplete();
+            downstream.onComplete();
         }
 
         @Override

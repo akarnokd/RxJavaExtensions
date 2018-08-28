@@ -372,7 +372,6 @@ public abstract class Nono implements Publisher<Void> {
         return onAssembly(new NonoMergeArray(sources, false, maxConcurrency));
     }
 
-
     /**
      * Runs all Nono sources at once and terminates once all of them terminate,
      * delaying errors in the process.
@@ -405,7 +404,6 @@ public abstract class Nono implements Publisher<Void> {
     public static Nono mergeDelayError(Publisher<? extends Nono> sources) {
         return mergeDelayError(sources, Integer.MAX_VALUE);
     }
-
 
     /**
      * Runs the maximum number of Nono sources emitted by the Publisher
@@ -1289,7 +1287,6 @@ public abstract class Nono implements Publisher<Void> {
     public final void blockingSubscribe(Action onComplete) {
         blockingSubscribe(onComplete, Functions.ERROR_CONSUMER);
     }
-
 
     /**
      * Block until this Nono terminates and call the Action or Consumer

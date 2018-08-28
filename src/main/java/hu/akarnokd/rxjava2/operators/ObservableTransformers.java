@@ -26,6 +26,7 @@ import io.reactivex.internal.functions.ObjectHelper;
  * use {@link Observable#compose(ObservableTransformer)}
  * to apply the operators to an existing sequence.
  * 
+ * @see Observables
  * @since 0.18.2
  */
 public final class ObservableTransformers {

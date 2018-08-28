@@ -48,29 +48,29 @@ final class NonoDoFinally extends Nono {
 
         private static final long serialVersionUID = -2447716698732984984L;
 
-        final Subscriber<? super Void> actual;
+        final Subscriber<? super Void> downstream;
 
         final Action onFinally;
 
-        Subscription s;
+        Subscription upstream;
 
-        DoFinallySubscriber(Subscriber<? super Void> actual, Action onFinally) {
-            this.actual = actual;
+        DoFinallySubscriber(Subscriber<? super Void> downstream, Action onFinally) {
+            this.downstream = downstream;
             this.onFinally = onFinally;
         }
 
         @Override
         public void cancel() {
-            s.cancel();
+            upstream.cancel();
             runFinally();
         }
 
         @Override
         public void onSubscribe(Subscription s) {
-            if (SubscriptionHelper.validate(this.s, s)) {
-                this.s = s;
+            if (SubscriptionHelper.validate(this.upstream, s)) {
+                this.upstream = s;
 
-                actual.onSubscribe(this);
+                downstream.onSubscribe(this);
             }
         }
 
@@ -81,13 +81,13 @@ final class NonoDoFinally extends Nono {
 
         @Override
         public void onError(Throwable t) {
-            actual.onError(t);
+            downstream.onError(t);
             runFinally();
         }
 
         @Override
         public void onComplete() {
-            actual.onComplete();
+            downstream.onComplete();
             runFinally();
         }
 

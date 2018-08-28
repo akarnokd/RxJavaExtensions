@@ -37,13 +37,13 @@ final class SingleValidator<T> extends Single<T> {
     }
 
     @Override
-    protected void subscribeActual(SingleObserver<? super T> s) {
-        source.subscribe(new ValidatorConsumer<T>(s, onViolation));
+    protected void subscribeActual(SingleObserver<? super T> observer) {
+        source.subscribe(new ValidatorConsumer<T>(observer, onViolation));
     }
 
     static final class ValidatorConsumer<T> implements SingleObserver<T>, Disposable {
 
-        final SingleObserver<? super T> actual;
+        final SingleObserver<? super T> downstream;
 
         final PlainConsumer<ProtocolNonConformanceException> onViolation;
 
@@ -51,10 +51,10 @@ final class SingleValidator<T> extends Single<T> {
 
         boolean done;
 
-        ValidatorConsumer(SingleObserver<? super T> actual,
+        ValidatorConsumer(SingleObserver<? super T> downstream,
                 PlainConsumer<ProtocolNonConformanceException> onViolation) {
             super();
-            this.actual = actual;
+            this.downstream = downstream;
             this.onViolation = onViolation;
         }
 
@@ -68,7 +68,7 @@ final class SingleValidator<T> extends Single<T> {
                 onViolation.accept(new MultipleOnSubscribeCallsException());
             }
             upstream = d;
-            actual.onSubscribe(this);
+            downstream.onSubscribe(this);
         }
 
         @Override
@@ -83,7 +83,7 @@ final class SingleValidator<T> extends Single<T> {
                 onViolation.accept(new OnSuccessAfterTerminationException());
             } else {
                 done = true;
-                actual.onSuccess(t);
+                downstream.onSuccess(t);
             }
         }
 
@@ -99,7 +99,7 @@ final class SingleValidator<T> extends Single<T> {
                 onViolation.accept(new MultipleTerminationsException(e));
             } else {
                 done = true;
-                actual.onError(e);
+                downstream.onError(e);
             }
         }
 

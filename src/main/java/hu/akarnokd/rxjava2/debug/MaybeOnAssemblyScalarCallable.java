@@ -37,8 +37,8 @@ final class MaybeOnAssemblyScalarCallable<T> extends Maybe<T> implements ScalarC
     }
 
     @Override
-    protected void subscribeActual(MaybeObserver<? super T> s) {
-        source.subscribe(new OnAssemblyMaybeObserver<T>(s, assembled));
+    protected void subscribeActual(MaybeObserver<? super T> observer) {
+        source.subscribe(new OnAssemblyMaybeObserver<T>(observer, assembled));
     }
 
     @SuppressWarnings("unchecked")

@@ -41,7 +41,6 @@ implements MaybeTransformer<T, R> {
 
     final Callable<? extends MaybeSource<? extends R>> onCompleteHandler;
 
-
     MaybeFlatMapSignalMaybe(Maybe<T> source,
             Function<? super T, ? extends MaybeSource<? extends R>> onSuccessHandler,
             Function<? super Throwable, ? extends MaybeSource<? extends R>> onErrorHandler,

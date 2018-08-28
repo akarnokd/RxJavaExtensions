@@ -533,7 +533,6 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .assertResult();
     }
 
-
     @Test
     public void mergeArray() {
         Nono.mergeArray(
@@ -609,7 +608,6 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .awaitDone(5, TimeUnit.SECONDS)
         .assertResult();
     }
-
 
     @Test
     public void mergeArrayDelayError() {
@@ -692,7 +690,6 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .awaitDone(5, TimeUnit.SECONDS)
         .assertFailure(IOException.class);
     }
-
 
     @Test
     public void mergeArrayDelayErrorError() {
@@ -2557,7 +2554,6 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
             throw ExceptionHelper.wrapOrThrow(ex);
         }
     }
-
 
     @Test
     public void noNext() {

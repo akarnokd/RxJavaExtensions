@@ -38,7 +38,6 @@ public final class Flowables {
         throw new IllegalStateException("No instances!");
     }
 
-
     /**
      * Merges the source Publishers in an ordered fashion picking the smallest of the available value from
      * them (determined by their natural order).
@@ -53,7 +52,6 @@ public final class Flowables {
     public static <T extends Comparable<? super T>> Flowable<T> orderedMerge(Publisher<T>... sources) {
         return orderedMerge(Functions.naturalOrder(), false, Flowable.bufferSize(), sources);
     }
-
 
     /**
      * Merges the source Publishers in an ordered fashion picking the smallest of the available value from
@@ -70,7 +68,6 @@ public final class Flowables {
     public static <T extends Comparable<? super T>> Flowable<T> orderedMerge(boolean delayErrors, Publisher<T>... sources) {
         return orderedMerge(Functions.naturalOrder(), delayErrors, Flowable.bufferSize(), sources);
     }
-
 
     /**
      * Merges the source Publishers in an ordered fashion picking the smallest of the available value from
@@ -90,7 +87,6 @@ public final class Flowables {
         return orderedMerge(Functions.naturalOrder(), delayErrors, prefetch, sources);
     }
 
-
     /**
      * Merges the source Publishers in an ordered fashion picking the smallest of the available value from
      * them (determined by the Comparator).
@@ -107,7 +103,6 @@ public final class Flowables {
     public static <T> Flowable<T> orderedMerge(Comparator<? super T> comparator, Publisher<T>... sources) {
         return orderedMerge(comparator, false, Flowable.bufferSize(), sources);
     }
-
 
     /**
      * Merges the source Publishers in an ordered fashion picking the smallest of the available value from
@@ -126,7 +121,6 @@ public final class Flowables {
     public static <T> Flowable<T> orderedMerge(Comparator<? super T> comparator, boolean delayErrors, Publisher<T>... sources) {
         return orderedMerge(comparator, delayErrors, Flowable.bufferSize(), sources);
     }
-
 
     /**
      * Merges the source Publishers in an ordered fashion picking the smallest of the available value from
@@ -167,7 +161,6 @@ public final class Flowables {
     public static <T> Flowable<T> orderedMerge(Iterable<? extends Publisher<T>> sources, Comparator<? super T> comparator) {
         return orderedMerge(sources, comparator, false, Flowable.bufferSize());
     }
-
 
     /**
      * Merges the source Publishers in an ordered fashion picking the smallest of the available value from
@@ -210,7 +203,6 @@ public final class Flowables {
         return RxJavaPlugins.onAssembly(new FlowableOrderedMerge<T>(null, sources, comparator, delayErrors, prefetch));
     }
 
-
     /**
      * Merges the source Publishers in an ordered fashion picking the smallest of the available value from
      * them (determined by their natural order).
@@ -225,7 +217,6 @@ public final class Flowables {
     public static <T extends Comparable<? super T>> Flowable<T> orderedMerge(Iterable<? extends Publisher<T>> sources) {
         return orderedMerge(sources, Functions.naturalOrder(), false, Flowable.bufferSize());
     }
-
 
     /**
      * Merges the source Publishers in an ordered fashion picking the smallest of the available value from
@@ -242,7 +233,6 @@ public final class Flowables {
     public static <T extends Comparable<? super T>> Flowable<T> orderedMerge(Iterable<? extends Publisher<T>> sources, boolean delayErrors) {
         return orderedMerge(sources, Functions.naturalOrder(), delayErrors, Flowable.bufferSize());
     }
-
 
     /**
      * Merges the source Publishers in an ordered fashion picking the smallest of the available value from
@@ -432,7 +422,6 @@ public final class Flowables {
         return zipLatest(combiner, ImmediateThinScheduler.INSTANCE, sources);
     }
 
-
     /**
      * Zips the latest available values of the source Publishers via a combiner function where the
      * emission rate is determined by the slowest Publisher and the downstream consumption rate.
@@ -472,7 +461,6 @@ public final class Flowables {
         return RxJavaPlugins.onAssembly(new FlowableZipLatest<T, R>(sources, null, combiner, scheduler));
     }
 
-
     /**
      * Zips the latest available values of the source Publishers via a combiner function where the
      * emission rate is determined by the slowest Publisher and the downstream consumption rate.
@@ -508,7 +496,6 @@ public final class Flowables {
     public static <T, R> Flowable<R> zipLatest(Iterable<? extends Publisher<? extends T>> sources, Function<? super Object[], ? extends R> combiner) {
         return zipLatest(sources, combiner, ImmediateThinScheduler.INSTANCE);
     }
-
 
     /**
      * Zips the latest available values of the source Publishers via a combiner function where the
@@ -549,7 +536,6 @@ public final class Flowables {
         return RxJavaPlugins.onAssembly(new FlowableZipLatest<T, R>(null, sources, combiner, scheduler));
     }
 
-
     /**
      * Zips the latest available values of the source Publishers via a combiner function where the
      * emission rate is determined by the slowest Publisher and the downstream consumption rate.
@@ -587,7 +573,6 @@ public final class Flowables {
     public static <T1, T2, R> Flowable<R> zipLatest(Publisher<T1> source1, Publisher<T2> source2, BiFunction<? super T1, ? super T2, ? extends R> combiner) {
         return zipLatest(source1, source2, combiner, ImmediateThinScheduler.INSTANCE);
     }
-
 
     /**
      * Zips the latest available values of the source Publishers via a combiner function where the
@@ -634,7 +619,6 @@ public final class Flowables {
                 Functions.toFunction(combiner), scheduler));
     }
 
-
     /**
      * Zips the latest available values of the source Publishers via a combiner function where the
      * emission rate is determined by the slowest Publisher and the downstream consumption rate.
@@ -675,7 +659,6 @@ public final class Flowables {
             Publisher<T3> source3, Function3<? super T1, ? super T2, ? super T3, ? extends R> combiner) {
         return zipLatest(source1, source2, source3, combiner, ImmediateThinScheduler.INSTANCE);
     }
-
 
     /**
      * Zips the latest available values of the source Publishers via a combiner function where the
@@ -727,7 +710,6 @@ public final class Flowables {
                 Functions.toFunction(combiner), scheduler));
     }
 
-
     /**
      * Zips the latest available values of the source Publishers via a combiner function where the
      * emission rate is determined by the slowest Publisher and the downstream consumption rate.
@@ -771,7 +753,6 @@ public final class Flowables {
             Function4<? super T1, ? super T2, ? super T3, ? super T4, ? extends R> combiner) {
         return zipLatest(source1, source2, source3, source4, combiner, ImmediateThinScheduler.INSTANCE);
     }
-
 
     /**
      * Zips the latest available values of the source Publishers via a combiner function where the

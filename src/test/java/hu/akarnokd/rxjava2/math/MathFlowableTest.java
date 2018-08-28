@@ -40,6 +40,7 @@ public class MathFlowableTest extends BaseTest {
     static Flowable<Double> doubleEmpty() {
         return Flowable.empty();
     }
+
     @Test
     public void normalSumInt() {
         assertResult(sumInt(flow(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)), 55);

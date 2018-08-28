@@ -53,10 +53,10 @@ final class NonoTimer extends Nono {
     implements Runnable {
         private static final long serialVersionUID = 3940118717227297027L;
 
-        final Subscriber<? super Void> actual;
+        final Subscriber<? super Void> downstream;
 
-        TimerSubscription(Subscriber<? super Void> actual) {
-            this.actual = actual;
+        TimerSubscription(Subscriber<? super Void> downstream) {
+            this.downstream = downstream;
         }
 
         @Override
@@ -91,7 +91,7 @@ final class NonoTimer extends Nono {
 
         @Override
         public void run() {
-            actual.onComplete();
+            downstream.onComplete();
         }
 
     }

@@ -39,7 +39,7 @@ public class FlowableSwitchFlatMapTest {
 
     @Test
     public void normal() {
-        PublishProcessor<Integer> ps = PublishProcessor.create();
+        PublishProcessor<Integer> pp = PublishProcessor.create();
 
         @SuppressWarnings("unchecked")
         final PublishProcessor<Integer>[] pss = new PublishProcessor[3];
@@ -47,7 +47,7 @@ public class FlowableSwitchFlatMapTest {
             pss[i] = PublishProcessor.create();
         }
 
-        TestSubscriber<Integer> ts = ps
+        TestSubscriber<Integer> ts = pp
         .compose(FlowableTransformers.switchFlatMap(new Function<Integer, Publisher<Integer>>() {
             @Override
             public Publisher<Integer> apply(Integer v) throws Exception {
@@ -56,8 +56,8 @@ public class FlowableSwitchFlatMapTest {
         }, 2))
         .test();
 
-        ps.onNext(0);
-        ps.onNext(1);
+        pp.onNext(0);
+        pp.onNext(1);
 
         pss[0].onNext(1);
         pss[0].onNext(2);
@@ -67,7 +67,7 @@ public class FlowableSwitchFlatMapTest {
         pss[1].onNext(11);
         pss[1].onNext(12);
 
-        ps.onNext(2);
+        pp.onNext(2);
 
         assertFalse(pss[0].hasSubscribers());
 
@@ -79,7 +79,7 @@ public class FlowableSwitchFlatMapTest {
 
         pss[1].onComplete();
         pss[2].onComplete();
-        ps.onComplete();
+        pp.onComplete();
 
         ts.assertResult(1, 2, 3, 10, 11, 12, 20, 21, 22);
     }

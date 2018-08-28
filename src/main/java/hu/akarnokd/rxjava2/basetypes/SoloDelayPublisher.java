@@ -51,11 +51,11 @@ final class SoloDelayPublisher<T> extends Solo<T> {
 
         private static final long serialVersionUID = 511073038536312798L;
 
-        final Subscriber<? super T> actual;
+        final Subscriber<? super T> downstream;
 
         final Publisher<?> other;
 
-        Subscription s;
+        Subscription upstream;
 
         T value;
         Throwable error;
@@ -63,8 +63,8 @@ final class SoloDelayPublisher<T> extends Solo<T> {
 
         boolean outputFused;
 
-        DelaySubscriber(Subscriber<? super T> actual, Publisher<?> other) {
-            this.actual = actual;
+        DelaySubscriber(Subscriber<? super T> downstream, Publisher<?> other) {
+            this.downstream = downstream;
             this.other = other;
         }
 
@@ -99,21 +99,21 @@ final class SoloDelayPublisher<T> extends Solo<T> {
 
         @Override
         public void request(long n) {
-            s.request(n);
+            upstream.request(n);
         }
 
         @Override
         public void cancel() {
-            s.cancel();
+            upstream.cancel();
             SubscriptionHelper.cancel(this);
         }
 
         @Override
         public void onSubscribe(Subscription s) {
-            if (SubscriptionHelper.validate(this.s, s)) {
-                this.s = s;
+            if (SubscriptionHelper.validate(this.upstream, s)) {
+                this.upstream = s;
 
-                actual.onSubscribe(this);
+                downstream.onSubscribe(this);
             }
         }
 
@@ -134,7 +134,7 @@ final class SoloDelayPublisher<T> extends Solo<T> {
         }
 
         void run() {
-            Subscriber<? super T> a = actual;
+            Subscriber<? super T> a = downstream;
             Throwable ex = error;
             if (ex != null) {
                 a.onError(ex);

@@ -873,7 +873,6 @@ public class FlowableGenerateAsyncTest {
         assertEquals(1, cleanup.get());
     }
 
-
     @Test
     public void nullItem() {
         final AtomicInteger cleanup = new AtomicInteger();
@@ -905,7 +904,6 @@ public class FlowableGenerateAsyncTest {
 
         assertEquals(1, cleanup.get());
     }
-
 
     @Test
     public void nullThrowable() {

@@ -626,7 +626,6 @@ public class SoloTest implements Consumer<Object>, Action, LongConsumer, Cancell
         .assertFailure(IOException.class);
     }
 
-
     @SuppressWarnings("unchecked")
     @Test
     public void concatIterableDelayError() {
@@ -713,7 +712,6 @@ public class SoloTest implements Consumer<Object>, Action, LongConsumer, Cancell
         .assertFailure(IOException.class, 2);
     }
 
-
     @SuppressWarnings("unchecked")
     @Test
     public void mergeIterable() {
@@ -799,7 +797,6 @@ public class SoloTest implements Consumer<Object>, Action, LongConsumer, Cancell
         .test()
         .assertFailure(IOException.class);
     }
-
 
     @SuppressWarnings("unchecked")
     @Test

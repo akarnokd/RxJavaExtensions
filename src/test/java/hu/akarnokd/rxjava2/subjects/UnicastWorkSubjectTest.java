@@ -58,40 +58,40 @@ public class UnicastWorkSubjectTest {
         assertFalse(uws.hasThrowable());
         assertNull(uws.getThrowable());
 
-        TestObserver<Integer> ts1 = uws.test();
+        TestObserver<Integer> to1 = uws.test();
 
         assertTrue(uws.hasObservers());
 
-        ts1.assertEmpty();
+        to1.assertEmpty();
 
         uws.onNext(1);
 
-        ts1.assertValuesOnly(1);
+        to1.assertValuesOnly(1);
 
         uws.onNext(2);
 
-        ts1.assertValuesOnly(1, 2);
+        to1.assertValuesOnly(1, 2);
 
-        ts1.dispose();
+        to1.dispose();
 
         assertFalse(uws.hasObservers());
 
         uws.onNext(3);
         uws.onNext(4);
 
-        TestObserver<Integer> ts2 = uws.test();
+        TestObserver<Integer> to2 = uws.test();
 
         assertTrue(uws.hasObservers());
 
-        ts2.assertValuesOnly(3, 4);
+        to2.assertValuesOnly(3, 4);
 
         uws.onNext(5);
 
-        ts2.assertValuesOnly(3, 4, 5);
+        to2.assertValuesOnly(3, 4, 5);
 
         uws.onComplete();
 
-        ts2.assertResult(3, 4, 5);
+        to2.assertResult(3, 4, 5);
 
         assertFalse(uws.hasObservers());
 
@@ -124,7 +124,6 @@ public class UnicastWorkSubjectTest {
 
         assertFalse(uws.hasObservers());
     }
-
 
     @Test
     public void twoSubscribers() {

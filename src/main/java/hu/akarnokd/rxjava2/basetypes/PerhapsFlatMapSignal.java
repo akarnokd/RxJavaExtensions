@@ -76,11 +76,11 @@ final class PerhapsFlatMapSignal<T, R> extends Perhaps<R> {
 
         boolean hasValue;
 
-        FlatMapSubscriber(Subscriber<? super R> actual,
+        FlatMapSubscriber(Subscriber<? super R> downstream,
                 Function<? super T, ? extends Perhaps<? extends R>> onSuccessMapper,
                         Function<? super Throwable, ? extends Perhaps<? extends R>> onErrorMapper,
                         Callable<? extends Perhaps<? extends R>> onCompleteMapper) {
-            super(actual);
+            super(downstream);
             this.onSuccessMapper = onSuccessMapper;
             this.onErrorMapper = onErrorMapper;
             this.onCompleteMapper = onCompleteMapper;

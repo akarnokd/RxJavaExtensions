@@ -41,7 +41,6 @@ implements MaybeConverter<T, Completable> {
 
     final Callable<? extends CompletableSource> onCompleteHandler;
 
-
     MaybeFlatMapSignalCompletable(Maybe<T> source,
             Function<? super T, ? extends CompletableSource> onSuccessHandler,
             Function<? super Throwable, ? extends CompletableSource> onErrorHandler,

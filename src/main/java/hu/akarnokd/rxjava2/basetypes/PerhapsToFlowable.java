@@ -46,8 +46,8 @@ final class PerhapsToFlowable<T> extends Flowable<T> {
 
         Subscription upstream;
 
-        ToFlowableSubscriber(Subscriber<? super T> actual) {
-            super(actual);
+        ToFlowableSubscriber(Subscriber<? super T> downstream) {
+            super(downstream);
         }
 
         @Override

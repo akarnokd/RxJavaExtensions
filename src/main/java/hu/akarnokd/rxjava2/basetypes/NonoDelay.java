@@ -61,8 +61,8 @@ final class NonoDelay extends Nono {
 
         Throwable error;
 
-        ObserveOnSubscriber(Subscriber<? super Void> actual, long delay, TimeUnit unit, Scheduler scheduler) {
-            super(actual);
+        ObserveOnSubscriber(Subscriber<? super Void> downstream, long delay, TimeUnit unit, Scheduler scheduler) {
+            super(downstream);
             this.delay = delay;
             this.unit = unit;
             this.scheduler = scheduler;
@@ -84,15 +84,15 @@ final class NonoDelay extends Nono {
             Throwable ex = error;
             if (ex != null) {
                 error = null;
-                actual.onError(ex);
+                downstream.onError(ex);
             } else {
-                actual.onComplete();
+                downstream.onComplete();
             }
         }
 
         @Override
         public void cancel() {
-            s.cancel();
+            upstream.cancel();
             DisposableHelper.dispose(this);
         }
     }

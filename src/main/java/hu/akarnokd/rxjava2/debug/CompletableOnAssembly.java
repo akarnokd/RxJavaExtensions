@@ -35,51 +35,51 @@ final class CompletableOnAssembly extends Completable {
     }
 
     @Override
-    protected void subscribeActual(CompletableObserver s) {
-        source.subscribe(new OnAssemblyCompletableObserver(s, assembled));
+    protected void subscribeActual(CompletableObserver observer) {
+        source.subscribe(new OnAssemblyCompletableObserver(observer, assembled));
     }
 
     static final class OnAssemblyCompletableObserver implements CompletableObserver, Disposable {
 
-        final CompletableObserver actual;
+        final CompletableObserver downstream;
 
         final RxJavaAssemblyException assembled;
 
-        Disposable d;
+        Disposable upstream;
 
-        OnAssemblyCompletableObserver(CompletableObserver actual, RxJavaAssemblyException assembled) {
-            this.actual = actual;
+        OnAssemblyCompletableObserver(CompletableObserver downstream, RxJavaAssemblyException assembled) {
+            this.downstream = downstream;
             this.assembled = assembled;
         }
 
         @Override
         public void onSubscribe(Disposable d) {
-            if (DisposableHelper.validate(this.d, d)) {
-                this.d = d;
+            if (DisposableHelper.validate(this.upstream, d)) {
+                this.upstream = d;
 
-                actual.onSubscribe(this);
+                downstream.onSubscribe(this);
             }
         }
 
         @Override
         public void onError(Throwable t) {
-            actual.onError(assembled.appendLast(t));
+            downstream.onError(assembled.appendLast(t));
         }
 
         @Override
         public void onComplete() {
-            actual.onComplete();
+            downstream.onComplete();
         }
 
         @Override
         public boolean isDisposed() {
-            return d.isDisposed();
+            return upstream.isDisposed();
         }
 
         @Override
         public void dispose() {
             // don't break the link here
-            d.dispose();
+            upstream.dispose();
         }
     }
 }

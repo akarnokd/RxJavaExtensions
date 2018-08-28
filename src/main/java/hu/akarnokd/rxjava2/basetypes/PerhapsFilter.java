@@ -46,8 +46,8 @@ final class PerhapsFilter<T> extends Perhaps<T> {
 
         final Predicate<? super T> predicate;
 
-        FilterSubscriber(Subscriber<? super T> actual, Predicate<? super T> predicate) {
-            super(actual);
+        FilterSubscriber(Subscriber<? super T> downstream, Predicate<? super T> predicate) {
+            super(downstream);
             this.predicate = predicate;
         }
 

@@ -41,7 +41,6 @@ implements MaybeConverter<T, Observable<R>> {
 
     final Callable<? extends ObservableSource<? extends R>> onCompleteHandler;
 
-
     MaybeFlatMapSignalObservable(Maybe<T> source,
             Function<? super T, ? extends ObservableSource<? extends R>> onSuccessHandler,
             Function<? super Throwable, ? extends ObservableSource<? extends R>> onErrorHandler,

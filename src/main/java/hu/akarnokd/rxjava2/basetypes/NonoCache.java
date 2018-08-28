@@ -61,9 +61,9 @@ final class NonoCache extends Nono implements Subscriber<Void> {
             if (inner.get() == 0) {
                 Throwable ex = error;
                 if (ex != null) {
-                    inner.actual.onError(ex);
+                    inner.downstream.onError(ex);
                 } else {
-                    inner.actual.onComplete();
+                    inner.downstream.onComplete();
                 }
             }
         }
@@ -136,7 +136,7 @@ final class NonoCache extends Nono implements Subscriber<Void> {
         error = t;
         for (CacheSubscription inner : subscribers.getAndSet(TERMINATED)) {
             if (inner.get() == 0) {
-                inner.actual.onError(t);
+                inner.downstream.onError(t);
             }
         }
     }
@@ -145,7 +145,7 @@ final class NonoCache extends Nono implements Subscriber<Void> {
     public void onComplete() {
         for (CacheSubscription inner : subscribers.getAndSet(TERMINATED)) {
             if (inner.get() == 0) {
-                inner.actual.onComplete();
+                inner.downstream.onComplete();
             }
         }
     }
@@ -154,10 +154,10 @@ final class NonoCache extends Nono implements Subscriber<Void> {
 
         private static final long serialVersionUID = -5746624477415417500L;
 
-        final Subscriber<? super Void> actual;
+        final Subscriber<? super Void> downstream;
 
-        CacheSubscription(Subscriber<? super Void> actual) {
-            this.actual = actual;
+        CacheSubscription(Subscriber<? super Void> downstream) {
+            this.downstream = downstream;
         }
 
         @Override

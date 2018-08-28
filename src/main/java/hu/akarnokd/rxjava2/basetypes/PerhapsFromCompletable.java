@@ -47,8 +47,8 @@ final class PerhapsFromCompletable<T> extends Perhaps<T> {
 
         Disposable upstream;
 
-        FromCompletableObserver(Subscriber<? super T> actual) {
-            super(actual);
+        FromCompletableObserver(Subscriber<? super T> downstream) {
+            super(downstream);
         }
 
         @Override

@@ -41,25 +41,25 @@ final class NonoToPerhaps<T> extends Perhaps<T> {
     static final class ToPerhapsSubcriber<T> extends BasicEmptyQueueSubscription
     implements Subscriber<Object> {
 
-        final Subscriber<? super T> actual;
+        final Subscriber<? super T> downstream;
 
-        Subscription s;
+        Subscription upstream;
 
-        ToPerhapsSubcriber(Subscriber<? super T> actual) {
-            this.actual = actual;
+        ToPerhapsSubcriber(Subscriber<? super T> downstream) {
+            this.downstream = downstream;
         }
 
         @Override
         public void cancel() {
-            s.cancel();
+            upstream.cancel();
         }
 
         @Override
         public void onSubscribe(Subscription s) {
-            if (SubscriptionHelper.validate(this.s, s)) {
-                this.s = s;
+            if (SubscriptionHelper.validate(this.upstream, s)) {
+                this.upstream = s;
 
-                actual.onSubscribe(this);
+                downstream.onSubscribe(this);
             }
         }
 
@@ -70,12 +70,12 @@ final class NonoToPerhaps<T> extends Perhaps<T> {
 
         @Override
         public void onError(Throwable t) {
-            actual.onError(t);
+            downstream.onError(t);
         }
 
         @Override
         public void onComplete() {
-            actual.onComplete();
+            downstream.onComplete();
         }
     }
 }

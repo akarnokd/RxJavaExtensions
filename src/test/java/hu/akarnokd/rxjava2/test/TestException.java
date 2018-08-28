@@ -55,6 +55,4 @@ public final class TestException extends RuntimeException {
     public TestException(Throwable cause) {
         super(cause);
     }
-
-
 }

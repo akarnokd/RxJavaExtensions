@@ -48,37 +48,37 @@ final class NonoRepeatUntil extends Nono {
 
         private static final long serialVersionUID = -3208438978515192633L;
 
-        protected final Subscriber<? super Void> actual;
+        protected final Subscriber<? super Void> downstream;
 
         final Nono source;
 
         final BooleanSupplier stop;
 
-        final AtomicReference<Subscription> s;
+        final AtomicReference<Subscription> upstream;
 
         volatile boolean active;
 
         boolean once;
 
-        RepeatUntilSubscriber(Subscriber<? super Void> actual,
+        RepeatUntilSubscriber(Subscriber<? super Void> downstream,
                 BooleanSupplier stop, Nono source) {
-            this.actual = actual;
+            this.downstream = downstream;
             this.stop = stop;
             this.source = source;
-            this.s = new AtomicReference<Subscription>();
+            this.upstream = new AtomicReference<Subscription>();
         }
 
         @Override
         public void cancel() {
-            SubscriptionHelper.cancel(s);
+            SubscriptionHelper.cancel(upstream);
         }
 
         @Override
         public void onSubscribe(Subscription s) {
-            SubscriptionHelper.replace(this.s, s);
+            SubscriptionHelper.replace(this.upstream, s);
             if (!once) {
                 once = true;
-                actual.onSubscribe(this);
+                downstream.onSubscribe(this);
             }
         }
 
@@ -89,7 +89,7 @@ final class NonoRepeatUntil extends Nono {
 
         @Override
         public void onError(Throwable t) {
-            actual.onError(t);
+            downstream.onError(t);
         }
 
         @Override
@@ -105,16 +105,16 @@ final class NonoRepeatUntil extends Nono {
                 b = stop.getAsBoolean();
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
-                actual.onError(ex);
+                downstream.onError(ex);
                 return;
             }
 
             if (b) {
-                actual.onComplete();
+                downstream.onComplete();
             } else {
                 if (getAndIncrement() == 0) {
                     do {
-                        if (SubscriptionHelper.isCancelled(s.get())) {
+                        if (SubscriptionHelper.isCancelled(upstream.get())) {
                             return;
                         }
 

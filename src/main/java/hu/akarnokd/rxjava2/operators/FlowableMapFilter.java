@@ -66,9 +66,9 @@ final class FlowableMapFilter<T, R> extends Flowable<R> implements FlowableTrans
 
         Throwable outError;
 
-        MapFilterSubscriber(Subscriber<? super R> actual,
+        MapFilterSubscriber(Subscriber<? super R> downstream,
                 BiConsumer<? super T, ? super BasicEmitter<R>> consumer) {
-            super(actual);
+            super(downstream);
             this.consumer = consumer;
         }
 
@@ -242,9 +242,9 @@ final class FlowableMapFilter<T, R> extends Flowable<R> implements FlowableTrans
 
         Throwable outError;
 
-        MapFilterConditionalSubscriber(ConditionalSubscriber<? super R> actual,
+        MapFilterConditionalSubscriber(ConditionalSubscriber<? super R> downstream,
                 BiConsumer<? super T, ? super BasicEmitter<R>> consumer) {
-            super(actual);
+            super(downstream);
             this.consumer = consumer;
         }
 

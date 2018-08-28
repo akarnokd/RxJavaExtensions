@@ -44,7 +44,7 @@ final class FlowableValidator<T> extends Flowable<T> {
 
     static final class ValidatorConsumer<T> implements FlowableSubscriber<T>, Subscription {
 
-        final Subscriber<? super T> actual;
+        final Subscriber<? super T> downstream;
 
         final PlainConsumer<ProtocolNonConformanceException> onViolation;
 
@@ -52,24 +52,24 @@ final class FlowableValidator<T> extends Flowable<T> {
 
         boolean done;
 
-        ValidatorConsumer(Subscriber<? super T> actual,
+        ValidatorConsumer(Subscriber<? super T> downstream,
                 PlainConsumer<ProtocolNonConformanceException> onViolation) {
             super();
-            this.actual = actual;
+            this.downstream = downstream;
             this.onViolation = onViolation;
         }
 
         @Override
-        public void onSubscribe(Subscription d) {
-            if (d == null) {
+        public void onSubscribe(Subscription s) {
+            if (s == null) {
                 onViolation.accept(new NullOnSubscribeParameterException());
             }
             Subscription u = upstream;
             if (u != null) {
                 onViolation.accept(new MultipleOnSubscribeCallsException());
             }
-            upstream = d;
-            actual.onSubscribe(this);
+            upstream = s;
+            downstream.onSubscribe(this);
         }
 
         @Override
@@ -83,7 +83,7 @@ final class FlowableValidator<T> extends Flowable<T> {
             if (done) {
                 onViolation.accept(new OnNextAfterTerminationException());
             } else {
-                actual.onNext(t);
+                downstream.onNext(t);
             }
         }
 
@@ -99,7 +99,7 @@ final class FlowableValidator<T> extends Flowable<T> {
                 onViolation.accept(new MultipleTerminationsException(e));
             } else {
                 done = true;
-                actual.onError(e);
+                downstream.onError(e);
             }
         }
 
@@ -113,7 +113,7 @@ final class FlowableValidator<T> extends Flowable<T> {
                 onViolation.accept(new MultipleTerminationsException());
             } else {
                 done = true;
-                actual.onComplete();
+                downstream.onComplete();
             }
         }
 

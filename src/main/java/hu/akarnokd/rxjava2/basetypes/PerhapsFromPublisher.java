@@ -45,8 +45,8 @@ final class PerhapsFromPublisher<T> extends Perhaps<T> {
 
         boolean done;
 
-        FromPublisherSubscriber(Subscriber<? super T> actual) {
-            super(actual);
+        FromPublisherSubscriber(Subscriber<? super T> downstream) {
+            super(downstream);
         }
 
         @Override

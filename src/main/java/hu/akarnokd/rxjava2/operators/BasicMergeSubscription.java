@@ -48,7 +48,7 @@ extends AtomicInteger
 implements Subscription, InnerQueuedSubscriberSupport<T> {
     private static final long serialVersionUID = -8467324377226330554L;
 
-    final Subscriber<? super T> actual;
+    final Subscriber<? super T> downstream;
 
     final Comparator<? super T> comparator;
 
@@ -65,8 +65,8 @@ implements Subscription, InnerQueuedSubscriberSupport<T> {
     volatile boolean cancelled;
 
     @SuppressWarnings("unchecked")
-    public BasicMergeSubscription(Subscriber<? super T> actual, Comparator<? super T> comparator, int n, int prefetch, boolean delayErrors) {
-        this.actual = actual;
+    public BasicMergeSubscription(Subscriber<? super T> downstream, Comparator<? super T> comparator, int n, int prefetch, boolean delayErrors) {
+        this.downstream = downstream;
         this.comparator = comparator;
         this.delayErrors = delayErrors;
         InnerQueuedSubscriber<T>[] subs = new InnerQueuedSubscriber[n];
@@ -179,7 +179,7 @@ implements Subscription, InnerQueuedSubscriberSupport<T> {
 
         int missed = 1;
 
-        Subscriber<? super T> a = actual;
+        Subscriber<? super T> a = downstream;
         AtomicThrowable err = errors;
         InnerQueuedSubscriber<T>[] subs = subscribers;
         int n = subs.length;

@@ -1695,11 +1695,11 @@ Map the upstream signals onto some reactive type and relay its events to the dow
 
 Availability:
 
-- `Flowables.flatMap{Completable|Single|Maybe}`
-- `Observables.flatMap{Completable|Single|Maybe}`
+<!-- - `Flowables.flatMap{Completable|Single|Maybe}` -->
+<!-- - `Observables.flatMap{Completable|Single|Maybe}` -->
 - `Single`
   - `SingleTransformers.flatMap` (use with `Single.compose()`)
-  - `Singles.flatMapSingle` (use with `Single.as()`)
+  - `Singles.flatMapCompletable` (use with `Single.as()`)
   - `Singles.flatMapMaybe` (use with `Single.as()`)
   - `Singles.flatMapObservable` (use with `Single.as()`)
   - `Singles.flatMapFlowable` (use with `Single.as()`)

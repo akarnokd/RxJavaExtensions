@@ -60,8 +60,8 @@ final class SoloAmbArray<T> extends Solo<T> {
 
         final AtomicBoolean once;
 
-        AmbSubscriber(Subscriber<? super T> actual) {
-            super(actual);
+        AmbSubscriber(Subscriber<? super T> downstream) {
+            super(downstream);
             this.set = new CompositeSubscription();
             this.once = new AtomicBoolean();
         }

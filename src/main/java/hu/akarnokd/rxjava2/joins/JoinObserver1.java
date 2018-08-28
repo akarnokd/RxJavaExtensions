@@ -74,7 +74,6 @@ final class JoinObserver1<T> implements Observer<Notification<T>>, JoinObserver 
         queue.remove();
     }
 
-
     @Override
     public void onNext(Notification<T> args) {
         safeObserver.onNext(args);

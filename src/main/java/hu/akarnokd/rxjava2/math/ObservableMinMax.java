@@ -41,15 +41,14 @@ final class ObservableMinMax<T> extends ObservableWithSource<T, T> {
 
     static final class MinMaxSubscriber<T> extends DeferredScalarObserver<T, T> {
 
-
         private static final long serialVersionUID = -4484454790848904397L;
 
         final Comparator<? super T> comparator;
 
         final int flag;
 
-        MinMaxSubscriber(Observer<? super T> actual, Comparator<? super T> comparator, int flag) {
-            super(actual);
+        MinMaxSubscriber(Observer<? super T> downstream, Comparator<? super T> comparator, int flag) {
+            super(downstream);
             this.comparator = comparator;
             this.flag = flag;
         }

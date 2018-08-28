@@ -52,19 +52,19 @@ public class ObservableValveTest {
 
     @Test
     public void syncGating() {
-        PublishSubject<Boolean> pp = PublishSubject.create();
+        PublishSubject<Boolean> ps = PublishSubject.create();
 
-        TestObserver<Integer> ts = Observable.range(1, 10)
-        .compose(ObservableTransformers.<Integer>valve(pp, false))
+        TestObserver<Integer> to = Observable.range(1, 10)
+        .compose(ObservableTransformers.<Integer>valve(ps, false))
         .test();
 
-        ts.assertEmpty();
+        to.assertEmpty();
 
-        pp.onNext(true);
+        ps.onNext(true);
 
-        ts.assertResult(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        to.assertResult(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
 
-        assertFalse(pp.hasObservers());
+        assertFalse(ps.hasObservers());
     }
 
     @Test
@@ -133,29 +133,29 @@ public class ObservableValveTest {
     @Test
     public void openCloseRace() {
         for (int i = 0; i < 1000; i++) {
-            final PublishSubject<Integer> pp1 = PublishSubject.create();
-            final PublishSubject<Boolean> pp2 = PublishSubject.create();
+            final PublishSubject<Integer> ps1 = PublishSubject.create();
+            final PublishSubject<Boolean> ps2 = PublishSubject.create();
 
-            TestObserver<Integer> ts = pp1.compose(ObservableTransformers.<Integer>valve(pp2, false))
+            TestObserver<Integer> to = ps1.compose(ObservableTransformers.<Integer>valve(ps2, false))
             .test();
 
             Runnable r1 = new Runnable() {
                 @Override
                 public void run() {
-                    pp1.onNext(1);
+                    ps1.onNext(1);
                 }
             };
 
             Runnable r2 = new Runnable() {
                 @Override
                 public void run() {
-                    pp2.onNext(true);
+                    ps2.onNext(true);
                 }
             };
 
             TestHelper.race(r1, r2, Schedulers.single());
 
-            ts.assertValue(1).assertNoErrors().assertNotComplete();
+            to.assertValue(1).assertNoErrors().assertNotComplete();
         }
     }
 

@@ -51,8 +51,8 @@ final class FlowableOnAssembly<T> extends Flowable<T> {
 
         final RxJavaAssemblyException assembled;
 
-        OnAssemblySubscriber(Subscriber<? super T> actual, RxJavaAssemblyException assembled) {
-            super(actual);
+        OnAssemblySubscriber(Subscriber<? super T> downstream, RxJavaAssemblyException assembled) {
+            super(downstream);
             this.assembled = assembled;
         }
 
@@ -83,13 +83,12 @@ final class FlowableOnAssembly<T> extends Flowable<T> {
         }
     }
 
-
     static final class OnAssemblyConditionalSubscriber<T> extends BasicFuseableConditionalSubscriber<T, T> {
 
         final RxJavaAssemblyException assembled;
 
-        OnAssemblyConditionalSubscriber(ConditionalSubscriber<? super T> actual, RxJavaAssemblyException assembled) {
-            super(actual);
+        OnAssemblyConditionalSubscriber(ConditionalSubscriber<? super T> downstream, RxJavaAssemblyException assembled) {
+            super(downstream);
             this.assembled = assembled;
         }
 

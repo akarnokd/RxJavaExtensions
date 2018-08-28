@@ -65,10 +65,10 @@ final class SoloFlatMapSignal<T, R> extends Solo<R> {
 
         Subscription upstream;
 
-        FlatMapSignalSubscriber(Subscriber<? super R> actual,
+        FlatMapSignalSubscriber(Subscriber<? super R> downstream,
                 Function<? super T, ? extends Solo<? extends R>> onSuccessMapper,
-                        Function<? super Throwable, ? extends Solo<? extends R>> onErrorMapper) {
-            super(actual);
+                Function<? super Throwable, ? extends Solo<? extends R>> onErrorMapper) {
+            super(downstream);
             this.onSuccessMapper = onSuccessMapper;
             this.onErrorMapper = onErrorMapper;
             this.nextSubscriber = new NextSubscriber();

@@ -49,16 +49,16 @@ final class NonoAndThenPublisher<T> extends Flowable<T> {
 
         private static final long serialVersionUID = -1295251708496517979L;
 
-        final Subscriber<? super T> actual;
+        final Subscriber<? super T> downstream;
 
         final AtomicLong requested;
 
         final Publisher<? extends T> after;
 
-        Subscription s;
+        Subscription upstream;
 
-        AndThenSubscriber(Subscriber<? super T> actual, Publisher<? extends T> after) {
-            this.actual = actual;
+        AndThenSubscriber(Subscriber<? super T> downstream, Publisher<? extends T> after) {
+            this.downstream = downstream;
             this.after = after;
             this.requested = new AtomicLong();
         }
@@ -70,16 +70,16 @@ final class NonoAndThenPublisher<T> extends Flowable<T> {
 
         @Override
         public void cancel() {
-            s.cancel();
+            upstream.cancel();
             SubscriptionHelper.cancel(this);
         }
 
         @Override
         public void onSubscribe(Subscription s) {
-            if (SubscriptionHelper.validate(this.s, s)) {
-                this.s = s;
+            if (SubscriptionHelper.validate(this.upstream, s)) {
+                this.upstream = s;
 
-                actual.onSubscribe(this);
+                downstream.onSubscribe(this);
             }
         }
 
@@ -90,7 +90,7 @@ final class NonoAndThenPublisher<T> extends Flowable<T> {
 
         @Override
         public void onError(Throwable t) {
-            actual.onError(t);
+            downstream.onError(t);
         }
 
         @Override
@@ -104,7 +104,7 @@ final class NonoAndThenPublisher<T> extends Flowable<T> {
 
         final class AfterSubscriber implements Subscriber<T> {
 
-            final Subscriber<? super T> a = actual;
+            final Subscriber<? super T> a = downstream;
 
             @Override
             public void onSubscribe(Subscription s) {

@@ -37,16 +37,16 @@ final class ObservableOnAssembly<T> extends Observable<T> {
     }
 
     @Override
-    protected void subscribeActual(Observer<? super T> s) {
-        source.subscribe(new OnAssemblyObserver<T>(s, assembled));
+    protected void subscribeActual(Observer<? super T> observer) {
+        source.subscribe(new OnAssemblyObserver<T>(observer, assembled));
     }
 
     static final class OnAssemblyObserver<T> extends BasicFuseableObserver<T, T> {
 
         final RxJavaAssemblyException assembled;
 
-        OnAssemblyObserver(Observer<? super T> actual, RxJavaAssemblyException assembled) {
-            super(actual);
+        OnAssemblyObserver(Observer<? super T> downstream, RxJavaAssemblyException assembled) {
+            super(downstream);
             this.assembled = assembled;
         }
 
@@ -62,9 +62,9 @@ final class ObservableOnAssembly<T> extends Observable<T> {
 
         @Override
         public int requestFusion(int mode) {
-            QueueDisposable<T> qs = this.qd;
-            if (qs != null) {
-                int m = qs.requestFusion(mode);
+            QueueDisposable<T> qd = this.qd;
+            if (qd != null) {
+                int m = qd.requestFusion(mode);
                 sourceMode = m;
                 return m;
             }

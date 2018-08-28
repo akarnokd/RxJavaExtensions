@@ -52,7 +52,7 @@ final class SoloRetry<T> extends Solo<T> {
 
         final AtomicInteger wip;
 
-        final AtomicReference<Subscription> s;
+        final AtomicReference<Subscription> upstream;
 
         final Solo<T> source;
 
@@ -60,17 +60,17 @@ final class SoloRetry<T> extends Solo<T> {
 
         volatile boolean active;
 
-        RetrySubscriber(Subscriber<? super T> actual, long times, Solo<T> source) {
-            super(actual);
+        RetrySubscriber(Subscriber<? super T> downstream, long times, Solo<T> source) {
+            super(downstream);
             this.times = times;
             this.source = source;
             this.wip = new AtomicInteger();
-            this.s = new AtomicReference<Subscription>();
+            this.upstream = new AtomicReference<Subscription>();
         }
 
         @Override
         public void onSubscribe(Subscription s) {
-            if (SubscriptionHelper.replace(this.s, s)) {
+            if (SubscriptionHelper.replace(this.upstream, s)) {
                 s.request(Long.MAX_VALUE);
             }
         }
@@ -99,7 +99,7 @@ final class SoloRetry<T> extends Solo<T> {
         void subscribeNext() {
             if (wip.getAndIncrement() == 0) {
                 do {
-                    if (SubscriptionHelper.isCancelled(s.get())) {
+                    if (SubscriptionHelper.isCancelled(upstream.get())) {
                         return;
                     }
 
@@ -125,7 +125,7 @@ final class SoloRetry<T> extends Solo<T> {
         @Override
         public void cancel() {
             super.cancel();
-            SubscriptionHelper.cancel(s);
+            SubscriptionHelper.cancel(upstream);
         }
     }
 }

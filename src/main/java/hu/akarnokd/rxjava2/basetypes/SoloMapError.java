@@ -49,9 +49,9 @@ final class SoloMapError<T> extends Solo<T> {
 
         final Function<? super Throwable, ? extends Throwable> errorMapper;
 
-        MapErrorSubscriber(Subscriber<? super T> actual,
+        MapErrorSubscriber(Subscriber<? super T> downstream,
                 Function<? super Throwable, ? extends Throwable> errorMapper) {
-            super(actual);
+            super(downstream);
             this.errorMapper = errorMapper;
         }
 

@@ -47,8 +47,8 @@ final class PerhapsFromMaybe<T> extends Perhaps<T> {
 
         Disposable upstream;
 
-        FromMaybeObserver(Subscriber<? super T> actual) {
-            super(actual);
+        FromMaybeObserver(Subscriber<? super T> downstream) {
+            super(downstream);
         }
 
         @Override

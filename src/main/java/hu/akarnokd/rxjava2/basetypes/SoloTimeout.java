@@ -62,8 +62,8 @@ final class SoloTimeout<T> extends Solo<T> {
 
         final AtomicBoolean once;
 
-        TimeoutSubscriber(Subscriber<? super T> actual, Solo<T> fallback) {
-            super(actual);
+        TimeoutSubscriber(Subscriber<? super T> downstream, Solo<T> fallback) {
+            super(downstream);
             this.upstream = new AtomicReference<Subscription>();
             this.fallback = fallback;
             this.once = new AtomicBoolean();

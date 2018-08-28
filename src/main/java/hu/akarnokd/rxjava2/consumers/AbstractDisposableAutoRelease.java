@@ -102,8 +102,8 @@ implements Disposable, LambdaConsumerIntrospection {
         return DisposableHelper.isDisposed(get());
     }
 
-    public final void onSubscribe(Disposable s) {
-        DisposableHelper.setOnce(this, s);
+    public final void onSubscribe(Disposable d) {
+        DisposableHelper.setOnce(this, d);
     }
 
     @Override

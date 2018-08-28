@@ -33,11 +33,11 @@ public class FlowableProcessorsTest {
     static final class SimpleProcessor implements Processor<Integer, Integer>, Subscription {
         Subscriber<? super Integer> subscriber;
 
-        Subscription s;
+        Subscription upstream;
 
         @Override
         public void onSubscribe(Subscription s) {
-            this.s = s;
+            this.upstream = s;
             s.request(Long.MAX_VALUE);
         }
 

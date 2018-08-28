@@ -37,13 +37,13 @@ final class ObservableValidator<T> extends Observable<T> {
     }
 
     @Override
-    protected void subscribeActual(Observer<? super T> s) {
-        source.subscribe(new ValidatorConsumer<T>(s, onViolation));
+    protected void subscribeActual(Observer<? super T> observer) {
+        source.subscribe(new ValidatorConsumer<T>(observer, onViolation));
     }
 
     static final class ValidatorConsumer<T> implements Observer<T>, Disposable {
 
-        final Observer<? super T> actual;
+        final Observer<? super T> downstream;
 
         final PlainConsumer<ProtocolNonConformanceException> onViolation;
 
@@ -51,10 +51,10 @@ final class ObservableValidator<T> extends Observable<T> {
 
         boolean done;
 
-        ValidatorConsumer(Observer<? super T> actual,
+        ValidatorConsumer(Observer<? super T> downstream,
                 PlainConsumer<ProtocolNonConformanceException> onViolation) {
             super();
-            this.actual = actual;
+            this.downstream = downstream;
             this.onViolation = onViolation;
         }
 
@@ -68,7 +68,7 @@ final class ObservableValidator<T> extends Observable<T> {
                 onViolation.accept(new MultipleOnSubscribeCallsException());
             }
             upstream = d;
-            actual.onSubscribe(this);
+            downstream.onSubscribe(this);
         }
 
         @Override
@@ -82,7 +82,7 @@ final class ObservableValidator<T> extends Observable<T> {
             if (done) {
                 onViolation.accept(new OnNextAfterTerminationException());
             } else {
-                actual.onNext(t);
+                downstream.onNext(t);
             }
         }
 
@@ -98,7 +98,7 @@ final class ObservableValidator<T> extends Observable<T> {
                 onViolation.accept(new MultipleTerminationsException(e));
             } else {
                 done = true;
-                actual.onError(e);
+                downstream.onError(e);
             }
         }
 
@@ -112,7 +112,7 @@ final class ObservableValidator<T> extends Observable<T> {
                 onViolation.accept(new MultipleTerminationsException());
             } else {
                 done = true;
-                actual.onComplete();
+                downstream.onComplete();
             }
         }
 

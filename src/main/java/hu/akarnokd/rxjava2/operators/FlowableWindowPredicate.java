@@ -79,7 +79,7 @@ final class FlowableWindowPredicate<T> extends Flowable<Flowable<T>> implements 
 
         private static final long serialVersionUID = 2749959965593866309L;
 
-        final Subscriber<? super Flowable<T>> actual;
+        final Subscriber<? super Flowable<T>> downstream;
 
         final Predicate<? super T> predicate;
 
@@ -89,7 +89,7 @@ final class FlowableWindowPredicate<T> extends Flowable<Flowable<T>> implements 
 
         final AtomicBoolean cancelled = new AtomicBoolean();
 
-        Subscription s;
+        Subscription upstream;
 
         UnicastProcessor<T> window;
 
@@ -97,11 +97,11 @@ final class FlowableWindowPredicate<T> extends Flowable<Flowable<T>> implements 
 
         final AtomicReference<UnicastProcessor<T>> pending; // 1-element drain queue for Mode.BEFORE
 
-        WindowPredicateSubscriber(Subscriber<? super Flowable<T>> actual,
+        WindowPredicateSubscriber(Subscriber<? super Flowable<T>> downstream,
                 Predicate<? super T> predicate, Mode mode,
                 int bufferSize) {
             super(1);
-            this.actual = actual;
+            this.downstream = downstream;
             this.predicate = predicate;
             this.mode = mode;
             this.bufferSize = bufferSize;
@@ -117,16 +117,16 @@ final class FlowableWindowPredicate<T> extends Flowable<Flowable<T>> implements 
 
         @Override
         public void onSubscribe(Subscription s) {
-            if (SubscriptionHelper.validate(this.s, s)) {
-                this.s = s;
-                actual.onSubscribe(this);
+            if (SubscriptionHelper.validate(this.upstream, s)) {
+                this.upstream = s;
+                downstream.onSubscribe(this);
             }
         }
 
         @Override
         public void onNext(T t) {
             if (!tryOnNext(t)) {
-                s.request(1);
+                upstream.request(1);
             }
         }
 
@@ -145,7 +145,7 @@ final class FlowableWindowPredicate<T> extends Flowable<Flowable<T>> implements 
                 if (mode == Mode.BEFORE) {
                     requestedWindows.getAndDecrement();
                 }
-                actual.onNext(w);
+                downstream.onNext(w);
             }
 
             boolean b;
@@ -155,8 +155,8 @@ final class FlowableWindowPredicate<T> extends Flowable<Flowable<T>> implements 
                 b = predicate.test(t) ^ mode == Mode.BEFORE;
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
-                s.cancel();
-                actual.onError(ex);
+                upstream.cancel();
+                downstream.onError(ex);
                 w.onError(ex);
                 window = null;
                 return true;
@@ -196,7 +196,7 @@ final class FlowableWindowPredicate<T> extends Flowable<Flowable<T>> implements 
                 w.onError(t);
             }
 
-            actual.onError(t);
+            downstream.onError(t);
         }
 
         @Override
@@ -207,7 +207,7 @@ final class FlowableWindowPredicate<T> extends Flowable<Flowable<T>> implements 
                 w.onComplete();
             }
 
-            actual.onComplete();
+            downstream.onComplete();
         }
 
         @Override
@@ -216,7 +216,7 @@ final class FlowableWindowPredicate<T> extends Flowable<Flowable<T>> implements 
                 BackpressureHelper.add(requestedWindows, n);
                 drain();
             }
-            s.request(n);
+            upstream.request(n);
         }
 
         @Override
@@ -229,7 +229,7 @@ final class FlowableWindowPredicate<T> extends Flowable<Flowable<T>> implements 
         @Override
         public void run() {
             if (decrementAndGet() == 0) {
-                s.cancel();
+                upstream.cancel();
             }
         }
 
@@ -243,7 +243,7 @@ final class FlowableWindowPredicate<T> extends Flowable<Flowable<T>> implements 
             }
             getAndIncrement();
             requestedWindows.getAndDecrement();
-            actual.onNext(w);
+            downstream.onNext(w);
         }
     }
 }

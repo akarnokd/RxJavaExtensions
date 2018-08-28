@@ -1130,15 +1130,15 @@ public class AsyncObservableTest {
 
         AsyncObservable.runAsync(Schedulers.single(), new BiConsumer<Observer<Object>, Disposable>() {
             @Override
-            public void accept(Observer<? super Object> s, Disposable d) throws Exception {
+            public void accept(Observer<? super Object> observer, Disposable d) throws Exception {
                 Thread.sleep(200);
-                s.onNext(1);
-                s.onNext(2);
-                s.onNext(3);
+                observer.onNext(1);
+                observer.onNext(2);
+                observer.onNext(3);
                 Thread.sleep(200);
-                s.onNext(4);
-                s.onNext(5);
-                s.onComplete();
+                observer.onNext(4);
+                observer.onNext(5);
+                observer.onComplete();
             }
         })
         .test()
@@ -1152,14 +1152,14 @@ public class AsyncObservableTest {
             UnicastSubject.<Object>create(),
         new BiConsumer<Observer<Object>, Disposable>() {
             @Override
-            public void accept(Observer<? super Object> s, Disposable d) throws Exception {
-                s.onNext(1);
-                s.onNext(2);
-                s.onNext(3);
+            public void accept(Observer<? super Object> observer, Disposable d) throws Exception {
+                observer.onNext(1);
+                observer.onNext(2);
+                observer.onNext(3);
                 Thread.sleep(200);
-                s.onNext(4);
-                s.onNext(5);
-                s.onComplete();
+                observer.onNext(4);
+                observer.onNext(5);
+                observer.onComplete();
             }
         })
         .test()

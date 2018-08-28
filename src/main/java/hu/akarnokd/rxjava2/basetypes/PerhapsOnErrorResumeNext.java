@@ -58,8 +58,8 @@ final class PerhapsOnErrorResumeNext<T> extends Perhaps<T> {
 
         Subscription upstream;
 
-        OnErrorResumeNextSubscriber(Subscriber<? super T> actual, Function<? super Throwable, ? extends Perhaps<? extends T>> fallbackSupplier) {
-            super(actual);
+        OnErrorResumeNextSubscriber(Subscriber<? super T> downstream, Function<? super Throwable, ? extends Perhaps<? extends T>> fallbackSupplier) {
+            super(downstream);
             this.fallbackSupplier = fallbackSupplier;
             this.otherSubscriber = new OtherSubscriber();
         }

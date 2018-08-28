@@ -68,26 +68,26 @@ final class NonoDoOnLifecycle extends Nono {
 
     final class DoOnSubscriber extends BasicNonoSubscriber {
 
-        DoOnSubscriber(Subscriber<? super Void> actual) {
-            super(actual);
+        DoOnSubscriber(Subscriber<? super Void> downstream) {
+            super(downstream);
         }
 
         @Override
         public void onSubscribe(Subscription s) {
-            if (SubscriptionHelper.validate(this.s, s)) {
-                this.s = s;
+            if (SubscriptionHelper.validate(this.upstream, s)) {
+                this.upstream = s;
 
                 try {
                     onSubscribe.accept(s);
                 } catch (Throwable ex) {
                     Exceptions.throwIfFatal(ex);
                     s.cancel();
-                    actual.onSubscribe(EmptySubscription.INSTANCE);
+                    downstream.onSubscribe(EmptySubscription.INSTANCE);
                     onError(ex);
                     return;
                 }
 
-                actual.onSubscribe(this);
+                downstream.onSubscribe(this);
             }
         }
 
@@ -105,7 +105,7 @@ final class NonoDoOnLifecycle extends Nono {
                 t = new CompositeException(t, ex);
             }
 
-            actual.onError(t);
+            downstream.onError(t);
 
             doAfter();
         }
@@ -118,11 +118,11 @@ final class NonoDoOnLifecycle extends Nono {
                     onComplete.run();
                 } catch (Throwable ex) {
                     Exceptions.throwIfFatal(ex);
-                    actual.onError(ex);
+                    downstream.onError(ex);
                     return;
                 }
 
-                actual.onComplete();
+                downstream.onComplete();
 
                 doAfter();
             }
@@ -145,7 +145,7 @@ final class NonoDoOnLifecycle extends Nono {
                 Exceptions.throwIfFatal(ex);
                 RxJavaPlugins.onError(ex);
             }
-            s.cancel();
+            upstream.cancel();
         }
 
         @Override
@@ -156,7 +156,7 @@ final class NonoDoOnLifecycle extends Nono {
                 Exceptions.throwIfFatal(ex);
                 RxJavaPlugins.onError(ex);
             }
-            s.request(n);
+            upstream.request(n);
         }
     }
 }

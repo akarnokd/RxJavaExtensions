@@ -69,43 +69,43 @@ public class DispatchWorkProcessorTest {
     public void online() {
         DispatchWorkProcessor<Integer> dws = DispatchWorkProcessor.create(Schedulers.trampoline());
 
-        TestSubscriber<Integer> to1 = dws.test();
+        TestSubscriber<Integer> ts1 = dws.test();
 
         assertTrue(dws.hasSubscribers());
 
-        to1.assertEmpty();
+        ts1.assertEmpty();
 
         dws.onNext(1);
 
-        to1.assertValuesOnly(1);
+        ts1.assertValuesOnly(1);
 
         dws.onNext(2);
 
-        to1.assertValuesOnly(1, 2);
+        ts1.assertValuesOnly(1, 2);
 
-        to1.dispose();
+        ts1.dispose();
 
         assertFalse(dws.hasSubscribers());
 
-        TestSubscriber<Integer> to2 = dws.test();
+        TestSubscriber<Integer> ts2 = dws.test();
 
         assertTrue(dws.hasSubscribers());
 
         dws.onNext(3);
 
-        to2.assertValuesOnly(3);
+        ts2.assertValuesOnly(3);
 
         dws.onNext(4);
 
-        to2.assertValuesOnly(3, 4);
+        ts2.assertValuesOnly(3, 4);
 
         dws.onNext(5);
 
-        to2.assertValuesOnly(3, 4, 5);
+        ts2.assertValuesOnly(3, 4, 5);
 
         dws.onComplete();
 
-        to2.assertResult(3, 4, 5);
+        ts2.assertResult(3, 4, 5);
 
         assertFalse(dws.hasSubscribers());
     }
@@ -125,17 +125,17 @@ public class DispatchWorkProcessorTest {
 
         assertFalse(dws.isDisposed());
 
-        BooleanSubscription d = new BooleanSubscription();
+        BooleanSubscription bs = new BooleanSubscription();
 
-        dws.onSubscribe(d);
+        dws.onSubscribe(bs);
 
         assertFalse(dws.isDisposed());
-        assertFalse(d.isCancelled());
+        assertFalse(bs.isCancelled());
 
         dws.dispose();
 
         assertTrue(dws.isDisposed());
-        assertTrue(d.isCancelled());
+        assertTrue(bs.isCancelled());
     }
 
     @Test
@@ -185,13 +185,13 @@ public class DispatchWorkProcessorTest {
     public void errorLive() {
         DispatchWorkProcessor<Integer> dws = DispatchWorkProcessor.create(Schedulers.trampoline(), true);
 
-        TestSubscriber<Integer> to = dws.test();
+        TestSubscriber<Integer> ts = dws.test();
 
         dws.onNext(1);
         dws.onNext(2);
         dws.onError(new TestException());
 
-        to.assertFailure(TestException.class, 1, 2);
+        ts.assertFailure(TestException.class, 1, 2);
 
         dws.test().assertFailure(TestException.class);
 
@@ -203,11 +203,11 @@ public class DispatchWorkProcessorTest {
     public void addRemove() {
         DispatchWorkProcessor<Integer> dws = DispatchWorkProcessor.create(Schedulers.trampoline(), true);
 
-        TestSubscriber<Integer> to = dws.test();
+        TestSubscriber<Integer> ts = dws.test();
 
         dws.test();
 
-        to.cancel();
+        ts.cancel();
 
         dws.test(1L, true);
     }
@@ -216,11 +216,11 @@ public class DispatchWorkProcessorTest {
     public void noDelayErrorComplete() {
         DispatchWorkProcessor<Integer> dws = DispatchWorkProcessor.create(Schedulers.trampoline(), false);
 
-        TestSubscriber<Integer> to = dws.test();
+        TestSubscriber<Integer> ts = dws.test();
 
         dws.onComplete();
 
-        to.assertResult();
+        ts.assertResult();
 
         dws.test().assertResult();
     }
@@ -230,21 +230,21 @@ public class DispatchWorkProcessorTest {
         for (int i = 0; i < TestHelper.RACE_LONG_LOOPS; i++) {
             final DispatchWorkProcessor<Integer> dws = DispatchWorkProcessor.create(Schedulers.trampoline(), true);
 
-            final TestSubscriber<Integer> to = dws.test();
+            final TestSubscriber<Integer> ts = dws.test();
 
-            final TestSubscriber<Integer> to2 = new TestSubscriber<Integer>();
+            final TestSubscriber<Integer> ts2 = new TestSubscriber<Integer>();
 
             Runnable r1 = new Runnable() {
                 @Override
                 public void run() {
-                    dws.subscribe(to2);
+                    dws.subscribe(ts2);
                 }
             };
 
             Runnable r2 = new Runnable() {
                 @Override
                 public void run() {
-                    to.cancel();
+                    ts.cancel();
                 }
             };
 
@@ -380,7 +380,7 @@ public class DispatchWorkProcessorTest {
 
         Flowable.range(0, n).subscribe(dws);
 
-        to.awaitDone(10, TimeUnit.SECONDS)
+        to.awaitDone(30, TimeUnit.SECONDS)
         .assertValueCount(1)
         .assertNoErrors()
         .assertComplete();
@@ -418,7 +418,7 @@ public class DispatchWorkProcessorTest {
 
         Flowable.range(0, n).subscribeOn(Schedulers.single()).subscribe(dws);
 
-        to.awaitDone(10, TimeUnit.SECONDS)
+        to.awaitDone(30, TimeUnit.SECONDS)
         .assertValueCount(1)
         .assertNoErrors()
         .assertComplete();
@@ -439,7 +439,7 @@ public class DispatchWorkProcessorTest {
         final DispatchWorkProcessor<Integer> dws = DispatchWorkProcessor.create(Schedulers.computation(), true);
 
         final AtomicInteger counter = new AtomicInteger();
-        
+
         Single<List<Integer>> o = dws
                 .doOnNext(new Consumer<Integer>() {
                     @Override
@@ -465,7 +465,7 @@ public class DispatchWorkProcessorTest {
 
         Flowable.range(0, n).subscribeOn(Schedulers.single()).subscribe(dws);
 
-        to.awaitDone(10, TimeUnit.SECONDS)
+        to.awaitDone(30, TimeUnit.SECONDS)
         .withTag("Received: " + counter.get())
         .assertValueCount(1)
         .assertNoErrors()

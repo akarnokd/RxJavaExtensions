@@ -47,15 +47,15 @@ final class NonoOnErrorResume extends Nono {
 
         private static final long serialVersionUID = 5344018235737739066L;
 
-        final Subscriber<? super Void> actual;
+        final Subscriber<? super Void> downstream;
 
         final Function<? super Throwable, ? extends Nono> errorHandler;
 
         boolean once;
 
-        OnErrorResumeSubscriber(Subscriber<? super Void> actual,
+        OnErrorResumeSubscriber(Subscriber<? super Void> downstream,
                 Function<? super Throwable, ? extends Nono> errorHandler) {
-            this.actual = actual;
+            this.downstream = downstream;
             this.errorHandler = errorHandler;
         }
 
@@ -68,7 +68,7 @@ final class NonoOnErrorResume extends Nono {
         public void onSubscribe(Subscription s) {
             SubscriptionHelper.replace(this, s);
             if (!once) {
-                actual.onSubscribe(this);
+                downstream.onSubscribe(this);
             }
         }
 
@@ -87,19 +87,19 @@ final class NonoOnErrorResume extends Nono {
                     np = errorHandler.apply(t);
                 } catch (Throwable ex) {
                     Exceptions.throwIfFatal(ex);
-                    actual.onError(new CompositeException(t, ex));
+                    downstream.onError(new CompositeException(t, ex));
                     return;
                 }
 
                 np.subscribe(this);
             } else {
-                actual.onError(t);
+                downstream.onError(t);
             }
         }
 
         @Override
         public void onComplete() {
-            actual.onComplete();
+            downstream.onComplete();
         }
     }
 }

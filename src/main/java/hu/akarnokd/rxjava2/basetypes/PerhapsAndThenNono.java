@@ -54,8 +54,8 @@ final class PerhapsAndThenNono<T> extends Perhaps<T> {
 
         Subscription upstream;
 
-        AndThenNonoSubscriber(Subscriber<? super T> actual, Nono other) {
-            super(actual);
+        AndThenNonoSubscriber(Subscriber<? super T> downstream, Nono other) {
+            super(downstream);
             this.other = other;
             this.otherSubscriber = new OtherSubscriber();
         }

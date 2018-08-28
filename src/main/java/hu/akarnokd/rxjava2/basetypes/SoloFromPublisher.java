@@ -47,8 +47,8 @@ final class SoloFromPublisher<T> extends Solo<T> {
 
         boolean done;
 
-        FromPublisherSubscriber(Subscriber<? super T> actual) {
-            super(actual);
+        FromPublisherSubscriber(Subscriber<? super T> downstream) {
+            super(downstream);
         }
 
         @Override

@@ -45,8 +45,8 @@ final class NonoMapError extends Nono {
 
         final Function<? super Throwable, ? extends Throwable> mapper;
 
-        MapErrorSubscriber(Subscriber<? super Void> actual, Function<? super Throwable, ? extends Throwable> mapper) {
-            super(actual);
+        MapErrorSubscriber(Subscriber<? super Void> downstream, Function<? super Throwable, ? extends Throwable> mapper) {
+            super(downstream);
             this.mapper = mapper;
         }
 
@@ -59,12 +59,12 @@ final class NonoMapError extends Nono {
                 Exceptions.throwIfFatal(exc);
                 ex = new CompositeException(t, exc);
             }
-            actual.onError(ex);
+            downstream.onError(ex);
         }
 
         @Override
         public void onComplete() {
-            actual.onComplete();
+            downstream.onComplete();
         }
 
     }

@@ -36,22 +36,22 @@ implements Subscriber<T>, Future<T>, Subscription {
     T value;
     Throwable error;
 
-    final AtomicReference<Subscription> s;
+    final AtomicReference<Subscription> upstream;
 
     FuturePerhapsSubscriber() {
         super(1);
-        this.s = new AtomicReference<Subscription>();
+        this.upstream = new AtomicReference<Subscription>();
     }
 
     @Override
     public boolean cancel(boolean mayInterruptIfRunning) {
         for (;;) {
-            Subscription a = s.get();
+            Subscription a = upstream.get();
             if (a == this || a == SubscriptionHelper.CANCELLED) {
                 return false;
             }
 
-            if (s.compareAndSet(a, SubscriptionHelper.CANCELLED)) {
+            if (upstream.compareAndSet(a, SubscriptionHelper.CANCELLED)) {
                 if (a != null) {
                     a.cancel();
                 }
@@ -63,7 +63,7 @@ implements Subscriber<T>, Future<T>, Subscription {
 
     @Override
     public boolean isCancelled() {
-        return SubscriptionHelper.isCancelled(s.get());
+        return SubscriptionHelper.isCancelled(upstream.get());
     }
 
     @Override
@@ -108,7 +108,7 @@ implements Subscriber<T>, Future<T>, Subscription {
 
     @Override
     public void onSubscribe(Subscription s) {
-        if (SubscriptionHelper.setOnce(this.s, s)) {
+        if (SubscriptionHelper.setOnce(this.upstream, s)) {
             s.request(Long.MAX_VALUE);
         }
     }
@@ -121,13 +121,13 @@ implements Subscriber<T>, Future<T>, Subscription {
     @Override
     public void onError(Throwable t) {
         for (;;) {
-            Subscription a = s.get();
+            Subscription a = upstream.get();
             if (a == this || a == SubscriptionHelper.CANCELLED) {
                 RxJavaPlugins.onError(t);
                 return;
             }
             error = t;
-            if (s.compareAndSet(a, this)) {
+            if (upstream.compareAndSet(a, this)) {
                 countDown();
                 return;
             }
@@ -137,11 +137,11 @@ implements Subscriber<T>, Future<T>, Subscription {
     @Override
     public void onComplete() {
         for (;;) {
-            Subscription a = s.get();
+            Subscription a = upstream.get();
             if (a == this || a == SubscriptionHelper.CANCELLED) {
                 return;
             }
-            if (s.compareAndSet(a, this)) {
+            if (upstream.compareAndSet(a, this)) {
                 countDown();
                 return;
             }

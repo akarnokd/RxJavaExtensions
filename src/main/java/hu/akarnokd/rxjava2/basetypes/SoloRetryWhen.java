@@ -73,7 +73,7 @@ final class SoloRetryWhen<T> extends Solo<T> {
 
         final AtomicInteger wip;
 
-        final AtomicReference<Subscription> s;
+        final AtomicReference<Subscription> upstream;
 
         final Solo<T> source;
 
@@ -85,19 +85,19 @@ final class SoloRetryWhen<T> extends Solo<T> {
 
         volatile boolean active;
 
-        RetrySubscriber(Subscriber<? super T> actual, FlowableProcessor<Throwable> signal, Solo<T> source) {
-            super(actual);
+        RetrySubscriber(Subscriber<? super T> downstream, FlowableProcessor<Throwable> signal, Solo<T> source) {
+            super(downstream);
             this.signal = signal;
             this.source = source;
             this.other = new OtherSubscriber();
             this.wip = new AtomicInteger();
-            this.s = new AtomicReference<Subscription>();
+            this.upstream = new AtomicReference<Subscription>();
             this.once = new AtomicBoolean();
         }
 
         @Override
         public void onSubscribe(Subscription s) {
-            if (SubscriptionHelper.replace(this.s, s)) {
+            if (SubscriptionHelper.replace(this.upstream, s)) {
                 s.request(Long.MAX_VALUE);
             }
         }
@@ -117,7 +117,7 @@ final class SoloRetryWhen<T> extends Solo<T> {
         void subscribeNext() {
             if (wip.getAndIncrement() == 0) {
                 do {
-                    if (SubscriptionHelper.isCancelled(s.get())) {
+                    if (SubscriptionHelper.isCancelled(upstream.get())) {
                         return;
                     }
 
@@ -142,12 +142,12 @@ final class SoloRetryWhen<T> extends Solo<T> {
         @Override
         public void cancel() {
             super.cancel();
-            SubscriptionHelper.cancel(s);
+            SubscriptionHelper.cancel(upstream);
             SubscriptionHelper.cancel(other);
         }
 
         void otherError(Throwable ex) {
-            SubscriptionHelper.cancel(s);
+            SubscriptionHelper.cancel(upstream);
             if (once.compareAndSet(false, true)) {
                 downstream.onError(ex);
             } else {
@@ -156,7 +156,7 @@ final class SoloRetryWhen<T> extends Solo<T> {
         }
 
         void otherComplete() {
-            SubscriptionHelper.cancel(s);
+            SubscriptionHelper.cancel(upstream);
             if (once.compareAndSet(false, true)) {
                 downstream.onError(new NoSuchElementException());
             }

@@ -44,7 +44,6 @@ implements MaybeConverter<T, Flowable<R>> {
 
     final Callable<? extends Publisher<? extends R>> onCompleteHandler;
 
-
     MaybeFlatMapSignalFlowable(Maybe<T> source,
             Function<? super T, ? extends Publisher<? extends R>> onSuccessHandler,
             Function<? super Throwable, ? extends Publisher<? extends R>> onErrorHandler,
@@ -61,8 +60,8 @@ implements MaybeConverter<T, Flowable<R>> {
     }
 
     @Override
-    protected void subscribeActual(Subscriber<? super R> observer) {
-        source.subscribe(new FlatMapSignalConsumer<T, R>(observer, onSuccessHandler, onErrorHandler, onCompleteHandler));
+    protected void subscribeActual(Subscriber<? super R> subscriber) {
+        source.subscribe(new FlatMapSignalConsumer<T, R>(subscriber, onSuccessHandler, onErrorHandler, onCompleteHandler));
     }
 
     static final class FlatMapSignalConsumer<T, R>

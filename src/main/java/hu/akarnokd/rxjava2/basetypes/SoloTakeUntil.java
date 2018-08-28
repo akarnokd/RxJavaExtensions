@@ -55,22 +55,22 @@ final class SoloTakeUntil<T> extends Solo<T> {
 
         private static final long serialVersionUID = -3094876274753374720L;
 
-        final AtomicReference<Subscription> s;
+        final AtomicReference<Subscription> upstream;
 
         final OtherSubscriber other;
 
         final AtomicBoolean once;
 
-        TakeUntilSubscriber(Subscriber<? super T> actual) {
-            super(actual);
-            this.s = new AtomicReference<Subscription>();
+        TakeUntilSubscriber(Subscriber<? super T> downstream) {
+            super(downstream);
+            this.upstream = new AtomicReference<Subscription>();
             this.other = new OtherSubscriber();
             this.once = new AtomicBoolean();
         }
 
         @Override
         public void onSubscribe(Subscription s) {
-            if (SubscriptionHelper.setOnce(this.s, s)) {
+            if (SubscriptionHelper.setOnce(this.upstream, s)) {
                 s.request(Long.MAX_VALUE);
             }
         }
@@ -106,7 +106,7 @@ final class SoloTakeUntil<T> extends Solo<T> {
         }
 
         void otherError(Throwable t) {
-            SubscriptionHelper.cancel(s);
+            SubscriptionHelper.cancel(upstream);
             if (once.compareAndSet(false, true)) {
                 value = null;
                 downstream.onError(t);

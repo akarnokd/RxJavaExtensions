@@ -40,7 +40,6 @@ public class MaybeConsumersTest implements Consumer<Object>, Action {
 
     final List<Object> events = new ArrayList<Object>();
 
-
     @Override
     public void run() throws Exception {
         events.add("OnComplete");
@@ -185,7 +184,6 @@ public class MaybeConsumersTest implements Consumer<Object>, Action {
         }
     }
 
-
     @Test
     public void onErrorCrash() {
         List<Throwable> errors = TestHelper.trackPluginErrors();
@@ -239,14 +237,14 @@ public class MaybeConsumersTest implements Consumer<Object>, Action {
                     new Maybe<Integer>() {
                         @Override
                         protected void subscribeActual(
-                                MaybeObserver<? super Integer> s) {
-                            s.onSubscribe(Disposables.empty());
-                            s.onComplete();
+                                MaybeObserver<? super Integer> observer) {
+                            observer.onSubscribe(Disposables.empty());
+                            observer.onComplete();
 
-                            s.onSubscribe(Disposables.empty());
-                            s.onSuccess(2);
-                            s.onComplete();
-                            s.onError(new IOException());
+                            observer.onSubscribe(Disposables.empty());
+                            observer.onSuccess(2);
+                            observer.onComplete();
+                            observer.onError(new IOException());
                         }
                     }, composite, this, this, this
                 );

@@ -48,37 +48,37 @@ final class NonoRetryWhile extends Nono {
 
         private static final long serialVersionUID = -3208438978515192633L;
 
-        protected final Subscriber<? super Void> actual;
+        protected final Subscriber<? super Void> downstream;
 
         final Nono source;
 
         final Predicate<? super Throwable> predicate;
 
-        final AtomicReference<Subscription> s;
+        final AtomicReference<Subscription> upstream;
 
         volatile boolean active;
 
         boolean once;
 
-        RetryUntilSubscriber(Subscriber<? super Void> actual,
+        RetryUntilSubscriber(Subscriber<? super Void> downstream,
                 Predicate<? super Throwable> predicate, Nono source) {
-            this.actual = actual;
+            this.downstream = downstream;
             this.predicate = predicate;
             this.source = source;
-            this.s = new AtomicReference<Subscription>();
+            this.upstream = new AtomicReference<Subscription>();
         }
 
         @Override
         public void cancel() {
-            SubscriptionHelper.cancel(s);
+            SubscriptionHelper.cancel(upstream);
         }
 
         @Override
         public void onSubscribe(Subscription s) {
-            SubscriptionHelper.replace(this.s, s);
+            SubscriptionHelper.replace(this.upstream, s);
             if (!once) {
                 once = true;
-                actual.onSubscribe(this);
+                downstream.onSubscribe(this);
             }
         }
 
@@ -95,17 +95,17 @@ final class NonoRetryWhile extends Nono {
                 b = predicate.test(t);
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
-                actual.onError(new CompositeException(t, ex));
+                downstream.onError(new CompositeException(t, ex));
                 return;
             }
 
             if (!b) {
-                actual.onError(t);
+                downstream.onError(t);
             } else {
                 active = false;
                 if (getAndIncrement() == 0) {
                     do {
-                        if (SubscriptionHelper.isCancelled(s.get())) {
+                        if (SubscriptionHelper.isCancelled(upstream.get())) {
                             return;
                         }
 
@@ -120,7 +120,7 @@ final class NonoRetryWhile extends Nono {
 
         @Override
         public void onComplete() {
-            actual.onComplete();
+            downstream.onComplete();
         }
     }
 }

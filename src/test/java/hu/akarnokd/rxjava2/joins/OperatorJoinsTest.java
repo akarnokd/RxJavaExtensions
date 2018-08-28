@@ -134,42 +134,51 @@ public class OperatorJoinsTest {
         public R call() {
             throw new TestException("Forced failure");
         }
+
         @Override
         public R apply(Object t1) {
             return call();
         }
+
         @Override
         public R apply(Integer t1, Integer t2, Integer t3, Integer t4, Integer t5,
                 Integer t6, Integer t7, Integer t8, Integer t9) {
             return call();
         }
+
         @Override
         public R apply(Integer t1, Integer t2, Integer t3, Integer t4, Integer t5,
                 Integer t6, Integer t7, Integer t8) {
             return call();
         }
+
         @Override
         public R apply(Integer t1, Integer t2, Integer t3, Integer t4, Integer t5,
                 Integer t6, Integer t7) {
             return call();
         }
+
         @Override
         public R apply(Integer t1, Integer t2, Integer t3, Integer t4, Integer t5,
                 Integer t6) {
             return call();
         }
+
         @Override
         public R apply(Integer t1, Integer t2, Integer t3, Integer t4, Integer t5) {
             return call();
         }
+
         @Override
         public R apply(Integer t1, Integer t2, Integer t3, Integer t4) {
             return call();
         }
+
         @Override
         public R apply(Integer t1, Integer t2, Integer t3) {
             return call();
         }
+
         @Override
         public R apply(Integer t1, Integer t2) {
             return call();
@@ -593,6 +602,7 @@ public class OperatorJoinsTest {
                 .and(some)
                 .then(add)));
     }
+
     @Test
     public void and5Error5() {
         verifyError(JoinObservable.when(
@@ -676,6 +686,7 @@ public class OperatorJoinsTest {
                 .and(some)
                 .then(add)));
     }
+
     @Test
     public void and6Error5() {
         verifyError(JoinObservable.when(
@@ -777,6 +788,7 @@ public class OperatorJoinsTest {
                 .and(some)
                 .then(add)));
     }
+
     @Test
     public void and7Error5() {
         verifyError(JoinObservable.when(
@@ -899,6 +911,7 @@ public class OperatorJoinsTest {
                 .and(some)
                 .then(add)));
     }
+
     @Test
     public void and8Error5() {
         verifyError(JoinObservable.when(
@@ -1044,6 +1057,7 @@ public class OperatorJoinsTest {
                 .and(some)
                 .then(add)));
     }
+
     @Test
     public void and9Error5() {
         verifyError(JoinObservable.when(
@@ -1103,6 +1117,7 @@ public class OperatorJoinsTest {
                 .and(some)
                 .then(add)));
     }
+
     @Test
     public void and9Error9() {
         verifyError(JoinObservable.when(
@@ -1220,6 +1235,7 @@ public class OperatorJoinsTest {
                 .and(some)
                 .then(add)));
     }
+
     @Test
     public void andNError5() {
         verifyError(JoinObservable.when(
@@ -1338,7 +1354,6 @@ public class OperatorJoinsTest {
             verifyError(JoinObservable.when(p.then(add)));
         }
     }
-
 
     @Test
     public void thenNThrows() {

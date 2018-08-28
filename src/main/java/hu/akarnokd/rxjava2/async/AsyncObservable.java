@@ -41,7 +41,6 @@ public final class AsyncObservable {
         throw new IllegalStateException("No instances!");
     }
 
-
     /**
      * Invokes the specified function asynchronously and returns an Observable that emits the result.
      * <p>
@@ -1472,7 +1471,6 @@ public final class AsyncObservable {
         return forEachFuture(source, onNext, Functions.emptyConsumer(), Functions.EMPTY_ACTION, Schedulers.computation());
     }
 
-
     /**
      * Subscribes to the given source and calls the callback for each emitted item, and surfaces the completion
      * or error through a Future.
@@ -1500,7 +1498,6 @@ public final class AsyncObservable {
             final Consumer<? super Throwable> onError) {
         return forEachFuture(source, onNext, onError, Functions.EMPTY_ACTION, Schedulers.computation());
     }
-
 
     /**
      * Subscribes to the given source and calls the callback for each emitted item, and surfaces the completion
@@ -1532,7 +1529,6 @@ public final class AsyncObservable {
         return forEachFuture(source, onNext, onError, onComplete, Schedulers.computation());
     }
 
-
     /**
      * Subscribes to the given source and calls the callback for each emitted item, and surfaces the completion
      * or error through a Future, scheduled on the given scheduler.
@@ -1556,7 +1552,6 @@ public final class AsyncObservable {
             Scheduler scheduler) {
         return forEachFuture(source, onNext, Functions.emptyConsumer(), Functions.EMPTY_ACTION, scheduler);
     }
-
 
     /**
      * Subscribes to the given source and calls the callback for each emitted item, and surfaces the completion
@@ -1583,7 +1578,6 @@ public final class AsyncObservable {
             Scheduler scheduler) {
         return forEachFuture(source, onNext, onError, Functions.EMPTY_ACTION, scheduler);
     }
-
 
     /**
      * Subscribes to the given source and calls the callback for each emitted item, and surfaces the completion
@@ -1641,7 +1635,7 @@ public final class AsyncObservable {
             }
         }, new Consumer<Disposable>() {
             @Override
-            public void accept(Disposable s) throws Exception {
+            public void accept(Disposable d) throws Exception {
             }
         });
         d.lazySet(ls);
@@ -1710,8 +1704,8 @@ public final class AsyncObservable {
 
         return new DisposableObservable<T>() {
             @Override
-            protected void subscribeActual(Observer<? super T> s) {
-                subject.subscribe(s);
+            protected void subscribeActual(Observer<? super T> observer) {
+                subject.subscribe(observer);
             }
 
             @Override

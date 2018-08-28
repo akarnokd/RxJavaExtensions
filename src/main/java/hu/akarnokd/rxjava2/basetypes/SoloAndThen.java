@@ -55,8 +55,8 @@ final class SoloAndThen<T> extends Solo<T> {
 
         Subscription upstream;
 
-        AndThenSubscriber(Subscriber<? super T> actual, Nono other) {
-            super(actual);
+        AndThenSubscriber(Subscriber<? super T> downstream, Nono other) {
+            super(downstream);
             this.otherSubscriber = new OtherSubscriber();
             this.other = other;
         }

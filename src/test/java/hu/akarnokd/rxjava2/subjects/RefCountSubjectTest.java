@@ -42,17 +42,17 @@ public class RefCountSubjectTest {
 
         assertTrue(source.hasObservers());
 
-        TestObserver<Integer> ts = rcp.test();
+        TestObserver<Integer> to = rcp.test();
 
         source.onNext(1);
 
-        ts.assertValue(1);
+        to.assertValue(1);
 
         source.onNext(2);
 
-        ts.assertValues(1, 2);
+        to.assertValues(1, 2);
 
-        ts.cancel();
+        to.cancel();
 
         assertFalse(source.hasObservers());
 
@@ -71,7 +71,7 @@ public class RefCountSubjectTest {
 
         assertTrue(source.hasObservers());
 
-        TestObserver<Integer> ts = rcp.test();
+        TestObserver<Integer> to = rcp.test();
 
         assertFalse(rcp.hasComplete());
         assertFalse(rcp.hasThrowable());
@@ -80,17 +80,17 @@ public class RefCountSubjectTest {
 
         source.onNext(1);
 
-        ts.assertValue(1);
+        to.assertValue(1);
 
         source.onNext(2);
 
-        ts.assertValues(1, 2);
+        to.assertValues(1, 2);
 
         source.onComplete();
 
         assertFalse(source.hasObservers());
 
-        ts.assertResult(1, 2);
+        to.assertResult(1, 2);
 
         rcp.test().assertResult();
 
@@ -112,7 +112,7 @@ public class RefCountSubjectTest {
 
         assertTrue(source.hasObservers());
 
-        TestObserver<Integer> ts = rcp.test();
+        TestObserver<Integer> to = rcp.test();
 
         assertFalse(rcp.hasComplete());
         assertFalse(rcp.hasThrowable());
@@ -121,17 +121,17 @@ public class RefCountSubjectTest {
 
         source.onNext(1);
 
-        ts.assertValue(1);
+        to.assertValue(1);
 
         source.onNext(2);
 
-        ts.assertValues(1, 2);
+        to.assertValues(1, 2);
 
         source.onError(new IOException());
 
         assertFalse(source.hasObservers());
 
-        ts.assertFailure(IOException.class, 1, 2);
+        to.assertFailure(IOException.class, 1, 2);
 
         rcp.test().assertFailure(IOException.class);
 
@@ -151,14 +151,14 @@ public class RefCountSubjectTest {
 
         assertTrue(source.hasObservers());
 
-        TestObserver<Integer> ts1 = rcp.test();
-        TestObserver<Integer> ts2 = rcp.test();
+        TestObserver<Integer> to1 = rcp.test();
+        TestObserver<Integer> to2 = rcp.test();
 
-        ts1.cancel();
+        to1.cancel();
 
         assertTrue(source.hasObservers());
 
-        ts2.cancel();
+        to2.cancel();
 
         assertFalse(source.hasObservers());
 
@@ -190,39 +190,39 @@ public class RefCountSubjectTest {
 
         assertTrue(source.hasObservers());
 
-        final TestObserver<Integer> ts = new TestObserver<Integer>();
+        final TestObserver<Integer> to = new TestObserver<Integer>();
 
         rcp.subscribe(new Observer<Integer>() {
 
             @Override
             public void onNext(Integer t) {
-                ts.onNext(t);
+                to.onNext(t);
             }
 
             @Override
             public void onError(Throwable t) {
-                ts.onError(t);
+                to.onError(t);
             }
 
             @Override
             public void onComplete() {
-                ts.onComplete();
+                to.onComplete();
             }
 
             @Override
-            public void onSubscribe(Disposable s) {
-                ts.onSubscribe(s);
-                assertFalse(s.isDisposed());
-                s.dispose();
-                assertTrue(s.isDisposed());
-                s.dispose();
-                assertTrue(s.isDisposed());
+            public void onSubscribe(Disposable d) {
+                to.onSubscribe(d);
+                assertFalse(d.isDisposed());
+                d.dispose();
+                assertTrue(d.isDisposed());
+                d.dispose();
+                assertTrue(d.isDisposed());
             }
         });
 
         assertFalse(source.hasObservers());
 
-        ts.assertEmpty();
+        to.assertEmpty();
     }
 
     @Test
@@ -235,43 +235,43 @@ public class RefCountSubjectTest {
 
         assertTrue(source.hasObservers());
 
-        TestObserver<Integer> ts0 = rcp.test();
+        TestObserver<Integer> to0 = rcp.test();
 
-        final TestObserver<Integer> ts = new TestObserver<Integer>();
+        final TestObserver<Integer> to = new TestObserver<Integer>();
 
         rcp.subscribe(new Observer<Integer>() {
 
             @Override
             public void onNext(Integer t) {
-                ts.onNext(t);
+                to.onNext(t);
             }
 
             @Override
             public void onError(Throwable t) {
-                ts.onError(t);
+                to.onError(t);
             }
 
             @Override
             public void onComplete() {
-                ts.onComplete();
+                to.onComplete();
             }
 
             @Override
-            public void onSubscribe(Disposable s) {
-                ts.onSubscribe(s);
-                s.dispose();
-                s.dispose();
+            public void onSubscribe(Disposable d) {
+                to.onSubscribe(d);
+                d.dispose();
+                d.dispose();
             }
         });
 
         assertTrue(source.hasObservers());
 
-        ts.assertEmpty();
+        to.assertEmpty();
 
         source.onNext(1);
         source.onComplete();
 
-        ts0.assertResult(1);
+        to0.assertResult(1);
     }
 
     @Test
@@ -285,12 +285,12 @@ public class RefCountSubjectTest {
 
             assertTrue(source.hasObservers());
 
-            final TestObserver<Integer> ts1 = rcp.test();
+            final TestObserver<Integer> to1 = rcp.test();
 
             Runnable r1 = new Runnable() {
                 @Override
                 public void run() {
-                    ts1.cancel();
+                    to1.cancel();
                 }
             };
 

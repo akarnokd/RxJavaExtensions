@@ -19,7 +19,7 @@ package hu.akarnokd.rxjava2.string;
 import org.reactivestreams.Subscriber;
 
 import io.reactivex.Flowable;
-import io.reactivex.internal.fuseable.QueueSubscription;
+import io.reactivex.internal.fuseable.QueueFuseable;
 import io.reactivex.internal.subscriptions.*;
 import io.reactivex.internal.util.BackpressureHelper;
 
@@ -44,7 +44,7 @@ final class FlowableCharSequence extends Flowable<Integer> {
 
         private static final long serialVersionUID = -4593793201463047197L;
 
-        final Subscriber<? super Integer> actual;
+        final Subscriber<? super Integer> downstream;
 
         final CharSequence string;
 
@@ -54,8 +54,8 @@ final class FlowableCharSequence extends Flowable<Integer> {
 
         volatile boolean cancelled;
 
-        CharSequenceSubscription(Subscriber<? super Integer> actual, CharSequence string) {
-            this.actual = actual;
+        CharSequenceSubscription(Subscriber<? super Integer> downstream, CharSequence string) {
+            this.downstream = downstream;
             this.string = string;
             this.end = string.length();
         }
@@ -81,7 +81,7 @@ final class FlowableCharSequence extends Flowable<Integer> {
         void fastPath() {
             int e = end;
             CharSequence s = string;
-            Subscriber<? super Integer> a = actual;
+            Subscriber<? super Integer> a = downstream;
 
             for (int i = index; i != e; i++) {
                 if (cancelled) {
@@ -101,7 +101,7 @@ final class FlowableCharSequence extends Flowable<Integer> {
             int i = index;
             int f = end;
             CharSequence s = string;
-            Subscriber<? super Integer> a = actual;
+            Subscriber<? super Integer> a = downstream;
 
             for (;;) {
 
@@ -137,7 +137,7 @@ final class FlowableCharSequence extends Flowable<Integer> {
 
         @Override
         public int requestFusion(int requestedMode) {
-            return requestedMode & QueueSubscription.SYNC;
+            return requestedMode & QueueFuseable.SYNC;
         }
 
         @Override

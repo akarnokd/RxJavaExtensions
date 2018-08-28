@@ -60,9 +60,9 @@ implements FlowableTransformer<T, Long> {
         long index;
         boolean found;
 
-        IndexOfSubscriber(Subscriber<? super Long> actual,
+        IndexOfSubscriber(Subscriber<? super Long> downstream,
                 Predicate<? super T> predicate) {
-            super(actual);
+            super(downstream);
             this.predicate = predicate;
         }
 

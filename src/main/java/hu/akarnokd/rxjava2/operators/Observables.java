@@ -19,6 +19,7 @@ package hu.akarnokd.rxjava2.operators;
 /**
  * Utility class to create Observable sources.
  * 
+ * @see ObservableTransformers
  * @since 0.18.2
  */
 public final class Observables {

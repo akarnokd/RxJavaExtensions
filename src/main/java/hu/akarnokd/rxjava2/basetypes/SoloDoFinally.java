@@ -50,55 +50,55 @@ final class SoloDoFinally<T> extends Solo<T> {
 
         private static final long serialVersionUID = -2447716698732984984L;
 
-        final Subscriber<? super T> actual;
+        final Subscriber<? super T> downstream;
 
         final Action onFinally;
 
-        Subscription s;
+        Subscription upstream;
 
         QueueSubscription<T> queue;
 
         int sourceMode;
 
-        DoFinallySubscriber(Subscriber<? super T> actual, Action onFinally) {
-            this.actual = actual;
+        DoFinallySubscriber(Subscriber<? super T> downstream, Action onFinally) {
+            this.downstream = downstream;
             this.onFinally = onFinally;
         }
 
         @Override
         public void cancel() {
-            s.cancel();
+            upstream.cancel();
             runFinally();
         }
 
         @SuppressWarnings("unchecked")
         @Override
         public void onSubscribe(Subscription s) {
-            if (SubscriptionHelper.validate(this.s, s)) {
-                this.s = s;
+            if (SubscriptionHelper.validate(this.upstream, s)) {
+                this.upstream = s;
 
                 if (s instanceof QueueSubscription) {
                     queue = (QueueSubscription<T>)s;
                 }
 
-                actual.onSubscribe(this);
+                downstream.onSubscribe(this);
             }
         }
 
         @Override
         public void onNext(T t) {
-            actual.onNext(t);
+            downstream.onNext(t);
         }
 
         @Override
         public void onError(Throwable t) {
-            actual.onError(t);
+            downstream.onError(t);
             runFinally();
         }
 
         @Override
         public void onComplete() {
-            actual.onComplete();
+            downstream.onComplete();
             runFinally();
         }
 
@@ -145,7 +145,7 @@ final class SoloDoFinally<T> extends Solo<T> {
 
         @Override
         public void request(long n) {
-            s.request(n);
+            upstream.request(n);
         }
     }
 }

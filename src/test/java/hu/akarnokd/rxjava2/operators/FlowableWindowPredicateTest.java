@@ -236,7 +236,6 @@ public class FlowableWindowPredicateTest {
         .assertValueCount(4);
     }
 
-
     @SuppressWarnings("unchecked")
     @Test
     public void untilMatchBegin() {
@@ -479,7 +478,6 @@ public class FlowableWindowPredicateTest {
         .requestMore(1)
         .assertValueCount(4);
     }
-
 
     @SuppressWarnings("unchecked")
     @Test

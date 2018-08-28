@@ -28,7 +28,6 @@ import io.reactivex.internal.fuseable.QueueSubscription;
  */
 abstract class BasicRefQueueSubscription<T, R> extends AtomicReference<R> implements QueueSubscription<T> {
 
-
     private static final long serialVersionUID = -6671519529404341862L;
 
     @Override

@@ -67,7 +67,7 @@ final class FlowableSplit extends Flowable<String> implements FlowableTransforme
 
         private static final long serialVersionUID = -5022617259701794064L;
 
-        final Subscriber<? super String> actual;
+        final Subscriber<? super String> downstream;
 
         final Pattern pattern;
 
@@ -79,7 +79,7 @@ final class FlowableSplit extends Flowable<String> implements FlowableTransforme
 
         final int limit;
 
-        Subscription s;
+        Subscription upstream;
 
         volatile boolean cancelled;
 
@@ -96,8 +96,8 @@ final class FlowableSplit extends Flowable<String> implements FlowableTransforme
 
         int empty;
 
-        SplitSubscriber(Subscriber<? super String> actual, Pattern pattern, int bufferSize) {
-            this.actual = actual;
+        SplitSubscriber(Subscriber<? super String> downstream, Pattern pattern, int bufferSize) {
+            this.downstream = downstream;
             this.pattern = pattern;
             this.bufferSize = bufferSize;
             this.limit = bufferSize - (bufferSize >> 2);
@@ -116,7 +116,7 @@ final class FlowableSplit extends Flowable<String> implements FlowableTransforme
         @Override
         public void cancel() {
             cancelled = true;
-            s.cancel();
+            upstream.cancel();
 
             if (getAndIncrement() == 0) {
                 current = null;
@@ -126,10 +126,10 @@ final class FlowableSplit extends Flowable<String> implements FlowableTransforme
 
         @Override
         public void onSubscribe(Subscription s) {
-            if (SubscriptionHelper.validate(this.s, s)) {
-                this.s = s;
+            if (SubscriptionHelper.validate(this.upstream, s)) {
+                this.upstream = s;
 
-                actual.onSubscribe(this);
+                downstream.onSubscribe(this);
 
                 s.request(bufferSize);
             }
@@ -138,7 +138,7 @@ final class FlowableSplit extends Flowable<String> implements FlowableTransforme
         @Override
         public void onNext(String t) {
             if (!tryOnNext(t)) {
-                s.request(1);
+                upstream.request(1);
             }
         }
 
@@ -154,7 +154,7 @@ final class FlowableSplit extends Flowable<String> implements FlowableTransforme
                 }
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
-                this.s.cancel();
+                this.upstream.cancel();
                 onError(ex);
                 return true;
             }
@@ -215,7 +215,7 @@ final class FlowableSplit extends Flowable<String> implements FlowableTransforme
             int idx = index;
             int emptyCount = empty;
 
-            Subscriber<? super String> a = actual;
+            Subscriber<? super String> a = downstream;
 
             for (;;) {
                 long r = requested.get();
@@ -236,7 +236,7 @@ final class FlowableSplit extends Flowable<String> implements FlowableTransforme
                             current = array;
                             if (++consumed == limit) {
                                 consumed = 0;
-                                s.request(limit);
+                                upstream.request(limit);
                             }
                         }
                     }
@@ -306,7 +306,7 @@ final class FlowableSplit extends Flowable<String> implements FlowableTransforme
                             current = array;
                             if (++consumed == limit) {
                                 consumed = 0;
-                                s.request(limit);
+                                upstream.request(limit);
                             }
                         }
                     }

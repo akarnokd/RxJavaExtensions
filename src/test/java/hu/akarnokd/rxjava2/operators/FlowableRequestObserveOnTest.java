@@ -86,7 +86,6 @@ public class FlowableRequestObserveOnTest {
         ts.assertResult(1, 2);
     }
 
-
     @Test
     public void requestAfterCompleteImmediate() throws Exception {
         TestSubscriber<Integer> ts = Flowable.range(1, 2)

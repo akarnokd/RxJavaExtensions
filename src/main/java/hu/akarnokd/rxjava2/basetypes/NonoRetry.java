@@ -43,8 +43,8 @@ final class NonoRetry extends Nono {
 
         private static final long serialVersionUID = 3432411068139897716L;
 
-        RetrySubscriber(Subscriber<? super Void> actual, long times, Nono source) {
-            super(actual, times, source);
+        RetrySubscriber(Subscriber<? super Void> downstream, long times, Nono source) {
+            super(downstream, times, source);
         }
 
         @Override
@@ -55,7 +55,7 @@ final class NonoRetry extends Nono {
 
         @Override
         public void onComplete() {
-            actual.onComplete();
+            downstream.onComplete();
         }
     }
 }

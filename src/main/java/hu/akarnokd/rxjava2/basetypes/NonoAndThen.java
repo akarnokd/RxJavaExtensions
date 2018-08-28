@@ -44,19 +44,19 @@ final class NonoAndThen extends Nono {
 
         private static final long serialVersionUID = 5073982210916423158L;
 
-        final Subscriber<? super Void> actual;
+        final Subscriber<? super Void> downstream;
 
         final Nono after;
 
-        AndThenSubscriber(Subscriber<? super Void> actual, Nono after) {
-            this.actual = actual;
+        AndThenSubscriber(Subscriber<? super Void> downstream, Nono after) {
+            this.downstream = downstream;
             this.after = after;
         }
 
         @Override
         public void onSubscribe(Subscription s) {
             if (SubscriptionHelper.setOnce(this, s)) {
-                actual.onSubscribe(this);
+                downstream.onSubscribe(this);
             }
         }
 
@@ -67,7 +67,7 @@ final class NonoAndThen extends Nono {
 
         @Override
         public void onError(Throwable t) {
-            actual.onError(t);
+            downstream.onError(t);
         }
 
         @Override
@@ -98,12 +98,12 @@ final class NonoAndThen extends Nono {
 
             @Override
             public void onError(Throwable t) {
-                actual.onError(t);
+                downstream.onError(t);
             }
 
             @Override
             public void onComplete() {
-                actual.onComplete();
+                downstream.onComplete();
             }
         }
     }

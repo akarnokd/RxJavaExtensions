@@ -66,7 +66,7 @@ final class ObservableWhileDoWhile<T> extends Observable<T> {
 
         private static final long serialVersionUID = -5255585317630843019L;
 
-        final Observer<? super T> actual;
+        final Observer<? super T> downstream;
 
         final AtomicInteger wip;
 
@@ -76,8 +76,8 @@ final class ObservableWhileDoWhile<T> extends Observable<T> {
 
         volatile boolean active;
 
-        WhileDoWhileObserver(Observer<? super T> actual, BooleanSupplier postCondition, ObservableSource<? extends T> source) {
-            this.actual = actual;
+        WhileDoWhileObserver(Observer<? super T> downstream, BooleanSupplier postCondition, ObservableSource<? extends T> source) {
+            this.downstream = downstream;
             this.wip = new AtomicInteger();
             this.postCondition = postCondition;
             this.source = source;
@@ -90,12 +90,12 @@ final class ObservableWhileDoWhile<T> extends Observable<T> {
 
         @Override
         public void onNext(T value) {
-            actual.onNext(value);
+            downstream.onNext(value);
         }
 
         @Override
         public void onError(Throwable e) {
-            actual.onError(e);
+            downstream.onError(e);
         }
 
         @Override
@@ -107,7 +107,7 @@ final class ObservableWhileDoWhile<T> extends Observable<T> {
                 b = postCondition.getAsBoolean();
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
-                actual.onError(ex);
+                downstream.onError(ex);
                 return;
             }
 
@@ -115,7 +115,7 @@ final class ObservableWhileDoWhile<T> extends Observable<T> {
                 active = false;
                 subscribeNext();
             } else {
-                actual.onComplete();
+                downstream.onComplete();
             }
         }
 

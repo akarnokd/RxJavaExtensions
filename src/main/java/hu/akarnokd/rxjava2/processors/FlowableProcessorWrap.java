@@ -86,48 +86,48 @@ final class FlowableProcessorWrap<T> extends FlowableProcessor<T> {
 
         private static final long serialVersionUID = -6891177704330298695L;
 
-        final Subscriber<? super T> actual;
+        final Subscriber<? super T> downstream;
 
-        Subscription s;
+        Subscription upstream;
 
-        WrapSubscriber(Subscriber<? super T> actual) {
-            this.actual = actual;
+        WrapSubscriber(Subscriber<? super T> downstream) {
+            this.downstream = downstream;
         }
 
         @Override
         public void onSubscribe(Subscription s) {
-            this.s = s;
+            this.upstream = s;
 
-            actual.onSubscribe(this);
+            downstream.onSubscribe(this);
         }
 
         @Override
         public void onNext(T t) {
-            actual.onNext(t);
+            downstream.onNext(t);
         }
 
         @Override
         public void onError(Throwable t) {
-            s = SubscriptionHelper.CANCELLED;
-            actual.onError(t);
+            upstream = SubscriptionHelper.CANCELLED;
+            downstream.onError(t);
         }
 
         @Override
         public void onComplete() {
-            s = SubscriptionHelper.CANCELLED;
-            actual.onComplete();
+            upstream = SubscriptionHelper.CANCELLED;
+            downstream.onComplete();
         }
 
         @Override
         public void request(long n) {
-            s.request(n);
+            upstream.request(n);
         }
 
         @Override
         public void cancel() {
             if (compareAndSet(false, true)) {
-                s.cancel();
-                s = SubscriptionHelper.CANCELLED;
+                upstream.cancel();
+                upstream = SubscriptionHelper.CANCELLED;
             }
         }
     }

@@ -29,6 +29,7 @@ import io.reactivex.internal.functions.ObjectHelper;
  * use {@link Maybe#as(MaybeConverter)}
  * to apply the operators to an existing sequence.
  * 
+ * @see MaybeTransformers
  * @since 0.20.2
  */
 public final class Maybes {

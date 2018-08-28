@@ -41,7 +41,6 @@ implements MaybeConverter<T, Single<R>> {
 
     final Callable<? extends SingleSource<? extends R>> onCompleteHandler;
 
-
     MaybeFlatMapSignalSingle(Maybe<T> source,
             Function<? super T, ? extends SingleSource<? extends R>> onSuccessHandler,
             Function<? super Throwable, ? extends SingleSource<? extends R>> onErrorHandler,

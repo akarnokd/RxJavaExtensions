@@ -58,8 +58,8 @@ final class SoloFlatMap<T, R> extends Solo<R> {
 
         Subscription upstream;
 
-        FlatMapSubscriber(Subscriber<? super R> actual, Function<? super T, ? extends Solo<? extends R>> mapper) {
-            super(actual);
+        FlatMapSubscriber(Subscriber<? super R> downstream, Function<? super T, ? extends Solo<? extends R>> mapper) {
+            super(downstream);
             this.mapper = mapper;
             this.nextSubscriber = new NextSubscriber();
         }

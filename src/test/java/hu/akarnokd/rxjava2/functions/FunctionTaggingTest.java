@@ -937,7 +937,6 @@ public class FunctionTaggingTest {
         }
     }
 
-
     @Test
     public void f9Tag() throws Exception {
         boolean enabled = FunctionTagging.isEnabled();

@@ -85,7 +85,7 @@ final class FlowableFlatMapSync<T, R> extends Flowable<R> implements FlowableTra
 
         private static final long serialVersionUID = -208456984819517117L;
 
-        final Subscriber<? super R> actual;
+        final Subscriber<? super R> downstream;
 
         final Function<? super T, ? extends Publisher<? extends R>> mapper;
 
@@ -118,11 +118,11 @@ final class FlowableFlatMapSync<T, R> extends Flowable<R> implements FlowableTra
         static final int PRODUCER_INDEX = 16;
         static final int CONSUMER_INDEX = 32;
 
-        BaseFlatMapOuterSubscriber(Subscriber<? super R> actual,
+        BaseFlatMapOuterSubscriber(Subscriber<? super R> downstream,
                 Function<? super T, ? extends Publisher<? extends R>> mapper,
                         int maxConcurrency, int bufferSize,
                         boolean depthFirst) {
-            this.actual = actual;
+            this.downstream = downstream;
             this.mapper = mapper;
             this.maxConcurrency = maxConcurrency;
             this.bufferSize = bufferSize;
@@ -141,7 +141,7 @@ final class FlowableFlatMapSync<T, R> extends Flowable<R> implements FlowableTra
             if (SubscriptionHelper.validate(this.upstream, s)) {
                 this.upstream = s;
 
-                actual.onSubscribe(this);
+                downstream.onSubscribe(this);
 
                 s.request(maxConcurrency);
             }
@@ -234,7 +234,7 @@ final class FlowableFlatMapSync<T, R> extends Flowable<R> implements FlowableTra
             long e = emitted;
             AtomicReferenceArray<FlatMapInnerSubscriber<T, R>> s = subscribers;
             int m = s.length();
-            Subscriber<? super R> a = actual;
+            Subscriber<? super R> a = downstream;
             AtomicLong act = active;
 
             for (;;) {
@@ -389,7 +389,7 @@ final class FlowableFlatMapSync<T, R> extends Flowable<R> implements FlowableTra
             long e = emitted;
             AtomicReferenceArray<FlatMapInnerSubscriber<T, R>> s = subscribers;
             int m = s.length();
-            Subscriber<? super R> a = actual;
+            Subscriber<? super R> a = downstream;
             AtomicLong act = active;
 
             for (;;) {
@@ -533,10 +533,10 @@ final class FlowableFlatMapSync<T, R> extends Flowable<R> implements FlowableTra
     static final class FlatMapOuterSubscriber<T, R> extends BaseFlatMapOuterSubscriber<T, R> {
         private static final long serialVersionUID = -5109342841608286301L;
 
-        FlatMapOuterSubscriber(Subscriber<? super R> actual,
+        FlatMapOuterSubscriber(Subscriber<? super R> downstream,
                 Function<? super T, ? extends Publisher<? extends R>> mapper, int maxConcurrency, int bufferSize,
                 boolean depthFirst) {
-            super(actual, mapper, maxConcurrency, bufferSize, depthFirst);
+            super(downstream, mapper, maxConcurrency, bufferSize, depthFirst);
         }
 
         @Override
@@ -564,7 +564,7 @@ final class FlowableFlatMapSync<T, R> extends Flowable<R> implements FlowableTra
                 long r = requested.get();
                 long e = emitted;
                 if (e != r) {
-                    actual.onNext(item);
+                    downstream.onNext(item);
                     emitted = e + 1;
                     inner.producedOne();
                 } else {
@@ -640,16 +640,16 @@ final class FlowableFlatMapSync<T, R> extends Flowable<R> implements FlowableTra
                     @SuppressWarnings("unchecked")
                     QueueSubscription<R> qs = (QueueSubscription<R>) s;
 
-                    int m = qs.requestFusion(QueueSubscription.ANY | QueueSubscription.BOUNDARY);
+                    int m = qs.requestFusion(QueueFuseable.ANY | QueueFuseable.BOUNDARY);
 
-                    if (m == QueueSubscription.SYNC) {
+                    if (m == QueueFuseable.SYNC) {
                         fusionMode = m;
                         queue = qs;
                         done = true;
                         parent.drain();
                         return;
                     }
-                    if (m == QueueSubscription.ASYNC) {
+                    if (m == QueueFuseable.ASYNC) {
                         fusionMode = m;
                         queue = qs;
                         s.request(bufferSize);
@@ -662,7 +662,7 @@ final class FlowableFlatMapSync<T, R> extends Flowable<R> implements FlowableTra
 
         @Override
         public void onNext(R t) {
-            if (fusionMode == QueueSubscription.NONE) {
+            if (fusionMode == QueueFuseable.NONE) {
                 parent.innerNext(this, t);
             } else {
                 parent.drain();
@@ -684,7 +684,7 @@ final class FlowableFlatMapSync<T, R> extends Flowable<R> implements FlowableTra
         }
 
         void producedOne() {
-            if (fusionMode != QueueSubscription.SYNC) {
+            if (fusionMode != QueueFuseable.SYNC) {
                 int p = produced + 1;
                 if (p == limit) {
                     produced = 0;

@@ -50,8 +50,8 @@ final class SoloOnErrorReturnItem<T> extends Solo<T> {
 
         Subscription upstream;
 
-        OnErrorReturnItemSubscriber(Subscriber<? super T> actual, T item) {
-            super(actual);
+        OnErrorReturnItemSubscriber(Subscriber<? super T> downstream, T item) {
+            super(downstream);
             this.item = item;
         }
 

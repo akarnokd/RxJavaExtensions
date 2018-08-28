@@ -52,25 +52,25 @@ final class FlowableEvery<T> extends Flowable<T> implements FlowableTransformer<
 
     static final class EverySubscriber<T> implements Subscriber<T>, Subscription {
 
-        final Subscriber<? super T> actual;
+        final Subscriber<? super T> downstream;
 
         final long keep;
 
         long index;
 
-        Subscription s;
+        Subscription upstream;
 
-        EverySubscriber(Subscriber<? super T> actual, long keep) {
-            this.actual = actual;
+        EverySubscriber(Subscriber<? super T> downstream, long keep) {
+            this.downstream = downstream;
             this.keep = keep;
         }
 
         @Override
         public void onSubscribe(Subscription s) {
-            if (SubscriptionHelper.validate(this.s, s)) {
-                this.s = s;
+            if (SubscriptionHelper.validate(this.upstream, s)) {
+                this.upstream = s;
 
-                actual.onSubscribe(this);
+                downstream.onSubscribe(this);
             }
         }
 
@@ -79,7 +79,7 @@ final class FlowableEvery<T> extends Flowable<T> implements FlowableTransformer<
             long i = index + 1;
             if (i == keep) {
                 index = 0;
-                actual.onNext(t);
+                downstream.onNext(t);
             } else {
                 index = i;
             }
@@ -87,25 +87,25 @@ final class FlowableEvery<T> extends Flowable<T> implements FlowableTransformer<
 
         @Override
         public void onError(Throwable t) {
-            actual.onError(t);
+            downstream.onError(t);
         }
 
         @Override
         public void onComplete() {
-            actual.onComplete();
+            downstream.onComplete();
         }
 
         @Override
         public void request(long n) {
             if (SubscriptionHelper.validate(n)) {
                 long u = BackpressureHelper.multiplyCap(n, keep);
-                s.request(u);
+                upstream.request(u);
             }
         }
 
         @Override
         public void cancel() {
-            s.cancel();
+            upstream.cancel();
         }
     }
 }

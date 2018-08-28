@@ -181,7 +181,6 @@ public class ParallelSchedulerTest implements Runnable {
         taskThrows(s);
     }
 
-
     @Test(timeout = 5000)
     public void taskThrowsTracking() throws Exception {
         Scheduler s = new ParallelScheduler(2, true);

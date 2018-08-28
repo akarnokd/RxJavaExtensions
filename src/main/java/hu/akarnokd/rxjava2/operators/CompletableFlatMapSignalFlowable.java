@@ -56,8 +56,8 @@ implements CompletableConverter<Flowable<R>> {
     }
 
     @Override
-    protected void subscribeActual(Subscriber<? super R> observer) {
-        source.subscribe(new FlatMapSignalConsumer<R>(observer, onCompleteHandler, onErrorHandler));
+    protected void subscribeActual(Subscriber<? super R> subscriber) {
+        source.subscribe(new FlatMapSignalConsumer<R>(subscriber, onCompleteHandler, onErrorHandler));
     }
 
     static final class FlatMapSignalConsumer<R>

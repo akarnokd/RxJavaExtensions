@@ -55,14 +55,14 @@ final class FlowableRepeatCallable<T> extends Flowable<T> {
 
         private static final long serialVersionUID = -231033913007168200L;
 
-        final Subscriber<? super T> actual;
+        final Subscriber<? super T> downstream;
 
         final Callable<T> callable;
 
         volatile boolean cancelled;
 
-        RepeatCallableSubscription(Subscriber<? super T> actual, Callable<T> callable) {
-            this.actual = actual;
+        RepeatCallableSubscription(Subscriber<? super T> downstream, Callable<T> callable) {
+            this.downstream = downstream;
             this.callable = callable;
         }
 
@@ -92,11 +92,11 @@ final class FlowableRepeatCallable<T> extends Flowable<T> {
                     v = ObjectHelper.requireNonNull(c.call(), "The callable returned a null value");
                 } catch (Throwable ex) {
                     Exceptions.throwIfFatal(ex);
-                    actual.onError(ex);
+                    downstream.onError(ex);
                     break;
                 }
 
-                actual.onNext(v);
+                downstream.onNext(v);
             }
         }
 
@@ -112,18 +112,17 @@ final class FlowableRepeatCallable<T> extends Flowable<T> {
                         return;
                     }
 
-
                     T v;
 
                     try {
                         v = ObjectHelper.requireNonNull(c.call(), "The callable returned a null value");
                     } catch (Throwable ex) {
                         Exceptions.throwIfFatal(ex);
-                        actual.onError(ex);
+                        downstream.onError(ex);
                         return;
                     }
 
-                    actual.onNext(v);
+                    downstream.onNext(v);
 
                     e++;
                 }
@@ -176,14 +175,14 @@ final class FlowableRepeatCallable<T> extends Flowable<T> {
 
         private static final long serialVersionUID = -231033913007168200L;
 
-        final ConditionalSubscriber<? super T> actual;
+        final ConditionalSubscriber<? super T> downstream;
 
         final Callable<T> callable;
 
         volatile boolean cancelled;
 
-        RepeatCallableConditionalSubscription(ConditionalSubscriber<? super T> actual, Callable<T> callable) {
-            this.actual = actual;
+        RepeatCallableConditionalSubscription(ConditionalSubscriber<? super T> downstream, Callable<T> callable) {
+            this.downstream = downstream;
             this.callable = callable;
         }
 
@@ -213,11 +212,11 @@ final class FlowableRepeatCallable<T> extends Flowable<T> {
                     v = ObjectHelper.requireNonNull(c.call(), "The callable returned a null value");
                 } catch (Throwable ex) {
                     Exceptions.throwIfFatal(ex);
-                    actual.onError(ex);
+                    downstream.onError(ex);
                     break;
                 }
 
-                actual.tryOnNext(v);
+                downstream.tryOnNext(v);
             }
         }
 
@@ -239,11 +238,11 @@ final class FlowableRepeatCallable<T> extends Flowable<T> {
                         v = ObjectHelper.requireNonNull(c.call(), "The callable returned a null value");
                     } catch (Throwable ex) {
                         Exceptions.throwIfFatal(ex);
-                        actual.onError(ex);
+                        downstream.onError(ex);
                         return;
                     }
 
-                    if (actual.tryOnNext(v)) {
+                    if (downstream.tryOnNext(v)) {
                         e++;
                     }
                 }

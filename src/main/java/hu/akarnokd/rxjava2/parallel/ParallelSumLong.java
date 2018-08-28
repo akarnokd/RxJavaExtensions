@@ -71,8 +71,8 @@ final class ParallelSumLong<T extends Number> extends ParallelFlowable<Long> imp
 
         Subscription upstream;
 
-        SumIntSubscriber(Subscriber<? super Long> actual) {
-            super(actual);
+        SumIntSubscriber(Subscriber<? super Long> downstream) {
+            super(downstream);
         }
 
         @Override

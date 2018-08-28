@@ -69,10 +69,10 @@ public class ObservableIndexOfTest {
     public void foundWithUnconditionalOnCompleteAfter() {
         new Observable<Integer>() {
             @Override
-            protected void subscribeActual(Observer<? super Integer> s) {
-                s.onSubscribe(Disposables.empty());
-                s.onNext(10);
-                s.onComplete();
+            protected void subscribeActual(Observer<? super Integer> observer) {
+                observer.onSubscribe(Disposables.empty());
+                observer.onNext(10);
+                observer.onComplete();
             }
         }
         .compose(ObservableTransformers.indexOf(new Predicate<Integer>() {

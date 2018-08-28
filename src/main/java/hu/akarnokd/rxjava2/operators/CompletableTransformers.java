@@ -26,7 +26,8 @@ import io.reactivex.internal.functions.ObjectHelper;
  * Additional operators in the form of {@link CompletableTransformer},
  * use {@link Completable#compose(CompletableTransformer)}
  * to apply the operators to an existing sequence.
- * 
+ *
+ * @see Completables
  * @since 0.20.2
  */
 public final class CompletableTransformers {

@@ -54,8 +54,8 @@ final class SoloOnErrorResumeWith<T> extends Solo<T> {
 
         Subscription upstream;
 
-        OnErrorResumeWithSubscriber(Subscriber<? super T> actual, Solo<T> next) {
-            super(actual);
+        OnErrorResumeWithSubscriber(Subscriber<? super T> downstream, Solo<T> next) {
+            super(downstream);
             this.next = next;
             this.nextSubscriber = new NextSubscriber();
         }

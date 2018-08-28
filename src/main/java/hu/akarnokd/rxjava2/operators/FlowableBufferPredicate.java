@@ -88,7 +88,7 @@ final class FlowableBufferPredicate<T, C extends Collection<? super T>> extends 
     static final class BufferPredicateSubscriber<T, C extends Collection<? super T>>
     implements ConditionalSubscriber<T>, Subscription {
 
-        final Subscriber<? super C> actual;
+        final Subscriber<? super C> downstream;
 
         final Predicate<? super T> predicate;
 
@@ -98,15 +98,15 @@ final class FlowableBufferPredicate<T, C extends Collection<? super T>> extends 
 
         C buffer;
 
-        Subscription s;
+        Subscription upstream;
 
         int count;
 
-        BufferPredicateSubscriber(Subscriber<? super C> actual,
+        BufferPredicateSubscriber(Subscriber<? super C> downstream,
                 C buffer,
                 Predicate<? super T> predicate, Mode mode,
                 Callable<C> bufferSupplier) {
-            this.actual = actual;
+            this.downstream = downstream;
             this.predicate = predicate;
             this.mode = mode;
             this.buffer = buffer;
@@ -115,17 +115,17 @@ final class FlowableBufferPredicate<T, C extends Collection<? super T>> extends 
 
         @Override
         public void onSubscribe(Subscription s) {
-            if (SubscriptionHelper.validate(this.s, s)) {
-                this.s = s;
+            if (SubscriptionHelper.validate(this.upstream, s)) {
+                this.upstream = s;
 
-                actual.onSubscribe(this);
+                downstream.onSubscribe(this);
             }
         }
 
         @Override
         public void onNext(T t) {
             if (!tryOnNext(t)) {
-                s.request(1);
+                upstream.request(1);
             }
         }
 
@@ -139,9 +139,9 @@ final class FlowableBufferPredicate<T, C extends Collection<? super T>> extends 
                     b = predicate.test(t);
                 } catch (Throwable ex) {
                     Exceptions.throwIfFatal(ex);
-                    s.cancel();
+                    upstream.cancel();
                     buffer = null;
-                    actual.onError(ex);
+                    downstream.onError(ex);
                     return true;
                 }
 
@@ -149,13 +149,13 @@ final class FlowableBufferPredicate<T, C extends Collection<? super T>> extends 
                 case AFTER: {
                     buf.add(t);
                     if (b) {
-                        actual.onNext(buf);
+                        downstream.onNext(buf);
 
                         try {
                             buffer = bufferSupplier.call();
                         } catch (Throwable ex) {
                             Exceptions.throwIfFatal(ex);
-                            s.cancel();
+                            upstream.cancel();
                             onError(ex);
                             return true;
                         }
@@ -173,12 +173,12 @@ final class FlowableBufferPredicate<T, C extends Collection<? super T>> extends 
                         count++;
                         return false;
                     } else {
-                        actual.onNext(buf);
+                        downstream.onNext(buf);
                         try {
                             buf = bufferSupplier.call();
                         } catch (Throwable ex) {
                             Exceptions.throwIfFatal(ex);
-                            s.cancel();
+                            upstream.cancel();
                             onError(ex);
                             return true;
                         }
@@ -191,13 +191,13 @@ final class FlowableBufferPredicate<T, C extends Collection<? super T>> extends 
                 }
                 default:
                     if (b) {
-                        actual.onNext(buf);
+                        downstream.onNext(buf);
 
                         try {
                             buffer = bufferSupplier.call();
                         } catch (Throwable ex) {
                             Exceptions.throwIfFatal(ex);
-                            s.cancel();
+                            upstream.cancel();
                             onError(ex);
                             return true;
                         }
@@ -217,7 +217,7 @@ final class FlowableBufferPredicate<T, C extends Collection<? super T>> extends 
         public void onError(Throwable t) {
             if (buffer != null) {
                 buffer = null;
-                actual.onError(t);
+                downstream.onError(t);
             } else {
                 RxJavaPlugins.onError(t);
             }
@@ -229,20 +229,20 @@ final class FlowableBufferPredicate<T, C extends Collection<? super T>> extends 
             if (b != null) {
                 buffer = null;
                 if (count != 0) {
-                    actual.onNext(b);
+                    downstream.onNext(b);
                 }
-                actual.onComplete();
+                downstream.onComplete();
             }
         }
 
         @Override
         public void request(long n) {
-            s.request(n);
+            upstream.request(n);
         }
 
         @Override
         public void cancel() {
-            s.cancel();
+            upstream.cancel();
         }
     }
 }

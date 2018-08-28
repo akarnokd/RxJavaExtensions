@@ -52,9 +52,9 @@ final class ObservableErrorJump<T, R> extends Observable<R> implements Observabl
     }
 
     @Override
-    protected void subscribeActual(Observer<? super R> s) {
+    protected void subscribeActual(Observer<? super R> observer) {
 
-        ErrorJumpFront<T, R> front = new ErrorJumpFront<T, R>(source, s);
+        ErrorJumpFront<T, R> front = new ErrorJumpFront<T, R>(source, observer);
 
         ObservableSource<R> downstream;
 
@@ -64,7 +64,7 @@ final class ObservableErrorJump<T, R> extends Observable<R> implements Observabl
                     "The transformer returned a null Publisher");
         } catch (Throwable ex) {
             Exceptions.throwIfFatal(ex);
-            EmptyDisposable.error(ex, s);
+            EmptyDisposable.error(ex, observer);
             return;
         }
 
@@ -88,17 +88,17 @@ final class ObservableErrorJump<T, R> extends Observable<R> implements Observabl
         }
 
         @Override
-        protected void subscribeActual(Observer<? super T> s) {
-            if (middle.compareAndSet(null, s)) {
+        protected void subscribeActual(Observer<? super T> observer) {
+            if (middle.compareAndSet(null, observer)) {
                 source.subscribe(this);
             } else {
-                EmptyDisposable.error(new IllegalStateException("Only one Subscriber allowed"), s);
+                EmptyDisposable.error(new IllegalStateException("Only one Subscriber allowed"), observer);
             }
         }
 
         @Override
-        public void onSubscribe(Disposable s) {
-            upstream = s;
+        public void onSubscribe(Disposable d) {
+            upstream = d;
             middle.get().onSubscribe(this);
         }
 
@@ -143,8 +143,8 @@ final class ObservableErrorJump<T, R> extends Observable<R> implements Observabl
             }
 
             @Override
-            public void onSubscribe(Disposable s) {
-                upstream = s;
+            public void onSubscribe(Disposable d) {
+                upstream = d;
                 downstream.onSubscribe(this);
             }
 

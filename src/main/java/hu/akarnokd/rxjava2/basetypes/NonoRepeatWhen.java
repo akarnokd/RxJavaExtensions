@@ -76,9 +76,9 @@ final class NonoRepeatWhen extends Nono {
 
         private static final long serialVersionUID = 6463015514357680572L;
 
-        final Subscriber<? super Void> actual;
+        final Subscriber<? super Void> downstream;
 
-        final AtomicReference<Subscription> s;
+        final AtomicReference<Subscription> upstream;
 
         final RedoInnerSubscriber inner;
 
@@ -90,9 +90,9 @@ final class NonoRepeatWhen extends Nono {
 
         volatile boolean active;
 
-        RepeatWhenMainSubscriber(Subscriber<? super Void> actual, FlowableProcessor<Object> processor, Nono source) {
-            this.actual = actual;
-            this.s = new AtomicReference<Subscription>();
+        RepeatWhenMainSubscriber(Subscriber<? super Void> downstream, FlowableProcessor<Object> processor, Nono source) {
+            this.downstream = downstream;
+            this.upstream = new AtomicReference<Subscription>();
             this.inner = new RedoInnerSubscriber(this);
             this.once = new AtomicBoolean();
             this.processor = processor;
@@ -101,13 +101,13 @@ final class NonoRepeatWhen extends Nono {
 
         @Override
         public void cancel() {
-            SubscriptionHelper.cancel(s);
+            SubscriptionHelper.cancel(upstream);
             inner.cancel();
         }
 
         @Override
         public void onSubscribe(Subscription s) {
-            SubscriptionHelper.setOnce(this.s, s);
+            SubscriptionHelper.setOnce(this.upstream, s);
         }
 
         @Override
@@ -119,7 +119,7 @@ final class NonoRepeatWhen extends Nono {
         public void onError(Throwable t) {
             inner.cancel();
             if (once.compareAndSet(false, true)) {
-                actual.onError(t);
+                downstream.onError(t);
             } else {
                 RxJavaPlugins.onError(t);
             }
@@ -130,7 +130,7 @@ final class NonoRepeatWhen extends Nono {
             active = false;
             if (getAndIncrement() == 0) {
                 do {
-                    if (SubscriptionHelper.isCancelled(s.get())) {
+                    if (SubscriptionHelper.isCancelled(upstream.get())) {
                         return;
                     }
 
@@ -150,9 +150,9 @@ final class NonoRepeatWhen extends Nono {
 
         @Override
         public void innerError(Throwable ex) {
-            SubscriptionHelper.cancel(s);
+            SubscriptionHelper.cancel(upstream);
             if (once.compareAndSet(false, true)) {
-                actual.onError(ex);
+                downstream.onError(ex);
             } else {
                 RxJavaPlugins.onError(ex);
             }
@@ -160,9 +160,9 @@ final class NonoRepeatWhen extends Nono {
 
         @Override
         public void innerComplete() {
-            SubscriptionHelper.cancel(s);
+            SubscriptionHelper.cancel(upstream);
             if (once.compareAndSet(false, true)) {
-                actual.onComplete();
+                downstream.onComplete();
             }
         }
 

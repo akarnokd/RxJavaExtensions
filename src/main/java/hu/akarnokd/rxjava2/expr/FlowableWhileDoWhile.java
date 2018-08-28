@@ -67,7 +67,7 @@ final class FlowableWhileDoWhile<T> extends Flowable<T> {
 
         private static final long serialVersionUID = -5255585317630843019L;
 
-        final Subscriber<? super T> actual;
+        final Subscriber<? super T> downstream;
 
         final AtomicInteger wip;
 
@@ -79,27 +79,27 @@ final class FlowableWhileDoWhile<T> extends Flowable<T> {
 
         long produced;
 
-        WhileDoWhileObserver(Subscriber<? super T> actual, BooleanSupplier postCondition, Publisher<? extends T> source) {
-            this.actual = actual;
+        WhileDoWhileObserver(Subscriber<? super T> downstream, BooleanSupplier postCondition, Publisher<? extends T> source) {
+            this.downstream = downstream;
             this.wip = new AtomicInteger();
             this.postCondition = postCondition;
             this.source = source;
         }
 
         @Override
-        public void onSubscribe(Subscription d) {
-            super.setSubscription(d);
+        public void onSubscribe(Subscription s) {
+            super.setSubscription(s);
         }
 
         @Override
         public void onNext(T value) {
             produced++;
-            actual.onNext(value);
+            downstream.onNext(value);
         }
 
         @Override
         public void onError(Throwable e) {
-            actual.onError(e);
+            downstream.onError(e);
         }
 
         @Override
@@ -111,7 +111,7 @@ final class FlowableWhileDoWhile<T> extends Flowable<T> {
                 b = postCondition.getAsBoolean();
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
-                actual.onError(ex);
+                downstream.onError(ex);
                 return;
             }
 
@@ -124,7 +124,7 @@ final class FlowableWhileDoWhile<T> extends Flowable<T> {
                 active = false;
                 subscribeNext();
             } else {
-                actual.onComplete();
+                downstream.onComplete();
             }
         }
 

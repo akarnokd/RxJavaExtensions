@@ -48,17 +48,17 @@ final class PerhapsDefaultIfEmpty<T> extends Perhaps<T> {
 
         final T item;
 
-        Subscription s;
+        Subscription upstream;
 
-        OnErrorReturnItemSubscriber(Subscriber<? super T> actual, T item) {
-            super(actual);
+        OnErrorReturnItemSubscriber(Subscriber<? super T> downstream, T item) {
+            super(downstream);
             this.item = item;
         }
 
         @Override
         public void onSubscribe(Subscription s) {
-            if (SubscriptionHelper.validate(this.s, s)) {
-                this.s = s;
+            if (SubscriptionHelper.validate(this.upstream, s)) {
+                this.upstream = s;
 
                 downstream.onSubscribe(this);
 

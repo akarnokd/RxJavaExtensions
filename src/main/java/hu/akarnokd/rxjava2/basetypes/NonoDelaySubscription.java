@@ -46,14 +46,14 @@ final class NonoDelaySubscription extends Nono {
 
         private static final long serialVersionUID = 7914910659996431449L;
 
-        final Subscriber<? super Void> actual;
+        final Subscriber<? super Void> downstream;
 
         final Nono source;
 
         boolean done;
 
-        DelaySubscriptionSubscriber(Subscriber<? super Void> actual, Nono source) {
-            this.actual = actual;
+        DelaySubscriptionSubscriber(Subscriber<? super Void> downstream, Nono source) {
+            this.downstream = downstream;
             this.source = source;
         }
 
@@ -66,7 +66,7 @@ final class NonoDelaySubscription extends Nono {
         public void onSubscribe(Subscription s) {
             if (SubscriptionHelper.setOnce(this, s)) {
 
-                actual.onSubscribe(this);
+                downstream.onSubscribe(this);
 
                 s.request(Long.MAX_VALUE);
             }
@@ -85,7 +85,7 @@ final class NonoDelaySubscription extends Nono {
             if (done) {
                 RxJavaPlugins.onError(t);
             } else {
-                actual.onError(t);
+                downstream.onError(t);
             }
         }
 
@@ -115,12 +115,12 @@ final class NonoDelaySubscription extends Nono {
 
             @Override
             public void onError(Throwable t) {
-                actual.onError(t);
+                downstream.onError(t);
             }
 
             @Override
             public void onComplete() {
-                actual.onComplete();
+                downstream.onComplete();
             }
         }
     }

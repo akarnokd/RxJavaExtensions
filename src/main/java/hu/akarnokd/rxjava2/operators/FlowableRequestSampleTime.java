@@ -73,7 +73,7 @@ final class FlowableRequestSampleTime<T> extends Flowable<T> implements Flowable
     static final class RequestSample<T>
     implements FlowableSubscriber<T>, Subscription, Runnable {
 
-        final Subscriber<? super T> actual;
+        final Subscriber<? super T> downstream;
 
         final AtomicLong downstreamRequests;
 
@@ -87,8 +87,8 @@ final class FlowableRequestSampleTime<T> extends Flowable<T> implements Flowable
 
         boolean done;
 
-        RequestSample(Subscriber<? super T> actual) {
-            this.actual = actual;
+        RequestSample(Subscriber<? super T> downstream) {
+            this.downstream = downstream;
             this.downstreamRequests = new AtomicLong();
             this.upstreamRequests = new AtomicLong();
             this.upstream = new AtomicReference<Subscription>();
@@ -106,11 +106,11 @@ final class FlowableRequestSampleTime<T> extends Flowable<T> implements Flowable
                 long e = emitted;
                 if (downstreamRequests.get() != e) {
                     emitted = e + 1;
-                    actual.onNext(t);
+                    downstream.onNext(t);
                 } else {
                     done = true;
                     cancel();
-                    actual.onError(new MissingBackpressureException("Downstream is not ready to receive the next upstream item."));
+                    downstream.onError(new MissingBackpressureException("Downstream is not ready to receive the next upstream item."));
                 }
             }
         }
@@ -119,7 +119,7 @@ final class FlowableRequestSampleTime<T> extends Flowable<T> implements Flowable
         public void onError(Throwable t) {
             if (!done) {
                 done = true;
-                actual.onError(t);
+                downstream.onError(t);
                 DisposableHelper.dispose(timer);
             } else {
                 RxJavaPlugins.onError(t);
@@ -130,7 +130,7 @@ final class FlowableRequestSampleTime<T> extends Flowable<T> implements Flowable
         public void onComplete() {
             if (!done) {
                 done = true;
-                actual.onComplete();
+                downstream.onComplete();
                 DisposableHelper.dispose(timer);
             }
         }

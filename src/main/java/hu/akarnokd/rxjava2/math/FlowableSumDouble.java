@@ -27,19 +27,18 @@ final class FlowableSumDouble extends FlowableSource<Double, Double> {
     }
 
     @Override
-    protected void subscribeActual(Subscriber<? super Double> observer) {
-        source.subscribe(new SumDoubleSubscriber(observer));
+    protected void subscribeActual(Subscriber<? super Double> subscriber) {
+        source.subscribe(new SumDoubleSubscriber(subscriber));
     }
 
     static final class SumDoubleSubscriber extends DeferredScalarSubscriber<Double, Double> {
-
 
         private static final long serialVersionUID = 600979972678601618L;
 
         double accumulator;
 
-        SumDoubleSubscriber(Subscriber<? super Double> actual) {
-            super(actual);
+        SumDoubleSubscriber(Subscriber<? super Double> downstream) {
+            super(downstream);
         }
 
         @Override

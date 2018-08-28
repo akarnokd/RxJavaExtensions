@@ -61,8 +61,8 @@ final class SoloCreate<T> extends Solo<T> {
 
         final AtomicReference<Disposable> resource;
 
-        SoloEmitter(Subscriber<? super T> actual) {
-            super(actual);
+        SoloEmitter(Subscriber<? super T> downstream) {
+            super(downstream);
             this.resource = new AtomicReference<Disposable>();
         }
 
@@ -101,8 +101,8 @@ final class SoloCreate<T> extends Solo<T> {
         }
 
         @Override
-        public void setDisposable(Disposable s) {
-            DisposableHelper.set(resource, s);
+        public void setDisposable(Disposable d) {
+            DisposableHelper.set(resource, d);
         }
 
         @Override

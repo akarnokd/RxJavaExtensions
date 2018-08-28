@@ -28,20 +28,20 @@ import io.reactivex.internal.subscriptions.SubscriptionHelper;
 abstract class BasicRefNonoSubscriber<R> extends BasicRefQueueSubscription<Void, R> implements Subscriber<Void> {
     private static final long serialVersionUID = -3157015053656142804L;
 
-    protected final Subscriber<? super Void> actual;
+    protected final Subscriber<? super Void> downstream;
 
-    Subscription s;
+    Subscription upstream;
 
-    BasicRefNonoSubscriber(Subscriber<? super Void> actual) {
-        this.actual = actual;
+    BasicRefNonoSubscriber(Subscriber<? super Void> downstream) {
+        this.downstream = downstream;
     }
 
     @Override
     public void onSubscribe(Subscription s) {
-        if (SubscriptionHelper.validate(this.s, s)) {
-            this.s = s;
+        if (SubscriptionHelper.validate(this.upstream, s)) {
+            this.upstream = s;
 
-            actual.onSubscribe(this);
+            downstream.onSubscribe(this);
         }
     }
 
@@ -52,7 +52,7 @@ abstract class BasicRefNonoSubscriber<R> extends BasicRefQueueSubscription<Void,
 
     @Override
     public void cancel() {
-        s.cancel();
+        upstream.cancel();
     }
 
     @Override

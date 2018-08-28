@@ -36,8 +36,8 @@ final class PerhapsToObservable<T> extends Observable<T> {
     }
 
     @Override
-    protected void subscribeActual(Observer<? super T> s) {
-        source.subscribe(new ToFlowableSubscriber<T>(s));
+    protected void subscribeActual(Observer<? super T> observer) {
+        source.subscribe(new ToFlowableSubscriber<T>(observer));
     }
 
     static final class ToFlowableSubscriber<T> extends DeferredScalarDisposable<T>
@@ -47,8 +47,8 @@ final class PerhapsToObservable<T> extends Observable<T> {
 
         Subscription upstream;
 
-        ToFlowableSubscriber(Observer<? super T> actual) {
-            super(actual);
+        ToFlowableSubscriber(Observer<? super T> downstream) {
+            super(downstream);
         }
 
         @Override

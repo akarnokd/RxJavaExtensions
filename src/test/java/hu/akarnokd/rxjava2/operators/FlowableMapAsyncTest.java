@@ -83,7 +83,6 @@ public class FlowableMapAsyncTest {
         .assertResult("2", "3", "4", "5", "6");
     }
 
-
     @Test
     public void normalCombiner() {
         Flowable.range(1, 5)
@@ -101,7 +100,6 @@ public class FlowableMapAsyncTest {
         .awaitDone(5, TimeUnit.SECONDS)
         .assertResult("2", "3", "4", "5", "6");
     }
-
 
     @Test
     public void nonDelayedCombiner() {
@@ -138,7 +136,6 @@ public class FlowableMapAsyncTest {
         .assertFailure(IOException.class);
     }
 
-
     @Test
     public void mainErrorBackpressured() {
         Flowable.<Integer>error(new IOException())
@@ -167,7 +164,6 @@ public class FlowableMapAsyncTest {
         .test()
         .assertResult();
     }
-
 
     @Test
     public void emptyBackpressured() {

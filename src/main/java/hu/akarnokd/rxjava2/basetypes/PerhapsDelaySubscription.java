@@ -55,8 +55,8 @@ final class PerhapsDelaySubscription<T> extends Perhaps<T> {
 
         Subscription upstream;
 
-        DelaySubscriber(Subscriber<? super T> actual, Perhaps<T> source) {
-            super(actual);
+        DelaySubscriber(Subscriber<? super T> downstream, Perhaps<T> source) {
+            super(downstream);
             this.source = source;
             this.sourceSubscriber = new SourceSubscriber();
         }

@@ -55,8 +55,8 @@ final class PerhapsSwitchIfEmpty<T> extends Perhaps<T> {
 
         Subscription upstream;
 
-        SwitchIfEmptySubscriber(Subscriber<? super T> actual, Perhaps<? extends T> other) {
-            super(actual);
+        SwitchIfEmptySubscriber(Subscriber<? super T> downstream, Perhaps<? extends T> other) {
+            super(downstream);
             this.other = other;
             this.otherSubscriber = new OtherSubscriber();
         }

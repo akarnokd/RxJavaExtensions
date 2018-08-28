@@ -40,7 +40,6 @@ public class SingleConsumersTest implements Consumer<Object> {
 
     final List<Object> events = new ArrayList<Object>();
 
-
     @Override
     public void accept(Object t) throws Exception {
         events.add(t);
@@ -126,7 +125,6 @@ public class SingleConsumersTest implements Consumer<Object> {
         }
     }
 
-
     @Test
     public void onErrorCrash() {
         List<Throwable> errors = TestHelper.trackPluginErrors();
@@ -159,13 +157,13 @@ public class SingleConsumersTest implements Consumer<Object> {
                     new Single<Integer>() {
                         @Override
                         protected void subscribeActual(
-                                SingleObserver<? super Integer> s) {
-                            s.onSubscribe(Disposables.empty());
-                            s.onSuccess(1);
+                                SingleObserver<? super Integer> observer) {
+                            observer.onSubscribe(Disposables.empty());
+                            observer.onSuccess(1);
 
-                            s.onSubscribe(Disposables.empty());
-                            s.onSuccess(2);
-                            s.onError(new IOException());
+                            observer.onSubscribe(Disposables.empty());
+                            observer.onSuccess(2);
+                            observer.onError(new IOException());
                         }
                     }, composite, this, this
                 );

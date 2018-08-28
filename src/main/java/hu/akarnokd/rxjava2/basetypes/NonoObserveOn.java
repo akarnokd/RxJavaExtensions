@@ -49,8 +49,8 @@ final class NonoObserveOn extends Nono {
 
         Throwable error;
 
-        ObserveOnSubscriber(Subscriber<? super Void> actual, Scheduler scheduler) {
-            super(actual);
+        ObserveOnSubscriber(Subscriber<? super Void> downstream, Scheduler scheduler) {
+            super(downstream);
             this.scheduler = scheduler;
         }
 
@@ -70,15 +70,15 @@ final class NonoObserveOn extends Nono {
             Throwable ex = error;
             if (ex != null) {
                 error = null;
-                actual.onError(ex);
+                downstream.onError(ex);
             } else {
-                actual.onComplete();
+                downstream.onComplete();
             }
         }
 
         @Override
         public void cancel() {
-            s.cancel();
+            upstream.cancel();
             DisposableHelper.dispose(this);
         }
     }

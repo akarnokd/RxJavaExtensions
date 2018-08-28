@@ -59,8 +59,8 @@ final class PerhapsTakeUntil<T> extends Perhaps<T> {
 
         final OtherSubscriber other;
 
-        TakeUntilSubscriber(Subscriber<? super T> actual) {
-            super(actual);
+        TakeUntilSubscriber(Subscriber<? super T> downstream) {
+            super(downstream);
             this.other = new OtherSubscriber();
             this.upstream = new AtomicReference<Subscription>();
             this.once = new AtomicBoolean();

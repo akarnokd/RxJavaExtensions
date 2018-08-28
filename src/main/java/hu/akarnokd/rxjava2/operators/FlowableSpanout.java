@@ -75,7 +75,7 @@ final class FlowableSpanout<T> extends Flowable<T> implements FlowableTransforme
 
     static final class SpanoutSubscriber<T> implements Subscriber<T>, Subscription, Runnable {
 
-        final Subscriber<? super T> actual;
+        final Subscriber<? super T> downstream;
 
         final long initialSpan;
 
@@ -89,13 +89,13 @@ final class FlowableSpanout<T> extends Flowable<T> implements FlowableTransforme
 
         long lastEvent;
 
-        Subscription s;
+        Subscription upstream;
 
         volatile Object terminalEvent;
 
-        SpanoutSubscriber(Subscriber<? super T> actual, long initialSpan, long betweenSpan,
+        SpanoutSubscriber(Subscriber<? super T> downstream, long initialSpan, long betweenSpan,
                 Worker worker, boolean delayError, int bufferSize) {
-            this.actual = actual;
+            this.downstream = downstream;
             this.initialSpan = initialSpan;
             this.betweenSpan = betweenSpan;
             this.worker = worker;
@@ -106,10 +106,10 @@ final class FlowableSpanout<T> extends Flowable<T> implements FlowableTransforme
 
         @Override
         public void onSubscribe(Subscription s) {
-            if (SubscriptionHelper.validate(this.s, s)) {
-                this.s = s;
+            if (SubscriptionHelper.validate(this.upstream, s)) {
+                this.upstream = s;
 
-                actual.onSubscribe(this);
+                downstream.onSubscribe(this);
             }
         }
 
@@ -156,13 +156,13 @@ final class FlowableSpanout<T> extends Flowable<T> implements FlowableTransforme
 
         @Override
         public void request(long n) {
-            s.request(n);
+            upstream.request(n);
         }
 
         @Override
         public void cancel() {
             worker.dispose();
-            s.cancel();
+            upstream.cancel();
         }
 
         @Override
@@ -170,7 +170,7 @@ final class FlowableSpanout<T> extends Flowable<T> implements FlowableTransforme
             Object o = terminalEvent;
             if (o != null && o != this && !delayError) {
                 queue.clear();
-                actual.onError((Throwable)o);
+                downstream.onError((Throwable)o);
                 worker.dispose();
                 return;
             }
@@ -181,16 +181,16 @@ final class FlowableSpanout<T> extends Flowable<T> implements FlowableTransforme
 
             if (o != null && empty) {
                 if (o == this) {
-                    actual.onComplete();
+                    downstream.onComplete();
                 } else {
-                    actual.onError((Throwable)o);
+                    downstream.onError((Throwable)o);
                 }
                 worker.dispose();
                 return;
             }
 
             if (!empty) {
-                actual.onNext(v);
+                downstream.onNext(v);
             }
         }
     }

@@ -41,41 +41,41 @@ final class NonoFromMaybe extends Nono {
     static final class FromMaybeObserver extends BasicEmptyQueueSubscription
     implements MaybeObserver<Object> {
 
-        final Subscriber<? super Void> actual;
+        final Subscriber<? super Void> downstream;
 
-        Disposable d;
+        Disposable upstream;
 
-        FromMaybeObserver(Subscriber<? super Void> actual) {
-            this.actual = actual;
+        FromMaybeObserver(Subscriber<? super Void> downstream) {
+            this.downstream = downstream;
         }
 
         @Override
         public void onSubscribe(Disposable d) {
-            if (DisposableHelper.validate(this.d, d)) {
-                this.d = d;
+            if (DisposableHelper.validate(this.upstream, d)) {
+                this.upstream = d;
 
-                actual.onSubscribe(this);
+                downstream.onSubscribe(this);
             }
         }
 
         @Override
         public void onSuccess(Object value) {
-            actual.onComplete();
+            downstream.onComplete();
         }
 
         @Override
         public void onError(Throwable t) {
-            actual.onError(t);
+            downstream.onError(t);
         }
 
         @Override
         public void onComplete() {
-            actual.onComplete();
+            downstream.onComplete();
         }
 
         @Override
         public void cancel() {
-            d.dispose();
+            upstream.dispose();
         }
     }
 }

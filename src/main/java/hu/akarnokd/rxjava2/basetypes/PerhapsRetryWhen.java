@@ -85,8 +85,8 @@ final class PerhapsRetryWhen<T> extends Perhaps<T> {
 
         volatile boolean active;
 
-        RetrySubscriber(Subscriber<? super T> actual, FlowableProcessor<Throwable> signal, Perhaps<T> source) {
-            super(actual);
+        RetrySubscriber(Subscriber<? super T> downstream, FlowableProcessor<Throwable> signal, Perhaps<T> source) {
+            super(downstream);
             this.signal = signal;
             this.source = source;
             this.other = new OtherSubscriber();

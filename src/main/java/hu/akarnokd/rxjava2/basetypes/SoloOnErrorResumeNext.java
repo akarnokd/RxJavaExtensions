@@ -57,8 +57,8 @@ final class SoloOnErrorResumeNext<T> extends Solo<T> {
 
         Subscription upstream;
 
-        OnErrorReturnItemSubscriber(Subscriber<? super T> actual, Function<? super Throwable, ? extends Solo<T>> errorHandler) {
-            super(actual);
+        OnErrorReturnItemSubscriber(Subscriber<? super T> downstream, Function<? super Throwable, ? extends Solo<T>> errorHandler) {
+            super(downstream);
             this.errorHandler = errorHandler;
             this.nextSubscriber = new NextSubscriber();
         }

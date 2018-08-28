@@ -685,7 +685,6 @@ public class PerhapsTest implements Consumer<Object>, Action, LongConsumer, Canc
         .assertFailure(IOException.class);
     }
 
-
     @SuppressWarnings("unchecked")
     @Test
     public void concatIterableDelayError() {
@@ -772,7 +771,6 @@ public class PerhapsTest implements Consumer<Object>, Action, LongConsumer, Canc
         .assertFailure(IOException.class, 2);
     }
 
-
     @SuppressWarnings("unchecked")
     @Test
     public void mergeIterable() {
@@ -858,7 +856,6 @@ public class PerhapsTest implements Consumer<Object>, Action, LongConsumer, Canc
         .test()
         .assertFailure(IOException.class);
     }
-
 
     @SuppressWarnings("unchecked")
     @Test

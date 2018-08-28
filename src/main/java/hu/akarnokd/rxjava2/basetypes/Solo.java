@@ -633,7 +633,6 @@ public abstract class Solo<T> implements Publisher<T> {
         return Flowable.concat(this, other);
     }
 
-
     /**
      * Merges the values of this Solo and the other Solo into a
      * Flowable sequence.

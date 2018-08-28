@@ -42,7 +42,6 @@ public class FlowableConsumersTest implements Consumer<Object>, Action {
 
     final List<Object> events = new ArrayList<Object>();
 
-
     @Override
     public void run() throws Exception {
         events.add("OnComplete");
@@ -216,7 +215,6 @@ public class FlowableConsumersTest implements Consumer<Object>, Action {
         }
     }
 
-
     @Test
     public void onNextCrashOnError() {
         List<Throwable> errors = TestHelper.trackPluginErrors();
@@ -262,7 +260,6 @@ public class FlowableConsumersTest implements Consumer<Object>, Action {
             RxJavaPlugins.reset();
         }
     }
-
 
     @Test
     public void onCompleteCrash() {

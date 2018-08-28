@@ -27,19 +27,18 @@ final class FlowableSumFloat extends FlowableSource<Float, Float> {
     }
 
     @Override
-    protected void subscribeActual(Subscriber<? super Float> observer) {
-        source.subscribe(new SumFloatSubscriber(observer));
+    protected void subscribeActual(Subscriber<? super Float> subscriber) {
+        source.subscribe(new SumFloatSubscriber(subscriber));
     }
 
     static final class SumFloatSubscriber extends DeferredScalarSubscriber<Float, Float> {
-
 
         private static final long serialVersionUID = 600979972678601618L;
 
         float accumulator;
 
-        SumFloatSubscriber(Subscriber<? super Float> actual) {
-            super(actual);
+        SumFloatSubscriber(Subscriber<? super Float> downstream) {
+            super(downstream);
         }
 
         @Override

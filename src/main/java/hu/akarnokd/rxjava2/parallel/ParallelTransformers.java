@@ -47,7 +47,6 @@ public final class ParallelTransformers {
         return orderedMerge(source, Functions.naturalOrder(), false, Flowable.bufferSize());
     }
 
-
     /**
      * Merges the source ParallelFlowable rails in an ordered fashion picking the smallest of the available value from
      * them (determined by their natural order) and allows delaying any error they may signal.
@@ -60,7 +59,6 @@ public final class ParallelTransformers {
     public static <T extends Comparable<? super T>> Flowable<T> orderedMerge(ParallelFlowable<T> source, boolean delayErrors) {
         return orderedMerge(source, Functions.naturalOrder(), delayErrors, Flowable.bufferSize());
     }
-
 
     /**
      * Merges the source ParallelFlowable rails in an ordered fashion picking the smallest of the available value from
@@ -77,7 +75,6 @@ public final class ParallelTransformers {
         return orderedMerge(source, Functions.naturalOrder(), delayErrors, prefetch);
     }
 
-
     /**
      * Merges the source ParallelFlowable rails in an ordered fashion picking the smallest of the available value from
      * them (determined by the Comparator).
@@ -91,7 +88,6 @@ public final class ParallelTransformers {
     public static <T> Flowable<T> orderedMerge(ParallelFlowable<T> source, Comparator<? super T> comparator) {
         return orderedMerge(source, comparator, false, Flowable.bufferSize());
     }
-
 
     /**
      * Merges the source ParallelFlowable rails in an ordered fashion picking the smallest of the available value from
@@ -107,7 +103,6 @@ public final class ParallelTransformers {
     public static <T> Flowable<T> orderedMerge(ParallelFlowable<T> source, Comparator<? super T> comparator, boolean delayErrors) {
         return orderedMerge(source, comparator, delayErrors, Flowable.bufferSize());
     }
-
 
     /**
      * Merges the source ParallelFlowable rails in an ordered fashion picking the smallest of the available value from

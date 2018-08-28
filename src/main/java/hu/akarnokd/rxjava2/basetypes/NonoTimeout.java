@@ -56,7 +56,7 @@ final class NonoTimeout extends Nono {
 
         private static final long serialVersionUID = 5699062216456523328L;
 
-        final Subscriber<? super Void> actual;
+        final Subscriber<? super Void> downstream;
 
         final Nono fallback;
 
@@ -64,8 +64,8 @@ final class NonoTimeout extends Nono {
 
         final AtomicBoolean once;
 
-        MainSubscriber(Subscriber<? super Void> actual, Nono fallback) {
-            this.actual = actual;
+        MainSubscriber(Subscriber<? super Void> downstream, Nono fallback) {
+            this.downstream = downstream;
             this.fallback = fallback;
             this.other = new OtherSubscriber();
             this.once = new AtomicBoolean();
@@ -91,7 +91,7 @@ final class NonoTimeout extends Nono {
         public void onError(Throwable t) {
             SubscriptionHelper.cancel(other);
             if (once.compareAndSet(false, true)) {
-                actual.onError(t);
+                downstream.onError(t);
             } else {
                 RxJavaPlugins.onError(t);
             }
@@ -101,14 +101,14 @@ final class NonoTimeout extends Nono {
         public void onComplete() {
             SubscriptionHelper.cancel(other);
             if (once.compareAndSet(false, true)) {
-                actual.onComplete();
+                downstream.onComplete();
             }
         }
 
         void otherError(Throwable t) {
             SubscriptionHelper.cancel(this);
             if (once.compareAndSet(false, true)) {
-                actual.onError(t);
+                downstream.onError(t);
             } else {
                 RxJavaPlugins.onError(t);
             }
@@ -119,7 +119,7 @@ final class NonoTimeout extends Nono {
             if (once.compareAndSet(false, true)) {
                 Nono f = fallback;
                 if (f == null) {
-                    actual.onError(new TimeoutException());
+                    downstream.onError(new TimeoutException());
                 } else {
                     f.subscribe(new FallbackSubscriber());
                 }
@@ -144,12 +144,12 @@ final class NonoTimeout extends Nono {
 
             @Override
             public void onError(Throwable t) {
-                actual.onError(t);
+                downstream.onError(t);
             }
 
             @Override
             public void onComplete() {
-                actual.onComplete();
+                downstream.onComplete();
             }
         }
 

@@ -51,14 +51,14 @@ final class NonoTakeUntil extends Nono {
 
         private static final long serialVersionUID = 5812459132190733401L;
 
-        final Subscriber<? super Void> actual;
+        final Subscriber<? super Void> downstream;
 
         final AtomicBoolean once;
 
         final OtherSubscriber inner;
 
-        TakeUntilSubscriber(Subscriber<? super Void> actual) {
-            this.actual = actual;
+        TakeUntilSubscriber(Subscriber<? super Void> downstream) {
+            this.downstream = downstream;
             this.once = new AtomicBoolean();
             this.inner = new OtherSubscriber();
         }
@@ -83,7 +83,7 @@ final class NonoTakeUntil extends Nono {
         public void onError(Throwable t) {
             if (once.compareAndSet(false, true)) {
                 SubscriptionHelper.cancel(inner);
-                actual.onError(t);
+                downstream.onError(t);
             } else {
                 RxJavaPlugins.onError(t);
             }
@@ -93,21 +93,21 @@ final class NonoTakeUntil extends Nono {
         public void onComplete() {
             if (once.compareAndSet(false, true)) {
                 SubscriptionHelper.cancel(inner);
-                actual.onComplete();
+                downstream.onComplete();
             }
         }
 
         void innerComplete() {
             if (once.compareAndSet(false, true)) {
                 SubscriptionHelper.cancel(this);
-                actual.onComplete();
+                downstream.onComplete();
             }
         }
 
         void innerError(Throwable t) {
             if (once.compareAndSet(false, true)) {
                 SubscriptionHelper.cancel(this);
-                actual.onError(t);
+                downstream.onError(t);
             } else {
                 RxJavaPlugins.onError(t);
             }

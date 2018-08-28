@@ -43,19 +43,19 @@ final class NonoUnsubscribeOn extends Nono {
 
         final Scheduler scheduler;
 
-        UnsubscribeOnSubscriber(Subscriber<? super Void> actual, Scheduler scheduler) {
-            super(actual);
+        UnsubscribeOnSubscriber(Subscriber<? super Void> downstream, Scheduler scheduler) {
+            super(downstream);
             this.scheduler = scheduler;
         }
 
         @Override
         public void onError(Throwable t) {
-            actual.onError(t);
+            downstream.onError(t);
         }
 
         @Override
         public void onComplete() {
-            actual.onComplete();
+            downstream.onComplete();
         }
 
         @Override
@@ -65,7 +65,7 @@ final class NonoUnsubscribeOn extends Nono {
 
         @Override
         public void run() {
-            s.cancel();
+            upstream.cancel();
         }
     }
 }

@@ -42,31 +42,31 @@ final class SoloToSingle<T> extends Single<T> {
 
     static final class ToSingleSubscriber<T> implements Subscriber<T>, Disposable {
 
-        final SingleObserver<? super T> actual;
+        final SingleObserver<? super T> downstream;
 
-        Subscription s;
+        Subscription upstream;
 
-        ToSingleSubscriber(SingleObserver<? super T> actual) {
-            this.actual = actual;
+        ToSingleSubscriber(SingleObserver<? super T> downstream) {
+            this.downstream = downstream;
         }
 
         @Override
         public void dispose() {
-            s.cancel();
-            s = SubscriptionHelper.CANCELLED;
+            upstream.cancel();
+            upstream = SubscriptionHelper.CANCELLED;
         }
 
         @Override
         public boolean isDisposed() {
-            return s == SubscriptionHelper.CANCELLED;
+            return upstream == SubscriptionHelper.CANCELLED;
         }
 
         @Override
         public void onSubscribe(Subscription s) {
-            if (SubscriptionHelper.validate(this.s, s)) {
-                this.s = s;
+            if (SubscriptionHelper.validate(this.upstream, s)) {
+                this.upstream = s;
 
-                actual.onSubscribe(this);
+                downstream.onSubscribe(this);
 
                 s.request(Long.MAX_VALUE);
             }
@@ -74,12 +74,12 @@ final class SoloToSingle<T> extends Single<T> {
 
         @Override
         public void onNext(T t) {
-            actual.onSuccess(t);
+            downstream.onSuccess(t);
         }
 
         @Override
         public void onError(Throwable t) {
-            actual.onError(t);
+            downstream.onError(t);
         }
 
         @Override

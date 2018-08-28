@@ -32,15 +32,14 @@ public class ObservableSumDouble extends ObservableWithSource<Double, Double> {
 
     static final class SumDoubleObserver extends DeferredScalarObserver<Double, Double> {
 
-
         private static final long serialVersionUID = -769098775594601087L;
 
         double accumulator;
 
         boolean hasValue;
 
-        SumDoubleObserver(Observer<? super Double> actual) {
-            super(actual);
+        SumDoubleObserver(Observer<? super Double> downstream) {
+            super(downstream);
         }
 
         @Override

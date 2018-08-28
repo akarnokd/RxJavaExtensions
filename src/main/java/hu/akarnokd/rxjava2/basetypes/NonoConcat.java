@@ -58,7 +58,7 @@ final class NonoConcat extends Nono {
 
         private static final long serialVersionUID = -2273338080908719181L;
 
-        final Subscriber<? super Void> actual;
+        final Subscriber<? super Void> downstream;
 
         final int prefetch;
 
@@ -68,7 +68,7 @@ final class NonoConcat extends Nono {
 
         final InnerSubscriber inner;
 
-        Subscription s;
+        Subscription upstream;
 
         SimpleQueue<Nono> queue;
 
@@ -82,8 +82,8 @@ final class NonoConcat extends Nono {
 
         volatile boolean cancelled;
 
-        AbstractConcatSubscriber(Subscriber<? super Void> actual, int prefetch) {
-            this.actual = actual;
+        AbstractConcatSubscriber(Subscriber<? super Void> downstream, int prefetch) {
+            this.downstream = downstream;
             this.prefetch = prefetch;
             this.limit = prefetch - (prefetch >> 2);
             this.error = new AtomicThrowable();
@@ -117,8 +117,8 @@ final class NonoConcat extends Nono {
 
         @Override
         public final void onSubscribe(Subscription s) {
-            if (SubscriptionHelper.validate(this.s, s)) {
-                this.s = s;
+            if (SubscriptionHelper.validate(this.upstream, s)) {
+                this.upstream = s;
 
                 if (s instanceof QueueSubscription) {
                     @SuppressWarnings("unchecked")
@@ -130,7 +130,7 @@ final class NonoConcat extends Nono {
                         queue = qs;
                         done = true;
 
-                        actual.onSubscribe(this);
+                        downstream.onSubscribe(this);
 
                         drain();
                         return;
@@ -139,7 +139,7 @@ final class NonoConcat extends Nono {
                         sourceMode = m;
                         queue = qs;
 
-                        actual.onSubscribe(this);
+                        downstream.onSubscribe(this);
 
                         s.request(prefetch == Integer.MAX_VALUE ? Long.MAX_VALUE : prefetch);
 
@@ -150,13 +150,13 @@ final class NonoConcat extends Nono {
                 if (prefetch == Integer.MAX_VALUE) {
                     queue = new SpscLinkedArrayQueue<Nono>(bufferSize());
 
-                    actual.onSubscribe(this);
+                    downstream.onSubscribe(this);
 
                     s.request(Long.MAX_VALUE);
                 } else {
                     queue = new SpscArrayQueue<Nono>(prefetch);
 
-                    actual.onSubscribe(this);
+                    downstream.onSubscribe(this);
 
                     s.request(prefetch);
                 }
@@ -168,7 +168,7 @@ final class NonoConcat extends Nono {
                 int c = consumed + 1;
                 if (c == limit) {
                     consumed = 0;
-                    s.request(c);
+                    upstream.request(c);
                 } else {
                     consumed = c;
                 }
@@ -179,7 +179,7 @@ final class NonoConcat extends Nono {
         public final void onNext(Nono t) {
             if (sourceMode == NONE) {
                 if (!queue.offer(t)) {
-                    s.cancel();
+                    upstream.cancel();
                     onError(new MissingBackpressureException());
                     return;
                 }
@@ -233,21 +233,21 @@ final class NonoConcat extends Nono {
 
         final AtomicInteger wip;
 
-        ConcatImmediateSubscriber(Subscriber<? super Void> actual, int prefetch) {
-            super(actual, prefetch);
+        ConcatImmediateSubscriber(Subscriber<? super Void> downstream, int prefetch) {
+            super(downstream, prefetch);
             this.wip = new AtomicInteger();
         }
 
         @Override
         public void onError(Throwable t) {
             cancel();
-            HalfSerializer.onError(actual, t, this, error);
+            HalfSerializer.onError(downstream, t, this, error);
         }
 
         @Override
         public void innerError(Throwable t) {
             cancel();
-            HalfSerializer.onError(actual, t, this, error);
+            HalfSerializer.onError(downstream, t, this, error);
         }
 
         @Override
@@ -259,7 +259,7 @@ final class NonoConcat extends Nono {
         @Override
         public void cancel() {
             cancelled = true;
-            s.cancel();
+            upstream.cancel();
             inner.dispose();
 
             if (wip.getAndIncrement() == 0) {
@@ -287,16 +287,16 @@ final class NonoConcat extends Nono {
                         np = queue.poll();
                     } catch (Throwable ex) {
                         Exceptions.throwIfFatal(ex);
-                        s.cancel();
+                        upstream.cancel();
                         queue.clear();
-                        HalfSerializer.onError(actual, ex, this, error);
+                        HalfSerializer.onError(downstream, ex, this, error);
                         return;
                     }
 
                     boolean empty = np == null;
 
                     if (d && empty) {
-                        HalfSerializer.onComplete(actual, this, error);
+                        HalfSerializer.onComplete(downstream, this, error);
                         return;
                     }
 
@@ -317,8 +317,8 @@ final class NonoConcat extends Nono {
 
         final boolean tillTheEnd;
 
-        ConcatDelayedSubscriber(Subscriber<? super Void> actual, int prefetch, boolean tillTheEnd) {
-            super(actual, prefetch);
+        ConcatDelayedSubscriber(Subscriber<? super Void> downstream, int prefetch, boolean tillTheEnd) {
+            super(downstream, prefetch);
             this.tillTheEnd = tillTheEnd;
         }
 
@@ -341,7 +341,7 @@ final class NonoConcat extends Nono {
         @Override
         public void cancel() {
             cancelled = true;
-            s.cancel();
+            upstream.cancel();
             inner.dispose();
 
             if (getAndIncrement() == 0) {
@@ -364,7 +364,7 @@ final class NonoConcat extends Nono {
                 if (!active) {
                     if (!tillTheEnd && error.get() != null) {
                         queue.clear();
-                        actual.onError(error.terminate());
+                        downstream.onError(error.terminate());
                         return;
                     }
 
@@ -376,11 +376,11 @@ final class NonoConcat extends Nono {
                         np = queue.poll();
                     } catch (Throwable ex) {
                         Exceptions.throwIfFatal(ex);
-                        s.cancel();
+                        upstream.cancel();
                         queue.clear();
                         error.addThrowable(ex);
 
-                        actual.onError(error.terminate());
+                        downstream.onError(error.terminate());
                         return;
                     }
 
@@ -389,9 +389,9 @@ final class NonoConcat extends Nono {
                     if (d && empty) {
                         Throwable ex = error.terminate();
                         if (ex != null) {
-                            actual.onError(ex);
+                            downstream.onError(ex);
                         } else {
-                            actual.onComplete();
+                            downstream.onComplete();
                         }
                         return;
                     }
@@ -410,7 +410,7 @@ final class NonoConcat extends Nono {
         void innerError(Throwable t) {
             if (error.addThrowable(t)) {
                 if (!tillTheEnd) {
-                    s.cancel();
+                    upstream.cancel();
                 }
                 active = false;
                 drain();

@@ -32,15 +32,14 @@ public class ObservableAverageFloat extends ObservableWithSource<Number, Float> 
 
     static final class AverageFloatObserver extends DeferredScalarObserver<Number, Float> {
 
-
         private static final long serialVersionUID = -4845767048730060914L;
 
         float accumulator;
 
         int count;
 
-        AverageFloatObserver(Observer<? super Float> actual) {
-            super(actual);
+        AverageFloatObserver(Observer<? super Float> downstream) {
+            super(downstream);
         }
 
         @Override

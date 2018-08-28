@@ -48,8 +48,8 @@ final class SoloMap<T, R> extends Solo<R> {
 
         final Function<? super T, ? extends R> mapper;
 
-        MapSubscriber(Subscriber<? super R> actual, Function<? super T, ? extends R> mapper) {
-            super(actual);
+        MapSubscriber(Subscriber<? super R> downstream, Function<? super T, ? extends R> mapper) {
+            super(downstream);
             this.mapper = mapper;
         }
 

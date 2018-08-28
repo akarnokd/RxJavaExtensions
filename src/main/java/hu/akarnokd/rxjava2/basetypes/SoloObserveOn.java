@@ -53,11 +53,11 @@ final class SoloObserveOn<T> extends Solo<T> {
 
         private static final long serialVersionUID = -658564450611526565L;
 
-        final Subscriber<? super T> actual;
+        final Subscriber<? super T> downstream;
 
         final Worker worker;
 
-        Subscription s;
+        Subscription upstream;
 
         volatile boolean done;
         Throwable error;
@@ -72,15 +72,15 @@ final class SoloObserveOn<T> extends Solo<T> {
 
         boolean outputFused;
 
-        ObserveOnSubscriber(Subscriber<? super T> actual, Worker worker) {
-            this.actual = actual;
+        ObserveOnSubscriber(Subscriber<? super T> downstream, Worker worker) {
+            this.downstream = downstream;
             this.worker = worker;
         }
 
         @Override
         public void onSubscribe(Subscription s) {
-            if (SubscriptionHelper.validate(this.s, s)) {
-                this.s = s;
+            if (SubscriptionHelper.validate(this.upstream, s)) {
+                this.upstream = s;
                 if (s instanceof QueueSubscription) {
                     @SuppressWarnings("unchecked")
                     QueueSubscription<T> qs = (QueueSubscription<T>) s;
@@ -91,7 +91,7 @@ final class SoloObserveOn<T> extends Solo<T> {
                         queue = qs;
                         done = true;
 
-                        actual.onSubscribe(this);
+                        downstream.onSubscribe(this);
 
                         return;
                     }
@@ -99,7 +99,7 @@ final class SoloObserveOn<T> extends Solo<T> {
                         sourceMode = m;
                         queue = qs;
 
-                        actual.onSubscribe(this);
+                        downstream.onSubscribe(this);
 
                         s.request(Long.MAX_VALUE);
                         return;
@@ -108,7 +108,7 @@ final class SoloObserveOn<T> extends Solo<T> {
 
                 queue = new SpscOneQueue<T>();
 
-                actual.onSubscribe(this);
+                downstream.onSubscribe(this);
 
                 s.request(Long.MAX_VALUE);
             }
@@ -154,7 +154,7 @@ final class SoloObserveOn<T> extends Solo<T> {
         public void cancel() {
             if (!cancelled) {
                 cancelled = true;
-                s.cancel();
+                upstream.cancel();
                 worker.dispose();
 
                 if (getAndIncrement() == 0) {
@@ -205,7 +205,7 @@ final class SoloObserveOn<T> extends Solo<T> {
                     if (outputFused) {
                         empty = q.isEmpty();
                         if (!empty) {
-                            actual.onNext(null);
+                            downstream.onNext(null);
                             empty = true;
                         }
                     } else {
@@ -216,7 +216,7 @@ final class SoloObserveOn<T> extends Solo<T> {
                         } catch (Throwable ex) {
                             Exceptions.throwIfFatal(ex);
                             q.clear();
-                            actual.onError(ex);
+                            downstream.onError(ex);
                             worker.dispose();
                             return;
                         }
@@ -224,7 +224,7 @@ final class SoloObserveOn<T> extends Solo<T> {
                         empty = v == null;
 
                         if (!empty) {
-                            actual.onNext(v);
+                            downstream.onNext(v);
                             empty = true;
                         }
                     }
@@ -233,12 +233,12 @@ final class SoloObserveOn<T> extends Solo<T> {
                 if (d) {
                     Throwable ex = error;
                     if (ex != null) {
-                        actual.onError(ex);
+                        downstream.onError(ex);
                         worker.dispose();
                         return;
                     } else
                     if (q.isEmpty()) {
-                        actual.onComplete();
+                        downstream.onComplete();
                         worker.dispose();
                         return;
                     }

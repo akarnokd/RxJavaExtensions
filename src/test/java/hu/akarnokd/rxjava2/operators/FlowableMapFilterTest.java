@@ -24,7 +24,7 @@ import org.junit.Test;
 import hu.akarnokd.rxjava2.test.TestHelper;
 import io.reactivex.Flowable;
 import io.reactivex.functions.BiConsumer;
-import io.reactivex.internal.fuseable.QueueSubscription;
+import io.reactivex.internal.fuseable.QueueFuseable;
 import io.reactivex.processors.*;
 import io.reactivex.subscribers.TestSubscriber;
 
@@ -220,7 +220,7 @@ public class FlowableMapFilterTest {
 
     @Test
     public void mapFused() {
-        TestSubscriber<Integer> ts = TestHelper.fusedSubscriber(QueueSubscription.ANY);
+        TestSubscriber<Integer> ts = TestHelper.fusedSubscriber(QueueFuseable.ANY);
 
         Flowable.range(1, 5)
         .compose(FlowableTransformers.mapFilter(new BiConsumer<Integer, BasicEmitter<Integer>>() {
@@ -231,13 +231,13 @@ public class FlowableMapFilterTest {
         }))
         .subscribe(ts);
 
-        ts.assertOf(TestHelper.<Integer>assertFusedSubscriber(QueueSubscription.SYNC))
+        ts.assertOf(TestHelper.<Integer>assertFusedSubscriber(QueueFuseable.SYNC))
         .assertResult(2, 4, 6, 8, 10);
     }
 
     @Test
     public void mapAsyncFused() {
-        TestSubscriber<Integer> ts = TestHelper.fusedSubscriber(QueueSubscription.ANY);
+        TestSubscriber<Integer> ts = TestHelper.fusedSubscriber(QueueFuseable.ANY);
 
         UnicastProcessor<Integer> up = UnicastProcessor.create();
         TestHelper.emit(up, 1, 2, 3, 4, 5);
@@ -251,13 +251,13 @@ public class FlowableMapFilterTest {
         }))
         .subscribe(ts);
 
-        ts.assertOf(TestHelper.<Integer>assertFusedSubscriber(QueueSubscription.ASYNC))
+        ts.assertOf(TestHelper.<Integer>assertFusedSubscriber(QueueFuseable.ASYNC))
         .assertResult(2, 4, 6, 8, 10);
     }
 
     @Test
     public void filterFused() {
-        TestSubscriber<Integer> ts = TestHelper.fusedSubscriber(QueueSubscription.ANY);
+        TestSubscriber<Integer> ts = TestHelper.fusedSubscriber(QueueFuseable.ANY);
 
         Flowable.range(1, 5)
         .compose(FlowableTransformers.mapFilter(new BiConsumer<Integer, BasicEmitter<Integer>>() {
@@ -270,13 +270,13 @@ public class FlowableMapFilterTest {
         }))
         .subscribe(ts);
 
-        ts.assertOf(TestHelper.<Integer>assertFusedSubscriber(QueueSubscription.SYNC))
+        ts.assertOf(TestHelper.<Integer>assertFusedSubscriber(QueueFuseable.SYNC))
         .assertResult(4, 8);
     }
 
     @Test
     public void consumerThrowsFused() {
-        TestSubscriber<Integer> ts = TestHelper.fusedSubscriber(QueueSubscription.ANY);
+        TestSubscriber<Integer> ts = TestHelper.fusedSubscriber(QueueFuseable.ANY);
 
         Flowable.range(1, 5)
         .compose(FlowableTransformers.mapFilter(new BiConsumer<Integer, BasicEmitter<Integer>>() {
@@ -287,13 +287,13 @@ public class FlowableMapFilterTest {
         }))
         .subscribe(ts);
 
-        ts.assertOf(TestHelper.<Integer>assertFusedSubscriber(QueueSubscription.SYNC))
+        ts.assertOf(TestHelper.<Integer>assertFusedSubscriber(QueueFuseable.SYNC))
         .assertFailure(IOException.class);
     }
 
     @Test
     public void consumerSignalsErrorFused() {
-        TestSubscriber<Integer> ts = TestHelper.fusedSubscriber(QueueSubscription.ANY);
+        TestSubscriber<Integer> ts = TestHelper.fusedSubscriber(QueueFuseable.ANY);
 
         Flowable.range(1, 5)
         .compose(FlowableTransformers.mapFilter(new BiConsumer<Integer, BasicEmitter<Integer>>() {
@@ -304,13 +304,13 @@ public class FlowableMapFilterTest {
         }))
         .subscribe(ts);
 
-        ts.assertOf(TestHelper.<Integer>assertFusedSubscriber(QueueSubscription.SYNC))
+        ts.assertOf(TestHelper.<Integer>assertFusedSubscriber(QueueFuseable.SYNC))
         .assertFailure(IOException.class);
     }
 
     @Test
     public void consumerCompleteFused() {
-        TestSubscriber<Integer> ts = TestHelper.fusedSubscriber(QueueSubscription.ANY);
+        TestSubscriber<Integer> ts = TestHelper.fusedSubscriber(QueueFuseable.ANY);
 
         Flowable.range(1, 5)
         .compose(FlowableTransformers.mapFilter(new BiConsumer<Integer, BasicEmitter<Integer>>() {
@@ -321,7 +321,7 @@ public class FlowableMapFilterTest {
         }))
         .subscribe(ts);
 
-        ts.assertOf(TestHelper.<Integer>assertFusedSubscriber(QueueSubscription.SYNC))
+        ts.assertOf(TestHelper.<Integer>assertFusedSubscriber(QueueFuseable.SYNC))
         .assertResult();
     }
 

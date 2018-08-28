@@ -178,8 +178,8 @@ final class PerhapsCache<T> extends Perhaps<T> implements Subscriber<T> {
 
         final AtomicReference<Object> parent;
 
-        CacheSubscription(Subscriber<? super T> actual, PerhapsCache<T> parent) {
-            super(actual);
+        CacheSubscription(Subscriber<? super T> downstream, PerhapsCache<T> parent) {
+            super(downstream);
             this.parent = new AtomicReference<Object>(parent);
         }
 

@@ -25,20 +25,20 @@ import io.reactivex.internal.subscriptions.SubscriptionHelper;
  */
 abstract class BasicNonoSubscriber extends BasicEmptyQueueSubscription implements Subscriber<Object> {
 
-    protected final Subscriber<? super Void> actual;
+    protected final Subscriber<? super Void> downstream;
 
-    protected Subscription s;
+    protected Subscription upstream;
 
-    BasicNonoSubscriber(Subscriber<? super Void> actual) {
-        this.actual = actual;
+    BasicNonoSubscriber(Subscriber<? super Void> downstream) {
+        this.downstream = downstream;
     }
 
     @Override
     public void onSubscribe(Subscription s) {
-        if (SubscriptionHelper.validate(this.s, s)) {
-            this.s = s;
+        if (SubscriptionHelper.validate(this.upstream, s)) {
+            this.upstream = s;
 
-            actual.onSubscribe(this);
+            downstream.onSubscribe(this);
         }
     }
 
@@ -49,7 +49,7 @@ abstract class BasicNonoSubscriber extends BasicEmptyQueueSubscription implement
 
     @Override
     public void cancel() {
-        s.cancel();
+        upstream.cancel();
     }
 
 }

@@ -50,14 +50,14 @@ final class NonoSubscribeOn extends Nono {
 
         private static final long serialVersionUID = -6761773996344047676L;
 
-        final Subscriber<? super Void> actual;
+        final Subscriber<? super Void> downstream;
 
         final SequentialDisposable task;
 
         final Nono source;
 
-        SubscribeOnSubscriber(Subscriber<? super Void> actual, Nono source) {
-            this.actual = actual;
+        SubscribeOnSubscriber(Subscriber<? super Void> downstream, Nono source) {
+            this.downstream = downstream;
             this.source = source;
             this.task = new SequentialDisposable();
         }
@@ -78,12 +78,12 @@ final class NonoSubscribeOn extends Nono {
 
         @Override
         public void onError(Throwable t) {
-            actual.onError(t);
+            downstream.onError(t);
         }
 
         @Override
         public void onComplete() {
-            actual.onComplete();
+            downstream.onComplete();
         }
 
         @Override

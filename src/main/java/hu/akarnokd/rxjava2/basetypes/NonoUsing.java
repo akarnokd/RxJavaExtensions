@@ -94,20 +94,20 @@ final class NonoUsing<R> extends Nono {
     static final class UsingSubscriber<R> extends BasicNonoIntQueueSubscription
     implements Subscriber<Void> {
 
-        final Subscriber<? super Void> actual;
+        final Subscriber<? super Void> downstream;
 
         final Consumer<? super R> disposer;
 
         final boolean eager;
 
-        Subscription s;
+        Subscription upstream;
 
         R resource;
 
         private static final long serialVersionUID = 5500674592438910341L;
 
-        UsingSubscriber(Subscriber<? super Void> actual, R resource, Consumer<? super R> disposer, boolean eager) {
-            this.actual = actual;
+        UsingSubscriber(Subscriber<? super Void> downstream, R resource, Consumer<? super R> disposer, boolean eager) {
+            this.downstream = downstream;
             this.resource = resource;
             this.disposer = disposer;
             this.eager = eager;
@@ -131,10 +131,10 @@ final class NonoUsing<R> extends Nono {
 
         @Override
         public void onSubscribe(Subscription s) {
-            if (SubscriptionHelper.validate(this.s, s)) {
-                this.s = s;
+            if (SubscriptionHelper.validate(this.upstream, s)) {
+                this.upstream = s;
 
-                actual.onSubscribe(this);
+                downstream.onSubscribe(this);
             }
         }
 
@@ -156,7 +156,7 @@ final class NonoUsing<R> extends Nono {
                 }
             }
 
-            actual.onError(t);
+            downstream.onError(t);
 
             if (!eager) {
                 if (compareAndSet(0, 1)) {
@@ -173,13 +173,13 @@ final class NonoUsing<R> extends Nono {
                         disposer.accept(resource);
                     } catch (Throwable ex) {
                         Exceptions.throwIfFatal(ex);
-                        actual.onError(ex);
+                        downstream.onError(ex);
                         return;
                     }
                 }
             }
 
-            actual.onComplete();
+            downstream.onComplete();
 
             if (!eager) {
                 if (compareAndSet(0, 1)) {

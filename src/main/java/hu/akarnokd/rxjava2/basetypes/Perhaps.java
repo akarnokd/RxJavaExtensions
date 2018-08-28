@@ -118,7 +118,6 @@ public abstract class Perhaps<T> implements Publisher<T> {
         return onAssembly(PerhapsEmpty.<T>instance());
     }
 
-
     /**
      * Returns a Perhaps that signals the given error to Subscribers.
      * @param <T> the value type
@@ -1249,7 +1248,7 @@ public abstract class Perhaps<T> implements Publisher<T> {
 
     /**
      * Delay the subscription to this Perhaps by the given time amount.
-     * @param delay the subscription delay amount
+     * @param delay the amount to delay the subscription
      * @param unit the delay time unit
      * @return the new Perhaps instance
      */
@@ -1257,11 +1256,10 @@ public abstract class Perhaps<T> implements Publisher<T> {
         return delaySubscription(timer(delay, unit));
     }
 
-
     /**
      * Delay the subscription to this Perhaps by the given time amount,
      * running on the specified Scheduler.
-     * @param delay the subscription delay amount
+     * @param delay the amount to delay the subscription
      * @param unit the delay time unit
      * @param scheduler the scheduler to wait on
      * @return the new Perhaps instance

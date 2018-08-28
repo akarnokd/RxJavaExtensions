@@ -36,7 +36,7 @@ public class NonoProcessorTest {
     public void once() {
         NonoProcessor ms = NonoProcessor.create();
 
-        TestSubscriber<Void> to = ms.test();
+        TestSubscriber<Void> ts = ms.test();
 
         ms.onComplete();
 
@@ -50,7 +50,7 @@ public class NonoProcessorTest {
         }
         ms.onComplete();
 
-        to.assertResult();
+        ts.assertResult();
     }
 
     @Test
@@ -63,9 +63,9 @@ public class NonoProcessorTest {
         assertFalse(ms.hasSubscribers());
         assertEquals(0, ms.subscriberCount());
 
-        TestSubscriber<Void> to = ms.test();
+        TestSubscriber<Void> ts = ms.test();
 
-        to.assertEmpty();
+        ts.assertEmpty();
 
         assertTrue(ms.hasSubscribers());
         assertEquals(1, ms.subscriberCount());
@@ -78,7 +78,7 @@ public class NonoProcessorTest {
         assertFalse(ms.hasSubscribers());
         assertEquals(0, ms.subscriberCount());
 
-        to.assertFailure(IOException.class);
+        ts.assertFailure(IOException.class);
 
         ms.test().assertFailure(IOException.class);
 
@@ -99,9 +99,9 @@ public class NonoProcessorTest {
         assertFalse(ms.hasSubscribers());
         assertEquals(0, ms.subscriberCount());
 
-        TestSubscriber<Void> to = ms.test();
+        TestSubscriber<Void> ts = ms.test();
 
-        to.assertEmpty();
+        ts.assertEmpty();
 
         assertTrue(ms.hasSubscribers());
         assertEquals(1, ms.subscriberCount());
@@ -114,7 +114,7 @@ public class NonoProcessorTest {
         assertFalse(ms.hasSubscribers());
         assertEquals(0, ms.subscriberCount());
 
-        to.assertResult();
+        ts.assertResult();
 
         ms.test().assertResult();
 
@@ -129,11 +129,11 @@ public class NonoProcessorTest {
     public void nullThrowable() {
         NonoProcessor ms = NonoProcessor.create();
 
-        TestSubscriber<Void> to = ms.test();
+        TestSubscriber<Void> ts = ms.test();
 
         ms.onError(null);
 
-        to.assertFailure(NullPointerException.class);
+        ts.assertFailure(NullPointerException.class);
     }
 
     @Test
@@ -159,9 +159,9 @@ public class NonoProcessorTest {
         NonoProcessor.create()
         .subscribe(new Subscriber<Void>() {
             @Override
-            public void onSubscribe(Subscription d) {
-                d.cancel();
-                d.cancel();
+            public void onSubscribe(Subscription s) {
+                s.cancel();
+                s.cancel();
             }
 
             @Override
@@ -185,19 +185,19 @@ public class NonoProcessorTest {
     public void onSubscribeDispose() {
         NonoProcessor ms = NonoProcessor.create();
 
-        BooleanSubscription d = new BooleanSubscription();
+        BooleanSubscription bs = new BooleanSubscription();
 
-        ms.onSubscribe(d);
+        ms.onSubscribe(bs);
 
-        assertFalse(d.isCancelled());
+        assertFalse(bs.isCancelled());
 
         ms.onComplete();
 
-        d = new BooleanSubscription();
+        bs = new BooleanSubscription();
 
-        ms.onSubscribe(d);
+        ms.onSubscribe(bs);
 
-        assertTrue(d.isCancelled());
+        assertTrue(bs.isCancelled());
     }
 
     @Test
@@ -205,7 +205,7 @@ public class NonoProcessorTest {
         for (int i = 0; i < 500; i++) {
             final NonoProcessor ms = NonoProcessor.create();
 
-            final TestSubscriber<Void> to = ms.test();
+            final TestSubscriber<Void> ts = ms.test();
 
             Runnable r1 = new Runnable() {
                 @Override
@@ -217,7 +217,7 @@ public class NonoProcessorTest {
             Runnable r2 = new Runnable() {
                 @Override
                 public void run() {
-                    to.cancel();
+                    ts.cancel();
                 }
             };
             TestHelper.race(r1, r2, Schedulers.single());

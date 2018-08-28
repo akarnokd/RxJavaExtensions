@@ -37,51 +37,51 @@ final class SingleOnAssembly<T> extends Single<T> {
     }
 
     @Override
-    protected void subscribeActual(SingleObserver<? super T> s) {
-        source.subscribe(new OnAssemblySingleObserver<T>(s, assembled));
+    protected void subscribeActual(SingleObserver<? super T> observer) {
+        source.subscribe(new OnAssemblySingleObserver<T>(observer, assembled));
     }
 
     static final class OnAssemblySingleObserver<T> implements SingleObserver<T>, Disposable {
 
-        final SingleObserver<? super T> actual;
+        final SingleObserver<? super T> downstream;
 
         final RxJavaAssemblyException assembled;
 
-        Disposable d;
+        Disposable upstream;
 
-        OnAssemblySingleObserver(SingleObserver<? super T> actual, RxJavaAssemblyException assembled) {
-            this.actual = actual;
+        OnAssemblySingleObserver(SingleObserver<? super T> downstream, RxJavaAssemblyException assembled) {
+            this.downstream = downstream;
             this.assembled = assembled;
         }
 
         @Override
         public void onSubscribe(Disposable d) {
-            if (DisposableHelper.validate(this.d, d)) {
-                this.d = d;
+            if (DisposableHelper.validate(this.upstream, d)) {
+                this.upstream = d;
 
-                actual.onSubscribe(this);
+                downstream.onSubscribe(this);
             }
         }
 
         @Override
         public void onSuccess(T value) {
-            actual.onSuccess(value);
+            downstream.onSuccess(value);
         }
 
         @Override
         public void onError(Throwable t) {
-            actual.onError(assembled.appendLast(t));
+            downstream.onError(assembled.appendLast(t));
         }
 
         @Override
         public boolean isDisposed() {
-            return d.isDisposed();
+            return upstream.isDisposed();
         }
 
         @Override
         public void dispose() {
             // don't break the link here
-            d.dispose();
+            upstream.dispose();
         }
     }
 }

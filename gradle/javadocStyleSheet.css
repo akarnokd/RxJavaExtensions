@@ -15,7 +15,6 @@ code { color: #777; line-height: 1.286em; font-family: "Consolas", "Lucida Conso
 a { text-decoration: none; color: #16569A; /* also try #2E85ED, #0033FF, #6C93C6, #1D7BBE, #1D8DD2 */ }
 a:hover { text-decoration: underline; }
 
-
 table[border="1"] { border: 1px solid #ddd; }
 table[border="1"] td, table[border="1"] th { border: 1px solid #ddd; }
 table[cellpadding="3"] td { padding: 0.5em; }
@@ -46,7 +45,6 @@ h2.title { color: #c81f08; }
 .FrameItemFont a:hover i {
   text-decoration: underline;
 }
-
 
 /* Navigation bar fonts and colors */
 .NavBarCell1    { background-color:#E0E6DF; } /* Light mauve */

@@ -79,9 +79,9 @@ final class PerhapsDoOnLifecycle<T> extends Perhaps<T> {
 
     final class DoOnSubscriber extends BasicSoloQueueSubscription<T> implements Subscriber<T> {
 
-        final Subscriber<? super T> actual;
+        final Subscriber<? super T> downstream;
 
-        Subscription s;
+        Subscription upstream;
 
         QueueSubscription<T> queue;
 
@@ -89,15 +89,15 @@ final class PerhapsDoOnLifecycle<T> extends Perhaps<T> {
 
         int sourceMode;
 
-        DoOnSubscriber(Subscriber<? super T> actual) {
-            this.actual = actual;
+        DoOnSubscriber(Subscriber<? super T> downstream) {
+            this.downstream = downstream;
         }
 
         @SuppressWarnings("unchecked")
         @Override
         public void onSubscribe(Subscription s) {
-            if (SubscriptionHelper.validate(this.s, s)) {
-                this.s = s;
+            if (SubscriptionHelper.validate(this.upstream, s)) {
+                this.upstream = s;
 
                 if (s instanceof QueueSubscription) {
                     queue = (QueueSubscription<T>)s;
@@ -108,12 +108,12 @@ final class PerhapsDoOnLifecycle<T> extends Perhaps<T> {
                 } catch (Throwable ex) {
                     Exceptions.throwIfFatal(ex);
                     s.cancel();
-                    actual.onSubscribe(EmptySubscription.INSTANCE);
+                    downstream.onSubscribe(EmptySubscription.INSTANCE);
                     onError(ex);
                     return;
                 }
 
-                actual.onSubscribe(this);
+                downstream.onSubscribe(this);
             }
         }
 
@@ -121,7 +121,7 @@ final class PerhapsDoOnLifecycle<T> extends Perhaps<T> {
         public void onNext(T t) {
             if (!done) {
                 if (sourceMode != NONE) {
-                    actual.onNext(null);
+                    downstream.onNext(null);
                     return;
                 }
 
@@ -129,18 +129,18 @@ final class PerhapsDoOnLifecycle<T> extends Perhaps<T> {
                     onNext.accept(t);
                 } catch (Throwable ex) {
                     Exceptions.throwIfFatal(ex);
-                    s.cancel();
+                    upstream.cancel();
                     onError(ex);
                     return;
                 }
 
-                actual.onNext(t);
+                downstream.onNext(t);
 
                 try {
                     onAfterNext.accept(t);
                 } catch (Throwable ex) {
                     Exceptions.throwIfFatal(ex);
-                    s.cancel();
+                    upstream.cancel();
                     onError(ex);
                     return;
                 }
@@ -161,7 +161,7 @@ final class PerhapsDoOnLifecycle<T> extends Perhaps<T> {
                 t = new CompositeException(t, ex);
             }
 
-            actual.onError(t);
+            downstream.onError(t);
 
             doAfter();
         }
@@ -174,11 +174,11 @@ final class PerhapsDoOnLifecycle<T> extends Perhaps<T> {
                     onComplete.run();
                 } catch (Throwable ex) {
                     Exceptions.throwIfFatal(ex);
-                    actual.onError(ex);
+                    downstream.onError(ex);
                     return;
                 }
 
-                actual.onComplete();
+                downstream.onComplete();
 
                 doAfter();
             }
@@ -201,7 +201,7 @@ final class PerhapsDoOnLifecycle<T> extends Perhaps<T> {
                 Exceptions.throwIfFatal(ex);
                 RxJavaPlugins.onError(ex);
             }
-            s.cancel();
+            upstream.cancel();
         }
 
         @Override
@@ -212,7 +212,7 @@ final class PerhapsDoOnLifecycle<T> extends Perhaps<T> {
                 Exceptions.throwIfFatal(ex);
                 RxJavaPlugins.onError(ex);
             }
-            s.request(n);
+            upstream.request(n);
         }
 
         @Override

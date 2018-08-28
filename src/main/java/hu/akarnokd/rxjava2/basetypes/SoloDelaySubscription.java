@@ -56,8 +56,8 @@ final class SoloDelaySubscription<T> extends Solo<T> {
 
         final OtherSubscriber other;
 
-        DelaySubscriptionSubscriber(Subscriber<? super T> actual, Solo<T> source) {
-            super(actual);
+        DelaySubscriptionSubscriber(Subscriber<? super T> downstream, Solo<T> source) {
+            super(downstream);
             this.source = source;
             this.other = new OtherSubscriber();
         }

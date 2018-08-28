@@ -27,8 +27,8 @@ final class FlowableAverageFloat extends FlowableSource<Number, Float> {
     }
 
     @Override
-    protected void subscribeActual(Subscriber<? super Float> observer) {
-        source.subscribe(new AverageFloatSubscriber(observer));
+    protected void subscribeActual(Subscriber<? super Float> subscriber) {
+        source.subscribe(new AverageFloatSubscriber(subscriber));
     }
 
     static final class AverageFloatSubscriber extends DeferredScalarSubscriber<Number, Float> {
@@ -39,8 +39,8 @@ final class FlowableAverageFloat extends FlowableSource<Number, Float> {
 
         int count;
 
-        AverageFloatSubscriber(Subscriber<? super Float> actual) {
-            super(actual);
+        AverageFloatSubscriber(Subscriber<? super Float> downstream) {
+            super(downstream);
         }
 
         @Override

@@ -278,7 +278,6 @@ public class FlowableFilterAsyncTest {
         .assertFailure(IOException.class);
     }
 
-
     @Test
     public void predicateErrorFused() {
         Flowable.just(1)
@@ -356,7 +355,6 @@ public class FlowableFilterAsyncTest {
 
         ts.assertResult(1);
     }
-
 
     @Test
     public void cancel() {

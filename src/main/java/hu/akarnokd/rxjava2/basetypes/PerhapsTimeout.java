@@ -68,8 +68,8 @@ final class PerhapsTimeout<T> extends Perhaps<T> {
 
         final AtomicBoolean once;
 
-        TimeoutSubscriber(Subscriber<? super T> actual, Perhaps<? extends T> fallback) {
-            super(actual);
+        TimeoutSubscriber(Subscriber<? super T> downstream, Perhaps<? extends T> fallback) {
+            super(downstream);
             this.upstream = new AtomicReference<Subscription>();
             this.fallback = fallback;
             this.once = new AtomicBoolean();

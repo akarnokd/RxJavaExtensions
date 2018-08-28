@@ -36,18 +36,18 @@ final class NonoOnErrorComplete extends Nono {
 
     static final class OnErrorCompleteSubscriber extends BasicNonoSubscriber {
 
-        OnErrorCompleteSubscriber(Subscriber<? super Void> actual) {
-            super(actual);
+        OnErrorCompleteSubscriber(Subscriber<? super Void> downstream) {
+            super(downstream);
         }
 
         @Override
         public void onError(Throwable t) {
-            actual.onComplete();
+            downstream.onComplete();
         }
 
         @Override
         public void onComplete() {
-            actual.onComplete();
+            downstream.onComplete();
         }
     }
 }

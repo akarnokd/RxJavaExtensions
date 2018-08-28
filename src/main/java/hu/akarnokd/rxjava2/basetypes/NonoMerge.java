@@ -51,7 +51,7 @@ final class NonoMerge extends Nono {
 
         private static final long serialVersionUID = 1247749138466245004L;
 
-        final Subscriber<? super Void> actual;
+        final Subscriber<? super Void> downstream;
 
         final CompositeDisposable set;
 
@@ -61,10 +61,10 @@ final class NonoMerge extends Nono {
 
         final AtomicThrowable errors;
 
-        Subscription s;
+        Subscription upstream;
 
-        MergeSubscriber(Subscriber<? super Void> actual, boolean delayErrors, int maxConcurrency) {
-            this.actual = actual;
+        MergeSubscriber(Subscriber<? super Void> downstream, boolean delayErrors, int maxConcurrency) {
+            this.downstream = downstream;
             this.delayErrors = delayErrors;
             this.maxConcurrency = maxConcurrency;
             this.set = new CompositeDisposable();
@@ -74,10 +74,10 @@ final class NonoMerge extends Nono {
 
         @Override
         public void onSubscribe(Subscription s) {
-            if (SubscriptionHelper.validate(this.s, s)) {
-                this.s = s;
+            if (SubscriptionHelper.validate(this.upstream, s)) {
+                this.upstream = s;
 
-                actual.onSubscribe(this);
+                downstream.onSubscribe(this);
 
                 int m = maxConcurrency;
                 if (m == Integer.MAX_VALUE) {
@@ -104,7 +104,7 @@ final class NonoMerge extends Nono {
 
                     Throwable ex = errors.terminate();
                     if (ex != ExceptionHelper.TERMINATED) {
-                        actual.onError(ex);
+                        downstream.onError(ex);
                     }
                 } else {
                     onComplete();
@@ -119,9 +119,9 @@ final class NonoMerge extends Nono {
             if (decrementAndGet() == 0) {
                 Throwable ex = errors.terminate();
                 if (ex != null) {
-                    actual.onError(ex);
+                    downstream.onError(ex);
                 } else {
-                    actual.onComplete();
+                    downstream.onComplete();
                 }
             }
         }
@@ -135,12 +135,12 @@ final class NonoMerge extends Nono {
             if (decrementAndGet() == 0) {
                 Throwable ex = errors.terminate();
                 if (ex != null) {
-                    actual.onError(ex);
+                    downstream.onError(ex);
                 } else {
-                    actual.onComplete();
+                    downstream.onComplete();
                 }
             } else {
-                s.request(1);
+                upstream.request(1);
             }
         }
 
@@ -152,7 +152,7 @@ final class NonoMerge extends Nono {
 
                     Throwable ex = errors.terminate();
                     if (ex != ExceptionHelper.TERMINATED) {
-                        actual.onError(ex);
+                        downstream.onError(ex);
                     }
                 } else {
                     complete();
@@ -164,7 +164,7 @@ final class NonoMerge extends Nono {
 
         @Override
         public void cancel() {
-            s.cancel();
+            upstream.cancel();
             set.dispose();
         }
 

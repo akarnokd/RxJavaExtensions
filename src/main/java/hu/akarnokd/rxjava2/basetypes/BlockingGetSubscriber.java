@@ -35,7 +35,7 @@ final class BlockingGetSubscriber<T> extends CountDownLatch implements Subscribe
 
     volatile boolean cancelled;
 
-    Subscription s;
+    Subscription upstream;
 
     T value;
     Throwable error;
@@ -46,8 +46,8 @@ final class BlockingGetSubscriber<T> extends CountDownLatch implements Subscribe
 
     @Override
     public void onSubscribe(Subscription s) {
-        if (SubscriptionHelper.validate(this.s, s)) {
-            this.s = s;
+        if (SubscriptionHelper.validate(this.upstream, s)) {
+            this.upstream = s;
             if (cancelled) {
                 s.cancel();
             } else {
@@ -74,7 +74,7 @@ final class BlockingGetSubscriber<T> extends CountDownLatch implements Subscribe
 
     void dispose() {
         cancelled = true;
-        Subscription a = s;
+        Subscription a = upstream;
         if (a != null) {
             a.cancel();
         }

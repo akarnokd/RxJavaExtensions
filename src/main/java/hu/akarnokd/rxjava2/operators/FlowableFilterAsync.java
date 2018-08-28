@@ -70,7 +70,7 @@ final class FlowableFilterAsync<T> extends Flowable<T> implements FlowableTransf
 
         private static final long serialVersionUID = -1557840206706079339L;
 
-        final Subscriber<? super T> actual;
+        final Subscriber<? super T> downstream;
 
         final Function<? super T, ? extends Publisher<Boolean>> asyncPredicate;
 
@@ -108,11 +108,11 @@ final class FlowableFilterAsync<T> extends Flowable<T> implements FlowableTransf
         static final int STATE_RUNNING = 1;
         static final int STATE_RESULT = 2;
 
-        FilterAsyncSubscriber(Subscriber<? super T> actual,
+        FilterAsyncSubscriber(Subscriber<? super T> downstream,
                 Function<? super T, ? extends Publisher<Boolean>> asyncPredicate,
                 int bufferSize) {
             super(Pow2.roundToPowerOfTwo(bufferSize));
-            this.actual = actual;
+            this.downstream = downstream;
             this.asyncPredicate = asyncPredicate;
             this.bufferSize = bufferSize;
             this.error = new AtomicThrowable();
@@ -189,7 +189,7 @@ final class FlowableFilterAsync<T> extends Flowable<T> implements FlowableTransf
             if (SubscriptionHelper.validate(upstream, s)) {
                 upstream = s;
 
-                actual.onSubscribe(this);
+                downstream.onSubscribe(this);
 
                 s.request(bufferSize);
             }
@@ -207,7 +207,7 @@ final class FlowableFilterAsync<T> extends Flowable<T> implements FlowableTransf
             long ci = consumerIndex;
             int f = consumed;
             int m = length() - 1;
-            Subscriber<? super T> a = actual;
+            Subscriber<? super T> a = downstream;
 
             for (;;) {
                 long r = requested.get();

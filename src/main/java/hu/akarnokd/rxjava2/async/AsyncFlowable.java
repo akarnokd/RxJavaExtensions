@@ -1575,7 +1575,6 @@ public final class AsyncFlowable {
         return forEachFuture(source, onNext, Functions.emptyConsumer(), Functions.EMPTY_ACTION, Schedulers.computation());
     }
 
-
     /**
      * Subscribes to the given source and calls the callback for each emitted item, and surfaces the completion
      * or error through a Future.
@@ -1605,7 +1604,6 @@ public final class AsyncFlowable {
             final Consumer<? super Throwable> onError) {
         return forEachFuture(source, onNext, onError, Functions.EMPTY_ACTION, Schedulers.computation());
     }
-
 
     /**
      * Subscribes to the given source and calls the callback for each emitted item, and surfaces the completion
@@ -1639,7 +1637,6 @@ public final class AsyncFlowable {
         return forEachFuture(source, onNext, onError, onComplete, Schedulers.computation());
     }
 
-
     /**
      * Subscribes to the given source and calls the callback for each emitted item, and surfaces the completion
      * or error through a Future, scheduled on the given scheduler.
@@ -1665,7 +1662,6 @@ public final class AsyncFlowable {
             Scheduler scheduler) {
         return forEachFuture(source, onNext, Functions.emptyConsumer(), Functions.EMPTY_ACTION, scheduler);
     }
-
 
     /**
      * Subscribes to the given source and calls the callback for each emitted item, and surfaces the completion
@@ -1694,7 +1690,6 @@ public final class AsyncFlowable {
             Scheduler scheduler) {
         return forEachFuture(source, onNext, onError, Functions.EMPTY_ACTION, scheduler);
     }
-
 
     /**
      * Subscribes to the given source and calls the callback for each emitted item, and surfaces the completion

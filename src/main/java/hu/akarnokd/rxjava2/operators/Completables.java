@@ -29,6 +29,7 @@ import io.reactivex.internal.functions.ObjectHelper;
  * use {@link Completable#as(CompletableConverter)}
  * to apply the operators to an existing sequence.
  * 
+ * @see CompletableTransformers
  * @since 0.20.2
  */
 public final class Completables {

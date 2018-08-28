@@ -64,11 +64,11 @@ implements FlowableTransformer<T, T> {
 
         private static final long serialVersionUID = -174718617614474267L;
 
-        final Subscriber<? super T> actual;
+        final Subscriber<? super T> downstream;
 
         final AtomicLong requested;
 
-        final AtomicReference<Subscription> s;
+        final AtomicReference<Subscription> upstream;
 
         final Iterator<? extends Publisher<? extends T>> alternatives;
 
@@ -76,18 +76,18 @@ implements FlowableTransformer<T, T> {
 
         volatile boolean active;
 
-        SwitchManySubscriber(Subscriber<? super T> actual, Iterator<? extends Publisher<? extends T>> alternatives) {
-            this.actual = actual;
+        SwitchManySubscriber(Subscriber<? super T> downstream, Iterator<? extends Publisher<? extends T>> alternatives) {
+            this.downstream = downstream;
             this.alternatives = alternatives;
             this.requested = new AtomicLong();
-            this.s = new AtomicReference<Subscription>();
+            this.upstream = new AtomicReference<Subscription>();
         }
 
         @Override
         public void request(long n) {
             if (SubscriptionHelper.validate(n)) {
                 BackpressureHelper.add(requested, n);
-                Subscription a = s.get();
+                Subscription a = upstream.get();
                 if (a != null) {
                     a.request(n);
                 }
@@ -96,12 +96,12 @@ implements FlowableTransformer<T, T> {
 
         @Override
         public void cancel() {
-            SubscriptionHelper.cancel(s);
+            SubscriptionHelper.cancel(upstream);
         }
 
         @Override
         public void onSubscribe(Subscription s) {
-            if (SubscriptionHelper.replace(this.s, s)) {
+            if (SubscriptionHelper.replace(this.upstream, s)) {
                 long n = requested.get();
                 if (n != 0L) {
                     s.request(n);
@@ -114,18 +114,18 @@ implements FlowableTransformer<T, T> {
             if (!hasValue) {
                 hasValue = true;
             }
-            actual.onNext(t);
+            downstream.onNext(t);
         }
 
         @Override
         public void onError(Throwable t) {
-            actual.onError(t);
+            downstream.onError(t);
         }
 
         @Override
         public void onComplete() {
             if (hasValue) {
-                actual.onComplete();
+                downstream.onComplete();
             } else {
                 active = false;
                 drain(null);
@@ -135,7 +135,7 @@ implements FlowableTransformer<T, T> {
         void drain(Publisher<? extends T> source) {
             if (getAndIncrement() == 0) {
                 do {
-                    if (SubscriptionHelper.isCancelled(s.get())) {
+                    if (SubscriptionHelper.isCancelled(upstream.get())) {
                         return;
                     }
 
@@ -149,16 +149,16 @@ implements FlowableTransformer<T, T> {
                                 }
                             } catch (Throwable ex) {
                                 Exceptions.throwIfFatal(ex);
-                                actual.onError(ex);
+                                downstream.onError(ex);
                                 return;
                             }
 
                             if (!b) {
-                                actual.onComplete();
+                                downstream.onComplete();
                                 return;
                             }
                             if (source == null) {
-                                actual.onError(new NullPointerException("The alternative Publisher is null"));
+                                downstream.onError(new NullPointerException("The alternative Publisher is null"));
                                 return;
                             }
                         }

@@ -46,7 +46,6 @@ public class FlowableSwitchIfEmptyManyArrayTest {
         .assertFailure(IOException.class);
     }
 
-
     @SuppressWarnings("unchecked")
     @Test
     public void nullAlternative() {
@@ -98,7 +97,6 @@ public class FlowableSwitchIfEmptyManyArrayTest {
         }
     }
 
-
     @Test
     public void normalEmptyAsync() {
         for (int i = 1; i < 10; i++) {
@@ -147,7 +145,6 @@ public class FlowableSwitchIfEmptyManyArrayTest {
             .assertResult(1, 2, 3, 4, 5);
         }
     }
-
 
     @Test
     public void normalBackpressured2() {

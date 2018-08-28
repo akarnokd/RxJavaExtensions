@@ -68,8 +68,8 @@ final class PerhapsZipArray<T, R> extends Perhaps<R> {
         final Object[] values;
 
         @SuppressWarnings("unchecked")
-        ZipCoordinator(Subscriber<? super R> actual, Function<? super Object[], ? extends R> zipper, int n) {
-            super(actual);
+        ZipCoordinator(Subscriber<? super R> downstream, Function<? super Object[], ? extends R> zipper, int n) {
+            super(downstream);
             this.zipper = zipper;
             this.wip = new AtomicInteger(n);
             this.subscribers = new ZipInnerSubscriber[n];

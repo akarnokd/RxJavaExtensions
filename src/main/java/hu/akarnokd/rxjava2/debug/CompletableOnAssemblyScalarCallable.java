@@ -35,8 +35,8 @@ final class CompletableOnAssemblyScalarCallable extends Completable implements S
     }
 
     @Override
-    protected void subscribeActual(CompletableObserver s) {
-        source.subscribe(new OnAssemblyCompletableObserver(s, assembled));
+    protected void subscribeActual(CompletableObserver observer) {
+        source.subscribe(new OnAssemblyCompletableObserver(observer, assembled));
     }
 
     @SuppressWarnings("unchecked")

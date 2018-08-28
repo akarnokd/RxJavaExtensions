@@ -75,8 +75,8 @@ final class FlowableFromCallableNull<T> extends Flowable<T> implements Callable<
 
         private static final long serialVersionUID = -7088349936918117528L;
 
-        CallableNullSubscription(Subscriber<? super T> actual) {
-            super(actual);
+        CallableNullSubscription(Subscriber<? super T> downstream) {
+            super(downstream);
         }
 
     }

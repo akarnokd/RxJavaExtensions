@@ -51,14 +51,14 @@ final class FlowableRepeatScalar<T> extends Flowable<T> {
 
         private static final long serialVersionUID = -231033913007168200L;
 
-        final Subscriber<? super T> actual;
+        final Subscriber<? super T> downstream;
 
         T value;
 
         volatile boolean cancelled;
 
-        RepeatScalarSubscription(Subscriber<? super T> actual, T value) {
-            this.actual = actual;
+        RepeatScalarSubscription(Subscriber<? super T> downstream, T value) {
+            this.downstream = downstream;
             this.value = value;
         }
 
@@ -81,7 +81,7 @@ final class FlowableRepeatScalar<T> extends Flowable<T> {
                 if (cancelled) {
                     break;
                 }
-                actual.onNext(v);
+                downstream.onNext(v);
             }
         }
 
@@ -97,7 +97,7 @@ final class FlowableRepeatScalar<T> extends Flowable<T> {
                         return;
                     }
 
-                    actual.onNext(v);
+                    downstream.onNext(v);
 
                     e++;
                 }
@@ -147,14 +147,14 @@ final class FlowableRepeatScalar<T> extends Flowable<T> {
 
         private static final long serialVersionUID = -231033913007168200L;
 
-        final ConditionalSubscriber<? super T> actual;
+        final ConditionalSubscriber<? super T> downstream;
 
         T value;
 
         volatile boolean cancelled;
 
-        RepeatScalarConditionalSubscription(ConditionalSubscriber<? super T> actual, T value) {
-            this.actual = actual;
+        RepeatScalarConditionalSubscription(ConditionalSubscriber<? super T> downstream, T value) {
+            this.downstream = downstream;
             this.value = value;
         }
 
@@ -177,7 +177,7 @@ final class FlowableRepeatScalar<T> extends Flowable<T> {
                 if (cancelled) {
                     break;
                 }
-                actual.tryOnNext(v);
+                downstream.tryOnNext(v);
             }
         }
 
@@ -193,7 +193,7 @@ final class FlowableRepeatScalar<T> extends Flowable<T> {
                         return;
                     }
 
-                    if (actual.tryOnNext(v)) {
+                    if (downstream.tryOnNext(v)) {
                         e++;
                     }
                 }

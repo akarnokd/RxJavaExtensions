@@ -62,8 +62,8 @@ final class PerhapsRetryWhile<T> extends Perhaps<T> {
 
         volatile boolean active;
 
-        RetrySubscriber(Subscriber<? super T> actual, Predicate<? super Throwable> predicate, Perhaps<T> source) {
-            super(actual);
+        RetrySubscriber(Subscriber<? super T> downstream, Predicate<? super Throwable> predicate, Perhaps<T> source) {
+            super(downstream);
             this.predicate = predicate;
             this.source = source;
             this.wip = new AtomicInteger();

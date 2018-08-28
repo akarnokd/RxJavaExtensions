@@ -36,13 +36,13 @@ final class CompletableValidator extends Completable {
     }
 
     @Override
-    protected void subscribeActual(CompletableObserver s) {
-        source.subscribe(new ValidatorConsumer(s, onViolation));
+    protected void subscribeActual(CompletableObserver observer) {
+        source.subscribe(new ValidatorConsumer(observer, onViolation));
     }
 
     static final class ValidatorConsumer implements CompletableObserver, Disposable {
 
-        final CompletableObserver actual;
+        final CompletableObserver downstream;
 
         final PlainConsumer<ProtocolNonConformanceException> onViolation;
 
@@ -50,10 +50,10 @@ final class CompletableValidator extends Completable {
 
         boolean done;
 
-        ValidatorConsumer(CompletableObserver actual,
+        ValidatorConsumer(CompletableObserver downstream,
                 PlainConsumer<ProtocolNonConformanceException> onViolation) {
             super();
-            this.actual = actual;
+            this.downstream = downstream;
             this.onViolation = onViolation;
         }
 
@@ -67,7 +67,7 @@ final class CompletableValidator extends Completable {
                 onViolation.accept(new MultipleOnSubscribeCallsException());
             }
             upstream = d;
-            actual.onSubscribe(this);
+            downstream.onSubscribe(this);
         }
 
         @Override
@@ -82,7 +82,7 @@ final class CompletableValidator extends Completable {
                 onViolation.accept(new MultipleTerminationsException(e));
             } else {
                 done = true;
-                actual.onError(e);
+                downstream.onError(e);
             }
         }
 
@@ -96,7 +96,7 @@ final class CompletableValidator extends Completable {
                 onViolation.accept(new MultipleTerminationsException());
             } else {
                 done = true;
-                actual.onComplete();
+                downstream.onComplete();
             }
         }
 

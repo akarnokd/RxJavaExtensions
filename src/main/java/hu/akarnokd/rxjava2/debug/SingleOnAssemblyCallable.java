@@ -39,8 +39,8 @@ final class SingleOnAssemblyCallable<T> extends Single<T> implements Callable<T>
     }
 
     @Override
-    protected void subscribeActual(SingleObserver<? super T> s) {
-        source.subscribe(new OnAssemblySingleObserver<T>(s, assembled));
+    protected void subscribeActual(SingleObserver<? super T> observer) {
+        source.subscribe(new OnAssemblySingleObserver<T>(observer, assembled));
     }
 
     @SuppressWarnings("unchecked")

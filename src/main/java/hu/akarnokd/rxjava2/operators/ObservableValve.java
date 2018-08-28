@@ -70,7 +70,7 @@ final class ObservableValve<T> extends Observable<T> implements ObservableTransf
 
         private static final long serialVersionUID = -2233734924340471378L;
 
-        final Observer<? super T> actual;
+        final Observer<? super T> downstream;
 
         final AtomicReference<Disposable> upstream;
 
@@ -86,8 +86,8 @@ final class ObservableValve<T> extends Observable<T> implements ObservableTransf
 
         volatile boolean cancelled;
 
-        ValveMainObserver(Observer<? super T> actual, int bufferSize, boolean defaultOpen) {
-            this.actual = actual;
+        ValveMainObserver(Observer<? super T> downstream, int bufferSize, boolean defaultOpen) {
+            this.downstream = downstream;
             this.queue = new SpscLinkedArrayQueue<T>(bufferSize);
             this.gate = defaultOpen;
             this.other = new OtherSubscriber();
@@ -141,7 +141,7 @@ final class ObservableValve<T> extends Observable<T> implements ObservableTransf
             int missed = 1;
 
             SimplePlainQueue<T> q = queue;
-            Observer<? super T> a = actual;
+            Observer<? super T> a = downstream;
             AtomicThrowable error = this.error;
 
             for (;;) {

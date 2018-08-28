@@ -114,10 +114,10 @@ public class RxJava2AssemblyTrackingTest {
         try {
             Observable<Integer> source = createObservable();
 
-            TestObserver<Integer> ts = source.test()
+            TestObserver<Integer> to = source.test()
             .assertFailure(IOException.class, 1, 2, 3, 4, 5);
 
-            String st = RxJavaAssemblyException.find(ts.errors().get(0)).stacktrace();
+            String st = RxJavaAssemblyException.find(to.errors().get(0)).stacktrace();
 
             assertTrue(st, st.contains("RxJava2AssemblyTrackingTest.createObservable"));
 
@@ -139,10 +139,10 @@ public class RxJava2AssemblyTrackingTest {
         try {
             Single<Integer> source = createSingle();
 
-            TestObserver<Integer> ts = source.test()
+            TestObserver<Integer> to = source.test()
             .assertFailure(IOException.class);
 
-            String st = RxJavaAssemblyException.find(ts.errors().get(0)).stacktrace();
+            String st = RxJavaAssemblyException.find(to.errors().get(0)).stacktrace();
 
             assertTrue(st, st.contains("RxJava2AssemblyTrackingTest.createSingle"));
 
@@ -152,10 +152,10 @@ public class RxJava2AssemblyTrackingTest {
 
         Single<Integer> source = createSingle();
 
-        TestObserver<Integer> ts = source.test()
+        TestObserver<Integer> to = source.test()
         .assertFailure(IOException.class);
 
-        assertNull(RxJavaAssemblyException.find(ts.errors().get(0)));
+        assertNull(RxJavaAssemblyException.find(to.errors().get(0)));
     }
 
     @Test
@@ -164,10 +164,10 @@ public class RxJava2AssemblyTrackingTest {
         try {
             Maybe<Integer> source = createMaybe();
 
-            TestObserver<Integer> ts = source.test()
+            TestObserver<Integer> to = source.test()
             .assertFailure(IOException.class);
 
-            String st = RxJavaAssemblyException.find(ts.errors().get(0)).stacktrace();
+            String st = RxJavaAssemblyException.find(to.errors().get(0)).stacktrace();
 
             assertTrue(st, st.contains("RxJava2AssemblyTrackingTest.createMaybe"));
 
@@ -177,10 +177,10 @@ public class RxJava2AssemblyTrackingTest {
 
         Maybe<Integer> source = createMaybe();
 
-        TestObserver<Integer> ts = source.test()
+        TestObserver<Integer> to = source.test()
         .assertFailure(IOException.class);
 
-        assertNull(RxJavaAssemblyException.find(ts.errors().get(0)));
+        assertNull(RxJavaAssemblyException.find(to.errors().get(0)));
     }
 
     @Test
@@ -189,10 +189,10 @@ public class RxJava2AssemblyTrackingTest {
         try {
             Completable source = createCompletable();
 
-            TestObserver<Void> ts = source.test()
+            TestObserver<Void> to = source.test()
             .assertFailure(IOException.class);
 
-            String st = RxJavaAssemblyException.find(ts.errors().get(0)).stacktrace();
+            String st = RxJavaAssemblyException.find(to.errors().get(0)).stacktrace();
 
             assertTrue(st, st.contains("RxJava2AssemblyTrackingTest.createCompletable"));
 
@@ -202,10 +202,10 @@ public class RxJava2AssemblyTrackingTest {
 
         Completable source = createCompletable();
 
-        TestObserver<Void> ts = source.test()
+        TestObserver<Void> to = source.test()
         .assertFailure(IOException.class);
 
-        assertNull(RxJavaAssemblyException.find(ts.errors().get(0)));
+        assertNull(RxJavaAssemblyException.find(to.errors().get(0)));
     }
 
     @Test

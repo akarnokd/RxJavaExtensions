@@ -69,7 +69,7 @@ final class FlowableCoalesce<T, R> extends Flowable<R> implements FlowableTransf
 
         private static final long serialVersionUID = -6157179110480235565L;
 
-        final Subscriber<? super R> actual;
+        final Subscriber<? super R> downstream;
 
         final Callable<R> containerSupplier;
 
@@ -93,9 +93,9 @@ final class FlowableCoalesce<T, R> extends Flowable<R> implements FlowableTransf
 
         long emitted;
 
-        CoalesceSubscriber(Subscriber<? super R> actual, Callable<R> containerSupplier,
+        CoalesceSubscriber(Subscriber<? super R> downstream, Callable<R> containerSupplier,
                 BiConsumer<R, T> coalescer, int bufferSize) {
-            this.actual = actual;
+            this.downstream = downstream;
             this.containerSupplier = containerSupplier;
             this.coalescer = coalescer;
             this.requested = new AtomicLong();
@@ -106,7 +106,7 @@ final class FlowableCoalesce<T, R> extends Flowable<R> implements FlowableTransf
         public void onSubscribe(Subscription s) {
             if (SubscriptionHelper.validate(upstream, s)) {
                 upstream = s;
-                actual.onSubscribe(this);
+                downstream.onSubscribe(this);
 
                 s.request(Long.MAX_VALUE);
             }
@@ -128,14 +128,14 @@ final class FlowableCoalesce<T, R> extends Flowable<R> implements FlowableTransf
                         Exceptions.throwIfFatal(ex);
                         upstream.cancel();
                         container = null;
-                        actual.onError(ex);
+                        downstream.onError(ex);
                         return;
                     }
                     long r = requested.get();
                     long e = emitted;
                     if (e != r) {
                         container = null;
-                        actual.onNext(c);
+                        downstream.onNext(c);
                         emitted = e + 1;
                     }
                     if (decrementAndGet() == 0) {
@@ -198,7 +198,7 @@ final class FlowableCoalesce<T, R> extends Flowable<R> implements FlowableTransf
             int missed = 1;
             long e = emitted;
             R c = container;
-            Subscriber<? super R> a = actual;
+            Subscriber<? super R> a = downstream;
 
             for (;;) {
                 if (cancelled) {

@@ -36,9 +36,9 @@ final class ObservableFromCallableNull<T> extends Observable<T> implements Calla
     }
 
     @Override
-    protected void subscribeActual(Observer<? super T> s) {
-        CallableNullDisposable<T> deferred = new CallableNullDisposable<T>(s);
-        s.onSubscribe(deferred);
+    protected void subscribeActual(Observer<? super T> observer) {
+        CallableNullDisposable<T> deferred = new CallableNullDisposable<T>(observer);
+        observer.onSubscribe(deferred);
 
         if (!deferred.isDisposed()) {
 
@@ -49,14 +49,14 @@ final class ObservableFromCallableNull<T> extends Observable<T> implements Calla
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
                 if (!deferred.isDisposed()) {
-                    s.onError(ex);
+                    observer.onError(ex);
                 }
                 return;
             }
 
             if (!deferred.isDisposed()) {
                 if (v == null) {
-                    s.onComplete();
+                    observer.onComplete();
                 } else {
                     deferred.complete(v);
                 }
@@ -73,8 +73,8 @@ final class ObservableFromCallableNull<T> extends Observable<T> implements Calla
 
         private static final long serialVersionUID = -7088349936918117528L;
 
-        CallableNullDisposable(Observer<? super T> actual) {
-            super(actual);
+        CallableNullDisposable(Observer<? super T> downstream) {
+            super(downstream);
         }
 
     }

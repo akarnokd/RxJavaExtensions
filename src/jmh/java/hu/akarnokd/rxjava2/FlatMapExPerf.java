@@ -174,7 +174,6 @@ public class FlatMapExPerf {
         c.await(count * range);
     }
 
-
     @Benchmark
     public void syncSyncB(Blackhole bh) {
         PerfConsumer c = new PerfConsumer(bh);

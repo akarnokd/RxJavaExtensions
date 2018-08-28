@@ -46,36 +46,36 @@ final class NonoRepeat extends Nono {
 
         private static final long serialVersionUID = -3208438978515192633L;
 
-        protected final Subscriber<? super Void> actual;
+        protected final Subscriber<? super Void> downstream;
 
         final Nono source;
 
         long times;
 
-        final AtomicReference<Subscription> s;
+        final AtomicReference<Subscription> upstream;
 
         protected volatile boolean active;
 
         boolean once;
 
-        RedoSubscriber(Subscriber<? super Void> actual, long times, Nono source) {
-            this.actual = actual;
+        RedoSubscriber(Subscriber<? super Void> downstream, long times, Nono source) {
+            this.downstream = downstream;
             this.times = times;
             this.source = source;
-            this.s = new AtomicReference<Subscription>();
+            this.upstream = new AtomicReference<Subscription>();
         }
 
         @Override
         public void cancel() {
-            SubscriptionHelper.cancel(s);
+            SubscriptionHelper.cancel(upstream);
         }
 
         @Override
         public void onSubscribe(Subscription s) {
-            SubscriptionHelper.replace(this.s, s);
+            SubscriptionHelper.replace(this.upstream, s);
             if (!once) {
                 once = true;
-                actual.onSubscribe(this);
+                downstream.onSubscribe(this);
             }
         }
 
@@ -88,9 +88,9 @@ final class NonoRepeat extends Nono {
             long p = times;
             if (p == 1) {
                 if (ex != null) {
-                    actual.onError(ex);
+                    downstream.onError(ex);
                 } else {
-                    actual.onComplete();
+                    downstream.onComplete();
                 }
             } else {
                 if (p != Long.MAX_VALUE) {
@@ -98,7 +98,7 @@ final class NonoRepeat extends Nono {
                 }
                 if (getAndIncrement() == 0) {
                     do {
-                        if (SubscriptionHelper.isCancelled(s.get())) {
+                        if (SubscriptionHelper.isCancelled(upstream.get())) {
                             return;
                         }
 
@@ -116,13 +116,13 @@ final class NonoRepeat extends Nono {
 
         private static final long serialVersionUID = 3432411068139897716L;
 
-        RepeatSubscriber(Subscriber<? super Void> actual, long times, Nono source) {
-            super(actual, times, source);
+        RepeatSubscriber(Subscriber<? super Void> downstream, long times, Nono source) {
+            super(downstream, times, source);
         }
 
         @Override
         public void onError(Throwable t) {
-            actual.onError(t);
+            downstream.onError(t);
         }
 
         @Override

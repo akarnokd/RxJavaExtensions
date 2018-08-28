@@ -54,20 +54,20 @@ final class PerhapsDelayPublisher<T> extends Perhaps<T> {
 
         final OtherSubscriber otherSubscriber;
 
-        Subscription s;
+        Subscription upstream;
 
         Throwable error;
 
-        DelaySubscriber(Subscriber<? super T> actual, Publisher<?> other) {
-            super(actual);
+        DelaySubscriber(Subscriber<? super T> downstream, Publisher<?> other) {
+            super(downstream);
             this.other = other;
             this.otherSubscriber = new OtherSubscriber();
         }
 
         @Override
         public void onSubscribe(Subscription s) {
-            if (SubscriptionHelper.validate(this.s, s)) {
-                this.s = s;
+            if (SubscriptionHelper.validate(this.upstream, s)) {
+                this.upstream = s;
 
                 downstream.onSubscribe(this);
 
@@ -116,7 +116,7 @@ final class PerhapsDelayPublisher<T> extends Perhaps<T> {
         @Override
         public void cancel() {
             super.cancel();
-            s.cancel();
+            upstream.cancel();
             SubscriptionHelper.cancel(otherSubscriber);
         }
 

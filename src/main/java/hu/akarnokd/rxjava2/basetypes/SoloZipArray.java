@@ -66,8 +66,8 @@ final class SoloZipArray<T, R> extends Solo<R> {
 
         final AtomicInteger wip;
 
-        ZipCoordinator(Subscriber<? super R> actual, Function<? super Object[], ? extends R> zipper, int n) {
-            super(actual);
+        ZipCoordinator(Subscriber<? super R> downstream, Function<? super Object[], ? extends R> zipper, int n) {
+            super(downstream);
             this.zipper = zipper;
             this.values = new Object[n];
             @SuppressWarnings("unchecked")

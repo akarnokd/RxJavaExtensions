@@ -58,9 +58,9 @@ final class FlowableValve<T> extends Flowable<T> implements FlowableOperator<T, 
     }
 
     @Override
-    public Subscriber<? super T> apply(Subscriber<? super T> observer) {
-        ValveMainSubscriber<T> parent = new ValveMainSubscriber<T>(observer, bufferSize, defaultOpen);
-        observer.onSubscribe(parent);
+    public Subscriber<? super T> apply(Subscriber<? super T> subscriber) {
+        ValveMainSubscriber<T> parent = new ValveMainSubscriber<T>(subscriber, bufferSize, defaultOpen);
+        subscriber.onSubscribe(parent);
         other.subscribe(parent.other);
         return parent;
     }
@@ -94,8 +94,8 @@ final class FlowableValve<T> extends Flowable<T> implements FlowableOperator<T, 
 
         volatile boolean cancelled;
 
-        ValveMainSubscriber(Subscriber<? super T> actual, int bufferSize, boolean defaultOpen) {
-            this.downstream = actual;
+        ValveMainSubscriber(Subscriber<? super T> downstream, int bufferSize, boolean defaultOpen) {
+            this.downstream = downstream;
             this.queue = new SpscLinkedArrayQueue<T>(bufferSize);
             this.gate = defaultOpen;
             this.other = new OtherSubscriber();

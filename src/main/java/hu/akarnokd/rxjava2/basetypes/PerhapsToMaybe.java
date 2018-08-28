@@ -36,29 +36,29 @@ final class PerhapsToMaybe<T> extends Maybe<T> {
     }
 
     @Override
-    protected void subscribeActual(MaybeObserver<? super T> s) {
-        source.subscribe(new ToFlowableSubscriber<T>(s));
+    protected void subscribeActual(MaybeObserver<? super T> observer) {
+        source.subscribe(new ToFlowableSubscriber<T>(observer));
     }
 
     static final class ToFlowableSubscriber<T>
     implements Subscriber<T>, Disposable {
 
-        final MaybeObserver<? super T> actual;
+        final MaybeObserver<? super T> downstream;
 
-        Subscription s;
+        Subscription upstream;
 
         T value;
 
-        ToFlowableSubscriber(MaybeObserver<? super T> actual) {
-            this.actual = actual;
+        ToFlowableSubscriber(MaybeObserver<? super T> downstream) {
+            this.downstream = downstream;
         }
 
         @Override
         public void onSubscribe(Subscription s) {
-            if (SubscriptionHelper.validate(this.s, s)) {
-                this.s = s;
+            if (SubscriptionHelper.validate(this.upstream, s)) {
+                this.upstream = s;
 
-                actual.onSubscribe(this);
+                downstream.onSubscribe(this);
 
                 s.request(Long.MAX_VALUE);
             }
@@ -71,28 +71,28 @@ final class PerhapsToMaybe<T> extends Maybe<T> {
 
         @Override
         public void onError(Throwable t) {
-            actual.onError(t);
+            downstream.onError(t);
         }
 
         @Override
         public void onComplete() {
             T v = value;
             if (v != null) {
-                actual.onSuccess(v);
+                downstream.onSuccess(v);
             } else {
-                actual.onComplete();
+                downstream.onComplete();
             }
         }
 
         @Override
         public boolean isDisposed() {
-            return s == SubscriptionHelper.CANCELLED;
+            return upstream == SubscriptionHelper.CANCELLED;
         }
 
         @Override
         public void dispose() {
-            s.cancel();
-            s = SubscriptionHelper.CANCELLED;
+            upstream.cancel();
+            upstream = SubscriptionHelper.CANCELLED;
         }
     }
 }

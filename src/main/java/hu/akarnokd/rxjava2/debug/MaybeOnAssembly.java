@@ -37,56 +37,56 @@ final class MaybeOnAssembly<T> extends Maybe<T> {
     }
 
     @Override
-    protected void subscribeActual(MaybeObserver<? super T> s) {
-        source.subscribe(new OnAssemblyMaybeObserver<T>(s, assembled));
+    protected void subscribeActual(MaybeObserver<? super T> observer) {
+        source.subscribe(new OnAssemblyMaybeObserver<T>(observer, assembled));
     }
 
     static final class OnAssemblyMaybeObserver<T> implements MaybeObserver<T>, Disposable {
 
-        final MaybeObserver<? super T> actual;
+        final MaybeObserver<? super T> downstream;
 
         final RxJavaAssemblyException assembled;
 
-        Disposable d;
+        Disposable upstream;
 
-        OnAssemblyMaybeObserver(MaybeObserver<? super T> actual, RxJavaAssemblyException assembled) {
-            this.actual = actual;
+        OnAssemblyMaybeObserver(MaybeObserver<? super T> downstream, RxJavaAssemblyException assembled) {
+            this.downstream = downstream;
             this.assembled = assembled;
         }
 
         @Override
         public void onSubscribe(Disposable d) {
-            if (DisposableHelper.validate(this.d, d)) {
-                this.d = d;
+            if (DisposableHelper.validate(this.upstream, d)) {
+                this.upstream = d;
 
-                actual.onSubscribe(this);
+                downstream.onSubscribe(this);
             }
         }
 
         @Override
         public void onSuccess(T value) {
-            actual.onSuccess(value);
+            downstream.onSuccess(value);
         }
 
         @Override
         public void onError(Throwable t) {
-            actual.onError(assembled.appendLast(t));
+            downstream.onError(assembled.appendLast(t));
         }
 
         @Override
         public void onComplete() {
-            actual.onComplete();
+            downstream.onComplete();
         }
 
         @Override
         public boolean isDisposed() {
-            return d.isDisposed();
+            return upstream.isDisposed();
         }
 
         @Override
         public void dispose() {
             // don't break the link here
-            d.dispose();
+            upstream.dispose();
         }
     }
 }

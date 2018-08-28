@@ -71,10 +71,10 @@ final class FlowableFlatMapAsync<T, R> extends Flowable<R> implements FlowableTr
 
         final Scheduler.Worker worker;
 
-        FlatMapOuterSubscriber(Subscriber<? super R> actual,
+        FlatMapOuterSubscriber(Subscriber<? super R> downstream,
                 Function<? super T, ? extends Publisher<? extends R>> mapper, int maxConcurrency, int bufferSize,
                 boolean depthFirst, Scheduler.Worker worker) {
-            super(actual, mapper, maxConcurrency, bufferSize, depthFirst);
+            super(downstream, mapper, maxConcurrency, bufferSize, depthFirst);
             this.worker = worker;
         }
 

@@ -41,7 +41,6 @@ public class ObservableConsumersTest implements Consumer<Object>, Action {
 
     final List<Object> events = new ArrayList<Object>();
 
-
     @Override
     public void run() throws Exception {
         events.add("OnComplete");
@@ -215,7 +214,6 @@ public class ObservableConsumersTest implements Consumer<Object>, Action {
         }
     }
 
-
     @Test
     public void onNextCrashOnError() {
         List<Throwable> errors = TestHelper.trackPluginErrors();
@@ -262,7 +260,6 @@ public class ObservableConsumersTest implements Consumer<Object>, Action {
         }
     }
 
-
     @Test
     public void onCompleteCrash() {
         List<Throwable> errors = TestHelper.trackPluginErrors();
@@ -293,15 +290,15 @@ public class ObservableConsumersTest implements Consumer<Object>, Action {
                     new Observable<Integer>() {
                         @Override
                         protected void subscribeActual(
-                                Observer<? super Integer> s) {
-                            s.onSubscribe(Disposables.empty());
-                            s.onNext(1);
-                            s.onComplete();
+                                Observer<? super Integer> observer) {
+                            observer.onSubscribe(Disposables.empty());
+                            observer.onNext(1);
+                            observer.onComplete();
 
-                            s.onSubscribe(Disposables.empty());
-                            s.onNext(2);
-                            s.onComplete();
-                            s.onError(new IOException());
+                            observer.onSubscribe(Disposables.empty());
+                            observer.onNext(2);
+                            observer.onComplete();
+                            observer.onError(new IOException());
                         }
                     }, composite, this, this, this
                 );

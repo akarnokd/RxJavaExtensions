@@ -29,7 +29,7 @@ final class NonoBlockingAwaitSubscriber extends CountDownLatch implements Subscr
 
     Throwable error;
 
-    Subscription s;
+    Subscription upstream;
 
     volatile boolean cancelled;
 
@@ -39,8 +39,8 @@ final class NonoBlockingAwaitSubscriber extends CountDownLatch implements Subscr
 
     @Override
     public void onSubscribe(Subscription s) {
-        if (SubscriptionHelper.validate(this.s, s)) {
-            this.s = s;
+        if (SubscriptionHelper.validate(this.upstream, s)) {
+            this.upstream = s;
             if (cancelled) {
                 s.cancel();
             }
@@ -49,7 +49,7 @@ final class NonoBlockingAwaitSubscriber extends CountDownLatch implements Subscr
 
     void cancel() {
         cancelled = true;
-        Subscription s = this.s;
+        Subscription s = this.upstream;
         if (s != null) {
             s.cancel();
         }

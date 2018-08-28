@@ -55,8 +55,8 @@ final class PerhapsOnErrorResumeWith<T> extends Perhaps<T> {
 
         Subscription upstream;
 
-        OnErrorResumeWithSubscriber(Subscriber<? super T> actual, Perhaps<? extends T> other) {
-            super(actual);
+        OnErrorResumeWithSubscriber(Subscriber<? super T> downstream, Perhaps<? extends T> other) {
+            super(downstream);
             this.other = other;
             this.otherSubscriber = new OtherSubscriber();
         }

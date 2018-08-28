@@ -327,8 +327,8 @@ public class MaybeFlatMapSignalObservableTest {
     public void doubleOnSubscribe() {
         TestHelper.checkDoubleOnSubscribeMaybeToObservable(new Function<Maybe<Integer>, Observable<Integer>>() {
             @Override
-            public Observable<Integer> apply(Maybe<Integer> c) throws Exception {
-                return c.as(Maybes.flatMapObservable(
+            public Observable<Integer> apply(Maybe<Integer> maybe) throws Exception {
+                return maybe.as(Maybes.flatMapObservable(
                         new Function<Integer, Observable<Integer>>() {
                             @Override
                             public Observable<Integer> apply(Integer e)

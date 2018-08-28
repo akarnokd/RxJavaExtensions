@@ -53,7 +53,7 @@ final class NonoMergeArray extends Nono {
 
         private static final long serialVersionUID = -58058606508277827L;
 
-        final Subscriber<? super Void> actual;
+        final Subscriber<? super Void> downstream;
 
         final AtomicThrowable errors;
 
@@ -69,8 +69,8 @@ final class NonoMergeArray extends Nono {
 
         volatile boolean cancelled;
 
-        MergeSubscriber(Subscriber<? super Void> actual, boolean delayErrors, int maxConcurrency, Nono[] sources) {
-            this.actual = actual;
+        MergeSubscriber(Subscriber<? super Void> downstream, boolean delayErrors, int maxConcurrency, Nono[] sources) {
+            this.downstream = downstream;
             this.delayErrors = delayErrors;
             this.errors = new AtomicThrowable();
             this.sources = sources;
@@ -151,7 +151,7 @@ final class NonoMergeArray extends Nono {
                         set.cancel();
                         Throwable ex = errors.terminate();
                         if (ex != ExceptionHelper.TERMINATED) {
-                            actual.onError(ex);
+                            downstream.onError(ex);
                         }
                         return;
                     }
@@ -196,7 +196,7 @@ final class NonoMergeArray extends Nono {
 
                     ex = errors.terminate();
                     if (ex != ExceptionHelper.TERMINATED) {
-                        actual.onError(ex);
+                        downstream.onError(ex);
                     }
                 } else {
                     subscribe(1);
@@ -218,9 +218,9 @@ final class NonoMergeArray extends Nono {
             if (decrementAndGet() == 0) {
                 Throwable ex = errors.terminate();
                 if (ex != null) {
-                    actual.onError(ex);
+                    downstream.onError(ex);
                 } else {
-                    actual.onComplete();
+                    downstream.onComplete();
                 }
             }
         }

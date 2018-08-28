@@ -58,7 +58,7 @@ final class FlowableRequestObserveOn<T> extends Flowable<T> implements FlowableT
 
         private static final long serialVersionUID = 3167152788131496136L;
 
-        final Subscriber<? super T> actual;
+        final Subscriber<? super T> downstream;
 
         final Worker worker;
 
@@ -73,8 +73,8 @@ final class FlowableRequestObserveOn<T> extends Flowable<T> implements FlowableT
         long emitted;
         boolean terminated;
 
-        RequestObserveOnSubscriber(Subscriber<? super T> actual, Scheduler.Worker worker) {
-            this.actual = actual;
+        RequestObserveOnSubscriber(Subscriber<? super T> downstream, Scheduler.Worker worker) {
+            this.downstream = downstream;
             this.worker = worker;
             this.requestOne = new Runnable() {
                 @Override
@@ -87,7 +87,7 @@ final class FlowableRequestObserveOn<T> extends Flowable<T> implements FlowableT
         @Override
         public void onSubscribe(Subscription s) {
             upstream = s;
-            actual.onSubscribe(this);
+            downstream.onSubscribe(this);
             worker.schedule(requestOne);
         }
 
@@ -123,9 +123,9 @@ final class FlowableRequestObserveOn<T> extends Flowable<T> implements FlowableT
                 if (d && empty) {
                     Throwable ex = error;
                     if (ex != null) {
-                        actual.onError(ex);
+                        downstream.onError(ex);
                     } else {
-                        actual.onComplete();
+                        downstream.onComplete();
                     }
                     worker.dispose();
                     terminated = true;
@@ -134,7 +134,7 @@ final class FlowableRequestObserveOn<T> extends Flowable<T> implements FlowableT
                 long e = emitted;
                 if (!empty && e != get()) {
                     item = null;
-                    actual.onNext(v);
+                    downstream.onNext(v);
                     emitted = e + 1;
                     worker.schedule(requestOne);
                 } else {

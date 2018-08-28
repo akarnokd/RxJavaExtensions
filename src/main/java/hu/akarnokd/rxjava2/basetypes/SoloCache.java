@@ -166,8 +166,8 @@ final class SoloCache<T> extends Solo<T> implements Subscriber<T> {
 
         final AtomicReference<Object> parent;
 
-        CacheSubscription(Subscriber<? super T> actual, SoloCache<T> parent) {
-            super(actual);
+        CacheSubscription(Subscriber<? super T> downstream, SoloCache<T> parent) {
+            super(downstream);
             this.parent = new AtomicReference<Object>(parent);
         }
 

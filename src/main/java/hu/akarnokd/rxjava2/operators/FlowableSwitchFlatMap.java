@@ -67,7 +67,7 @@ implements FlowableTransformer<T, R> {
 
         private static final long serialVersionUID = 6801374887555723721L;
 
-        final Subscriber<? super R> actual;
+        final Subscriber<? super R> downstream;
 
         final Function<? super T, ? extends Publisher<? extends R>> mapper;
 
@@ -81,7 +81,7 @@ implements FlowableTransformer<T, R> {
 
         final AtomicThrowable error;
 
-        Subscription s;
+        Subscription upstream;
 
         volatile boolean done;
 
@@ -93,10 +93,10 @@ implements FlowableTransformer<T, R> {
         long versionCache;
 
         @SuppressWarnings("unchecked")
-        SwitchFlatMapSubscriber(Subscriber<? super R> actual,
+        SwitchFlatMapSubscriber(Subscriber<? super R> downstream,
                 Function<? super T, ? extends Publisher<? extends R>> mapper, int maxActive,
                         int bufferSize) {
-            this.actual = actual;
+            this.downstream = downstream;
             this.mapper = mapper;
             this.maxActive = maxActive;
             this.bufferSize = bufferSize;
@@ -108,10 +108,10 @@ implements FlowableTransformer<T, R> {
 
         @Override
         public void onSubscribe(Subscription s) {
-            if (SubscriptionHelper.validate(this.s, s)) {
-                this.s = s;
+            if (SubscriptionHelper.validate(this.upstream, s)) {
+                this.upstream = s;
 
-                actual.onSubscribe(this);
+                downstream.onSubscribe(this);
 
                 s.request(Long.MAX_VALUE);
             }
@@ -124,7 +124,7 @@ implements FlowableTransformer<T, R> {
                 p = ObjectHelper.requireNonNull(mapper.apply(t), "The mapper returned a null Publisher");
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
-                s.cancel();
+                upstream.cancel();
                 onError(ex);
                 return;
             }
@@ -191,7 +191,7 @@ implements FlowableTransformer<T, R> {
         public void cancel() {
             if (!cancelled) {
                 cancelled = true;
-                s.cancel();
+                upstream.cancel();
                 cancelInners();
                 if (getAndIncrement() == 0) {
                     clearCache();
@@ -216,7 +216,7 @@ implements FlowableTransformer<T, R> {
 
         void innerError(Throwable t) {
             if (error.compareAndSet(null, t)) {
-                s.cancel();
+                upstream.cancel();
                 cancelInners();
                 done = true;
                 drain();
@@ -245,7 +245,7 @@ implements FlowableTransformer<T, R> {
         void drain() {
             if (getAndIncrement() == 0) {
                 int missed = 1;
-                Subscriber<? super R> a = actual;
+                Subscriber<? super R> a = downstream;
                 SfmInnerSubscriber<T, R>[] inners = activeCache;
                 AtomicThrowable err = error;
 
@@ -253,7 +253,6 @@ implements FlowableTransformer<T, R> {
                 for (;;) {
                     long r = requested.get();
                     long e = 0;
-
 
                     for (;;) {
                         if (cancelled) {
@@ -265,7 +264,6 @@ implements FlowableTransformer<T, R> {
 
                         updateInners();
                         long ver = versionCache;
-
 
                         if (d) {
                             Throwable ex = err.get();

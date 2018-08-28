@@ -39,8 +39,8 @@ final class ConnectableObservableValidator<T> extends ConnectableObservable<T> {
     }
 
     @Override
-    protected void subscribeActual(Observer<? super T> s) {
-        source.subscribe(new ObservableValidator.ValidatorConsumer<T>(s, onViolation));
+    protected void subscribeActual(Observer<? super T> observer) {
+        source.subscribe(new ObservableValidator.ValidatorConsumer<T>(observer, onViolation));
     }
 
     @Override

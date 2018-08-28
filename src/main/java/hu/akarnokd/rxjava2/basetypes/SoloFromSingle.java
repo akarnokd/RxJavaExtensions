@@ -47,8 +47,8 @@ final class SoloFromSingle<T> extends Solo<T> {
 
         Disposable upstream;
 
-        FromSingleObserver(Subscriber<? super T> actual) {
-            super(actual);
+        FromSingleObserver(Subscriber<? super T> downstream) {
+            super(downstream);
         }
 
         @Override

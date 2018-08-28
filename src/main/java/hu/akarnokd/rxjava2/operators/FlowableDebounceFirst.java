@@ -63,7 +63,7 @@ implements FlowableTransformer<T, T> {
     static final class DebounceFirstSubscriber<T>
     implements ConditionalSubscriber<T>, Subscription {
 
-        final Subscriber<? super T> actual;
+        final Subscriber<? super T> downstream;
 
         final long timeout;
 
@@ -71,15 +71,15 @@ implements FlowableTransformer<T, T> {
 
         final Scheduler scheduler;
 
-        Subscription s;
+        Subscription upstream;
 
         long timestamp;
 
         long gate;
 
-        DebounceFirstSubscriber(Subscriber<? super T> actual, long timeout, TimeUnit unit, Scheduler scheduler) {
+        DebounceFirstSubscriber(Subscriber<? super T> downstream, long timeout, TimeUnit unit, Scheduler scheduler) {
             super();
-            this.actual = actual;
+            this.downstream = downstream;
             this.timeout = timeout;
             this.unit = unit;
             this.scheduler = scheduler;
@@ -87,18 +87,18 @@ implements FlowableTransformer<T, T> {
 
         @Override
         public void onSubscribe(Subscription s) {
-            if (SubscriptionHelper.validate(this.s, s)) {
-                this.s = s;
+            if (SubscriptionHelper.validate(this.upstream, s)) {
+                this.upstream = s;
                 this.gate = scheduler.now(unit);
 
-                actual.onSubscribe(this);
+                downstream.onSubscribe(this);
             }
         }
 
         @Override
         public void onNext(T t) {
             if (!tryOnNext(t)) {
-                s.request(1);
+                upstream.request(1);
             }
         }
 
@@ -110,28 +110,28 @@ implements FlowableTransformer<T, T> {
             if (now < g) {
                 return false;
             }
-            actual.onNext(t);
+            downstream.onNext(t);
             return true;
         }
 
         @Override
         public void onError(Throwable t) {
-            actual.onError(t);
+            downstream.onError(t);
         }
 
         @Override
         public void onComplete() {
-            actual.onComplete();
+            downstream.onComplete();
         }
 
         @Override
         public void request(long n) {
-            s.request(n);
+            upstream.request(n);
         }
 
         @Override
         public void cancel() {
-            s.cancel();
+            upstream.cancel();
         }
     }
 }

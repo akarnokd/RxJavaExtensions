@@ -60,8 +60,8 @@ final class PerhapsRetry<T> extends Perhaps<T> {
 
         volatile boolean active;
 
-        RetrySubscriber(Subscriber<? super T> actual, long times, Perhaps<T> source) {
-            super(actual);
+        RetrySubscriber(Subscriber<? super T> downstream, long times, Perhaps<T> source) {
+            super(downstream);
             this.times = times;
             this.source = source;
             this.wip = new AtomicInteger();

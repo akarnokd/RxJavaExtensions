@@ -68,9 +68,9 @@ final class NonoRetryWhen extends Nono {
 
         private static final long serialVersionUID = 6463015514357680572L;
 
-        final Subscriber<? super Void> actual;
+        final Subscriber<? super Void> downstream;
 
-        final AtomicReference<Subscription> s;
+        final AtomicReference<Subscription> upstream;
 
         final RedoInnerSubscriber inner;
 
@@ -82,9 +82,9 @@ final class NonoRetryWhen extends Nono {
 
         volatile boolean active;
 
-        RetryWhenMainSubscriber(Subscriber<? super Void> actual, FlowableProcessor<Throwable> processor, Nono source) {
-            this.actual = actual;
-            this.s = new AtomicReference<Subscription>();
+        RetryWhenMainSubscriber(Subscriber<? super Void> downstream, FlowableProcessor<Throwable> processor, Nono source) {
+            this.downstream = downstream;
+            this.upstream = new AtomicReference<Subscription>();
             this.inner = new RedoInnerSubscriber(this);
             this.once = new AtomicBoolean();
             this.processor = processor;
@@ -93,13 +93,13 @@ final class NonoRetryWhen extends Nono {
 
         @Override
         public void cancel() {
-            SubscriptionHelper.cancel(s);
+            SubscriptionHelper.cancel(upstream);
             inner.cancel();
         }
 
         @Override
         public void onSubscribe(Subscription s) {
-            SubscriptionHelper.replace(this.s, s);
+            SubscriptionHelper.replace(this.upstream, s);
         }
 
         @Override
@@ -112,7 +112,7 @@ final class NonoRetryWhen extends Nono {
             active = false;
             if (getAndIncrement() == 0) {
                 do {
-                    if (SubscriptionHelper.isCancelled(s.get())) {
+                    if (SubscriptionHelper.isCancelled(upstream.get())) {
                         return;
                     }
 
@@ -129,7 +129,7 @@ final class NonoRetryWhen extends Nono {
         public void onComplete() {
             inner.cancel();
             if (once.compareAndSet(false, true)) {
-                actual.onComplete();
+                downstream.onComplete();
             }
         }
 
@@ -140,9 +140,9 @@ final class NonoRetryWhen extends Nono {
 
         @Override
         public void innerError(Throwable ex) {
-            SubscriptionHelper.cancel(s);
+            SubscriptionHelper.cancel(upstream);
             if (once.compareAndSet(false, true)) {
-                actual.onError(ex);
+                downstream.onError(ex);
             } else {
                 RxJavaPlugins.onError(ex);
             }
@@ -150,9 +150,9 @@ final class NonoRetryWhen extends Nono {
 
         @Override
         public void innerComplete() {
-            SubscriptionHelper.cancel(s);
+            SubscriptionHelper.cancel(upstream);
             if (once.compareAndSet(false, true)) {
-                actual.onComplete();
+                downstream.onComplete();
             }
         }
     }

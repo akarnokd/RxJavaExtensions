@@ -107,8 +107,8 @@ final class SoloUsing<T, R> extends Solo<T> {
 
         R resource;
 
-        UsingSubscriber(Subscriber<? super T> actual, R resource, Consumer<? super R> disposer, boolean eager) {
-            super(actual);
+        UsingSubscriber(Subscriber<? super T> downstream, R resource, Consumer<? super R> disposer, boolean eager) {
+            super(downstream);
             this.resource = resource;
             this.disposer = disposer;
             this.eager = eager;

@@ -48,7 +48,7 @@ final class NonoConcatArray extends Nono {
 
         private static final long serialVersionUID = -4926738846855955051L;
 
-        final Subscriber<? super Void> actual;
+        final Subscriber<? super Void> downstream;
 
         final AtomicThrowable errors;
 
@@ -60,8 +60,8 @@ final class NonoConcatArray extends Nono {
 
         volatile boolean active;
 
-        ConcatSubscriber(Subscriber<? super Void> actual, Nono[] sources, boolean delayError) {
-            this.actual = actual;
+        ConcatSubscriber(Subscriber<? super Void> downstream, Nono[] sources, boolean delayError) {
+            this.downstream = downstream;
             this.sources = sources;
             this.errors = delayError ? new AtomicThrowable() : null;
             this.wip = new AtomicInteger();
@@ -90,7 +90,7 @@ final class NonoConcatArray extends Nono {
                 active = false;
                 drain();
             } else {
-                actual.onError(t);
+                downstream.onError(t);
             }
         }
 
@@ -115,9 +115,9 @@ final class NonoConcatArray extends Nono {
                     if (idx == sources.length) {
                         Throwable ex = errors != null ? errors.terminate() : null;
                         if (ex != null) {
-                            actual.onError(ex);
+                            downstream.onError(ex);
                         } else {
-                            actual.onComplete();
+                            downstream.onComplete();
                         }
                         return;
                     }
@@ -130,9 +130,9 @@ final class NonoConcatArray extends Nono {
                         NullPointerException npe = new NullPointerException("One of the sources is null");
                         if (errors != null) {
                             errors.addThrowable(npe);
-                            actual.onError(errors.terminate());
+                            downstream.onError(errors.terminate());
                         } else {
-                            actual.onError(npe);
+                            downstream.onError(npe);
                         }
                         return;
                     }

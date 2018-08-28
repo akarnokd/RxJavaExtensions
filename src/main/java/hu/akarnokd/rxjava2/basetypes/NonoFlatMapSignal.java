@@ -57,7 +57,7 @@ final class NonoFlatMapSignal<T> extends Flowable<T> {
 
         private static final long serialVersionUID = -1838187298176717779L;
 
-        final Subscriber<? super T> actual;
+        final Subscriber<? super T> downstream;
 
         final Function<? super Throwable, ? extends Publisher<? extends T>> onErrorMapper;
 
@@ -65,12 +65,12 @@ final class NonoFlatMapSignal<T> extends Flowable<T> {
 
         final AtomicLong requested;
 
-        Subscription s;
+        Subscription upstream;
 
-        FlatMapSignalSubscriber(Subscriber<? super T> actual,
+        FlatMapSignalSubscriber(Subscriber<? super T> downstream,
                 Function<? super Throwable, ? extends Publisher<? extends T>> onErrorMapper,
                 Callable<? extends Publisher<? extends T>> onCompleteMapper) {
-            this.actual = actual;
+            this.downstream = downstream;
             this.onErrorMapper = onErrorMapper;
             this.onCompleteMapper = onCompleteMapper;
             this.requested = new AtomicLong();
@@ -83,16 +83,16 @@ final class NonoFlatMapSignal<T> extends Flowable<T> {
 
         @Override
         public void cancel() {
-            s.cancel();
+            upstream.cancel();
             SubscriptionHelper.cancel(this);
         }
 
         @Override
         public void onSubscribe(Subscription s) {
-            if (SubscriptionHelper.validate(this.s, s)) {
-                this.s = s;
+            if (SubscriptionHelper.validate(this.upstream, s)) {
+                this.upstream = s;
 
-                actual.onSubscribe(this);
+                downstream.onSubscribe(this);
             }
         }
 
@@ -108,7 +108,7 @@ final class NonoFlatMapSignal<T> extends Flowable<T> {
                 p = ObjectHelper.requireNonNull(onErrorMapper.apply(t), "The onErrorMapper returned a null Nono");
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
-                actual.onError(ex);
+                downstream.onError(ex);
                 return;
             }
 
@@ -122,7 +122,7 @@ final class NonoFlatMapSignal<T> extends Flowable<T> {
                 p = ObjectHelper.requireNonNull(onCompleteMapper.call(), "The onCompleteMapper returned a null Nono");
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
-                actual.onError(ex);
+                downstream.onError(ex);
                 return;
             }
 
@@ -135,7 +135,7 @@ final class NonoFlatMapSignal<T> extends Flowable<T> {
 
         final class InnerSubscriber implements Subscriber<T> {
 
-            final Subscriber<? super T> a = actual;
+            final Subscriber<? super T> a = downstream;
 
             @Override
             public void onSubscribe(Subscription s) {

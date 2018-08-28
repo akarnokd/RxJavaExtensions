@@ -46,7 +46,6 @@ public class FlowableSwitchIfEmptyManyTest {
         .assertFailure(IOException.class);
     }
 
-
     @SuppressWarnings("unchecked")
     @Test
     public void nullAlternative() {
@@ -95,7 +94,6 @@ public class FlowableSwitchIfEmptyManyTest {
             .assertResult(1, 2, 3, 4, 5);
         }
     }
-
 
     @Test
     public void normalEmptyAsync() {
@@ -229,10 +227,12 @@ public class FlowableSwitchIfEmptyManyTest {
                     public boolean hasNext() {
                         return true;
                     }
+
                     @Override
                     public Publisher<Integer> next() {
                         throw new IllegalArgumentException();
                     }
+
                     @Override
                     public void remove() {
                         throw new UnsupportedOperationException();
