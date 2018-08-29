@@ -123,6 +123,11 @@ plugins.withType(EclipsePlugin) {
 
 javadoc {
     failOnError = false
+    options.links(
+        "https://docs.oracle.com/javase/7/docs/api/",
+        "http://www.reactive-streams.org/reactive-streams-1.0.2-javadoc/",
+        "http://reactivex.io/RxJava/2.x/javadoc/"
+    )
 }
 
 test {
