@@ -123,11 +123,14 @@ plugins.withType(EclipsePlugin) {
 
 javadoc {
     failOnError = false
+    options.stylesheetFile = new File(projectDir, "gradle/stylesheet.css");
+    
     options.links(
         "https://docs.oracle.com/javase/7/docs/api/",
         "http://www.reactive-streams.org/reactive-streams-1.0.2-javadoc/",
         "http://reactivex.io/RxJava/2.x/javadoc/"
     )
+    
 }
 
 test {
