@@ -136,7 +136,7 @@ public final class DispatchWorkProcessor<T> extends FlowableProcessor<T> impleme
     final long prefetch;
 
     final AtomicLong requestedDownstream;
-    
+
     final AtomicLong requestedUpstream;
 
     @SuppressWarnings("rawtypes")
