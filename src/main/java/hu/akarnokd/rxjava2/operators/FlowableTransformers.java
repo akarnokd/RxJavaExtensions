@@ -1045,7 +1045,7 @@ public final class FlowableTransformers {
      * <p>The inner Publishers are consumed in order and one at a time.
      * @param <T> the input and output value type
      * @param asyncPredicate the function that receives the upstream value and returns
-     * a Publisher that should emit a single truee to indicate the original value should pass.
+     * a Publisher that should emit a single true to indicate the original value should pass.
      * @return the new FlowableTransformer instance
      * @since 0.16.2
      */
@@ -1061,14 +1061,14 @@ public final class FlowableTransformers {
      * <p>The inner Publishers are consumed in order and one at a time.
      * @param <T> the input and output value type
      * @param asyncPredicate the function that receives the upstream value and returns
-     * a Publisher that should emit a single truee to indicate the original value should pass.
+     * a Publisher that should emit a single true to indicate the original value should pass.
      * @param bufferSize the internal buffer size and prefetch amount to buffer items from
      * upstream until their turn comes up
      * @return the new FlowableTransformer instance
      * @since 0.16.2
      */
     public static <T> FlowableTransformer<T, T> filterAsync(Function<? super T, ? extends Publisher<Boolean>> asyncPredicate, int bufferSize) {
-        ObjectHelper.requireNonNull("combiner", "combiner is null");
+        ObjectHelper.requireNonNull("asyncPredicate", "asyncPredicate is null");
         ObjectHelper.verifyPositive(bufferSize, "bufferSize");
         return new FlowableFilterAsync<T>(null, asyncPredicate, bufferSize);
     }

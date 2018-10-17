@@ -16,6 +16,7 @@
 
 package hu.akarnokd.rxjava2.operators;
 
+import hu.akarnokd.rxjava2.util.BiFunctionSecondIdentity;
 import io.reactivex.*;
 import io.reactivex.annotations.*;
 import io.reactivex.functions.*;
@@ -200,7 +201,7 @@ public final class ObservableTransformers {
      * buffer size hint.
      * <p>Properties:
      * <ul>
-     * <li>If the other Publisher completes, the sequence terminates with an {@code IllegalStateException}.</li>
+     * <li>If the other ObservableSource completes, the sequence terminates with an {@code IllegalStateException}.</li>
      * <li>The operator doesn't run on any particular {@link io.reactivex.Scheduler Scheduler}.</li>
      * </ul>
      * @param <T> the value type of the main source
@@ -217,5 +218,124 @@ public final class ObservableTransformers {
         ObjectHelper.requireNonNull(other, "other is null");
         ObjectHelper.verifyPositive(bufferSize, "bufferSize");
         return new ObservableValve<T>(null, other, defaultOpen, bufferSize);
+    }
+
+    /**
+     * Maps each upstream value into a single value provided by a generated ObservableSource for that
+     * input value, which is then emitted to the downstream.
+     * <p>Only the first item emitted by the inner ObservableSource are considered. If
+     * the inner ObservableSource is empty, no resulting item is generated for that input value.
+     * <p>The inner ObservableSources are consumed in order and one at a time.
+     * @param <T> the input value type
+     * @param <R> the result value type
+     * @param mapper the function that receives the upstream value and returns a ObservableSource
+     * that should emit a single value to be emitted.
+     * @return the new ObservableTransformer instance
+     * @since 0.20.4
+     */
+    public static <T, R> ObservableTransformer<T, R> mapAsync(Function<? super T, ? extends ObservableSource<? extends R>> mapper) {
+        return mapAsync(mapper, BiFunctionSecondIdentity.<T, R>instance(), Flowable.bufferSize());
+    }
+    /**
+     * Maps each upstream value into a single value provided by a generated ObservableSource for that
+     * input value, which is then emitted to the downstream.
+     * <p>Only the first item emitted by the inner ObservableSource are considered. If
+     * the inner ObservableSource is empty, no resulting item is generated for that input value.
+     * <p>The inner ObservableSources are consumed in order and one at a time.
+     * @param <T> the input value type
+     * @param <R> the result value type
+     * @param mapper the function that receives the upstream value and returns a ObservableSource
+     * that should emit a single value to be emitted.
+     * @param capacityHint the number of items expected from the upstream to be buffered while each
+     * inner ObservableSource is executing.
+     * @return the new ObservableTransformer instance
+     * @since 0.20.4
+     */
+    public static <T, R> ObservableTransformer<T, R> mapAsync(Function<? super T, ? extends ObservableSource<? extends R>> mapper, int capacityHint) {
+        return mapAsync(mapper, BiFunctionSecondIdentity.<T, R>instance(), capacityHint);
+    }
+    /**
+     * Maps each upstream value into a single value provided by a generated ObservableSource for that
+     * input value and combines the original and generated single value into a final result item
+     * to be emitted to downstream.
+     * <p>Only the first item emitted by the inner ObservableSource are considered. If
+     * the inner ObservableSource is empty, no resulting item is generated for that input value.
+     * <p>The inner ObservableSources are consumed in order and one at a time.
+     * @param <T> the input value type
+     * @param <U> the intermediate value type
+     * @param <R> the result value type
+     * @param mapper the function that receives the upstream value and returns a ObservableSource
+     * that should emit a single value to be emitted.
+     * @param combiner the bi-function that receives the original upstream value and the
+     * single value emitted by the ObservableSource and returns a result value to be emitted to
+     * downstream.
+     * @return the new ObservableTransformer instance
+     * @since 0.20.4
+     */
+    public static <T, U, R> ObservableTransformer<T, R> mapAsync(Function<? super T, ? extends ObservableSource<? extends U>> mapper, BiFunction<? super T, ? super U, ? extends R> combiner) {
+        return mapAsync(mapper, combiner, Flowable.bufferSize());
+    }
+
+    /**
+     * Maps each upstream value into a single value provided by a generated ObservableSource for that
+     * input value and combines the original and generated single value into a final result item
+     * to be emitted to downstream.
+     * <p>Only the first item emitted by the inner ObservableSource are considered. If
+     * the inner ObservableSource is empty, no resulting item is generated for that input value.
+     * <p>The inner ObservableSources are consumed in order and one at a time.
+     * @param <T> the input value type
+     * @param <U> the intermediate value type
+     * @param <R> the result value type
+     * @param mapper the function that receives the upstream value and returns a ObservableSource
+     * that should emit a single value to be emitted.
+     * @param combiner the bi-function that receives the original upstream value and the
+     * single value emitted by the ObservableSource and returns a result value to be emitted to
+     * downstream.
+     * @param capacityHint the number of items expected from the upstream to be buffered while each
+     * inner ObservableSource is executing.
+     * @return the new ObservableTransformer instance
+     * @since 0.20.4
+     */
+    public static <T, U, R> ObservableTransformer<T, R> mapAsync(Function<? super T, ? extends ObservableSource<? extends U>> mapper, BiFunction<? super T, ? super U, ? extends R> combiner, int capacityHint) {
+        ObjectHelper.requireNonNull(mapper, "mapper is null");
+        ObjectHelper.requireNonNull(combiner, "combiner is null");
+        ObjectHelper.verifyPositive(capacityHint, "capacityHint");
+        return new ObservableMapAsync<T, U, R>(null, mapper, combiner, capacityHint);
+    }
+
+    /**
+     * Maps each upstream value into a single {@code true} or {@code false} value provided by a generated ObservableSource for that
+     * input value and emits the input value if the inner ObservableSource returned {@code true}.
+     * <p>Only the first item emitted by the inner ObservableSource's are considered. If
+     * the inner ObservableSource is empty, no resulting item is generated for that input value.
+     * <p>The inner ObservableSources are consumed in order and one at a time.
+     * @param <T> the input and output value type
+     * @param asyncPredicate the function that receives the upstream value and returns
+     * a ObservableSource that should emit a single true to indicate the original value should pass.
+     * @return the new ObservableTransformer instance
+     * @since 0.20.4
+     */
+    public static <T> ObservableTransformer<T, T> filterAsync(Function<? super T, ? extends ObservableSource<Boolean>> asyncPredicate) {
+        return filterAsync(asyncPredicate, Flowable.bufferSize());
+    }
+
+    /**
+     * Maps each upstream value into a single {@code true} or {@code false} value provided by a generated ObservableSource for that
+     * input value and emits the input value if the inner ObservableSource returned {@code true}.
+     * <p>Only the first item emitted by the inner ObservableSource's are considered. If
+     * the inner ObservableSource is empty, no resulting item is generated for that input value.
+     * <p>The inner ObservableSources are consumed in order and one at a time.
+     * @param <T> the input and output value type
+     * @param asyncPredicate the function that receives the upstream value and returns
+     * a ObservableSource that should emit a single true to indicate the original value should pass.
+     * @param bufferSize the internal buffer size and prefetch amount to buffer items from
+     * upstream until their turn comes up
+     * @return the new ObservableTransformer instance
+     * @since 0.20.4
+     */
+    public static <T> ObservableTransformer<T, T> filterAsync(Function<? super T, ? extends ObservableSource<Boolean>> asyncPredicate, int bufferSize) {
+        ObjectHelper.requireNonNull("asyncPredicate", "asyncPredicate is null");
+        ObjectHelper.verifyPositive(bufferSize, "capacityHint");
+        return new ObservableFilterAsync<T>(null, asyncPredicate, bufferSize);
     }
 }

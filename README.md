@@ -1157,6 +1157,8 @@ Flowable.just(new File("."))
 
 ### FlowableTransformers.mapAsync()
 
+**Also available as `ObservableTransformers.mapAsync().`**
+
 This is an "asynchronous" version of the regular `map()` operator where an upstream value is mapped to a `Publisher` which
 is expected to emit a single value to be the result itself or through a combiner function become the result. Only
 one such `Publisher` is executed at once and the source order is kept. If the `Publisher` is empty, no value is emitted
@@ -1184,6 +1186,8 @@ Flowable.range(1, 5)
 ```
 
 ### FlowableTransformers.filterAsync()
+
+**Also available as `ObservableTransformers.filterAsync().`**
 
 This is an "asynchronous" version of the regular `filter()` operator where an upstream value is mapped to a `Publisher`
 which is expected to emit a single `true` or `false` that indicates the original value should go through. An empty `Publisher`
