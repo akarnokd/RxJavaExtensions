@@ -566,7 +566,7 @@ Note that calling `onComplete` after `onNext` is optional with `SoloProcessor` b
 
 ### MulticastProcessor
 
-*Moved to RxJava as standard processor: [`io.reactivex.processors.MulticastProcessor`](http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/processors/MulticastProcessor.html) instead*.
+*Moved to RxJava as standard processor: [`io.reactivex.processors.MulticastProcessor`](http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/processors/MulticastProcessor.html)*.
 
 ### UnicastWorkSubject
 
