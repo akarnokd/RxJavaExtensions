@@ -57,7 +57,7 @@ Maven search:
     - [debounceFirst()](#flowabletransformersdebouncefirst), [switchFlatMap()](#flowabletransformersswitchflatmap), [flatMapSync()](#flowabletransformersflatmapsync),
     - [flatMapAsync()](#flowabletransformersflatmapasync), [switchIfEmpty()](#flowabletransformersswitchifempty--switchifemptyarray),
     - [expand()](#flowabletransformersexpand), [mapAsync()](#flowabletransformersmapasync), [filterAsync()](#flowabletransformerfilterasync),
-    - [refCount()](#flowabletransformersrefcount), [zipLatest()](#flowablesziplatest), [coalesce()](#flowabletransformerscoalesce),
+    - [zipLatest()](#flowablesziplatest), [coalesce()](#flowabletransformerscoalesce),
     - [windowWhile()](#flowabletransformerswindowwhile), [windowUntil()](#flowabletransformerswindowuntil), [windowSplit()](#flowabletransformerswindowsplit),
     - [indexOf()](#flowabletransformersindexof), [requestObserveOn()](#flowabletransformersrequestobserveon), [requestSample()](#flowabletransformersrequestsample)
     - [observeOnDrop()](#observabletransformersobserveondrop), [observeOnLatest()](#observabletransformersobserveonlatest), [generateAsync()](#flowablesgenerateasync),
@@ -1200,53 +1200,9 @@ Flowable.range(1, 10)
 
 ### FlowableTransformers.refCount()
 
-Offers the option to connect after a certain amount of subscribers have subscribed and/or specify a timeout
-for disconnecting the upstream if all subscribers have unsubscribed. This allows keeping the connection alive if
-there is a small window where new subscribers may subscribe after the previous set has unsubscribed. Note
-that if the upstream to the transformer is not a `ConnectableFlowable`, the call to the transformer method
-will throw an `IllegalArgumentException`.
-
-This example will connect only after there is a second subscriber:
-
-```java
-Flowable<Integer> source = Flowable.range(1, 5)
-    .publish()
-    .compose(FlowableTransformers.refCount(2))
-    ;
-
-TestSubscriber<Integer> ts1 = source.test();
-
-ts1.assertEmpty();
-
-TestSubscriber<Integer> ts2 = source.test();
-
-ts1.assertResult(1, 2, 3, 4, 5);
-ts2.assertResult(1, 2, 3, 4, 5);
-```
-
-This example will disconnect only after a second:
-
-```java
-PublishProcessor<Integer> pp = PublishProcessor.create();
-
-Flowable<Integer> source = pp
-    .publish()
-    .compose(FlowableTransformers.refCount(1, TimeUnit.SECONDS, Schedulers.single()));
-
-assertFalse(pp.hasSubscribers());
-
-TestSubscriber<Integer> ts = source.test();
-
-assertTrue(pp.hasSubscribers());
-
-ts.cancel();
-
-assertTrue(pp.hasSubscribers());
-
-Thread.sleep(1200);
-
-assertFalse(pp.hasSubscribers());
-```
+*Moved to RxJava as standard operators: 
+[ConnectableObservable.refCount](http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/observables/ConnectableObservable.html#refCount-int-long-java.util.concurrent.TimeUnit-io.reactivex.Scheduler-), 
+[ConnectableFlowable.refCount](http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/flowables/ConnectableFlowable.html#refCount-int-long-java.util.concurrent.TimeUnit-io.reactivex.Scheduler-).
 
 ### Flowables.zipLatest()
 
