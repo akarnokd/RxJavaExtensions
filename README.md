@@ -566,36 +566,7 @@ Note that calling `onComplete` after `onNext` is optional with `SoloProcessor` b
 
 ### MulticastProcessor
 
-*Deprecated in 0.19.2; will be removed in 0.20.0. Use the standard 
-[`io.reactivex.processors.MulticastProcessor`](http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/processors/MulticastProcessor.html) instead*.
-
-Works similarly to `publish(Function)` and multicasts items to subscribers if all of them are ready to receive the items.
-In addition, it supports a mode where the last subscriber cancelling will trigger a cancellation to the upstream.
-If you need it to run without subscribing the `MulticastProcessor` to another `Publisher` use `start()` or `startUnbounded()`.
-Use `offer()` to try and offer/emit items but don't fail if the internal buffer is full.
-
-```java
-MulticastProcessor<Integer> mp = Flowable.range(1, 10)
-    .subscribeWith(MulticastProcessor.create());
-
-mp.test().assertResult(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
-
-// --------------------
-
-MulticastProcessor<Integer> mp2 = MulticastProcessor.create(4);
-mp2.start();
-
-assertTrue(mp2.offer(1));
-assertTrue(mp2.offer(2));
-assertTrue(mp2.offer(3));
-assertTrue(mp2.offer(4));
-
-assertFalse(mp2.offer(5));
-
-mp2.onComplete();
-
-mp2.test().assertResult(1, 2, 3, 4);
-```
+*Moved to RxJava as standard processor: [`io.reactivex.processors.MulticastProcessor`](http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/processors/MulticastProcessor.html) instead*.
 
 ### UnicastWorkSubject
 
