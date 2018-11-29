@@ -69,7 +69,7 @@ Maven search:
   - [Special Publisher implementations](#special-publisher-implementations)
   - Custom consumers
     - [FlowableConsumers](#flowableconsumers)
-      - [subscribeAutoRelease()](#subscribeautorelease)
+      - [subscribeAutoDispose()](#subscribeautodispose)
     - [ObservableConsumers](#observableconsumers)
     - [SingleConsumers](#singleconsumers)
     - [MaybeConsumers](#maybeconsumers)
@@ -1830,7 +1830,7 @@ The utility classes can be found in `hu.akarnokd.rxjava2.consumers` package.
 
 ### FlowableConsumers
 
-#### `subscribeAutoRelease`
+#### `subscribeAutoDispose`
 
 Wraps the given `onXXX` callbacks into a `Disposable` `Subscriber`,
 adds it to the given `CompositeDisposable` and ensures, that if the upstream
@@ -1842,7 +1842,7 @@ The Subscriber will be removed *after* the callback for the terminal event has b
 ```java
 CompositeDisposable composite = new CompositeDisposable();
 
-Disposable d = FlowableConsumers.subscribeAutoRelease(
+Disposable d = FlowableConsumers.subscribeAutoDispose(
     Flowable.just(1), composite,
     System.out::println, Throwable::printStackTrace, () -> System.out.println("Done")
 );
@@ -1851,7 +1851,7 @@ assertEquals(0, composite.size());
 
 // --------------------------
 
-Disposable d2 = FlowableConsumers.subscribeAutoRelease(
+Disposable d2 = FlowableConsumers.subscribeAutoDispose(
     Flowable.never(), composite,
     System.out::println, Throwable::printStackTrace, () -> System.out.println("Done")
 );
@@ -1867,20 +1867,20 @@ The Subscriber will be removed after the callback for the terminal event has bee
 
 ### ObservableConsumers
 
-- `subscribeAutoRelease`: Similar to `FlowableConsumers.subscribeAutoRelease()` but targeting `Observable`s and `Observer`s-like
+- `subscribeAutoDispose`: Similar to `FlowableConsumers.subscribeAutoDispose()` but targeting `Observable`s and `Observer`s-like
 consumers.
 
 ### SingleConsumers
 
-- `subscribeAutoRelease`: Similar to `FlowableConsumers.subscribeAutoRelease()` but targeting `Single`s and `SingleObserver`s-like
+- `subscribeAutoDispose`: Similar to `FlowableConsumers.subscribeAutoDispose()` but targeting `Single`s and `SingleObserver`s-like
 consumers.
 
 ### MaybeConsumers
 
-- `subscribeAutoRelease`: Similar to `FlowableConsumers.subscribeAutoRelease()` but targeting `Maybe`s and `MaybeObserver`s-like
+- `subscribeAutoDispose`: Similar to `FlowableConsumers.subscribeAutoDispose()` but targeting `Maybe`s and `MaybeObserver`s-like
 consumers.
 
 ### CompletableConsumers
 
-- `subscribeAutoRelease`: Similar to `FlowableConsumers.subscribeAutoRelease()` but targeting `Completable`s and `CompletableObserver`s-like
+- `subscribeAutoDispose`: Similar to `FlowableConsumers.subscribeAutoDispose()` but targeting `Completable`s and `CompletableObserver`s-like
 consumers.

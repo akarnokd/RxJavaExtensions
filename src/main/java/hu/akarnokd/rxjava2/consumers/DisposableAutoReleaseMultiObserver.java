@@ -58,6 +58,7 @@ implements SingleObserver<T>, MaybeObserver<T>, CompletableObserver {
                 RxJavaPlugins.onError(e);
             }
         }
+        removeSelf();
     }
 
 }
