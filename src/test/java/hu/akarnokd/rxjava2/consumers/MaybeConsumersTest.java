@@ -68,7 +68,7 @@ public class MaybeConsumersTest implements Consumer<Object>, Action {
 
         processor.onSuccess(1);
 
-        assertTrue(composite.size() > 0);
+        assertEquals(0, composite.size());
 
         assertEquals(Arrays.<Object>asList(1), events);
 
@@ -85,7 +85,7 @@ public class MaybeConsumersTest implements Consumer<Object>, Action {
 
         processor.onSuccess(1);
 
-        assertTrue(composite.size() > 0);
+        assertEquals(0, composite.size());
 
         assertEquals(Arrays.<Object>asList(1), events);
 
@@ -118,11 +118,11 @@ public class MaybeConsumersTest implements Consumer<Object>, Action {
 
         assertTrue(events.toString(), events.isEmpty());
 
-        processor.onSuccess(1);
+        processor.onComplete();
 
-        assertTrue(composite.size() > 0);
+        assertEquals(0, composite.size());
 
-        assertEquals(Arrays.<Object>asList(1), events);
+        assertEquals(Arrays.<Object>asList("OnComplete"), events);
 
     }
 
@@ -164,7 +164,7 @@ public class MaybeConsumersTest implements Consumer<Object>, Action {
     }
 
     @Test
-    public void onNextCrash() {
+    public void onSuccessCrash() {
         List<Throwable> errors = TestHelper.trackPluginErrors();
         try {
             MaybeConsumers.subscribeAutoDispose(processor, composite, new Consumer<Object>() {

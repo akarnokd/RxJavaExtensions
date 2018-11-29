@@ -63,7 +63,7 @@ public class SingleConsumersTest implements Consumer<Object> {
 
         processor.onSuccess(1);
 
-        assertTrue(composite.size() > 0);
+        assertEquals(0, composite.size());
 
         assertEquals(Arrays.<Object>asList(1), events);
 
@@ -80,7 +80,7 @@ public class SingleConsumersTest implements Consumer<Object> {
 
         processor.onSuccess(1);
 
-        assertTrue(composite.size() > 0);
+        assertEquals(0, composite.size());
 
         assertEquals(Arrays.<Object>asList(1), events);
 
@@ -105,7 +105,7 @@ public class SingleConsumersTest implements Consumer<Object> {
     }
 
     @Test
-    public void onNextCrash() {
+    public void onSuccessCrash() {
         List<Throwable> errors = TestHelper.trackPluginErrors();
         try {
             SingleConsumers.subscribeAutoDispose(processor, composite, new Consumer<Object>() {
