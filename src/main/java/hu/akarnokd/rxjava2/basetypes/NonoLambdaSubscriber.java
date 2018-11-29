@@ -74,7 +74,7 @@ final class NonoLambdaSubscriber extends AtomicReference<Subscription> implement
 
     @Override
     public boolean isDisposed() {
-        return SubscriptionHelper.isCancelled(get());
+        return SubscriptionHelper.CANCELLED == get();
     }
 
     @Override

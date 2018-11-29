@@ -80,6 +80,7 @@ final class FlowableWhileDoWhile<T> extends Flowable<T> {
         long produced;
 
         WhileDoWhileObserver(Subscriber<? super T> downstream, BooleanSupplier postCondition, Publisher<? extends T> source) {
+            super(false);
             this.downstream = downstream;
             this.wip = new AtomicInteger();
             this.postCondition = postCondition;

@@ -63,7 +63,7 @@ implements Subscriber<T>, Future<T>, Subscription {
 
     @Override
     public boolean isCancelled() {
-        return SubscriptionHelper.isCancelled(upstream.get());
+        return SubscriptionHelper.CANCELLED == upstream.get();
     }
 
     @Override

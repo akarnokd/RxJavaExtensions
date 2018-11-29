@@ -122,7 +122,7 @@ implements FlowableSubscriber<T>, Disposable, LambdaConsumerIntrospection {
 
     @Override
     public boolean isDisposed() {
-        return SubscriptionHelper.isCancelled(get());
+        return SubscriptionHelper.CANCELLED == get();
     }
 
     @Override

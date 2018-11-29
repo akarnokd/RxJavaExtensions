@@ -105,7 +105,7 @@ final class NonoRetryWhile extends Nono {
                 active = false;
                 if (getAndIncrement() == 0) {
                     do {
-                        if (SubscriptionHelper.isCancelled(upstream.get())) {
+                        if (SubscriptionHelper.CANCELLED == upstream.get()) {
                             return;
                         }
 

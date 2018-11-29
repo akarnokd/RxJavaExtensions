@@ -97,6 +97,7 @@ final class FlowableExpand<T> extends Flowable<T> implements FlowableTransformer
 
         ExpandBreadthSubscriber(Subscriber<? super T> downstream,
                 Function<? super T, ? extends Publisher<? extends T>> expander, int capacityHint, boolean delayErrors) {
+            super(false);
             this.downstream = downstream;
             this.expander = expander;
             this.wip = new AtomicInteger();
@@ -438,7 +439,7 @@ final class FlowableExpand<T> extends Flowable<T> implements FlowableTransformer
 
             @Override
             public void onNext(T t) {
-                if (!SubscriptionHelper.isCancelled(get())) {
+                if (SubscriptionHelper.CANCELLED != get()) {
                     value = t;
                     innerNext(this, t);
                 }
@@ -446,14 +447,14 @@ final class FlowableExpand<T> extends Flowable<T> implements FlowableTransformer
 
             @Override
             public void onError(Throwable t) {
-                if (!SubscriptionHelper.isCancelled(get())) {
+                if (SubscriptionHelper.CANCELLED != get()) {
                     innerError(this, t);
                 }
             }
 
             @Override
             public void onComplete() {
-                if (!SubscriptionHelper.isCancelled(get())) {
+                if (SubscriptionHelper.CANCELLED != get()) {
                     innerComplete(this);
                 }
             }

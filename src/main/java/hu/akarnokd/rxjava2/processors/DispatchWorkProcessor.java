@@ -218,7 +218,7 @@ public final class DispatchWorkProcessor<T> extends FlowableProcessor<T> impleme
 
     @Override
     public boolean isDisposed() {
-        return SubscriptionHelper.isCancelled(upstream.get());
+        return SubscriptionHelper.CANCELLED == upstream.get();
     }
 
     @Override

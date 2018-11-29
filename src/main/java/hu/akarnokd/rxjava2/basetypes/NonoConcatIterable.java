@@ -117,7 +117,7 @@ final class NonoConcatIterable extends Nono {
             }
 
             do {
-                if (SubscriptionHelper.isCancelled(this.get())) {
+                if (SubscriptionHelper.CANCELLED == this.get()) {
                     return;
                 }
 

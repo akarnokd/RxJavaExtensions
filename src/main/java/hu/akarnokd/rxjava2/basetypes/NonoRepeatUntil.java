@@ -114,7 +114,7 @@ final class NonoRepeatUntil extends Nono {
             } else {
                 if (getAndIncrement() == 0) {
                     do {
-                        if (SubscriptionHelper.isCancelled(upstream.get())) {
+                        if (SubscriptionHelper.CANCELLED == upstream.get()) {
                             return;
                         }
 
