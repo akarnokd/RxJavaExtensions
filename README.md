@@ -426,7 +426,7 @@ if (assembled != null) {
 
 Often, when a function throws or returns null, there is not enough information to
 locate said function in the codebase. The `FunctionTagging` utility class offers
-static wrappers for RxJava funtion types that when fail or return null, a custom
+static wrappers for RxJava function types that when fail or return null, a custom
 string tag is added or appended to the exception and allows locating that function
 in your codebase. Since added logic has overhead, the tagging process has to be
 enabled and can be disabled as necessary.
@@ -677,7 +677,7 @@ Flowable.just(1)
 
 ### ParallelScheduler
 
-It is similar to `Schedulers.computation()` but you can control the number of threads, the thread name prefix, the thread priority and to track each task sumbitted to its worker.
+It is similar to `Schedulers.computation()` but you can control the number of threads, the thread name prefix, the thread priority and to track each task submitted to its worker.
 
 Tracking a task means that if one calls `Worker.dispose()`, all outstanding tasks is cancelled. However, certain use cases can get away with just preventing the execution of the task body and just run through all outstanding tasks yielding lower overhead.
 
@@ -1404,7 +1404,7 @@ When the call succeeds, the `onValue` is invoked with it. If there are no more i
 ` CompletableFuture`  returned by the last ` nextValue`  is completed (with ` null` ).
 If there is an error, the same ` CompletableFuture`  is completed exceptionally. Each
 ` nextValue`  invocation creates a fresh ` CompletableFuture`  which can be cancelled
-if necesary. ` nextValue`  should not be invoked again until the ` onValue`  callback
+if necessary. ` nextValue`  should not be invoked again until the ` onValue`  callback
 has been notified.
 
 An instance of this API can be obtained on demand, thus the state of this operator consists of the
@@ -1476,7 +1476,7 @@ the output object. The same array could also contain more than one output items,
 it should be kept around in case the output is backpressured.
 
 This example shows, given a flow of `String`s with embedded separator `|`, how one
-can split them along the separator and have invidiual items returned, even when
+can split them along the separator and have individual items returned, even when
 they span multiple subsequent items (`cdefgh`) or more than one is present in a source item (`mno||pqr|s`). 
 
 ```java
@@ -1834,7 +1834,7 @@ The utility classes can be found in `hu.akarnokd.rxjava2.consumers` package.
 
 Wraps the given `onXXX` callbacks into a `Disposable` `Subscriber`,
 adds it to the given `CompositeDisposable` and ensures, that if the upstream
-completes or this particlular `Disposable` is disposed, the `Subscriber` is removed
+completes or this particular `Disposable` is disposed, the `Subscriber` is removed
 from the given composite.
 
 The Subscriber will be removed *after* the callback for the terminal event has been invoked.
