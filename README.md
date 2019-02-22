@@ -62,7 +62,7 @@ Maven search:
     - [indexOf()](#flowabletransformersindexof), [requestObserveOn()](#flowabletransformersrequestobserveon), [requestSample()](#flowabletransformersrequestsample)
     - [observeOnDrop()](#observabletransformersobserveondrop), [observeOnLatest()](#observabletransformersobserveonlatest), [generateAsync()](#flowablesgenerateasync),
     - [partialCollect()](#flowabletransformerspartialcollect), [flatMapDrop()](#observabletransformersflatmapdrop), [flatMapLatest()](#observabletransformersflatmaplatest),
-    - [errorJump()](#flowabletransformerserrorjump), [flatMap on signal type](#flatmap-signal)
+    - [errorJump()](#flowabletransformerserrorjump), [flatMap on signal type](#flatmap-signal), [switchOnFirst()](#flowabletransformersswitchonfirst)
   - [Custom parallel operators and transformers](#custom-parallel-operators-and-transformers)
     - [sumX()](#paralleltransformerssumx)
     - [orderedMerge()](#paralleltransformersorderedmerge)
@@ -1341,6 +1341,27 @@ Flowables.repeatCallable(() -> 1)
 .awaitDone(10, TimeUnit.SECONDS)
 .assertResult(1, 1, 1, 1, 1);
 ```
+
+### FlowableTransformers.switchOnFirst
+
+Depending on the very first item of the source sequence, see if that item matches a predicate and if so, switch to
+a generated alternative sequence.
+
+```java
+Flowable.fromCallable(() -> Math.random())
+.compose(FlowableTransformers.switchOnFirst(
+     v -> v < 0.5,
+     v -> Flowable.just(v * 6)
+))
+.repeat(20)
+.subscribe(System.out::println);
+```
+
+Note that if one wishes to switch always based on the first item, one can use `v -> true` for the predicate and return the resumption
+sequence conditionally in the selector property.
+
+Note that the initial value is not emitted if the predicate returns true. If one wants to keep that in the sequence, concatenate
+it to the sequence returned from the selector: `v -> Flowable.just(v).concatWith(theNewSequence)`.
 
 ### ObservableTransformers.observeOnDrop
 

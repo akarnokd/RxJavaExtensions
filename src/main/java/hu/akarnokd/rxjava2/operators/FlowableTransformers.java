@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2018 David Karnok
+ * Copyright 2016-2019 David Karnok
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1296,7 +1296,7 @@ public final class FlowableTransformers {
      * @return the new FlowableTransformer instance
      * @since 0.18.6
      */
-    public static <T> FlowableTransformer<T, T> requestSample(long initialDelay, long period, TimeUnit unit,Scheduler scheduler) {
+    public static <T> FlowableTransformer<T, T> requestSample(long initialDelay, long period, TimeUnit unit, Scheduler scheduler) {
         return new FlowableRequestSampleTime<T>(null, initialDelay, period, unit, scheduler);
     }
 
@@ -1372,5 +1372,27 @@ public final class FlowableTransformers {
     public static <T, R> FlowableTransformer<T, R> errorJump(FlowableTransformer<T, R> transformer) {
         ObjectHelper.requireNonNull(transformer, "transformer");
         return new FlowableErrorJump<T, R>(null, transformer);
+    }
+
+    /**
+     * Switches to an alternate flow if the very first item of the main flow matches the given
+     * predicate.
+     * <p>
+     * Note that the very first item is not included in the follow-up sequence if the switch happens.
+     * Use {@link Flowable#startWith(Object)} to add it back if necessary.
+     *
+     * @param predicate a predicate that receives the very first item and should return true
+     * to indicate to switch streams. If the predicate returns false, the main sequence is streamed
+     * till its end.
+     * @param selector if the {@code predicate} returned true, the function is called with the
+     * very first item and should return a flow to resume with.
+     * @return the new FlowableTransformer instance
+     * @since 0.20.7
+     */
+    public static <T> FlowableTransformer<T, T> switchOnFirst(Predicate<? super T> predicate,
+            Function<? super T, ? extends Publisher<? extends T>> selector) {
+        ObjectHelper.requireNonNull(predicate, "predicate");
+        ObjectHelper.requireNonNull(selector, "selector");
+        return new FlowableSwitchOnFirst<T>(null, predicate, selector);
     }
 }
