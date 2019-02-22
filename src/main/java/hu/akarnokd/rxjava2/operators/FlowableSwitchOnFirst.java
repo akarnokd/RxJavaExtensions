@@ -148,11 +148,15 @@ final class FlowableSwitchOnFirst<T> extends Flowable<T> implements FlowableTran
                     return;
                 }
             }
-            SwitchOnSecondarySubscriber<T> secondary = this.secondary;
-            if (secondary.upstream.get() == null) {
+            if (isMainSequence) {
                 upstream.request(n);
+            } else {
+                SwitchOnSecondarySubscriber<T> secondary = this.secondary;
+                if (secondary.upstream.get() == null) {
+                    upstream.request(n);
+                }
+                SubscriptionHelper.deferredRequest(secondary.upstream, secondary, n);
             }
-            SubscriptionHelper.deferredRequest(secondary.upstream, secondary, n);
         }
 
         @Override
