@@ -24,9 +24,12 @@ import java.util.concurrent.*;
 import org.junit.Test;
 
 import io.reactivex.*;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
 import io.reactivex.observers.TestObserver;
 import io.reactivex.parallel.ParallelFlowable;
+import io.reactivex.processors.PublishProcessor;
+import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subscribers.TestSubscriber;
 
 /**
@@ -231,5 +234,129 @@ public class RxJava2AssemblyTrackingTest {
         .assertFailure(IOException.class, 1, 2, 3, 4, 5);
 
         assertNull(RxJavaAssemblyException.find(ts.errors().get(0)));
+    }
+
+    @Test
+    public void observableReplayResetWorks() {
+
+        RxJavaAssemblyTracking.enable();
+        try {
+            PublishSubject<Integer> ps = PublishSubject.create();
+
+            Observable<Integer> source = ps.replay(1).refCount();
+
+            Disposable d1 = source.subscribe();
+            Disposable d2 = source.subscribe();
+
+            ps.onNext(1);
+
+            d1.dispose();
+            d2.dispose();
+
+            TestObserver<Integer> to1 = source.test();
+            TestObserver<Integer> to2 = source.test();
+
+            ps.onNext(2);
+            ps.onNext(3);
+            ps.onNext(4);
+
+            to1.assertValuesOnly(2, 3, 4);
+            to2.assertValuesOnly(2, 3, 4);
+        } finally {
+            RxJavaAssemblyTracking.disable();
+        }
+    }
+
+    @Test
+    public void flowableReplayResetWorks() {
+
+        RxJavaAssemblyTracking.enable();
+        try {
+            PublishProcessor<Integer> pp = PublishProcessor.create();
+
+            Flowable<Integer> source = pp.replay(1).refCount();
+
+            Disposable d1 = source.subscribe();
+            Disposable d2 = source.subscribe();
+
+            pp.onNext(1);
+
+            d1.dispose();
+            d2.dispose();
+
+            TestSubscriber<Integer> ts1 = source.test();
+            TestSubscriber<Integer> ts2 = source.test();
+
+            pp.onNext(2);
+            pp.onNext(3);
+            pp.onNext(4);
+
+            ts1.assertValuesOnly(2, 3, 4);
+            ts2.assertValuesOnly(2, 3, 4);
+        } finally {
+            RxJavaAssemblyTracking.disable();
+        }
+    }
+
+    @Test
+    public void observablePublishResetWorks() {
+
+        RxJavaAssemblyTracking.enable();
+        try {
+            PublishSubject<Integer> ps = PublishSubject.create();
+
+            Observable<Integer> source = ps.publish().refCount();
+
+            Disposable d1 = source.subscribe();
+            Disposable d2 = source.subscribe();
+
+            ps.onNext(1);
+
+            d1.dispose();
+            d2.dispose();
+
+            TestObserver<Integer> to1 = source.test();
+            TestObserver<Integer> to2 = source.test();
+
+            ps.onNext(2);
+            ps.onNext(3);
+            ps.onNext(4);
+
+            to1.assertValuesOnly(2, 3, 4);
+            to2.assertValuesOnly(2, 3, 4);
+        } finally {
+            RxJavaAssemblyTracking.disable();
+        }
+    }
+
+    @Test
+    public void flowablePublishResetWorks() {
+
+        RxJavaAssemblyTracking.enable();
+        try {
+            PublishProcessor<Integer> pp = PublishProcessor.create();
+
+            Flowable<Integer> source = pp.publish().refCount();
+
+            Disposable d1 = source.subscribe();
+            Disposable d2 = source.subscribe();
+
+            pp.onNext(1);
+
+            d1.dispose();
+            d2.dispose();
+
+            TestSubscriber<Integer> ts1 = source.test();
+            TestSubscriber<Integer> ts2 = source.test();
+
+            pp.onNext(2);
+            pp.onNext(3);
+            pp.onNext(4);
+
+            ts1.assertValuesOnly(2, 3, 4);
+            ts2.assertValuesOnly(2, 3, 4);
+        } finally {
+            RxJavaAssemblyTracking.disable();
+        }
     }
 }

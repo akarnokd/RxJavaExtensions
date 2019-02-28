@@ -22,6 +22,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import io.reactivex.*;
 import io.reactivex.flowables.ConnectableFlowable;
 import io.reactivex.functions.Function;
+import io.reactivex.internal.disposables.ResettableConnectable;
 import io.reactivex.internal.fuseable.ScalarCallable;
 import io.reactivex.observables.ConnectableObservable;
 import io.reactivex.parallel.ParallelFlowable;
@@ -66,6 +67,9 @@ public final class RxJavaAssemblyTracking {
             RxJavaPlugins.setOnConnectableFlowableAssembly(new Function<ConnectableFlowable, ConnectableFlowable>() {
                 @Override
                 public ConnectableFlowable apply(ConnectableFlowable f) throws Exception {
+                    if (f instanceof ResettableConnectable) {
+                        return new FlowableOnAssemblyConnectableResettable(f);
+                    }
                     return new FlowableOnAssemblyConnectable(f);
                 }
             });
@@ -86,6 +90,9 @@ public final class RxJavaAssemblyTracking {
             RxJavaPlugins.setOnConnectableObservableAssembly(new Function<ConnectableObservable, ConnectableObservable>() {
                 @Override
                 public ConnectableObservable apply(ConnectableObservable f) throws Exception {
+                    if (f instanceof ResettableConnectable) {
+                        return new ObservableOnAssemblyConnectableResettable(f);
+                    }
                     return new ObservableOnAssemblyConnectable(f);
                 }
             });
