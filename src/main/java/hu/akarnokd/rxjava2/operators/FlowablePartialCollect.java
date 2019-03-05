@@ -337,6 +337,7 @@ implements FlowableTransformer<T, R> {
                         }
 
                         long e = emitted;
+                        long ci = consumerIndex;
 
                         try {
                             handler.accept(this);
@@ -351,7 +352,8 @@ implements FlowableTransformer<T, R> {
                         if (this.handlerDone) {
                             continue;
                         }
-                        if (e == emitted) {
+                        // if there was no emission and no consumption, quit
+                        if (e == emitted && ci == consumerIndex) {
                             break;
                         }
                     }

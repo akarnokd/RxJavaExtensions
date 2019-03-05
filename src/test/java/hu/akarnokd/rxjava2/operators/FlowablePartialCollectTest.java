@@ -19,6 +19,7 @@ package hu.akarnokd.rxjava2.operators;
 import static org.junit.Assert.assertFalse;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.Test;
 import org.reactivestreams.*;
@@ -31,6 +32,7 @@ import io.reactivex.internal.functions.Functions;
 import io.reactivex.internal.subscriptions.BooleanSubscription;
 import io.reactivex.plugins.RxJavaPlugins;
 import io.reactivex.processors.PublishProcessor;
+import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subscribers.TestSubscriber;
 
 public class FlowablePartialCollectTest {
@@ -292,64 +294,205 @@ public class FlowablePartialCollectTest {
 
     @Test
     public void stringSplit() {
-Flowable.just("ab|cdef", "gh|ijkl|", "mno||pqr|s", "|", "tuv|xy", "|z")
-.compose(FlowableTransformers.partialCollect(new Consumer<PartialCollectEmitter<String, Integer, StringBuilder, String>>() {
-    @Override
-    public void accept(
-            PartialCollectEmitter<String, Integer, StringBuilder, String> emitter)
-            throws Exception {
-        Integer idx = emitter.getIndex();
-        if (idx == null) {
-            idx = 0;
-        }
-        StringBuilder sb = emitter.getAccumulator();
-        if (sb == null) {
-            sb = new StringBuilder();
-            emitter.setAccumulator(sb);
-        }
-
-        if (emitter.demand() != 0) {
-
-            boolean d = emitter.isComplete();
-            if (emitter.size() != 0) {
-                String str = emitter.getItem(0);
-
-                int j = str.indexOf('|', idx);
-
-                if (j >= 0) {
-                    sb.append(str.substring(idx, j));
-                    emitter.next(sb.toString());
-                    sb.setLength(0);
-                    idx = j + 1;
-                } else {
-                    sb.append(str.substring(idx));
-                    emitter.dropItems(1);
+        Flowable.just("ab|cdef", "gh|ijkl|", "mno||pqr|s", "|", "tuv|xy", "|z")
+        .compose(FlowableTransformers.partialCollect(new Consumer<PartialCollectEmitter<String, Integer, StringBuilder, String>>() {
+            @Override
+            public void accept(
+                    PartialCollectEmitter<String, Integer, StringBuilder, String> emitter)
+                    throws Exception {
+                Integer idx = emitter.getIndex();
+                if (idx == null) {
                     idx = 0;
                 }
-            } else if (d) {
-                if (sb.length() != 0) {
-                    emitter.next(sb.toString());
+                StringBuilder sb = emitter.getAccumulator();
+                if (sb == null) {
+                    sb = new StringBuilder();
+                    emitter.setAccumulator(sb);
                 }
-                emitter.complete();
-                return;
-            }
-        }
 
-        emitter.setIndex(idx);
+                if (emitter.demand() != 0) {
+
+                    boolean d = emitter.isComplete();
+                    if (emitter.size() != 0) {
+                        String str = emitter.getItem(0);
+
+                        int j = str.indexOf('|', idx);
+
+                        if (j >= 0) {
+                            sb.append(str.substring(idx, j));
+                            emitter.next(sb.toString());
+                            sb.setLength(0);
+                            idx = j + 1;
+                        } else {
+                            sb.append(str.substring(idx));
+                            emitter.dropItems(1);
+                            idx = 0;
+                        }
+                    } else if (d) {
+                        if (sb.length() != 0) {
+                            emitter.next(sb.toString());
+                        }
+                        emitter.complete();
+                        return;
+                    }
+                }
+
+                emitter.setIndex(idx);
+            }
+        }, Functions.emptyConsumer(), 128))
+        .test()
+        .assertResult(
+                "ab",
+                "cdefgh",
+                "ijkl",
+                "mno",
+                "",
+                "pqr",
+                "s",
+                "tuv",
+                "xy",
+                "z"
+        );
     }
-}, Functions.emptyConsumer(), 128))
-.test()
-.assertResult(
-        "ab",
-        "cdefgh",
-        "ijkl",
-        "mno",
-        "",
-        "pqr",
-        "s",
-        "tuv",
-        "xy",
-        "z"
-);
+
+    @Test
+    public void stringSplitBackpressured() {
+        Flowable.just("ab|cdef", "gh|ijkl|", "mno||pqr|s", "|", "tuv|xy", "|z")
+        .compose(FlowableTransformers.partialCollect(new Consumer<PartialCollectEmitter<String, Integer, StringBuilder, String>>() {
+            @Override
+            public void accept(
+                    PartialCollectEmitter<String, Integer, StringBuilder, String> emitter)
+                    throws Exception {
+                Integer idx = emitter.getIndex();
+                if (idx == null) {
+                    idx = 0;
+                }
+                StringBuilder sb = emitter.getAccumulator();
+                if (sb == null) {
+                    sb = new StringBuilder();
+                    emitter.setAccumulator(sb);
+                }
+
+                if (emitter.demand() != 0) {
+
+                    boolean d = emitter.isComplete();
+                    if (emitter.size() != 0) {
+                        String str = emitter.getItem(0);
+
+                        int j = str.indexOf('|', idx);
+
+                        if (j >= 0) {
+                            sb.append(str.substring(idx, j));
+                            emitter.next(sb.toString());
+                            sb.setLength(0);
+                            idx = j + 1;
+                        } else {
+                            sb.append(str.substring(idx));
+                            emitter.dropItems(1);
+                            idx = 0;
+                        }
+                    } else if (d) {
+                        if (sb.length() != 0) {
+                            emitter.next(sb.toString());
+                        }
+                        emitter.complete();
+                        return;
+                    }
+                }
+
+                emitter.setIndex(idx);
+            }
+        }, Functions.emptyConsumer(), 128))
+        .rebatchRequests(1)
+        .test()
+        .assertResult(
+                "ab",
+                "cdefgh",
+                "ijkl",
+                "mno",
+                "",
+                "pqr",
+                "s",
+                "tuv",
+                "xy",
+                "z"
+        );
+    }
+
+    @Test
+    public void stringSplitBackpressuredAsync() {
+        Flowable.just("ab|cdef", "gh|ijkl|", "mno||pqr|s", "|", "tuv|xy", "|z")
+        .compose(FlowableTransformers.partialCollect(new Consumer<PartialCollectEmitter<String, Integer, StringBuilder, String>>() {
+            @Override
+            public void accept(
+                    PartialCollectEmitter<String, Integer, StringBuilder, String> emitter)
+                    throws Exception {
+                Integer idx = emitter.getIndex();
+                if (idx == null) {
+                    idx = 0;
+                }
+                StringBuilder sb = emitter.getAccumulator();
+                if (sb == null) {
+                    sb = new StringBuilder();
+                    emitter.setAccumulator(sb);
+                }
+
+                if (emitter.demand() != 0) {
+
+                    boolean d = emitter.isComplete();
+                    if (emitter.size() != 0) {
+                        String str = emitter.getItem(0);
+
+                        int j = str.indexOf('|', idx);
+
+                        if (j >= 0) {
+                            sb.append(str.substring(idx, j));
+                            emitter.next(sb.toString());
+                            sb.setLength(0);
+                            idx = j + 1;
+                        } else {
+                            sb.append(str.substring(idx));
+                            emitter.dropItems(1);
+                            idx = 0;
+                        }
+                    } else if (d) {
+                        if (sb.length() != 0) {
+                            emitter.next(sb.toString());
+                        }
+                        emitter.complete();
+                        return;
+                    }
+                }
+
+                emitter.setIndex(idx);
+            }
+        }, Functions.emptyConsumer(), 128))
+        .doOnRequest(new LongConsumer() {
+            @Override
+            public void accept(long l) throws Exception {
+                System.out.println("request(" + l + ")");
+            }
+        })
+        .doOnNext(new Consumer<String>() {
+            @Override
+            public void accept(String s) throws Exception {
+                System.out.println("Item: " + s);
+            }
+        })
+        .observeOn(Schedulers.computation(), false, 1)
+        .test()
+        .awaitDone(10, TimeUnit.SECONDS)
+        .assertResult(
+                "ab",
+                "cdefgh",
+                "ijkl",
+                "mno",
+                "",
+                "pqr",
+                "s",
+                "tuv",
+                "xy",
+                "z"
+        );
     }
 }
