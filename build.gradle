@@ -53,7 +53,7 @@ dependencies {
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
 
-    testCompile 'org.mockito:mockito-core:2.5.0'
+    testCompile 'org.mockito:mockito-core:2.28.2'
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
