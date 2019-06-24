@@ -647,7 +647,7 @@ public class SoloTest implements Consumer<Object>, Action, LongConsumer, Cancell
     public void concatIterableDelayErrorError2() {
         Solo.concatDelayError(Arrays.asList(Solo.error(new IOException()), Solo.just(2)))
         .test()
-        .assertFailure(IOException.class);
+        .assertFailure(IOException.class, 2);
     }
 
     @Test
@@ -675,7 +675,7 @@ public class SoloTest implements Consumer<Object>, Action, LongConsumer, Cancell
     public void concatDelayErrorPublisherError2() {
         Solo.concatDelayError(Flowable.just(Solo.error(new IOException()), Solo.just(2)))
         .test()
-        .assertFailure(IOException.class);
+        .assertFailure(IOException.class, 2);
     }
 
     @Test

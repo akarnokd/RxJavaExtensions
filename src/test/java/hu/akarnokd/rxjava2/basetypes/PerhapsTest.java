@@ -706,7 +706,7 @@ public class PerhapsTest implements Consumer<Object>, Action, LongConsumer, Canc
     public void concatIterableDelayErrorError2() {
         Perhaps.concatDelayError(Arrays.asList(Perhaps.error(new IOException()), Perhaps.just(2)))
         .test()
-        .assertFailure(IOException.class);
+        .assertFailure(IOException.class, 2);
     }
 
     @Test
@@ -734,7 +734,7 @@ public class PerhapsTest implements Consumer<Object>, Action, LongConsumer, Canc
     public void concatDelayErrorPublisherError2() {
         Perhaps.concatDelayError(Flowable.just(Perhaps.error(new IOException()), Perhaps.just(2)))
         .test()
-        .assertFailure(IOException.class);
+        .assertFailure(IOException.class, 2);
     }
 
     @Test
