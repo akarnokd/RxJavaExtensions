@@ -1,7 +1,7 @@
-# RxJava2Extensions
+# RxJavaExtensions
 
-<a href='https://travis-ci.org/akarnokd/RxJava2Extensions/builds'><img src='https://travis-ci.org/akarnokd/RxJava2Extensions.svg?branch=master'></a>
-[![codecov.io](http://codecov.io/github/akarnokd/RxJava2Extensions/coverage.svg?branch=master)](http://codecov.io/github/akarnokd/RxJava2Extensions?branch=master)
+<a href='https://travis-ci.org/akarnokd/RxJavaExtensions/builds'><img src='https://travis-ci.org/akarnokd/RxJavaExtensions.svg?branch=master'></a>
+[![codecov.io](http://codecov.io/github/akarnokd/RxJavaExtensions/coverage.svg?branch=master)](http://codecov.io/github/akarnokd/RxJavaExtensions?branch=master)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.akarnokd/rxjava2-extensions/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.akarnokd/rxjava2-extensions)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.reactivex.rxjava2/rxjava/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.reactivex.rxjava2/rxjava)
 
@@ -17,7 +17,7 @@ dependencies {
 }
 ```
 
-Javadoc: https://akarnokd.github.com/RxJava2Extensions/javadoc/index.html
+Javadoc: https://akarnokd.github.com/RxJavaExtensions/javadoc/index.html
 
 
 Maven search:
@@ -1073,18 +1073,18 @@ Flowable.just(new File("."))
 .subscribe(System.out::println);
 
 // prints something like
-// ~/git/RxJava2Extensions
-// ~/git/RxJava2Extensions/src
-// ~/git/RxJava2Extensions/src/main
-// ~/git/RxJava2Extensions/src/main/java
-// ~/git/RxJava2Extensions/src/main/java/hu
-// ~/git/RxJava2Extensions/src/main/java/hu/akarnokd
-// ~/git/RxJava2Extensions/src/main/java/hu/akarnokd/rxjava2
-// ~/git/RxJava2Extensions/src/main/java/hu/akarnokd/rxjava2/operators
-// ~/git/RxJava2Extensions/src/main/java/hu/akarnokd/rxjava2/operators/FlowableExpand.java
+// ~/git/RxJavaExtensions
+// ~/git/RxJavaExtensions/src
+// ~/git/RxJavaExtensions/src/main
+// ~/git/RxJavaExtensions/src/main/java
+// ~/git/RxJavaExtensions/src/main/java/hu
+// ~/git/RxJavaExtensions/src/main/java/hu/akarnokd
+// ~/git/RxJavaExtensions/src/main/java/hu/akarnokd/rxjava2
+// ~/git/RxJavaExtensions/src/main/java/hu/akarnokd/rxjava2/operators
+// ~/git/RxJavaExtensions/src/main/java/hu/akarnokd/rxjava2/operators/FlowableExpand.java
 // ...
-// ~/git/RxJava2Extensions/src/test
-// ~/git/RxJava2Extensions/src/test/java
+// ~/git/RxJavaExtensions/src/test
+// ~/git/RxJavaExtensions/src/test/java
 ```
 
 Breadth-first example:
@@ -1103,27 +1103,27 @@ Flowable.just(new File("."))
 .subscribe(System.out::println);
 
 // prints something like
-// ~/git/RxJava2Extensions
-// ~/git/RxJava2Extensions/src
-// ~/git/RxJava2Extensions/build
-// ~/git/RxJava2Extensions/gradle
-// ~/git/RxJava2Extensions/HEADER
-// ~/git/RxJava2Extensions/README.md
+// ~/git/RxJavaExtensions
+// ~/git/RxJavaExtensions/src
+// ~/git/RxJavaExtensions/build
+// ~/git/RxJavaExtensions/gradle
+// ~/git/RxJavaExtensions/HEADER
+// ~/git/RxJavaExtensions/README.md
 // ...
-// ~/git/RxJava2Extensions/src/main
-// ~/git/RxJava2Extensions/src/test
-// ~/git/RxJava2Extensions/src/jmh
-// ~/git/RxJava2Extensions/src/main/java
-// ~/git/RxJava2Extensions/src/main/java/hu
-// ~/git/RxJava2Extensions/src/main/java/hu/akarnokd
-// ~/git/RxJava2Extensions/src/main/java/hu/akarnokd/rxjava2
-// ~/git/RxJava2Extensions/src/main/java/hu/akarnokd/rxjava2/operators
-// ~/git/RxJava2Extensions/src/main/java/hu/akarnokd/rxjava2/math
-// ~/git/RxJava2Extensions/src/main/java/hu/akarnokd/rxjava2/async
-// ~/git/RxJava2Extensions/src/main/java/hu/akarnokd/rxjava2/debug
+// ~/git/RxJavaExtensions/src/main
+// ~/git/RxJavaExtensions/src/test
+// ~/git/RxJavaExtensions/src/jmh
+// ~/git/RxJavaExtensions/src/main/java
+// ~/git/RxJavaExtensions/src/main/java/hu
+// ~/git/RxJavaExtensions/src/main/java/hu/akarnokd
+// ~/git/RxJavaExtensions/src/main/java/hu/akarnokd/rxjava2
+// ~/git/RxJavaExtensions/src/main/java/hu/akarnokd/rxjava2/operators
+// ~/git/RxJavaExtensions/src/main/java/hu/akarnokd/rxjava2/math
+// ~/git/RxJavaExtensions/src/main/java/hu/akarnokd/rxjava2/async
+// ~/git/RxJavaExtensions/src/main/java/hu/akarnokd/rxjava2/debug
 // ...
-// ~/git/RxJava2Extensions/src/main/java/hu/akarnokd/rxjava2/operators/FlowableExpand.java
-// ~/git/RxJava2Extensions/src/main/java/hu/akarnokd/rxjava2/operators/FlowableTransformers.java
+// ~/git/RxJavaExtensions/src/main/java/hu/akarnokd/rxjava2/operators/FlowableExpand.java
+// ~/git/RxJavaExtensions/src/main/java/hu/akarnokd/rxjava2/operators/FlowableTransformers.java
 ```
 
 ### FlowableTransformers.mapAsync()

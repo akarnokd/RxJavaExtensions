@@ -48,7 +48,7 @@ public class CheckLocalVariablesInTests {
     static void findPattern(String pattern, boolean checkMain) throws Exception {
         File f = TestHelper.findSourceDir();
         if (f == null) {
-            System.out.println("Unable to find sources of RxJava2Extensions");
+            System.out.println("Unable to find sources of RxJavaExtensions");
             return;
         }
 

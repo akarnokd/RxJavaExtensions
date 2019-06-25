@@ -25,7 +25,7 @@ sourceCompatibility = '1.6'
 targetCompatibility = '1.6'
 
 group = "com.github.akarnokd" 
-ext.githubProjectName = 'RxJava2Extensions'
+ext.githubProjectName = 'RxJavaExtensions'
 
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
@@ -88,7 +88,7 @@ jar {
     manifest {
         name = 'rxjava2-extensions'
         instruction 'Bundle-Vendor', 'akarnokd'
-        instruction 'Bundle-DocURL', 'https://github.com/akarnokd/RxJava2Extensions'
+        instruction 'Bundle-DocURL', 'https://github.com/akarnokd/RxJavaExtensions'
         instruction 'Import-Package', '!org.junit,!junit.framework,!org.mockito.*,*'
         instruction 'Eclipse-ExtensibleAPI', 'true'
     }

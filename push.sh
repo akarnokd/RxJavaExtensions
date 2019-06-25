@@ -5,7 +5,7 @@
 # based on https://gist.github.com/willprice/e07efd73fb7f13f917ea
 
 # specify the common address for the repository
-targetRepo=github.com/akarnokd/RxJava2Extensions.git
+targetRepo=github.com/akarnokd/RxJavaExtensions.git
 # =======================================================================
 
 # only for main pushes, for now

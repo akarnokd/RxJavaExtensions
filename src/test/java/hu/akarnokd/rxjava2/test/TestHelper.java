@@ -2924,9 +2924,9 @@ public enum TestHelper {
 
 //        System.out.println(path);
 
-        int i = path.indexOf("/RxJava2Extensions");
+        int i = path.indexOf("/RxJavaExtensions");
         if (i < 0) {
-            System.out.println("Can't find the base RxJava2Extensions directory");
+            System.out.println("Can't find the base RxJavaExtensions directory");
             return null;
         }
 
