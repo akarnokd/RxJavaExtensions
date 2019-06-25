@@ -49,7 +49,7 @@ dependencies {
     signature 'org.codehaus.mojo.signature:java16:1.1@signature'
 
     compile "org.reactivestreams:reactive-streams:1.0.2"
-    compile "io.reactivex.rxjava2:rxjava:2.2.10"
+    compile "io.reactivex.rxjava3:rxjava:3.0.0-RC0"
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
 
@@ -86,7 +86,7 @@ artifacts {
 
 jar {
     manifest {
-        name = 'rxjava2-extensions'
+        name = 'rxjava3-extensions'
         instruction 'Bundle-Vendor', 'akarnokd'
         instruction 'Bundle-DocURL', 'https://github.com/akarnokd/RxJavaExtensions'
         instruction 'Import-Package', '!org.junit,!junit.framework,!org.mockito.*,*'
@@ -128,7 +128,7 @@ javadoc {
     options.links(
         "https://docs.oracle.com/javase/7/docs/api/",
         "http://www.reactive-streams.org/reactive-streams-1.0.2-javadoc/",
-        "http://reactivex.io/RxJava/2.x/javadoc/"
+        "http://reactivex.io/RxJava/3.x/javadoc/"
     )
     
 }

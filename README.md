@@ -1,11 +1,11 @@
 # RxJavaExtensions
 
 <a href='https://travis-ci.org/akarnokd/RxJavaExtensions/builds'><img src='https://travis-ci.org/akarnokd/RxJavaExtensions.svg?branch=master'></a>
-[![codecov.io](http://codecov.io/github/akarnokd/RxJavaExtensions/coverage.svg?branch=master)](http://codecov.io/github/akarnokd/RxJavaExtensions?branch=master)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.akarnokd/rxjava2-extensions/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.akarnokd/rxjava2-extensions)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.reactivex.rxjava2/rxjava/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.reactivex.rxjava2/rxjava)
+[![codecov.io](http://codecov.io/github/akarnokd/RxJavaExtensions/coverage.svg?branch=3.x)](http://codecov.io/github/akarnokd/RxJavaExtensions?branch=3.x)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.akarnokd/rxjava3-extensions/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.akarnokd/rxjava3-extensions)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.reactivex.rxjava3/rxjava/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.reactivex.rxjava3/rxjava)
 
-RxJava 2.x implementation of extra sources, operators and components and ports of many 1.x companion libraries.
+RxJava 3.x implementation of extra sources, operators and components and ports of many 1.x companion libraries.
 
 # Releases
 
@@ -13,7 +13,7 @@ RxJava 2.x implementation of extra sources, operators and components and ports o
 
 ```
 dependencies {
-    compile "com.github.akarnokd:rxjava2-extensions:0.20.10"
+    compile "com.github.akarnokd:rxjava3-extensions:3.0.0-RC0"
 }
 ```
 
@@ -80,7 +80,7 @@ Maven search:
 Support the join-patterns and async-util with functional interfaces of consumers with 3-9 type arguments
 and have functional interfaces of functions without the `throws Exception`.
 
-  - `Supplier<T>` - `Callable<T>` without `throws Exception`
+  - `SimpleCallable<T>` - `Callable<T>` without `throws Exception`
   - `Consumer3` - 3 argument `Consumer`
   - `Consumer4` - 4 argument `Consumer`
   - `Consumer5` - 5 argument `Consumer`
@@ -201,7 +201,7 @@ func.apply(1)
 ```
 ### startFuture
 
-Run a Callable that returns a Future to call blocking get() on to get the solo value or exception.
+Run a Supplier that returns a Future to call blocking get() on to get the solo value or exception.
 
 ```java
 ExecutorService exec = Executors.newSingleThreadedScheduler();
@@ -216,7 +216,7 @@ exec.shutdown();
 
 ### deferFuture
 
-Run a Callable that returns a Future to call blocking get() on to get a `Publisher` to stream back.
+Run a Supplier that returns a Future to call blocking get() on to get a `Publisher` to stream back.
 
 ```java
 ExecutorService exec = Executors.newSingleThreadedScheduler();
@@ -404,8 +404,8 @@ In debug mode, you can walk through the reference graph of Disposables and Subsc
 ```
 RxJavaAssemblyException: assembled
 at io.reactivex.Completable.error(Completable.java:280)
-at hu.akarnokd.rxjava2.debug.RxJava2AssemblyTrackingTest.createCompletable(RxJava2AssemblyTrackingTest.java:78)
-at hu.akarnokd.rxjava2.debug.RxJava2AssemblyTrackingTest.completable(RxJava2AssemblyTrackingTest.java:185)
+at hu.akarnokd.rxjava3.debug.RxJava3AssemblyTrackingTest.createCompletable(RxJava3AssemblyTrackingTest.java:78)
+at hu.akarnokd.rxjava3.debug.RxJava3AssemblyTrackingTest.completable(RxJava3AssemblyTrackingTest.java:185)
 ```
 
 This is a filtered list of stacktrace elements (skipping threading, unit test and self-related entries). Most modern IDEs should allow you to navigate to the locations when printed on (or pasted into) its console.
@@ -459,7 +459,7 @@ name (t1 .. t9) and the tag provided.
 
 Custom operators and sources sometimes contain bugs that manifest themselves in odd sequence behavior or crashes 
 from within the standard operators. Since the revealing stacktraces is often missing or incomplete, diagnosing 
-such failures can be tiresome. Therefore, the `hu.akarnokd.rxjava2.debug.validator.RxJavaProtocolValidator` 
+such failures can be tiresome. Therefore, the `hu.akarnokd.rxjava3.debug.validator.RxJavaProtocolValidator` 
 class offers assembly hooks for the standard reactive base types.
 
 The validation hooks can be enabled via `RxJavaProtocolValidator.enable()` and disabled via `RxJavaProtocolValidator.disable()`.
@@ -506,7 +506,7 @@ The standard `RxJavaPlugins` allows only one hook to be associated with each mai
 If multiple hooks should be invoked, that option is not directly supported by `RxJavaPlugins` but
 can be built upon the single hook scheme.
 
-The `hu.akarnokd.rxjava2.debug.multihook` package offers hook managers that can work with multiple hooks
+The `hu.akarnokd.rxjava3.debug.multihook` package offers hook managers that can work with multiple hooks
 themselves.
 
 The various multi-hook managers are built upon the generic `MultiHandlerManager<H>` class. The class offers the `register`
@@ -721,7 +721,7 @@ public static void main(String[] args) {
 
 ## Custom operators and transformers
 
-The custom transformers (to be applied with `Flowable.compose` for example), can be found in `hu.akarnokd.rxjava2.operators.FlowableTransformers` class. The custom source-like operators can be found in `hu.akarnokd.rxjava2.operators.Flowables` class. The operators and transformers for the other base
+The custom transformers (to be applied with `Flowable.compose` for example), can be found in `hu.akarnokd.rxjava3.operators.FlowableTransformers` class. The custom source-like operators can be found in `hu.akarnokd.rxjava3.operators.Flowables` class. The operators and transformers for the other base
 reactive classes (will) follow the usual naming scheme.
 
 ### FlowableTransformers.valve()
@@ -876,12 +876,12 @@ Flowable.repeat("doesn't matter")
 .assertResult(true);
 ```
 
-### Flowables.repeatCallable()
+### Flowables.repeatSupplier()
 
-Repeatedly calls a callable, indefinitely (until the downstream actually cancels) or if the callable throws or returns null (when it signals `NullPointerException`), honoring backpressure and supporting synchronous fusion and/or conditional fusion.
+Repeatedly calls a supplier, indefinitely (until the downstream actually cancels) or if the supplier throws or returns null (when it signals `NullPointerException`), honoring backpressure and supporting synchronous fusion and/or conditional fusion.
 
 ```java
-Flowable.repeatCallable(() -> ThreadLocalRandom.current().nextDouble())
+Flowable.repeatSupplier(() -> ThreadLocalRandom.current().nextDouble())
 .take(100)
 .all(v -> v < 1d)
 .test()
@@ -1079,9 +1079,9 @@ Flowable.just(new File("."))
 // ~/git/RxJavaExtensions/src/main/java
 // ~/git/RxJavaExtensions/src/main/java/hu
 // ~/git/RxJavaExtensions/src/main/java/hu/akarnokd
-// ~/git/RxJavaExtensions/src/main/java/hu/akarnokd/rxjava2
-// ~/git/RxJavaExtensions/src/main/java/hu/akarnokd/rxjava2/operators
-// ~/git/RxJavaExtensions/src/main/java/hu/akarnokd/rxjava2/operators/FlowableExpand.java
+// ~/git/RxJavaExtensions/src/main/java/hu/akarnokd/rxjava3
+// ~/git/RxJavaExtensions/src/main/java/hu/akarnokd/rxjava3/operators
+// ~/git/RxJavaExtensions/src/main/java/hu/akarnokd/rxjava3/operators/FlowableExpand.java
 // ...
 // ~/git/RxJavaExtensions/src/test
 // ~/git/RxJavaExtensions/src/test/java
@@ -1116,14 +1116,14 @@ Flowable.just(new File("."))
 // ~/git/RxJavaExtensions/src/main/java
 // ~/git/RxJavaExtensions/src/main/java/hu
 // ~/git/RxJavaExtensions/src/main/java/hu/akarnokd
-// ~/git/RxJavaExtensions/src/main/java/hu/akarnokd/rxjava2
-// ~/git/RxJavaExtensions/src/main/java/hu/akarnokd/rxjava2/operators
-// ~/git/RxJavaExtensions/src/main/java/hu/akarnokd/rxjava2/math
-// ~/git/RxJavaExtensions/src/main/java/hu/akarnokd/rxjava2/async
-// ~/git/RxJavaExtensions/src/main/java/hu/akarnokd/rxjava2/debug
+// ~/git/RxJavaExtensions/src/main/java/hu/akarnokd/rxjava3
+// ~/git/RxJavaExtensions/src/main/java/hu/akarnokd/rxjava3/operators
+// ~/git/RxJavaExtensions/src/main/java/hu/akarnokd/rxjava3/math
+// ~/git/RxJavaExtensions/src/main/java/hu/akarnokd/rxjava3/async
+// ~/git/RxJavaExtensions/src/main/java/hu/akarnokd/rxjava3/debug
 // ...
-// ~/git/RxJavaExtensions/src/main/java/hu/akarnokd/rxjava2/operators/FlowableExpand.java
-// ~/git/RxJavaExtensions/src/main/java/hu/akarnokd/rxjava2/operators/FlowableTransformers.java
+// ~/git/RxJavaExtensions/src/main/java/hu/akarnokd/rxjava3/operators/FlowableExpand.java
+// ~/git/RxJavaExtensions/src/main/java/hu/akarnokd/rxjava3/operators/FlowableTransformers.java
 ```
 
 ### FlowableTransformers.mapAsync()
@@ -1651,24 +1651,24 @@ Availability:
 <!-- - `Observables.flatMap{Completable|Single|Maybe}` -->
 - `Single`
   - `SingleTransformers.flatMap` (use with `Single.compose()`)
-  - `Singles.flatMapCompletable` (use with `Single.as()`)
-  - `Singles.flatMapMaybe` (use with `Single.as()`)
-  - `Singles.flatMapObservable` (use with `Single.as()`)
-  - `Singles.flatMapFlowable` (use with `Single.as()`)
+  - `Singles.flatMapCompletable` (use with `Single.to()`)
+  - `Singles.flatMapMaybe` (use with `Single.to()`)
+  - `Singles.flatMapObservable` (use with `Single.to()`)
+  - `Singles.flatMapFlowable` (use with `Single.to()`)
 - `Maybe`
   - `MaybeTransformers.flatMap` (use with `Maybe.compose()`)
-  - `Maybes.flatMapCompletable` (use with `Maybe.as()`)
-  - `Maybes.flatMapSingle` (use with `Maybe.as()`)
-  - `Maybes.flatMapObservable` (use with `Maybe.as()`)
-  - `Maybes.flatMapFlowable` (use with `Maybe.as()`)
+  - `Maybes.flatMapCompletable` (use with `Maybe.to()`)
+  - `Maybes.flatMapSingle` (use with `Maybe.to()`)
+  - `Maybes.flatMapObservable` (use with `Maybe.to()`)
+  - `Maybes.flatMapFlowable` (use with `Maybe.to()`)
 - `Completable`
   - `CompletableTransformers.flatMap` (use with `Completable.compose()`)
-  - `Completables.flatMapSingle` (use with `Completable.as()`)
-  - `Completables.flatMapMaybe` (use with `Completable.as()`)
-  - `Completables.flatMapObservable` (use with `Completable.as()`)
-  - `Completables.flatMapFlowable` (use with `Completable.as()`)
+  - `Completables.flatMapSingle` (use with `Completable.to()`)
+  - `Completables.flatMapMaybe` (use with `Completable.to()`)
+  - `Completables.flatMapObservable` (use with `Completable.to()`)
+  - `Completables.flatMapFlowable` (use with `Completable.to()`)
 
-Note: same-type transformations for [Flowable.flatMap](http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Flowable.html#flatMap-io.reactivex.functions.Function-io.reactivex.functions.Function-java.util.concurrent.Callable-), [Observable.flatMap](http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Observable.html#flatMap-io.reactivex.functions.Function-io.reactivex.functions.Function-java.util.concurrent.Callable-) already exist in RxJava.
+Note: same-type transformations for [Flowable.flatMap](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/Flowable.html#flatMap-io.reactivex.functions.Function-io.reactivex.functions.Function-io.reactivex.functions.Supplier-), [Observable.flatMap](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/Observable.html#flatMap-io.reactivex.functions.Function-io.reactivex.functions.Function-io.reactivex.functions.Supplier-) already exist in RxJava.
 
 ## Custom parallel operators and transformers
 
@@ -1846,7 +1846,7 @@ ts.assertResult(1);
 
 ## Custom consumers
 
-The utility classes can be found in `hu.akarnokd.rxjava2.consumers` package.
+The utility classes can be found in `hu.akarnokd.rxjava3.consumers` package.
 
 
 ### FlowableConsumers
