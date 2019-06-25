@@ -1,6 +1,6 @@
 # RxJavaExtensions
 
-<a href='https://travis-ci.org/akarnokd/RxJavaExtensions/builds'><img src='https://travis-ci.org/akarnokd/RxJavaExtensions.svg?branch=master'></a>
+<a href='https://travis-ci.org/akarnokd/RxJavaExtensions/builds'><img src='https://travis-ci.org/akarnokd/RxJavaExtensions.svg?branch=3.x'></a>
 [![codecov.io](http://codecov.io/github/akarnokd/RxJavaExtensions/coverage.svg?branch=3.x)](http://codecov.io/github/akarnokd/RxJavaExtensions?branch=3.x)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.akarnokd/rxjava3-extensions/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.akarnokd/rxjava3-extensions)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.reactivex.rxjava3/rxjava/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.reactivex.rxjava3/rxjava)
