@@ -49,7 +49,7 @@ dependencies {
     signature 'org.codehaus.mojo.signature:java16:1.1@signature'
 
     compile "org.reactivestreams:reactive-streams:1.0.2"
-    compile "io.reactivex.rxjava3:rxjava:3.0.0-RC0"
+    compile "io.reactivex.rxjava3:rxjava:3.0.0-RC1"
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
 
