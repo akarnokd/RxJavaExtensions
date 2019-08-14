@@ -1176,7 +1176,7 @@ public abstract class Nono implements Publisher<Void> {
      * @return the TestSubscriber created
      */
     @SchedulerSupport(SchedulerSupport.NONE)
-    public final TestSubscriber<Void> test(boolean cancelled) {
+    public final TestSubscriber<Void> createTestSubscriber(boolean cancelled) {
         TestSubscriber<Void> ts = new TestSubscriber<Void>();
         if (cancelled) {
             ts.cancel();
