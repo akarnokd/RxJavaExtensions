@@ -34,7 +34,7 @@ public final class Subjects {
      * Wraps a Subject and makes sure if all observers dispose
      * their disposables, the upstream's Disposable gets disposed as well.
      * <p>
-     * This operator is similar to {@link io.reactivex.observables.ConnectableObservable#refCount()}
+     * This operator is similar to {@link io.reactivex.rxjava3.observables.ConnectableObservable#refCount()}
      * except the first Observer doesn't trigger any sort of connection; that happens
      * when the resulting Subject is subscribed to an Observable manually.
      * @param <T> the input and output value type

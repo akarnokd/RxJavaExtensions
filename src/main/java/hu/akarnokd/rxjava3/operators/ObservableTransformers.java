@@ -154,7 +154,7 @@ public final class ObservableTransformers {
      * <ul>
      * <li>The operator starts with an open valve.</li>
      * <li>If the other ObservableSource completes, the sequence terminates with an {@code IllegalStateException}.</li>
-     * <li>The operator doesn't run on any particular {@link io.reactivex.Scheduler Scheduler}.</li>
+     * <li>The operator doesn't run on any particular {@link io.reactivex.rxjava3.core.Scheduler Scheduler}.</li>
      * <li>The operator uses an internal unbounded buffer
      * of size {@link Flowable#bufferSize()} to hold onto values if the valve is closed.</li>
      * </ul>
@@ -177,7 +177,7 @@ public final class ObservableTransformers {
      * <p>Properties:
      * <ul>
      * <li>If the other ObservableSource completes, the sequence terminates with an {@code IllegalStateException}.</li>
-     * <li>The operator doesn't run on any particular {@link io.reactivex.Scheduler Scheduler}.</li>
+     * <li>The operator doesn't run on any particular {@link io.reactivex.rxjava3.core.Scheduler Scheduler}.</li>
      * <li>The operator uses an internal unbounded buffer
      * of size {@link Flowable#bufferSize()} to hold onto values if the valve is closed.</li>
      * </ul>
@@ -202,7 +202,7 @@ public final class ObservableTransformers {
      * <p>Properties:
      * <ul>
      * <li>If the other ObservableSource completes, the sequence terminates with an {@code IllegalStateException}.</li>
-     * <li>The operator doesn't run on any particular {@link io.reactivex.Scheduler Scheduler}.</li>
+     * <li>The operator doesn't run on any particular {@link io.reactivex.rxjava3.core.Scheduler Scheduler}.</li>
      * </ul>
      * @param <T> the value type of the main source
      * @param other the other source

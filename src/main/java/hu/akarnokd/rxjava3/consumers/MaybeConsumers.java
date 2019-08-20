@@ -22,7 +22,7 @@ import io.reactivex.rxjava3.functions.*;
 import io.reactivex.rxjava3.internal.functions.*;
 
 /**
- * Utility methods for creating and using consumers {@link io.reactivex.Maybe}s.
+ * Utility methods for creating and using consumers {@link io.reactivex.rxjava3.core.Maybe}s.
  * @since 0.18.0
  */
 public final class MaybeConsumers {

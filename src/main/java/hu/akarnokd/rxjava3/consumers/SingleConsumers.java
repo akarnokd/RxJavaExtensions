@@ -22,7 +22,7 @@ import io.reactivex.rxjava3.functions.Consumer;
 import io.reactivex.rxjava3.internal.functions.*;
 
 /**
- * Utility methods for creating and using consumers {@link io.reactivex.SingleObserver}s.
+ * Utility methods for creating and using consumers {@link io.reactivex.rxjava3.core.SingleObserver}s.
  * @since 0.18.0
  */
 public final class SingleConsumers {

@@ -49,7 +49,7 @@ public final class FlowableTransformers {
      * <ul>
      * <li>The operator starts with an open valve.</li>
      * <li>If the other Publisher completes, the sequence terminates with an {@code IllegalStateException}.</li>
-     * <li>The operator doesn't run on any particular {@link io.reactivex.Scheduler Scheduler}.</li>
+     * <li>The operator doesn't run on any particular {@link io.reactivex.rxjava3.core.Scheduler Scheduler}.</li>
      * <li>The operator is a pass-through for backpressure and uses an internal unbounded buffer
      * of size {@link Flowable#bufferSize()} to hold onto values if the valve is closed.</li>
      * </ul>
@@ -73,7 +73,7 @@ public final class FlowableTransformers {
      * <p>Properties:
      * <ul>
      * <li>If the other Publisher completes, the sequence terminates with an {@code IllegalStateException}.</li>
-     * <li>The operator doesn't run on any particular {@link io.reactivex.Scheduler Scheduler}.</li>
+     * <li>The operator doesn't run on any particular {@link io.reactivex.rxjava3.core.Scheduler Scheduler}.</li>
      * <li>The operator is a pass-through for backpressure and uses an internal unbounded buffer
      * of size {@link Flowable#bufferSize()} to hold onto values if the valve is closed.</li>
      * </ul>
@@ -99,7 +99,7 @@ public final class FlowableTransformers {
      * <p>Properties:
      * <ul>
      * <li>If the other Publisher completes, the sequence terminates with an {@code IllegalStateException}.</li>
-     * <li>The operator doesn't run on any particular {@link io.reactivex.Scheduler Scheduler}.</li>
+     * <li>The operator doesn't run on any particular {@link io.reactivex.rxjava3.core.Scheduler Scheduler}.</li>
      * </ul>
      * @param <T> the value type of the main source
      * @param other the other source
@@ -1229,7 +1229,7 @@ public final class FlowableTransformers {
      * as an individual {@code Runnable} task. Each item received from the upstream will
      * also run on the given {@code Scheduler} as individual {@code Runnable} tasks which
      * should maximize the possibility of work interleaved on a threadpool-backed {@code Scheduler}
-     * such as {@link io.reactivex.schedulers.Schedulers#computation()}.
+     * such as {@link io.reactivex.rxjava3.schedulers.Schedulers#computation()}.
      * <dl>
      *  <dt><b>Backpressure:</b></dt>
      *  <dd>The operator requests one item at a time and requests the next item once the downstream
@@ -1257,7 +1257,7 @@ public final class FlowableTransformers {
      *  <dt><b>Backpressure:</b></dt>
      *  <dd>The operator issues {@code request(1)} to its upstream periodically and expects the downstream
      *  to be ready to consume the items. If the downstream is not ready at that moment,
-     *  a {@link io.reactivex.exceptions.MissingBackpressureException MissingBackpressureException} is signalled
+     *  a {@link io.reactivex.rxjava3.exceptions.MissingBackpressureException MissingBackpressureException} is signalled
      *  and the flow is cancelled.</dd>
      *  <dt><b>Scheduler:</b></dt>
      *  <dd>You specify the {@link Scheduler} this operator should use for issuing each {@code request(1)} call.
@@ -1282,7 +1282,7 @@ public final class FlowableTransformers {
      *  <dt><b>Backpressure:</b></dt>
      *  <dd>The operator issues {@code request(1)} to its upstream after an initial delay, then periodically and expects the downstream
      *  to be ready to consume the items. If the downstream is not ready at that moment,
-     *  a {@link io.reactivex.exceptions.MissingBackpressureException MissingBackpressureException} is signalled
+     *  a {@link io.reactivex.rxjava3.exceptions.MissingBackpressureException MissingBackpressureException} is signalled
      *  and the flow is cancelled.</dd>
      *  <dt><b>Scheduler:</b></dt>
      *  <dd>You specify the {@link Scheduler} this operator should use for issuing each {@code request(1)} call.
@@ -1309,7 +1309,7 @@ public final class FlowableTransformers {
      *  <dt><b>Backpressure:</b></dt>
      *  <dd>The operator issues {@code request(1)} when the other {@code Publisher} signals an {@code onNext} and expects the downstream
      *  to be ready to consume the items. If the downstream is not ready at that moment,
-     *  a {@link io.reactivex.exceptions.MissingBackpressureException MissingBackpressureException} is signalled
+     *  a {@link io.reactivex.rxjava3.exceptions.MissingBackpressureException MissingBackpressureException} is signalled
      *  and the flow is cancelled. The other {@code Publisher} is consumed in an unbounded manner.</dd>
      *  <dt><b>Scheduler:</b></dt>
      *  <dd>This operator doesn't run on any particular {@link Scheduler}.</dd>
