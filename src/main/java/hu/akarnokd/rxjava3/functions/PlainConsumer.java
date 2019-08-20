@@ -16,7 +16,7 @@
 
 package hu.akarnokd.rxjava3.functions;
 
-import io.reactivex.functions.Consumer;
+import io.reactivex.rxjava3.functions.Consumer;
 
 /**
  * A {@link Consumer} with suppressed exception on its {@link #accept(Object)} method.

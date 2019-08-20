@@ -18,10 +18,10 @@ package hu.akarnokd.rxjava3.basetypes;
 
 import org.reactivestreams.*;
 
-import io.reactivex.Scheduler;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.internal.disposables.SequentialDisposable;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.rxjava3.core.Scheduler;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.internal.disposables.SequentialDisposable;
+import io.reactivex.rxjava3.internal.subscriptions.SubscriptionHelper;
 
 /**
  * Subscribe to the source Nono on a specified scheduler.

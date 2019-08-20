@@ -17,9 +17,9 @@
 package hu.akarnokd.rxjava3.debug;
 
 import hu.akarnokd.rxjava3.debug.MaybeOnAssembly.OnAssemblyMaybeObserver;
-import io.reactivex.*;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.Supplier;
+import io.reactivex.rxjava3.core.*;
+import io.reactivex.rxjava3.exceptions.Exceptions;
+import io.reactivex.rxjava3.functions.Supplier;
 
 /**
  * Wraps a MaybeSource and inject the assembly info.

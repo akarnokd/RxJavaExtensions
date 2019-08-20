@@ -15,10 +15,10 @@ package hu.akarnokd.rxjava3.subjects;
 
 import java.util.concurrent.atomic.*;
 
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.internal.disposables.*;
-import io.reactivex.subjects.Subject;
+import io.reactivex.rxjava3.core.Observer;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.internal.disposables.*;
+import io.reactivex.rxjava3.subjects.Subject;
 
 /**
  * A Subject wrapper that disposes the Disposable set via

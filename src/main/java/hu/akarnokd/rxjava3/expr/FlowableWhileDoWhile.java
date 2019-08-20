@@ -20,10 +20,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.reactivestreams.*;
 
-import io.reactivex.Flowable;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.BooleanSupplier;
-import io.reactivex.internal.subscriptions.*;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.exceptions.Exceptions;
+import io.reactivex.rxjava3.functions.BooleanSupplier;
+import io.reactivex.rxjava3.internal.subscriptions.*;
 
 final class FlowableWhileDoWhile<T> extends Flowable<T> {
 

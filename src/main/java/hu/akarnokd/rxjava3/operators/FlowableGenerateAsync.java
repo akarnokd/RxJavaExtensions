@@ -20,12 +20,12 @@ import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
 
-import io.reactivex.Flowable;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.*;
-import io.reactivex.internal.subscriptions.EmptySubscription;
-import io.reactivex.internal.util.*;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.exceptions.Exceptions;
+import io.reactivex.rxjava3.functions.*;
+import io.reactivex.rxjava3.internal.subscriptions.EmptySubscription;
+import io.reactivex.rxjava3.internal.util.*;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 /**
  * Generates items by invoking a callback, for each downstream request one by one, that sets up an

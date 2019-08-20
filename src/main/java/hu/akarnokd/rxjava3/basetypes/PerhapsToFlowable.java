@@ -18,8 +18,8 @@ package hu.akarnokd.rxjava3.basetypes;
 
 import org.reactivestreams.*;
 
-import io.reactivex.Flowable;
-import io.reactivex.internal.subscriptions.*;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.internal.subscriptions.*;
 
 /**
  * Convert the Perhaps into a Flowable.

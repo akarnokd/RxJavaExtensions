@@ -18,13 +18,13 @@ package hu.akarnokd.rxjava3.operators;
 
 import org.reactivestreams.Subscriber;
 
-import io.reactivex.Flowable;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.Supplier;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.fuseable.ConditionalSubscriber;
-import io.reactivex.internal.subscriptions.*;
-import io.reactivex.internal.util.BackpressureHelper;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.exceptions.Exceptions;
+import io.reactivex.rxjava3.functions.Supplier;
+import io.reactivex.rxjava3.internal.functions.ObjectHelper;
+import io.reactivex.rxjava3.internal.fuseable.ConditionalSubscriber;
+import io.reactivex.rxjava3.internal.subscriptions.*;
+import io.reactivex.rxjava3.internal.util.BackpressureHelper;
 
 /**
  * Repeatedly calls a Supplier indefinitely.

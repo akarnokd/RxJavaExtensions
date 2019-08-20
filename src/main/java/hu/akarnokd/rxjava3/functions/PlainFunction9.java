@@ -16,7 +16,7 @@
 
 package hu.akarnokd.rxjava3.functions;
 
-import io.reactivex.functions.Function9;
+import io.reactivex.rxjava3.functions.Function9;
 
 /**
  * A {@link Function9} with suppressed exception on its

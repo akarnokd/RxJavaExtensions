@@ -18,9 +18,9 @@ package hu.akarnokd.rxjava3.math;
 
 import java.util.Comparator;
 
-import io.reactivex.internal.observers.DeferredScalarObserver;
-import io.reactivex.*;
-import io.reactivex.exceptions.Exceptions;
+import io.reactivex.rxjava3.core.*;
+import io.reactivex.rxjava3.exceptions.Exceptions;
+import io.reactivex.rxjava3.internal.observers.DeferredScalarObserver;
 
 final class ObservableMinMax<T> extends ObservableWithSource<T, T> {
 

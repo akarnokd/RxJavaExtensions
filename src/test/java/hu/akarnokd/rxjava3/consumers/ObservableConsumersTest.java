@@ -24,14 +24,14 @@ import java.util.*;
 import org.junit.Test;
 
 import hu.akarnokd.rxjava3.test.TestHelper;
-import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.disposables.*;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.*;
-import io.reactivex.observers.LambdaConsumerIntrospection;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.subjects.PublishSubject;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Observer;
+import io.reactivex.rxjava3.disposables.*;
+import io.reactivex.rxjava3.exceptions.*;
+import io.reactivex.rxjava3.functions.*;
+import io.reactivex.rxjava3.observers.LambdaConsumerIntrospection;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.subjects.PublishSubject;
 
 public class ObservableConsumersTest implements Consumer<Object>, Action {
 

@@ -21,9 +21,9 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import hu.akarnokd.rxjava3.test.*;
-import io.reactivex.Maybe;
-import io.reactivex.functions.*;
-import io.reactivex.subjects.MaybeSubject;
+import io.reactivex.rxjava3.core.Maybe;
+import io.reactivex.rxjava3.functions.*;
+import io.reactivex.rxjava3.subjects.MaybeSubject;
 
 public class MaybeFlatMapSignalMaybeTest {
 

@@ -19,10 +19,10 @@ package hu.akarnokd.rxjava3.debug;
 import org.reactivestreams.*;
 
 import hu.akarnokd.rxjava3.debug.FlowableOnAssembly.*;
-import io.reactivex.Flowable;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.Supplier;
-import io.reactivex.internal.fuseable.ConditionalSubscriber;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.exceptions.Exceptions;
+import io.reactivex.rxjava3.functions.Supplier;
+import io.reactivex.rxjava3.internal.fuseable.ConditionalSubscriber;
 
 /**
  * Wraps a Publisher and inject the assembly info.

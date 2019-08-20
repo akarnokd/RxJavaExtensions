@@ -21,7 +21,7 @@ import static hu.akarnokd.rxjava3.math.MathObservable.*;
 import org.junit.Test;
 
 import hu.akarnokd.rxjava3.test.BaseTest;
-import io.reactivex.Observable;
+import io.reactivex.rxjava3.core.Observable;
 
 public class MathObservableTest extends BaseTest {
 

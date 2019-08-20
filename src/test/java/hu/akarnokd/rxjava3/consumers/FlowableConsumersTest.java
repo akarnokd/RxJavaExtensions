@@ -25,14 +25,14 @@ import org.junit.Test;
 import org.reactivestreams.Subscriber;
 
 import hu.akarnokd.rxjava3.test.TestHelper;
-import io.reactivex.Flowable;
-import io.reactivex.disposables.*;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
-import io.reactivex.observers.LambdaConsumerIntrospection;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.processors.PublishProcessor;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.disposables.*;
+import io.reactivex.rxjava3.exceptions.*;
+import io.reactivex.rxjava3.functions.*;
+import io.reactivex.rxjava3.internal.subscriptions.BooleanSubscription;
+import io.reactivex.rxjava3.observers.LambdaConsumerIntrospection;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.processors.PublishProcessor;
 
 public class FlowableConsumersTest implements Consumer<Object>, Action {
 

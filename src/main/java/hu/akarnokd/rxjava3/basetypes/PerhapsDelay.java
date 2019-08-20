@@ -20,9 +20,9 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.reactivestreams.*;
 
-import io.reactivex.exceptions.CompositeException;
-import io.reactivex.internal.subscriptions.*;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.exceptions.CompositeException;
+import io.reactivex.rxjava3.internal.subscriptions.*;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 /**
  * Delay the emission of signals from the upstream until the

@@ -19,9 +19,9 @@ package hu.akarnokd.rxjava3.async;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import io.reactivex.disposables.Disposable;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.internal.functions.ObjectHelper;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 /**
  * A Future implementation that can be terminated externally.

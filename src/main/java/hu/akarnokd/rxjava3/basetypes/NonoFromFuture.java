@@ -20,9 +20,9 @@ import java.util.concurrent.*;
 
 import org.reactivestreams.Subscriber;
 
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.Supplier;
-import io.reactivex.internal.subscriptions.EmptySubscription;
+import io.reactivex.rxjava3.exceptions.Exceptions;
+import io.reactivex.rxjava3.functions.Supplier;
+import io.reactivex.rxjava3.internal.subscriptions.EmptySubscription;
 
 /**
  * Block until the Future completes or times out.

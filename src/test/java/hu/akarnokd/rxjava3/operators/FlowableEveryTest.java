@@ -20,7 +20,7 @@ import java.io.IOException;
 
 import org.junit.Test;
 
-import io.reactivex.Flowable;
+import io.reactivex.rxjava3.core.Flowable;
 
 public class FlowableEveryTest {
 

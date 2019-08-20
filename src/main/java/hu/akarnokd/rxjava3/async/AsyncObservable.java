@@ -19,16 +19,16 @@ package hu.akarnokd.rxjava3.async;
 import java.util.concurrent.*;
 
 import hu.akarnokd.rxjava3.functions.*;
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.disposables.SequentialDisposable;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.internal.observers.LambdaObserver;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subjects.*;
+import io.reactivex.rxjava3.core.*;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.exceptions.*;
+import io.reactivex.rxjava3.functions.*;
+import io.reactivex.rxjava3.internal.disposables.SequentialDisposable;
+import io.reactivex.rxjava3.internal.functions.Functions;
+import io.reactivex.rxjava3.internal.observers.LambdaObserver;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+import io.reactivex.rxjava3.subjects.*;
 
 /**
  * Utility methods to convert functions and actions into asynchronous operations through the Observable/Observer

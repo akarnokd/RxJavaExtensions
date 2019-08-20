@@ -23,11 +23,11 @@ import org.reactivestreams.Subscriber;
 
 import hu.akarnokd.rxjava3.basetypes.NonoMergeArray.*;
 import hu.akarnokd.rxjava3.util.CompositeSubscription;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.subscriptions.*;
-import io.reactivex.internal.util.AtomicThrowable;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.exceptions.Exceptions;
+import io.reactivex.rxjava3.internal.functions.ObjectHelper;
+import io.reactivex.rxjava3.internal.subscriptions.*;
+import io.reactivex.rxjava3.internal.util.AtomicThrowable;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 /**
  * Run Nono sources in parallel and complete when all complete.

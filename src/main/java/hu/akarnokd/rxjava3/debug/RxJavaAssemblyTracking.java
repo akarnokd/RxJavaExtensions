@@ -18,13 +18,13 @@ package hu.akarnokd.rxjava3.debug;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import io.reactivex.*;
-import io.reactivex.flowables.ConnectableFlowable;
-import io.reactivex.functions.*;
-import io.reactivex.internal.fuseable.ScalarSupplier;
-import io.reactivex.observables.ConnectableObservable;
-import io.reactivex.parallel.ParallelFlowable;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.core.*;
+import io.reactivex.rxjava3.flowables.ConnectableFlowable;
+import io.reactivex.rxjava3.functions.*;
+import io.reactivex.rxjava3.internal.fuseable.ScalarSupplier;
+import io.reactivex.rxjava3.observables.ConnectableObservable;
+import io.reactivex.rxjava3.parallel.ParallelFlowable;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 /**
  * Utility class to enable and disable tracking of operator application ({@code source.map().filter()})

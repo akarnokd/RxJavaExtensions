@@ -23,8 +23,8 @@ import java.util.concurrent.TimeUnit;
 import org.junit.Test;
 import org.reactivestreams.Publisher;
 
-import io.reactivex.*;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.rxjava3.core.*;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class FlowableSwitchIfEmptyManyArrayTest {
 

@@ -18,9 +18,9 @@ package hu.akarnokd.rxjava3.basetypes;
 
 import org.reactivestreams.Subscriber;
 
-import io.reactivex.functions.Function;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.subscribers.BasicFuseableSubscriber;
+import io.reactivex.rxjava3.functions.Function;
+import io.reactivex.rxjava3.internal.functions.ObjectHelper;
+import io.reactivex.rxjava3.internal.subscribers.BasicFuseableSubscriber;
 
 /**
  * Map the success value to another value.

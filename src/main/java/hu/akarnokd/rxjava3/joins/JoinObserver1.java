@@ -19,14 +19,14 @@ package hu.akarnokd.rxjava3.joins;
 import java.util.*;
 import java.util.concurrent.atomic.*;
 
-import io.reactivex.Notification;
-import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.Consumer;
-import io.reactivex.internal.disposables.DisposableHelper;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.core.Notification;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Observer;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.exceptions.*;
+import io.reactivex.rxjava3.functions.Consumer;
+import io.reactivex.rxjava3.internal.disposables.DisposableHelper;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 /**
  * Default implementation of a join observer.

@@ -21,13 +21,13 @@ import java.util.*;
 
 import org.junit.Test;
 
-import hu.akarnokd.rxjava3.test.*;
-import io.reactivex.Flowable;
-import io.reactivex.exceptions.CompositeException;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.subscribers.TestSubscriber;
+import hu.akarnokd.rxjava3.test.TestHelper;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.exceptions.CompositeException;
+import io.reactivex.rxjava3.functions.*;
+import io.reactivex.rxjava3.internal.functions.Functions;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.subscribers.TestSubscriber;
 
 public class FlowableOrderedMergeTest {
 

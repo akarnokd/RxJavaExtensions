@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
 
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 /**
  * A hot Nono that signals the terminal event to Subscribers.

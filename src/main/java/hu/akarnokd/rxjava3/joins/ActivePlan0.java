@@ -16,8 +16,7 @@
 
 package hu.akarnokd.rxjava3.joins;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Represents an activated plan.

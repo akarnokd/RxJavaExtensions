@@ -19,7 +19,7 @@ package hu.akarnokd.rxjava3.basetypes;
 import org.reactivestreams.Subscriber;
 
 import hu.akarnokd.rxjava3.basetypes.NonoAmbIterable.AmbSubscriber;
-import io.reactivex.exceptions.Exceptions;
+import io.reactivex.rxjava3.exceptions.Exceptions;
 
 /**
  * Terminate as soon as one of the Mono sources terminates.

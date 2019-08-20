@@ -16,8 +16,8 @@
 
 package hu.akarnokd.rxjava3.math;
 
-import io.reactivex.internal.observers.DeferredScalarObserver;
-import io.reactivex.*;
+import io.reactivex.rxjava3.core.*;
+import io.reactivex.rxjava3.internal.observers.DeferredScalarObserver;
 
 public class ObservableSumFloat extends ObservableWithSource<Float, Float> {
 

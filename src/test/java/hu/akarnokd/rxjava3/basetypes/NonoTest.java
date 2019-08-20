@@ -26,18 +26,18 @@ import org.junit.*;
 import org.reactivestreams.*;
 
 import hu.akarnokd.rxjava3.test.TestHelper;
-import io.reactivex.*;
-import io.reactivex.Observable;
-import io.reactivex.exceptions.CompositeException;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.internal.fuseable.QueueSubscription;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
-import io.reactivex.internal.util.ExceptionHelper;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.processors.PublishProcessor;
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.rxjava3.core.*;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.exceptions.CompositeException;
+import io.reactivex.rxjava3.functions.*;
+import io.reactivex.rxjava3.internal.functions.Functions;
+import io.reactivex.rxjava3.internal.fuseable.QueueSubscription;
+import io.reactivex.rxjava3.internal.subscriptions.BooleanSubscription;
+import io.reactivex.rxjava3.internal.util.ExceptionHelper;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.processors.PublishProcessor;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+import io.reactivex.rxjava3.subscribers.TestSubscriber;
 
 public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancellable {
 

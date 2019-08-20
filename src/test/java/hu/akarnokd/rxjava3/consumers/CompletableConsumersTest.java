@@ -24,13 +24,13 @@ import java.util.*;
 import org.junit.Test;
 
 import hu.akarnokd.rxjava3.test.TestHelper;
-import io.reactivex.*;
-import io.reactivex.disposables.*;
-import io.reactivex.exceptions.CompositeException;
-import io.reactivex.functions.*;
-import io.reactivex.observers.LambdaConsumerIntrospection;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.subjects.CompletableSubject;
+import io.reactivex.rxjava3.core.*;
+import io.reactivex.rxjava3.disposables.*;
+import io.reactivex.rxjava3.exceptions.CompositeException;
+import io.reactivex.rxjava3.functions.*;
+import io.reactivex.rxjava3.observers.LambdaConsumerIntrospection;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.subjects.CompletableSubject;
 
 public class CompletableConsumersTest implements Consumer<Object>, Action {
 

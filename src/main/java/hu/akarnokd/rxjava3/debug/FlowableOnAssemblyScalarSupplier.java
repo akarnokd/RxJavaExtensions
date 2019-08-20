@@ -19,8 +19,8 @@ package hu.akarnokd.rxjava3.debug;
 import org.reactivestreams.*;
 
 import hu.akarnokd.rxjava3.debug.FlowableOnAssembly.*;
-import io.reactivex.Flowable;
-import io.reactivex.internal.fuseable.*;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.internal.fuseable.*;
 
 /**
  * Wraps a Publisher and inject the assembly info.

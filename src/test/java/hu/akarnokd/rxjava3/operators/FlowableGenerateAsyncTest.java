@@ -19,19 +19,19 @@ package hu.akarnokd.rxjava3.operators;
 import static org.junit.Assert.*;
 
 import java.util.List;
-import java.util.concurrent.*;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.*;
 
 import org.junit.Test;
 
 import hu.akarnokd.rxjava3.operators.FlowableGenerateAsync.AtomicCancellable;
 import hu.akarnokd.rxjava3.test.*;
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.*;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.functions.*;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+import io.reactivex.rxjava3.subscribers.TestSubscriber;
 
 public class FlowableGenerateAsyncTest {
 

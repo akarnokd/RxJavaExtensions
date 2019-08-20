@@ -21,16 +21,16 @@ import java.util.concurrent.*;
 import org.reactivestreams.*;
 
 import hu.akarnokd.rxjava3.functions.*;
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.disposables.SequentialDisposable;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.internal.subscribers.LambdaSubscriber;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.processors.*;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.rxjava3.core.*;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.exceptions.*;
+import io.reactivex.rxjava3.functions.*;
+import io.reactivex.rxjava3.internal.disposables.SequentialDisposable;
+import io.reactivex.rxjava3.internal.functions.Functions;
+import io.reactivex.rxjava3.internal.subscribers.LambdaSubscriber;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.processors.*;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 /**
  * Utility methods to convert functions and actions into asynchronous operations through the Publisher/Subscriber

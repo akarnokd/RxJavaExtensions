@@ -17,10 +17,10 @@
 package hu.akarnokd.rxjava3.operators;
 
 import hu.akarnokd.rxjava3.util.BiFunctionSecondIdentity;
-import io.reactivex.*;
-import io.reactivex.annotations.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.ObjectHelper;
+import io.reactivex.rxjava3.annotations.*;
+import io.reactivex.rxjava3.core.*;
+import io.reactivex.rxjava3.functions.*;
+import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 
 /**
  * Additional operators in the form of {@link ObservableTransformer},

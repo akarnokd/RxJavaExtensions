@@ -18,10 +18,10 @@ package hu.akarnokd.rxjava3.async;
 
 import org.reactivestreams.Subscriber;
 
-import io.reactivex.Flowable;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.Supplier;
-import io.reactivex.internal.subscriptions.DeferredScalarSubscription;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.exceptions.Exceptions;
+import io.reactivex.rxjava3.functions.Supplier;
+import io.reactivex.rxjava3.internal.subscriptions.DeferredScalarSubscription;
 
 /**
  * Runs a Supplier and treats a null result as completion.

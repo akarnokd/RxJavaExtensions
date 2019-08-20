@@ -22,9 +22,9 @@ import org.junit.Test;
 import org.reactivestreams.Publisher;
 
 import hu.akarnokd.rxjava3.test.*;
-import io.reactivex.*;
-import io.reactivex.exceptions.CompositeException;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.rxjava3.core.*;
+import io.reactivex.rxjava3.exceptions.CompositeException;
+import io.reactivex.rxjava3.subscribers.TestSubscriber;
 
 public class FlowableErrorJumpTest {
 

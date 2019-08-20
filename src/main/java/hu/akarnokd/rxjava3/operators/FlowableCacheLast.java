@@ -20,8 +20,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.processors.AsyncProcessor;
+import io.reactivex.rxjava3.core.*;
+import io.reactivex.rxjava3.processors.AsyncProcessor;
 
 /**
  * Cache only the very last value and relay/replay it to Subscribers.

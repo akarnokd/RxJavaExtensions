@@ -18,7 +18,6 @@ package hu.akarnokd.rxjava3.subjects;
 
 import org.junit.Test;
 
-import hu.akarnokd.rxjava3.subjects.Subjects;
 import hu.akarnokd.rxjava3.test.TestHelper;
 
 public class SubjectsTest {

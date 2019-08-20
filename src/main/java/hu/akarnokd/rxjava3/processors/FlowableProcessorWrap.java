@@ -16,12 +16,12 @@
 
 package hu.akarnokd.rxjava3.processors;
 
-import java.util.concurrent.atomic.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.reactivestreams.*;
 
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.processors.FlowableProcessor;
+import io.reactivex.rxjava3.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.rxjava3.processors.FlowableProcessor;
 
 final class FlowableProcessorWrap<T> extends FlowableProcessor<T> {
 

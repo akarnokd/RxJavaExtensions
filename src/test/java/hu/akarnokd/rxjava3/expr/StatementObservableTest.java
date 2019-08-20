@@ -21,9 +21,9 @@ import java.util.*;
 import org.junit.*;
 import org.mockito.MockitoAnnotations;
 
-import io.reactivex.Observable;
-import io.reactivex.functions.*;
-import io.reactivex.schedulers.*;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.functions.*;
+import io.reactivex.rxjava3.schedulers.*;
 
 public class StatementObservableTest {
     TestScheduler scheduler;

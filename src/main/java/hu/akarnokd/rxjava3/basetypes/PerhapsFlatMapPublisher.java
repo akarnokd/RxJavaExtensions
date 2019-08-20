@@ -20,11 +20,11 @@ import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
 
-import io.reactivex.Flowable;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.exceptions.Exceptions;
+import io.reactivex.rxjava3.functions.Function;
+import io.reactivex.rxjava3.internal.functions.ObjectHelper;
+import io.reactivex.rxjava3.internal.subscriptions.SubscriptionHelper;
 
 /**
  * Map the success value of the upstream into a Publisher and emit

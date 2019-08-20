@@ -16,9 +16,9 @@
 
 package hu.akarnokd.rxjava3.operators;
 
-import io.reactivex.Emitter;
-import io.reactivex.annotations.Experimental;
-import io.reactivex.functions.Cancellable;
+import io.reactivex.rxjava3.annotations.Experimental;
+import io.reactivex.rxjava3.core.Emitter;
+import io.reactivex.rxjava3.functions.Cancellable;
 
 /**
  * Provides an API on top of the {@link Emitter} signals that allow

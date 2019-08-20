@@ -21,8 +21,8 @@ import java.util.Comparator;
 import org.reactivestreams.Publisher;
 
 import hu.akarnokd.rxjava3.util.SelfComparator;
-import io.reactivex.Flowable;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 /**
  * Utility methods to work with numerical Flowable sources: sum, min, max and average.

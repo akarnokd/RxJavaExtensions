@@ -16,10 +16,10 @@
 
 package hu.akarnokd.rxjava3.consumers;
 
-import io.reactivex.Single;
-import io.reactivex.disposables.*;
-import io.reactivex.functions.Consumer;
-import io.reactivex.internal.functions.*;
+import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.disposables.*;
+import io.reactivex.rxjava3.functions.Consumer;
+import io.reactivex.rxjava3.internal.functions.*;
 
 /**
  * Utility methods for creating and using consumers {@link io.reactivex.SingleObserver}s.

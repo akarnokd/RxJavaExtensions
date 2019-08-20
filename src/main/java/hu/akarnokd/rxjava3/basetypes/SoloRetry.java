@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
 
-import io.reactivex.internal.subscriptions.*;
+import io.reactivex.rxjava3.internal.subscriptions.*;
 
 /**
  * Retries the source Solo at most the given number of times.

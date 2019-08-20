@@ -21,8 +21,8 @@ import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
 
-import io.reactivex.internal.subscriptions.*;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.internal.subscriptions.*;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 /**
  * Switch to another Perhaps if this doesn't signal events before the other

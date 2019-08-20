@@ -21,8 +21,8 @@ import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
 
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 /**
  * Signal a TimeoutException or switch to a fallback Mono if the

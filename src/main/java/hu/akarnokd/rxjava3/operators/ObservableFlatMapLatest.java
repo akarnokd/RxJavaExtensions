@@ -18,14 +18,14 @@ package hu.akarnokd.rxjava3.operators;
 
 import java.util.concurrent.atomic.*;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.disposables.DisposableHelper;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.util.AtomicThrowable;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.core.*;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.exceptions.Exceptions;
+import io.reactivex.rxjava3.functions.Function;
+import io.reactivex.rxjava3.internal.disposables.DisposableHelper;
+import io.reactivex.rxjava3.internal.functions.ObjectHelper;
+import io.reactivex.rxjava3.internal.util.AtomicThrowable;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 /**
  * FlatMap only one {@link ObservableSource} at a time and keep the latest upstream value until it terminates

@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
 
-import io.reactivex.internal.subscriptions.DeferredScalarSubscription;
+import io.reactivex.rxjava3.internal.subscriptions.DeferredScalarSubscription;
 
 /**
  * Cache the success value or error from upstream and relay/replay

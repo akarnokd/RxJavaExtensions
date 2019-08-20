@@ -18,8 +18,8 @@ package hu.akarnokd.rxjava3.joins;
 
 import java.util.Map;
 
-import io.reactivex.*;
-import io.reactivex.functions.Consumer;
+import io.reactivex.rxjava3.core.*;
+import io.reactivex.rxjava3.functions.Consumer;
 
 /**
  * Represents an execution plan for join patterns.

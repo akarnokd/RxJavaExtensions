@@ -17,9 +17,9 @@ import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
 
-import io.reactivex.FlowableSubscriber;
-import io.reactivex.internal.subscriptions.*;
-import io.reactivex.processors.FlowableProcessor;
+import io.reactivex.rxjava3.core.FlowableSubscriber;
+import io.reactivex.rxjava3.internal.subscriptions.*;
+import io.reactivex.rxjava3.processors.FlowableProcessor;
 
 /**
  * A FlowableProcessor wrapper that disposes the Subscription set via

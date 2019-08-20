@@ -17,8 +17,8 @@
 package hu.akarnokd.rxjava3.debug;
 
 import hu.akarnokd.rxjava3.debug.CompletableOnAssembly.OnAssemblyCompletableObserver;
-import io.reactivex.*;
-import io.reactivex.internal.fuseable.ScalarSupplier;
+import io.reactivex.rxjava3.core.*;
+import io.reactivex.rxjava3.internal.fuseable.ScalarSupplier;
 
 /**
  * Wraps a CompletableSource and inject the assembly info.

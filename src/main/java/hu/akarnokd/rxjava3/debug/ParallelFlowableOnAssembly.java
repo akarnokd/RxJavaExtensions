@@ -19,8 +19,8 @@ package hu.akarnokd.rxjava3.debug;
 import org.reactivestreams.Subscriber;
 
 import hu.akarnokd.rxjava3.debug.FlowableOnAssembly.*;
-import io.reactivex.internal.fuseable.ConditionalSubscriber;
-import io.reactivex.parallel.ParallelFlowable;
+import io.reactivex.rxjava3.internal.fuseable.ConditionalSubscriber;
+import io.reactivex.rxjava3.parallel.ParallelFlowable;
 
 /**
  * Wrap a Parallel Flowable and inject the assembly info.

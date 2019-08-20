@@ -18,9 +18,9 @@ package hu.akarnokd.rxjava3.operators;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.internal.util.BackpressureHelper;
+import io.reactivex.rxjava3.core.*;
+import io.reactivex.rxjava3.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.rxjava3.internal.util.BackpressureHelper;
 
 /**
  * Emits only every Nth item.

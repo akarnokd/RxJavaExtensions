@@ -20,10 +20,10 @@ import java.io.IOException;
 
 import org.junit.Test;
 
-import io.reactivex.Flowable;
-import io.reactivex.functions.Supplier;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.functions.Supplier;
+import io.reactivex.rxjava3.internal.functions.Functions;
+import io.reactivex.rxjava3.subscribers.TestSubscriber;
 
 public class FlowableRepeatCallableTest {
 

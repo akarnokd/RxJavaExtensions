@@ -19,12 +19,12 @@ import java.io.IOException;
 
 import org.junit.Test;
 
-import hu.akarnokd.rxjava3.test.*;
-import io.reactivex.Observer;
-import io.reactivex.disposables.*;
-import io.reactivex.observers.TestObserver;
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subjects.*;
+import hu.akarnokd.rxjava3.test.TestHelper;
+import io.reactivex.rxjava3.core.Observer;
+import io.reactivex.rxjava3.disposables.*;
+import io.reactivex.rxjava3.observers.TestObserver;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+import io.reactivex.rxjava3.subjects.*;
 
 public class RefCountSubjectTest {
 

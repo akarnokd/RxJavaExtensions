@@ -20,9 +20,9 @@ import java.util.concurrent.TimeUnit;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.internal.fuseable.ConditionalSubscriber;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.rxjava3.core.*;
+import io.reactivex.rxjava3.internal.fuseable.ConditionalSubscriber;
+import io.reactivex.rxjava3.internal.subscriptions.SubscriptionHelper;
 
 /**
  * Debounce the upstream by taking an item and then blocking out subsequent

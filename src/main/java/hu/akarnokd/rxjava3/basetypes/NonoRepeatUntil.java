@@ -20,9 +20,9 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.reactivestreams.*;
 
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.BooleanSupplier;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.rxjava3.exceptions.Exceptions;
+import io.reactivex.rxjava3.functions.BooleanSupplier;
+import io.reactivex.rxjava3.internal.subscriptions.SubscriptionHelper;
 
 /**
  * Repeat until the supplier returns true.

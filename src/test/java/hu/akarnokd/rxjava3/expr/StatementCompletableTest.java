@@ -21,9 +21,9 @@ import java.util.*;
 import org.junit.*;
 import org.mockito.MockitoAnnotations;
 
-import io.reactivex.Completable;
-import io.reactivex.functions.*;
-import io.reactivex.schedulers.TestScheduler;
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.functions.*;
+import io.reactivex.rxjava3.schedulers.TestScheduler;
 
 @SuppressWarnings("rawtypes")
 public class StatementCompletableTest {

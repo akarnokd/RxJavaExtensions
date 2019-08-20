@@ -17,16 +17,16 @@
 package hu.akarnokd.rxjava3.operators;
 
 import java.util.*;
-import java.util.concurrent.*;
+import java.util.concurrent.TimeUnit;
 
 import org.reactivestreams.Publisher;
 
 import hu.akarnokd.rxjava3.util.BiFunctionSecondIdentity;
-import io.reactivex.*;
-import io.reactivex.annotations.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.*;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.rxjava3.annotations.*;
+import io.reactivex.rxjava3.core.*;
+import io.reactivex.rxjava3.functions.*;
+import io.reactivex.rxjava3.internal.functions.*;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 /**
  * Additional operators in the form of {@link FlowableTransformer},

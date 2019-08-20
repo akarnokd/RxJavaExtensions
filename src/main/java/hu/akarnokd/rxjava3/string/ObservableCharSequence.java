@@ -18,8 +18,8 @@ package hu.akarnokd.rxjava3.string;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import io.reactivex.*;
-import io.reactivex.disposables.*;
+import io.reactivex.rxjava3.core.*;
+import io.reactivex.rxjava3.disposables.Disposable;
 
 final class ObservableCharSequence extends Observable<Integer> {
 

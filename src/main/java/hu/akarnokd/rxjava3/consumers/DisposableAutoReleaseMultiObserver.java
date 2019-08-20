@@ -16,12 +16,12 @@
 
 package hu.akarnokd.rxjava3.consumers;
 
-import io.reactivex.*;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.*;
-import io.reactivex.internal.disposables.DisposableHelper;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.core.*;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.exceptions.Exceptions;
+import io.reactivex.rxjava3.functions.*;
+import io.reactivex.rxjava3.internal.disposables.DisposableHelper;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 /**
  * Wraps lambda callbacks and when the upstream terminates or this (Single | Maybe | Completable)

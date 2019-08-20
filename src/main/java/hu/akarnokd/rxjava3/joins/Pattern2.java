@@ -16,8 +16,8 @@
 
 package hu.akarnokd.rxjava3.joins;
 
-import io.reactivex.Observable;
-import io.reactivex.functions.BiFunction;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.functions.BiFunction;
 
 /**
  * Represents a join pattern over observable sequences.

@@ -18,9 +18,9 @@ package hu.akarnokd.rxjava3.string;
 
 import java.util.regex.Pattern;
 
-import io.reactivex.*;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.core.*;
+import io.reactivex.rxjava3.internal.functions.ObjectHelper;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 /**
  * Utility class for String operations with {@link Flowable}s.

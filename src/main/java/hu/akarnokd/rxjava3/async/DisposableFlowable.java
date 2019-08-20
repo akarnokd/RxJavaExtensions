@@ -16,8 +16,8 @@
 
 package hu.akarnokd.rxjava3.async;
 
-import io.reactivex.Flowable;
-import io.reactivex.disposables.Disposable;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.disposables.Disposable;
 
 /**
  * A {@link Flowable} that also offers a means to dispose it, cancelling/disposing

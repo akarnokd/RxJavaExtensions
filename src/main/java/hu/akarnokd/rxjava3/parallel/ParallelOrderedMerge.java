@@ -21,8 +21,8 @@ import java.util.Comparator;
 import org.reactivestreams.Subscriber;
 
 import hu.akarnokd.rxjava3.operators.BasicMergeSubscription;
-import io.reactivex.Flowable;
-import io.reactivex.parallel.ParallelFlowable;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.parallel.ParallelFlowable;
 
 /**
  * Merges the individual 'rails' of the source ParallelFlowable by picking

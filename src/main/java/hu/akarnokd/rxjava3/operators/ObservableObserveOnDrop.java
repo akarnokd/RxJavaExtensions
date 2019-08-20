@@ -18,10 +18,10 @@ package hu.akarnokd.rxjava3.operators;
 
 import java.util.concurrent.atomic.*;
 
-import io.reactivex.*;
-import io.reactivex.Scheduler.Worker;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.internal.disposables.DisposableHelper;
+import io.reactivex.rxjava3.core.*;
+import io.reactivex.rxjava3.core.Scheduler.Worker;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.internal.disposables.DisposableHelper;
 
 /**
  * Schedules the event emission on a Scheduler and drops upstream values while

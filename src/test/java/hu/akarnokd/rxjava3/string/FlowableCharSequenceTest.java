@@ -19,9 +19,9 @@ package hu.akarnokd.rxjava3.string;
 import org.junit.Test;
 import org.reactivestreams.Publisher;
 
-import io.reactivex.Flowable;
-import io.reactivex.functions.Function;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.functions.Function;
+import io.reactivex.rxjava3.subscribers.TestSubscriber;
 
 public class FlowableCharSequenceTest {
 

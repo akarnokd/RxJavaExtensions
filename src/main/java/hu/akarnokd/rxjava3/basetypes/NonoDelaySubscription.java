@@ -18,8 +18,8 @@ package hu.akarnokd.rxjava3.basetypes;
 
 import org.reactivestreams.*;
 
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 /**
  * Delay subscribing to the main Nono until the other Publisher signals

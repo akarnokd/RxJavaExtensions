@@ -20,11 +20,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.reactivestreams.*;
 
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.subscriptions.*;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.exceptions.*;
+import io.reactivex.rxjava3.functions.*;
+import io.reactivex.rxjava3.internal.functions.ObjectHelper;
+import io.reactivex.rxjava3.internal.subscriptions.*;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 /**
  * Use a resource while the actual Solo is running.

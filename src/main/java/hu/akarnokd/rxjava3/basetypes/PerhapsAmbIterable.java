@@ -19,8 +19,8 @@ package hu.akarnokd.rxjava3.basetypes;
 import org.reactivestreams.Subscriber;
 
 import hu.akarnokd.rxjava3.basetypes.SoloAmbArray.AmbSubscriber;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.internal.functions.ObjectHelper;
+import io.reactivex.rxjava3.exceptions.Exceptions;
+import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 
 /**
  * Signal the events of the first source that signals.

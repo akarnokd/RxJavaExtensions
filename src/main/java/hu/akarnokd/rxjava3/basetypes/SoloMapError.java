@@ -18,11 +18,11 @@ package hu.akarnokd.rxjava3.basetypes;
 
 import org.reactivestreams.Subscriber;
 
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.fuseable.QueueSubscription;
-import io.reactivex.internal.subscribers.BasicFuseableSubscriber;
+import io.reactivex.rxjava3.exceptions.*;
+import io.reactivex.rxjava3.functions.Function;
+import io.reactivex.rxjava3.internal.functions.ObjectHelper;
+import io.reactivex.rxjava3.internal.fuseable.QueueSubscription;
+import io.reactivex.rxjava3.internal.subscribers.BasicFuseableSubscriber;
 
 /**
  * Maps the error from upstream into another Throwable.

@@ -18,9 +18,9 @@ package hu.akarnokd.rxjava3.basetypes;
 
 import org.reactivestreams.Subscriber;
 
-import io.reactivex.Scheduler;
-import io.reactivex.internal.fuseable.QueueSubscription;
-import io.reactivex.internal.subscribers.BasicFuseableSubscriber;
+import io.reactivex.rxjava3.core.Scheduler;
+import io.reactivex.rxjava3.internal.fuseable.QueueSubscription;
+import io.reactivex.rxjava3.internal.subscribers.BasicFuseableSubscriber;
 
 /**
  * Call cancel from downstream on the specified Scheduler.

@@ -18,8 +18,8 @@ package hu.akarnokd.rxjava3.basetypes;
 
 import org.reactivestreams.Subscriber;
 
-import io.reactivex.internal.fuseable.ScalarSupplier;
-import io.reactivex.internal.subscriptions.ScalarSubscription;
+import io.reactivex.rxjava3.internal.fuseable.ScalarSupplier;
+import io.reactivex.rxjava3.internal.subscriptions.ScalarSubscription;
 
 /**
  * Signals exactly one value.

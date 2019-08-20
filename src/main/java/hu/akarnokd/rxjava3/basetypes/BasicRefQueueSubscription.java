@@ -18,7 +18,7 @@ package hu.akarnokd.rxjava3.basetypes;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-import io.reactivex.internal.fuseable.QueueSubscription;
+import io.reactivex.rxjava3.internal.fuseable.QueueSubscription;
 
 /**
  * Base class extending AtomicReference (resource tracking) and QueueSubscription (fusion).

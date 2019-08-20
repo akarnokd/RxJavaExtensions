@@ -21,9 +21,9 @@ import java.util.*;
 import org.junit.*;
 import org.mockito.MockitoAnnotations;
 
-import io.reactivex.Single;
-import io.reactivex.functions.*;
-import io.reactivex.schedulers.TestScheduler;
+import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.functions.*;
+import io.reactivex.rxjava3.schedulers.TestScheduler;
 
 public class StatementSingleTest {
     TestScheduler scheduler;

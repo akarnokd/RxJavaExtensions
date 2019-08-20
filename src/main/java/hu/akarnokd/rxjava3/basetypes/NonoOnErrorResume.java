@@ -18,9 +18,9 @@ package hu.akarnokd.rxjava3.basetypes;
 
 import org.reactivestreams.*;
 
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.rxjava3.exceptions.*;
+import io.reactivex.rxjava3.functions.Function;
+import io.reactivex.rxjava3.internal.subscriptions.SubscriptionHelper;
 
 /**
  * If the main source fails, resume with another Nono returned from

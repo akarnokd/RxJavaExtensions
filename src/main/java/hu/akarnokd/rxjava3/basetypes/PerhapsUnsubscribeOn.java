@@ -19,7 +19,7 @@ package hu.akarnokd.rxjava3.basetypes;
 import org.reactivestreams.Subscriber;
 
 import hu.akarnokd.rxjava3.basetypes.SoloUnsubscribeOn.UnsubscribeOnSubscriber;
-import io.reactivex.Scheduler;
+import io.reactivex.rxjava3.core.Scheduler;
 
 /**
  * Call cancel from downstream on the specified Scheduler.

@@ -24,13 +24,13 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.junit.Test;
 
-import hu.akarnokd.rxjava3.test.*;
-import io.reactivex.*;
-import io.reactivex.disposables.Disposables;
-import io.reactivex.functions.*;
-import io.reactivex.observers.TestObserver;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.subjects.PublishSubject;
+import hu.akarnokd.rxjava3.test.TestHelper;
+import io.reactivex.rxjava3.core.*;
+import io.reactivex.rxjava3.disposables.Disposables;
+import io.reactivex.rxjava3.functions.*;
+import io.reactivex.rxjava3.observers.TestObserver;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.subjects.PublishSubject;
 
 public class ObservableFlatMapDropTest {
 

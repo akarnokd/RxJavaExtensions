@@ -21,9 +21,9 @@ import java.util.Arrays;
 import org.reactivestreams.Subscriber;
 
 import hu.akarnokd.rxjava3.basetypes.PerhapsZipArray.ZipCoordinator;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.subscriptions.EmptySubscription;
+import io.reactivex.rxjava3.exceptions.Exceptions;
+import io.reactivex.rxjava3.functions.Function;
+import io.reactivex.rxjava3.internal.subscriptions.EmptySubscription;
 
 /**
  * Waits till all sources produce a value and calls a function

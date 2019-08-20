@@ -23,10 +23,10 @@ import org.junit.Test;
 import org.reactivestreams.Subscriber;
 
 import hu.akarnokd.rxjava3.test.TestHelper;
-import io.reactivex.Flowable;
-import io.reactivex.functions.*;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.functions.*;
+import io.reactivex.rxjava3.internal.subscriptions.BooleanSubscription;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 public class FlowableBufferPredicateTest {
 

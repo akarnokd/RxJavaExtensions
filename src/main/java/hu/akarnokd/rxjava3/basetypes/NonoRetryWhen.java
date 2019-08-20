@@ -21,12 +21,12 @@ import java.util.concurrent.atomic.*;
 import org.reactivestreams.*;
 
 import hu.akarnokd.rxjava3.basetypes.NonoRepeatWhen.*;
-import io.reactivex.Flowable;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.subscriptions.*;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.processors.*;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.exceptions.Exceptions;
+import io.reactivex.rxjava3.functions.Function;
+import io.reactivex.rxjava3.internal.subscriptions.*;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.processors.*;
 
 /**
  * Retry when the Publisher signals an item.

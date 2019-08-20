@@ -19,9 +19,9 @@ package hu.akarnokd.rxjava3.basetypes;
 import org.reactivestreams.Subscriber;
 
 import hu.akarnokd.rxjava3.basetypes.SoloSubscribeOn.SubscribeOnSubscriber;
-import io.reactivex.Scheduler;
-import io.reactivex.Scheduler.Worker;
-import io.reactivex.internal.disposables.DisposableHelper;
+import io.reactivex.rxjava3.core.Scheduler;
+import io.reactivex.rxjava3.core.Scheduler.Worker;
+import io.reactivex.rxjava3.internal.disposables.DisposableHelper;
 
 /**
  * Subscribe to the upstream on the specified scheduler.

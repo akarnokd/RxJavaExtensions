@@ -22,12 +22,12 @@ import java.util.*;
 import org.junit.Test;
 
 import hu.akarnokd.rxjava3.test.TestHelper;
-import io.reactivex.Flowable;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.processors.PublishProcessor;
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.functions.*;
+import io.reactivex.rxjava3.internal.functions.Functions;
+import io.reactivex.rxjava3.processors.PublishProcessor;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+import io.reactivex.rxjava3.subscribers.TestSubscriber;
 
 public class FlowableCoalesceTest {
 

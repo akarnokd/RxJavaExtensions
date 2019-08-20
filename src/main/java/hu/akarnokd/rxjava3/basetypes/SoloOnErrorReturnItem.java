@@ -18,7 +18,7 @@ package hu.akarnokd.rxjava3.basetypes;
 
 import org.reactivestreams.*;
 
-import io.reactivex.internal.subscriptions.*;
+import io.reactivex.rxjava3.internal.subscriptions.*;
 
 /**
  * If the upstream signals an error, signal an item instead.

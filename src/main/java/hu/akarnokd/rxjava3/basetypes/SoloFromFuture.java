@@ -21,7 +21,7 @@ import java.util.concurrent.*;
 
 import org.reactivestreams.Subscriber;
 
-import io.reactivex.internal.subscriptions.DeferredScalarSubscription;
+import io.reactivex.rxjava3.internal.subscriptions.DeferredScalarSubscription;
 
 /**
  * Await a Future's result.

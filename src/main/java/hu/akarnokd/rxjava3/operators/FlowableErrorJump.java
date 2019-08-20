@@ -20,10 +20,10 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.*;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.subscriptions.EmptySubscription;
+import io.reactivex.rxjava3.core.*;
+import io.reactivex.rxjava3.exceptions.*;
+import io.reactivex.rxjava3.internal.functions.ObjectHelper;
+import io.reactivex.rxjava3.internal.subscriptions.EmptySubscription;
 
 /**
  * Makes sure an upstream error skips the flow created with a

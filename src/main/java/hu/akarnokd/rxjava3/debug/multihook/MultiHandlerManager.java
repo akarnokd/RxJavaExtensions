@@ -20,10 +20,10 @@ import java.util.Iterator;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicReference;
 
-import io.reactivex.annotations.NonNull;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.ObjectHelper;
+import io.reactivex.rxjava3.annotations.NonNull;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.functions.*;
+import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 
 /**
  * Manages an array of handlers.

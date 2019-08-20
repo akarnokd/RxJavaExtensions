@@ -24,9 +24,9 @@ import org.openjdk.jmh.infra.Blackhole;
 import org.reactivestreams.Publisher;
 
 import hu.akarnokd.rxjava3.operators.FlowableTransformers;
-import io.reactivex.Flowable;
-import io.reactivex.functions.Function;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.functions.Function;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 /**
  * Example benchmark. Run from command line as

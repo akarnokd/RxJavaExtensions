@@ -20,10 +20,10 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.reactivestreams.*;
 
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.subscriptions.*;
+import io.reactivex.rxjava3.exceptions.Exceptions;
+import io.reactivex.rxjava3.functions.*;
+import io.reactivex.rxjava3.internal.functions.ObjectHelper;
+import io.reactivex.rxjava3.internal.subscriptions.*;
 
 /**
  * Map the signals of the upstream into a Perhaps and emit

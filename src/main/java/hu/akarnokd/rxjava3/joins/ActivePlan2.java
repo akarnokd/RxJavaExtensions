@@ -16,8 +16,8 @@
 
 package hu.akarnokd.rxjava3.joins;
 
-import io.reactivex.Notification;
-import io.reactivex.functions.*;
+import io.reactivex.rxjava3.core.Notification;
+import io.reactivex.rxjava3.functions.*;
 
 /**
  * Represents an active plan.

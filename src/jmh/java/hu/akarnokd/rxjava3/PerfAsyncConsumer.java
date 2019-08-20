@@ -21,8 +21,8 @@ import java.util.concurrent.*;
 import org.openjdk.jmh.infra.Blackhole;
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
+import io.reactivex.rxjava3.core.*;
+import io.reactivex.rxjava3.disposables.Disposable;
 
 public final class PerfAsyncConsumer
 extends CountDownLatch

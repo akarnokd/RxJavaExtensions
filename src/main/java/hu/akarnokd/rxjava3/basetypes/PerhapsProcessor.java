@@ -20,8 +20,8 @@ import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
 
-import io.reactivex.internal.subscriptions.DeferredScalarSubscription;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.internal.subscriptions.DeferredScalarSubscription;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 /**
  * A Processor based on the Perhaps type that emits an onNext+onComplete, only onComplete or an onError.

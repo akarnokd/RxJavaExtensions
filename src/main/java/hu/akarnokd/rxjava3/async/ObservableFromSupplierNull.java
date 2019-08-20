@@ -16,10 +16,10 @@
 
 package hu.akarnokd.rxjava3.async;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.Supplier;
-import io.reactivex.internal.observers.DeferredScalarDisposable;
+import io.reactivex.rxjava3.core.*;
+import io.reactivex.rxjava3.exceptions.Exceptions;
+import io.reactivex.rxjava3.functions.Supplier;
+import io.reactivex.rxjava3.internal.observers.DeferredScalarDisposable;
 
 /**
  * Runs a supplier and treats a null result as completion.

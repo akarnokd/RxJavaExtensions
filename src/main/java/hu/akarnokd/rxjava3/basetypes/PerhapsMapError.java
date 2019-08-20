@@ -19,7 +19,7 @@ package hu.akarnokd.rxjava3.basetypes;
 import org.reactivestreams.Subscriber;
 
 import hu.akarnokd.rxjava3.basetypes.SoloMapError.MapErrorSubscriber;
-import io.reactivex.functions.Function;
+import io.reactivex.rxjava3.functions.Function;
 
 /**
  * Map the error of upstream to another Throwable.

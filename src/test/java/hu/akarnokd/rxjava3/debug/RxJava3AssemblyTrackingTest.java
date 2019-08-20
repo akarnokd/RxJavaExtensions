@@ -24,14 +24,14 @@ import java.util.concurrent.*;
 import org.junit.Test;
 
 import hu.akarnokd.rxjava3.test.TestHelper;
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Action;
-import io.reactivex.observers.TestObserver;
-import io.reactivex.parallel.ParallelFlowable;
-import io.reactivex.processors.PublishProcessor;
-import io.reactivex.subjects.PublishSubject;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.rxjava3.core.*;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.functions.Action;
+import io.reactivex.rxjava3.observers.TestObserver;
+import io.reactivex.rxjava3.parallel.ParallelFlowable;
+import io.reactivex.rxjava3.processors.PublishProcessor;
+import io.reactivex.rxjava3.subjects.PublishSubject;
+import io.reactivex.rxjava3.subscribers.TestSubscriber;
 
 /**
  * Named as such to avoid being filtered out in stacktraces of this test.

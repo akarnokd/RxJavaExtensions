@@ -20,12 +20,12 @@ import java.io.IOException;
 import org.junit.Test;
 import org.reactivestreams.Subscription;
 
-import hu.akarnokd.rxjava3.test.*;
-import io.reactivex.FlowableSubscriber;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
-import io.reactivex.processors.*;
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subscribers.TestSubscriber;
+import hu.akarnokd.rxjava3.test.TestHelper;
+import io.reactivex.rxjava3.core.FlowableSubscriber;
+import io.reactivex.rxjava3.internal.subscriptions.BooleanSubscription;
+import io.reactivex.rxjava3.processors.*;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+import io.reactivex.rxjava3.subscribers.TestSubscriber;
 
 public class RefCountProcessorTest {
 

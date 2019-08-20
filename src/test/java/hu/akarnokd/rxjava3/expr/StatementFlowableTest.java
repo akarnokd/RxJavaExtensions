@@ -21,9 +21,9 @@ import java.util.*;
 import org.junit.*;
 import org.mockito.MockitoAnnotations;
 
-import io.reactivex.Flowable;
-import io.reactivex.functions.*;
-import io.reactivex.schedulers.*;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.functions.*;
+import io.reactivex.rxjava3.schedulers.*;
 
 public class StatementFlowableTest {
     TestScheduler scheduler;

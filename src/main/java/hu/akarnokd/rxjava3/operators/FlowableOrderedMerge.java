@@ -16,16 +16,14 @@
 
 package hu.akarnokd.rxjava3.operators;
 
-import java.util.Arrays;
-import java.util.Comparator;
+import java.util.*;
 
-import org.reactivestreams.Publisher;
-import org.reactivestreams.Subscriber;
+import org.reactivestreams.*;
 
-import io.reactivex.Flowable;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.subscriptions.EmptySubscription;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.exceptions.Exceptions;
+import io.reactivex.rxjava3.internal.functions.ObjectHelper;
+import io.reactivex.rxjava3.internal.subscriptions.EmptySubscription;
 
 /**
  * Merges a fixed set of sources by picking the next smallest

@@ -18,7 +18,7 @@ package hu.akarnokd.rxjava3.basetypes;
 
 import org.reactivestreams.Subscriber;
 
-import io.reactivex.Flowable;
+import io.reactivex.rxjava3.core.Flowable;
 
 /**
  * Converts a Solo into a Flowable.

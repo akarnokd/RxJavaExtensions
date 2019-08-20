@@ -20,13 +20,13 @@ import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.disposables.DisposableHelper;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.rxjava3.core.*;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.exceptions.Exceptions;
+import io.reactivex.rxjava3.functions.Function;
+import io.reactivex.rxjava3.internal.disposables.DisposableHelper;
+import io.reactivex.rxjava3.internal.functions.ObjectHelper;
+import io.reactivex.rxjava3.internal.subscriptions.SubscriptionHelper;
 
 /**
  * Maps the signals of the upstream into Publishers and consumes them.

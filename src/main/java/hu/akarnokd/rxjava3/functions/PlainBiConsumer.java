@@ -16,7 +16,7 @@
 
 package hu.akarnokd.rxjava3.functions;
 
-import io.reactivex.functions.BiConsumer;
+import io.reactivex.rxjava3.functions.BiConsumer;
 
 /**
  * A {@link BiConsumer} with suppressed exception on its

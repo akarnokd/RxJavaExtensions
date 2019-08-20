@@ -18,7 +18,7 @@ package hu.akarnokd.rxjava3.util;
 
 import org.reactivestreams.Subscription;
 
-import io.reactivex.internal.util.OpenHashSet;
+import io.reactivex.rxjava3.internal.util.OpenHashSet;
 
 /**
  * Container for Subscriptions and atomic operations on them.

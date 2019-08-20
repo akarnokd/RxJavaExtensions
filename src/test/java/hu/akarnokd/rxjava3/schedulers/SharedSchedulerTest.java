@@ -26,12 +26,12 @@ import org.junit.Test;
 
 import hu.akarnokd.rxjava3.schedulers.SharedScheduler.SharedWorker.SharedAction;
 import hu.akarnokd.rxjava3.test.TestHelper;
-import io.reactivex.Flowable;
-import io.reactivex.Scheduler.Worker;
-import io.reactivex.disposables.*;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.schedulers.*;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.core.Scheduler.Worker;
+import io.reactivex.rxjava3.disposables.*;
+import io.reactivex.rxjava3.functions.Function;
+import io.reactivex.rxjava3.internal.functions.Functions;
+import io.reactivex.rxjava3.schedulers.*;
 
 public class SharedSchedulerTest implements Runnable {
 

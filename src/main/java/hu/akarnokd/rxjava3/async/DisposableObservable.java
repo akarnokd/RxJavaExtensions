@@ -16,8 +16,8 @@
 
 package hu.akarnokd.rxjava3.async;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.disposables.Disposable;
 
 /**
  * A {@link Observable} that also offers a means to dispose it, cancelling/disposing

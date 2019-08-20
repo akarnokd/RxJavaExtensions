@@ -16,7 +16,7 @@
 
 package hu.akarnokd.rxjava3.functions;
 
-import io.reactivex.functions.*;
+import io.reactivex.rxjava3.functions.BiFunction;
 
 /**
  * A {@link BiFunction} with suppressed exception on its

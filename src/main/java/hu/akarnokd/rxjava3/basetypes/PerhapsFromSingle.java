@@ -19,7 +19,7 @@ package hu.akarnokd.rxjava3.basetypes;
 import org.reactivestreams.Subscriber;
 
 import hu.akarnokd.rxjava3.basetypes.SoloFromSingle.FromSingleObserver;
-import io.reactivex.SingleSource;
+import io.reactivex.rxjava3.core.SingleSource;
 
 /**
  * Wrap a Single into a Perhaps.

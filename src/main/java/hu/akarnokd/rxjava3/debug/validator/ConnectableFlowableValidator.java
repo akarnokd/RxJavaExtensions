@@ -19,9 +19,9 @@ package hu.akarnokd.rxjava3.debug.validator;
 import org.reactivestreams.Subscriber;
 
 import hu.akarnokd.rxjava3.functions.PlainConsumer;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.flowables.ConnectableFlowable;
-import io.reactivex.functions.Consumer;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.flowables.ConnectableFlowable;
+import io.reactivex.rxjava3.functions.Consumer;
 
 /**
  * Validates a ConnectableFlowable.

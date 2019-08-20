@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.reactivestreams.*;
 
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.rxjava3.internal.subscriptions.SubscriptionHelper;
 
 /**
  * Repeatedly re-subscribe to the source Nono.

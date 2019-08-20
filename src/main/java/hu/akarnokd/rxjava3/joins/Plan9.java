@@ -20,8 +20,8 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 import hu.akarnokd.rxjava3.functions.Consumer9;
-import io.reactivex.Observer;
-import io.reactivex.functions.*;
+import io.reactivex.rxjava3.core.Observer;
+import io.reactivex.rxjava3.functions.*;
 
 /**
  * Represents an execution plan for join patterns.

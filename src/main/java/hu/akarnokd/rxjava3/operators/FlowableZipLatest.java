@@ -21,14 +21,14 @@ import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.Scheduler.Worker;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.internal.util.*;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.core.*;
+import io.reactivex.rxjava3.core.Scheduler.Worker;
+import io.reactivex.rxjava3.exceptions.Exceptions;
+import io.reactivex.rxjava3.functions.Function;
+import io.reactivex.rxjava3.internal.functions.ObjectHelper;
+import io.reactivex.rxjava3.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.rxjava3.internal.util.*;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 /**
  * Takes only the latest value from the sources in each zip round and applies a transformer function

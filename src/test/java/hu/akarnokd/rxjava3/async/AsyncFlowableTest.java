@@ -27,12 +27,12 @@ import org.junit.Test;
 import org.reactivestreams.Subscriber;
 
 import hu.akarnokd.rxjava3.functions.*;
-import io.reactivex.Flowable;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.processors.UnicastProcessor;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.functions.*;
+import io.reactivex.rxjava3.internal.functions.Functions;
+import io.reactivex.rxjava3.processors.UnicastProcessor;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class AsyncFlowableTest {
 

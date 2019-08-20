@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.reactivestreams.*;
 
-import io.reactivex.internal.subscriptions.*;
+import io.reactivex.rxjava3.internal.subscriptions.*;
 
 /**
  * Execute a Nono after the source Perhaps.

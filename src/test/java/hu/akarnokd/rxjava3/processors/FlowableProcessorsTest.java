@@ -24,9 +24,9 @@ import org.junit.Test;
 import org.reactivestreams.*;
 
 import hu.akarnokd.rxjava3.test.TestHelper;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
-import io.reactivex.processors.*;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.rxjava3.internal.subscriptions.BooleanSubscription;
+import io.reactivex.rxjava3.processors.*;
+import io.reactivex.rxjava3.subscribers.TestSubscriber;
 
 public class FlowableProcessorsTest {
 

@@ -18,7 +18,7 @@ package hu.akarnokd.rxjava3.math;
 
 import org.reactivestreams.Publisher;
 
-import io.reactivex.Flowable;
+import io.reactivex.rxjava3.core.Flowable;
 
 abstract class FlowableSource<T, R> extends Flowable<R> {
 

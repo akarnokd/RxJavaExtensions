@@ -18,10 +18,9 @@ package hu.akarnokd.rxjava3.parallel;
 
 import org.reactivestreams.*;
 
-import io.reactivex.FlowableSubscriber;
-import io.reactivex.internal.subscriptions.*;
-import io.reactivex.parallel.ParallelFlowable;
-import io.reactivex.parallel.ParallelTransformer;
+import io.reactivex.rxjava3.core.FlowableSubscriber;
+import io.reactivex.rxjava3.internal.subscriptions.*;
+import io.reactivex.rxjava3.parallel.*;
 
 /**
  * Sums numbers as integers on each parallel rail, or empty if the rail doesn't produce any data.

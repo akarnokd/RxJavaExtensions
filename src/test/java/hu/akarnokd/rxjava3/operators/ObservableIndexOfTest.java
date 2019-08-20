@@ -20,9 +20,9 @@ import java.io.IOException;
 
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposables;
-import io.reactivex.functions.Predicate;
+import io.reactivex.rxjava3.core.*;
+import io.reactivex.rxjava3.disposables.Disposables;
+import io.reactivex.rxjava3.functions.Predicate;
 
 public class ObservableIndexOfTest {
 

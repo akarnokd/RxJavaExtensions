@@ -20,16 +20,16 @@ import java.util.concurrent.*;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.annotations.SchedulerSupport;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.*;
-import io.reactivex.internal.util.*;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.rxjava3.annotations.SchedulerSupport;
+import io.reactivex.rxjava3.core.*;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.exceptions.*;
+import io.reactivex.rxjava3.functions.*;
+import io.reactivex.rxjava3.internal.functions.*;
+import io.reactivex.rxjava3.internal.util.*;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+import io.reactivex.rxjava3.subscribers.TestSubscriber;
 
 /**
  * Represents the base reactive class with fluent API for Publisher-based,

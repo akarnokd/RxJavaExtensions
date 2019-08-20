@@ -18,8 +18,8 @@ package hu.akarnokd.rxjava3.util;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.fuseable.SimplePlainQueue;
+import io.reactivex.rxjava3.internal.functions.ObjectHelper;
+import io.reactivex.rxjava3.internal.fuseable.SimplePlainQueue;
 
 /**
  * A single-producer single-consumer queue with exactly one slot of value.

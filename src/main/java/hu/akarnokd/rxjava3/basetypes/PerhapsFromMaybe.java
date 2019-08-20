@@ -18,10 +18,10 @@ package hu.akarnokd.rxjava3.basetypes;
 
 import org.reactivestreams.Subscriber;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.internal.disposables.DisposableHelper;
-import io.reactivex.internal.subscriptions.DeferredScalarSubscription;
+import io.reactivex.rxjava3.core.*;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.internal.disposables.DisposableHelper;
+import io.reactivex.rxjava3.internal.subscriptions.DeferredScalarSubscription;
 
 /**
  * Wrap a Maybe into a Perhaps.

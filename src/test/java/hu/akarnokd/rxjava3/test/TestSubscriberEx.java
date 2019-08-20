@@ -4,9 +4,9 @@ import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
 
-import io.reactivex.FlowableSubscriber;
-import io.reactivex.internal.fuseable.*;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.rxjava3.core.FlowableSubscriber;
+import io.reactivex.rxjava3.internal.fuseable.*;
+import io.reactivex.rxjava3.internal.subscriptions.SubscriptionHelper;
 
 /**
  * An extended test subscriber that records events and allows making assertions about them.

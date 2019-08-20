@@ -21,8 +21,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.reactivestreams.*;
 
 import hu.akarnokd.rxjava3.util.CompositeSubscription;
-import io.reactivex.internal.subscriptions.DeferredScalarSubscription;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.internal.subscriptions.DeferredScalarSubscription;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 /**
  * Signal the events of the first source that signals.

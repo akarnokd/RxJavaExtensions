@@ -26,12 +26,12 @@ import org.junit.Test;
 
 import hu.akarnokd.rxjava3.schedulers.ParallelScheduler.TrackingParallelWorker.TrackedAction;
 import hu.akarnokd.rxjava3.test.TestHelper;
-import io.reactivex.*;
-import io.reactivex.Scheduler.Worker;
-import io.reactivex.disposables.*;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.internal.schedulers.RxThreadFactory;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.rxjava3.core.*;
+import io.reactivex.rxjava3.core.Scheduler.Worker;
+import io.reactivex.rxjava3.disposables.*;
+import io.reactivex.rxjava3.internal.functions.Functions;
+import io.reactivex.rxjava3.internal.schedulers.RxThreadFactory;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class ParallelSchedulerTest implements Runnable {
 

@@ -20,13 +20,13 @@ import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.internal.util.*;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.core.*;
+import io.reactivex.rxjava3.exceptions.Exceptions;
+import io.reactivex.rxjava3.functions.*;
+import io.reactivex.rxjava3.internal.functions.ObjectHelper;
+import io.reactivex.rxjava3.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.rxjava3.internal.util.*;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 /**
  * Maps each upstream value into a single value provided by a generated Publisher for that

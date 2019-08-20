@@ -18,11 +18,11 @@ package hu.akarnokd.rxjava3.basetypes;
 
 import org.reactivestreams.*;
 
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.fuseable.QueueSubscription;
-import io.reactivex.internal.subscriptions.*;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.exceptions.*;
+import io.reactivex.rxjava3.functions.*;
+import io.reactivex.rxjava3.internal.fuseable.QueueSubscription;
+import io.reactivex.rxjava3.internal.subscriptions.*;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 /**
  * Execute callbacks at various points in the lifecycle.

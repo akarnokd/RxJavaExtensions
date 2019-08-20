@@ -16,25 +16,18 @@
 
 package hu.akarnokd.rxjava3.operators;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.*;
+import java.util.concurrent.atomic.*;
 
-import org.reactivestreams.Publisher;
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
+import org.reactivestreams.*;
 
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.internal.fuseable.SimpleQueue;
-import io.reactivex.internal.subscribers.InnerQueuedSubscriber;
-import io.reactivex.internal.subscribers.InnerQueuedSubscriberSupport;
-import io.reactivex.internal.subscriptions.EmptySubscription;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.internal.util.AtomicThrowable;
-import io.reactivex.internal.util.BackpressureHelper;
-import io.reactivex.parallel.ParallelFlowable;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.exceptions.Exceptions;
+import io.reactivex.rxjava3.internal.fuseable.SimpleQueue;
+import io.reactivex.rxjava3.internal.subscribers.*;
+import io.reactivex.rxjava3.internal.subscriptions.*;
+import io.reactivex.rxjava3.internal.util.*;
+import io.reactivex.rxjava3.parallel.ParallelFlowable;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 /**
  * Subscription coordinator that merges items from a fixed set of source Publishers by

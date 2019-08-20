@@ -20,10 +20,10 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.reactivestreams.*;
 
-import io.reactivex.disposables.*;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.internal.util.*;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.disposables.*;
+import io.reactivex.rxjava3.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.rxjava3.internal.util.*;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 /**
  * Run Nonos at the same time and terminate when one or all terminate.

@@ -20,8 +20,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.reactivestreams.*;
 
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.internal.util.AtomicThrowable;
+import io.reactivex.rxjava3.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.rxjava3.internal.util.AtomicThrowable;
 
 /**
  * Subscribe to the Nono sources one at a time and complete if all of them complete.

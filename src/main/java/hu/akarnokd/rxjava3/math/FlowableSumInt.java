@@ -18,7 +18,7 @@ package hu.akarnokd.rxjava3.math;
 
 import org.reactivestreams.*;
 
-import io.reactivex.internal.subscribers.DeferredScalarSubscriber;
+import io.reactivex.rxjava3.internal.subscribers.DeferredScalarSubscriber;
 
 final class FlowableSumInt extends FlowableSource<Integer, Integer> {
 

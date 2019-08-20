@@ -21,10 +21,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.reactivestreams.*;
 
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.subscriptions.*;
-import io.reactivex.internal.util.AtomicThrowable;
+import io.reactivex.rxjava3.exceptions.Exceptions;
+import io.reactivex.rxjava3.internal.functions.ObjectHelper;
+import io.reactivex.rxjava3.internal.subscriptions.*;
+import io.reactivex.rxjava3.internal.util.AtomicThrowable;
 
 /**
  * Subscribe to the Nono sources one at a time and complete if all of them complete.

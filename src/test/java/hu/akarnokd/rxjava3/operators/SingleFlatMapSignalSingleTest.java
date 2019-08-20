@@ -21,9 +21,9 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import hu.akarnokd.rxjava3.test.*;
-import io.reactivex.Single;
-import io.reactivex.functions.Function;
-import io.reactivex.subjects.SingleSubject;
+import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.functions.Function;
+import io.reactivex.rxjava3.subjects.SingleSubject;
 
 public class SingleFlatMapSignalSingleTest {
 

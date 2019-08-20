@@ -18,10 +18,10 @@ package hu.akarnokd.rxjava3.expr;
 
 import java.util.Map;
 
-import io.reactivex.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.core.*;
+import io.reactivex.rxjava3.functions.*;
+import io.reactivex.rxjava3.internal.functions.ObjectHelper;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 /**
  * Imperative statements expressed as Single operators.

@@ -32,26 +32,26 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.disposables.*;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.fuseable.*;
-import io.reactivex.internal.operators.completable.CompletableToFlowable;
-import io.reactivex.internal.operators.maybe.MaybeToFlowable;
-import io.reactivex.internal.operators.single.SingleToFlowable;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
-import io.reactivex.internal.util.ExceptionHelper;
-import io.reactivex.observers.*;
-import io.reactivex.parallel.ParallelFlowable;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.processors.PublishProcessor;
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subjects.Subject;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.rxjava3.core.*;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Observer;
+import io.reactivex.rxjava3.disposables.*;
+import io.reactivex.rxjava3.exceptions.*;
+import io.reactivex.rxjava3.functions.*;
+import io.reactivex.rxjava3.internal.functions.ObjectHelper;
+import io.reactivex.rxjava3.internal.fuseable.*;
+import io.reactivex.rxjava3.internal.operators.completable.CompletableToFlowable;
+import io.reactivex.rxjava3.internal.operators.maybe.MaybeToFlowable;
+import io.reactivex.rxjava3.internal.operators.single.SingleToFlowable;
+import io.reactivex.rxjava3.internal.subscriptions.BooleanSubscription;
+import io.reactivex.rxjava3.internal.util.ExceptionHelper;
+import io.reactivex.rxjava3.observers.*;
+import io.reactivex.rxjava3.parallel.ParallelFlowable;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.processors.PublishProcessor;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+import io.reactivex.rxjava3.subjects.Subject;
+import io.reactivex.rxjava3.subscribers.TestSubscriber;
 
 /**
  * Common methods for helping with tests from 1.x mostly.

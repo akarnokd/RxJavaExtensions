@@ -20,13 +20,13 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.reactivestreams.Subscriber;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.Cancellable;
-import io.reactivex.internal.disposables.*;
-import io.reactivex.internal.subscriptions.DeferredScalarSubscription;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.core.*;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.exceptions.Exceptions;
+import io.reactivex.rxjava3.functions.Cancellable;
+import io.reactivex.rxjava3.internal.disposables.*;
+import io.reactivex.rxjava3.internal.subscriptions.DeferredScalarSubscription;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 /**
  * Create a Perhaps that for each incoming Subscriber calls a callback to

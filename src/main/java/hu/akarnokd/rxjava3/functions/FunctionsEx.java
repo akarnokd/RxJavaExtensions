@@ -16,7 +16,7 @@
 
 package hu.akarnokd.rxjava3.functions;
 
-import io.reactivex.functions.*;
+import io.reactivex.rxjava3.functions.*;
 
 /**
  * Utility methods to work with functional interfaces of this package.

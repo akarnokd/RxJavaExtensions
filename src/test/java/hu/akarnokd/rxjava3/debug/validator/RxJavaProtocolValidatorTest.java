@@ -25,16 +25,16 @@ import org.reactivestreams.Subscriber;
 import hu.akarnokd.rxjava3.debug.*;
 import hu.akarnokd.rxjava3.functions.PlainConsumer;
 import hu.akarnokd.rxjava3.test.TestHelper;
-import io.reactivex.*;
-import io.reactivex.disposables.*;
-import io.reactivex.flowables.ConnectableFlowable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
-import io.reactivex.observables.ConnectableObservable;
-import io.reactivex.parallel.ParallelFlowable;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.subjects.*;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.rxjava3.core.*;
+import io.reactivex.rxjava3.disposables.*;
+import io.reactivex.rxjava3.flowables.ConnectableFlowable;
+import io.reactivex.rxjava3.functions.Consumer;
+import io.reactivex.rxjava3.internal.subscriptions.BooleanSubscription;
+import io.reactivex.rxjava3.observables.ConnectableObservable;
+import io.reactivex.rxjava3.parallel.ParallelFlowable;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.subjects.*;
+import io.reactivex.rxjava3.subscribers.TestSubscriber;
 
 public class RxJavaProtocolValidatorTest implements PlainConsumer<ProtocolNonConformanceException> {
 

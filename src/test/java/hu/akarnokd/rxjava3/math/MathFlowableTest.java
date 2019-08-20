@@ -21,7 +21,7 @@ import static hu.akarnokd.rxjava3.math.MathFlowable.*;
 import org.junit.Test;
 
 import hu.akarnokd.rxjava3.test.BaseTest;
-import io.reactivex.Flowable;
+import io.reactivex.rxjava3.core.Flowable;
 
 public class MathFlowableTest extends BaseTest {
 

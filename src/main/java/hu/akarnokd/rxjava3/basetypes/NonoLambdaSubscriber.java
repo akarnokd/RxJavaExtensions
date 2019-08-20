@@ -20,11 +20,11 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.reactivestreams.*;
 
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.exceptions.*;
+import io.reactivex.rxjava3.functions.*;
+import io.reactivex.rxjava3.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 /**
  * Calls the appropriate function when this Subscriber terminates.

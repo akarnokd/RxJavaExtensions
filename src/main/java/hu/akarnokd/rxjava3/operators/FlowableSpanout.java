@@ -20,11 +20,11 @@ import java.util.concurrent.TimeUnit;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.Scheduler.Worker;
-import io.reactivex.internal.fuseable.SimplePlainQueue;
-import io.reactivex.internal.queue.SpscLinkedArrayQueue;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.rxjava3.core.*;
+import io.reactivex.rxjava3.core.Scheduler.Worker;
+import io.reactivex.rxjava3.internal.fuseable.SimplePlainQueue;
+import io.reactivex.rxjava3.internal.queue.SpscLinkedArrayQueue;
+import io.reactivex.rxjava3.internal.subscriptions.SubscriptionHelper;
 
 /**
  * Makes sure there is at least the given amount of time between emissions of the upstream elements.

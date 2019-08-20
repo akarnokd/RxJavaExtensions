@@ -19,7 +19,7 @@ package hu.akarnokd.rxjava3.debug.validator;
 import org.reactivestreams.*;
 
 import hu.akarnokd.rxjava3.functions.PlainConsumer;
-import io.reactivex.*;
+import io.reactivex.rxjava3.core.*;
 
 /**
  * Validates a Flowable.

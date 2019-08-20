@@ -18,10 +18,10 @@ package hu.akarnokd.rxjava3.basetypes;
 
 import org.reactivestreams.*;
 
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.Action;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.exceptions.Exceptions;
+import io.reactivex.rxjava3.functions.Action;
+import io.reactivex.rxjava3.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 /**
  * Execute an action exactly once after the upstream terminates or the

@@ -18,7 +18,7 @@ package hu.akarnokd.rxjava3.basetypes;
 
 import org.reactivestreams.Subscriber;
 
-import io.reactivex.internal.subscriptions.EmptySubscription;
+import io.reactivex.rxjava3.internal.subscriptions.EmptySubscription;
 
 /**
  * Never signals an event other than onSubscribe.

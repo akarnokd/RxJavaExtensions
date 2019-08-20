@@ -26,11 +26,11 @@ import org.junit.*;
 import org.mockito.*;
 
 import hu.akarnokd.rxjava3.test.TestException;
-import io.reactivex.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.observers.TestObserver;
-import io.reactivex.subjects.PublishSubject;
+import io.reactivex.rxjava3.core.*;
+import io.reactivex.rxjava3.functions.*;
+import io.reactivex.rxjava3.internal.functions.Functions;
+import io.reactivex.rxjava3.observers.TestObserver;
+import io.reactivex.rxjava3.subjects.PublishSubject;
 
 public class OperatorJoinsTest {
     @Mock

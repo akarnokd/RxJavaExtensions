@@ -21,9 +21,9 @@ import java.util.concurrent.atomic.*;
 import org.reactivestreams.*;
 
 import hu.akarnokd.rxjava3.util.CompositeSubscription;
-import io.reactivex.internal.subscriptions.*;
-import io.reactivex.internal.util.*;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.internal.subscriptions.*;
+import io.reactivex.rxjava3.internal.util.*;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 /**
  * Run Nono sources in parallel and complete when all complete.

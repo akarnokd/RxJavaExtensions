@@ -24,12 +24,10 @@ import org.junit.Test;
 import org.reactivestreams.Subscriber;
 
 import hu.akarnokd.rxjava3.test.TestHelper;
-import io.reactivex.Flowable;
-import io.reactivex.Single;
-import io.reactivex.functions.Function;
-import io.reactivex.functions.Predicate;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.core.*;
+import io.reactivex.rxjava3.functions.*;
+import io.reactivex.rxjava3.internal.subscriptions.BooleanSubscription;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 public class FlowableWindowPredicateTest {
 

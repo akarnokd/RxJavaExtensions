@@ -19,11 +19,11 @@ package hu.akarnokd.rxjava3.basetypes;
 import org.reactivestreams.*;
 
 import hu.akarnokd.rxjava3.util.SpscOneQueue;
-import io.reactivex.Scheduler;
-import io.reactivex.Scheduler.Worker;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.internal.fuseable.*;
-import io.reactivex.internal.subscriptions.*;
+import io.reactivex.rxjava3.core.Scheduler;
+import io.reactivex.rxjava3.core.Scheduler.Worker;
+import io.reactivex.rxjava3.exceptions.Exceptions;
+import io.reactivex.rxjava3.internal.fuseable.*;
+import io.reactivex.rxjava3.internal.subscriptions.*;
 
 /**
  * Delivers the upstream's onNext, onError and onComplete on the specified

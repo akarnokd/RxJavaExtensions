@@ -18,12 +18,12 @@ package hu.akarnokd.rxjava3.consumers;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-import io.reactivex.disposables.*;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.disposables.DisposableHelper;
-import io.reactivex.observers.LambdaConsumerIntrospection;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.disposables.*;
+import io.reactivex.rxjava3.exceptions.*;
+import io.reactivex.rxjava3.functions.*;
+import io.reactivex.rxjava3.internal.disposables.DisposableHelper;
+import io.reactivex.rxjava3.observers.LambdaConsumerIntrospection;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 /**
  * Wraps lambda callbacks and when the upstream terminates or the observer gets disposed,

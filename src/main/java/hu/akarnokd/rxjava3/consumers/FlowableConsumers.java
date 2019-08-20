@@ -16,10 +16,10 @@
 
 package hu.akarnokd.rxjava3.consumers;
 
-import io.reactivex.Flowable;
-import io.reactivex.disposables.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.*;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.disposables.*;
+import io.reactivex.rxjava3.functions.*;
+import io.reactivex.rxjava3.internal.functions.*;
 
 /**
  * Utility methods for creating and using consumers {@link io.reactivex.Flowable}s.

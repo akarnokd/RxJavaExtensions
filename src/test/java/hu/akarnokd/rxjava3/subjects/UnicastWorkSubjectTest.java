@@ -24,9 +24,9 @@ import java.util.List;
 import org.junit.Test;
 
 import hu.akarnokd.rxjava3.test.*;
-import io.reactivex.disposables.*;
-import io.reactivex.observers.TestObserver;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.disposables.*;
+import io.reactivex.rxjava3.observers.TestObserver;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 public class UnicastWorkSubjectTest {
 

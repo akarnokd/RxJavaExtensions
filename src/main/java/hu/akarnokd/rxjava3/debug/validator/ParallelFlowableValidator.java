@@ -19,7 +19,7 @@ package hu.akarnokd.rxjava3.debug.validator;
 import org.reactivestreams.Subscriber;
 
 import hu.akarnokd.rxjava3.functions.PlainConsumer;
-import io.reactivex.parallel.ParallelFlowable;
+import io.reactivex.rxjava3.parallel.ParallelFlowable;
 
 /**
  * Validates a ParallelFlowable.

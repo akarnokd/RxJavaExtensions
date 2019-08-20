@@ -19,7 +19,7 @@ package hu.akarnokd.rxjava3.basetypes;
 import org.reactivestreams.Subscriber;
 
 import hu.akarnokd.rxjava3.basetypes.SoloDoFinally.DoFinallySubscriber;
-import io.reactivex.functions.Action;
+import io.reactivex.rxjava3.functions.Action;
 
 /**
  * Execute an action exactly once after the upstream terminates or the

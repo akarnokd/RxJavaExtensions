@@ -19,9 +19,9 @@ package hu.akarnokd.rxjava3.schedulers;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
-import io.reactivex.Scheduler;
-import io.reactivex.disposables.*;
-import io.reactivex.internal.disposables.*;
+import io.reactivex.rxjava3.core.Scheduler;
+import io.reactivex.rxjava3.disposables.*;
+import io.reactivex.rxjava3.internal.disposables.*;
 
 /**
  * A Scheduler implementation that uses one of the Workers from another Scheduler

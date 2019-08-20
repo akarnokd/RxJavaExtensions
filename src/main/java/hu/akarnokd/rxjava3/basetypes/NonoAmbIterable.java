@@ -19,9 +19,9 @@ package hu.akarnokd.rxjava3.basetypes;
 import org.reactivestreams.*;
 
 import hu.akarnokd.rxjava3.util.CompositeSubscription;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.internal.subscriptions.BasicIntQueueSubscription;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.exceptions.Exceptions;
+import io.reactivex.rxjava3.internal.subscriptions.BasicIntQueueSubscription;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 /**
  * Terminate as soon as one of the Mono sources terminates.

@@ -18,10 +18,10 @@ package hu.akarnokd.rxjava3.expr;
 
 import org.reactivestreams.*;
 
-import io.reactivex.Flowable;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.BooleanSupplier;
-import io.reactivex.internal.subscriptions.EmptySubscription;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.exceptions.Exceptions;
+import io.reactivex.rxjava3.functions.BooleanSupplier;
+import io.reactivex.rxjava3.internal.subscriptions.EmptySubscription;
 
 /**
  * When an Subscriber subscribes, the condition is evaluated and the appropriate

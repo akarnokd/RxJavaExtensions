@@ -19,8 +19,8 @@ package hu.akarnokd.rxjava3;
 import org.openjdk.jmh.infra.Blackhole;
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
+import io.reactivex.rxjava3.core.*;
+import io.reactivex.rxjava3.disposables.Disposable;
 
 public final class PerfConsumer implements Subscriber<Object>, Observer<Object>,
 SingleObserver<Object>, MaybeObserver<Object>, CompletableObserver {

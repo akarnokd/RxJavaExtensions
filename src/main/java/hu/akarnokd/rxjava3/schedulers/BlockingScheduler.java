@@ -20,13 +20,13 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
 import java.util.concurrent.locks.*;
 
-import io.reactivex.Scheduler;
-import io.reactivex.disposables.*;
-import io.reactivex.functions.Action;
-import io.reactivex.internal.disposables.SequentialDisposable;
-import io.reactivex.internal.functions.*;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.rxjava3.core.Scheduler;
+import io.reactivex.rxjava3.disposables.*;
+import io.reactivex.rxjava3.functions.Action;
+import io.reactivex.rxjava3.internal.disposables.SequentialDisposable;
+import io.reactivex.rxjava3.internal.functions.*;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 /**
  * A Scheduler that uses the current thread, in an event-loop and

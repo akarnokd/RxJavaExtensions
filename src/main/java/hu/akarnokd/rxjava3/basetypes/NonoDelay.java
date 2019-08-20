@@ -20,9 +20,9 @@ import java.util.concurrent.TimeUnit;
 
 import org.reactivestreams.Subscriber;
 
-import io.reactivex.Scheduler;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.internal.disposables.DisposableHelper;
+import io.reactivex.rxjava3.core.Scheduler;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.internal.disposables.DisposableHelper;
 
 /**
  * Emit the terminal events on the specified Scheduler.

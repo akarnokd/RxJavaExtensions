@@ -20,11 +20,11 @@ import java.util.concurrent.*;
 
 import org.reactivestreams.*;
 
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.internal.util.ExceptionHelper;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.exceptions.*;
+import io.reactivex.rxjava3.functions.*;
+import io.reactivex.rxjava3.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.rxjava3.internal.util.ExceptionHelper;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 /**
  * Blocks until the source terminates and returns the (last) value it produced if any.

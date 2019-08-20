@@ -16,8 +16,8 @@
 
 package hu.akarnokd.rxjava3.string;
 
-import io.reactivex.*;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 /**
  * Utility class for String operations with {@link Observable}s.

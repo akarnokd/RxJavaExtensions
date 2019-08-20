@@ -19,7 +19,7 @@ package hu.akarnokd.rxjava3.basetypes;
 import org.reactivestreams.Subscriber;
 
 import hu.akarnokd.rxjava3.basetypes.SoloObserveOn.ObserveOnSubscriber;
-import io.reactivex.Scheduler;
+import io.reactivex.rxjava3.core.Scheduler;
 
 /**
  * Delivers the upstream's onNext, onError and onComplete on the specified

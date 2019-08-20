@@ -16,7 +16,7 @@
 
 package hu.akarnokd.rxjava3.basetypes;
 
-import io.reactivex.internal.fuseable.QueueSubscription;
+import io.reactivex.rxjava3.internal.fuseable.QueueSubscription;
 
 /**
  * Base class for empty, async-fuseable intermediate operators.

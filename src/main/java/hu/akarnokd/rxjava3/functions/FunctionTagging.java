@@ -18,10 +18,10 @@ package hu.akarnokd.rxjava3.functions;
 
 import java.util.*;
 
-import io.reactivex.exceptions.CompositeException;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.exceptions.CompositeException;
+import io.reactivex.rxjava3.functions.*;
+import io.reactivex.rxjava3.internal.functions.ObjectHelper;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 /**
  * Wraps the regular {@code io.reactivex.functions} function types and appends

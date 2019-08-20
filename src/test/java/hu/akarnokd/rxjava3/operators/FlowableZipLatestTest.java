@@ -24,14 +24,14 @@ import org.junit.*;
 import org.reactivestreams.*;
 
 import hu.akarnokd.rxjava3.test.*;
-import io.reactivex.Flowable;
-import io.reactivex.exceptions.ProtocolViolationException;
-import io.reactivex.functions.*;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.processors.PublishProcessor;
-import io.reactivex.schedulers.*;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.exceptions.ProtocolViolationException;
+import io.reactivex.rxjava3.functions.*;
+import io.reactivex.rxjava3.internal.subscriptions.BooleanSubscription;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.processors.PublishProcessor;
+import io.reactivex.rxjava3.schedulers.*;
+import io.reactivex.rxjava3.subscribers.TestSubscriber;
 
 public class FlowableZipLatestTest {
 

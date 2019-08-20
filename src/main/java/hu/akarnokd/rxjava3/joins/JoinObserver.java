@@ -16,7 +16,7 @@
 
 package hu.akarnokd.rxjava3.joins;
 
-import io.reactivex.disposables.Disposable;
+import io.reactivex.rxjava3.disposables.Disposable;
 
 /**
  * Base interface to manage joined observations.

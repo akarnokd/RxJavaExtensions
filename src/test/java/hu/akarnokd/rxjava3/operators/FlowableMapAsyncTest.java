@@ -23,15 +23,15 @@ import java.util.concurrent.TimeUnit;
 import org.junit.*;
 import org.reactivestreams.*;
 
-import hu.akarnokd.rxjava3.basetypes.*;
+import hu.akarnokd.rxjava3.basetypes.Perhaps;
 import hu.akarnokd.rxjava3.test.TestHelper;
-import io.reactivex.Flowable;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.processors.PublishProcessor;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.functions.*;
+import io.reactivex.rxjava3.internal.functions.Functions;
+import io.reactivex.rxjava3.internal.subscriptions.BooleanSubscription;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.processors.PublishProcessor;
+import io.reactivex.rxjava3.subscribers.TestSubscriber;
 
 public class FlowableMapAsyncTest {
 

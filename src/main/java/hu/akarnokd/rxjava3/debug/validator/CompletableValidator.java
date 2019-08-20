@@ -17,8 +17,8 @@
 package hu.akarnokd.rxjava3.debug.validator;
 
 import hu.akarnokd.rxjava3.functions.PlainConsumer;
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
+import io.reactivex.rxjava3.core.*;
+import io.reactivex.rxjava3.disposables.Disposable;
 
 /**
  * Validates a Completable.

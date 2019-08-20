@@ -18,7 +18,7 @@ package hu.akarnokd.rxjava3.basetypes;
 
 import org.reactivestreams.*;
 
-import io.reactivex.internal.subscriptions.*;
+import io.reactivex.rxjava3.internal.subscriptions.*;
 
 /**
  * Return an item if the upstream is empty.

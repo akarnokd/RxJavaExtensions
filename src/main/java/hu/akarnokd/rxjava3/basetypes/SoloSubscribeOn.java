@@ -20,11 +20,11 @@ import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
 
-import io.reactivex.Scheduler;
-import io.reactivex.Scheduler.Worker;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.internal.disposables.DisposableHelper;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.rxjava3.core.Scheduler;
+import io.reactivex.rxjava3.core.Scheduler.Worker;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.internal.disposables.DisposableHelper;
+import io.reactivex.rxjava3.internal.subscriptions.SubscriptionHelper;
 
 /**
  * Subscribe to the upstream on the specified scheduler.

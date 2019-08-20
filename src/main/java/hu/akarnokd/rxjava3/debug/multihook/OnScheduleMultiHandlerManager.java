@@ -16,8 +16,8 @@
 
 package hu.akarnokd.rxjava3.debug.multihook;
 
-import io.reactivex.functions.*;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.functions.*;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 /**
  * Handles the OnSchedule hooks.

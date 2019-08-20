@@ -21,13 +21,13 @@ import java.util.regex.Pattern;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.internal.fuseable.*;
-import io.reactivex.internal.queue.SpscArrayQueue;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.internal.util.BackpressureHelper;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.core.*;
+import io.reactivex.rxjava3.exceptions.Exceptions;
+import io.reactivex.rxjava3.internal.fuseable.*;
+import io.reactivex.rxjava3.internal.queue.SpscArrayQueue;
+import io.reactivex.rxjava3.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.rxjava3.internal.util.BackpressureHelper;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 /**
  * Consider a sequence of CharSequence as one and split it based on

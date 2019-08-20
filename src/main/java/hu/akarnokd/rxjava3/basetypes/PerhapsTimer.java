@@ -21,9 +21,9 @@ import java.util.concurrent.TimeUnit;
 import org.reactivestreams.Subscriber;
 
 import hu.akarnokd.rxjava3.basetypes.SoloTimer.TimerSubscriber;
-import io.reactivex.Scheduler;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.internal.disposables.DisposableHelper;
+import io.reactivex.rxjava3.core.Scheduler;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.internal.disposables.DisposableHelper;
 
 /**
  * Signal a 0L after the specified time delay.

@@ -16,8 +16,8 @@
 
 package hu.akarnokd.rxjava3.joins;
 
-import io.reactivex.Observable;
-import io.reactivex.functions.Function5;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.functions.Function5;
 
 /**
  * Represents a join pattern over observable sequences.

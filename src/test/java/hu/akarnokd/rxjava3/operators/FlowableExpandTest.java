@@ -25,12 +25,12 @@ import org.junit.*;
 import org.reactivestreams.*;
 
 import hu.akarnokd.rxjava3.test.TestHelper;
-import io.reactivex.*;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.processors.PublishProcessor;
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.rxjava3.core.*;
+import io.reactivex.rxjava3.functions.Function;
+import io.reactivex.rxjava3.internal.functions.Functions;
+import io.reactivex.rxjava3.processors.PublishProcessor;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+import io.reactivex.rxjava3.subscribers.TestSubscriber;
 
 public class FlowableExpandTest {
 

@@ -21,9 +21,9 @@ import java.io.IOException;
 import org.junit.Test;
 import org.reactivestreams.Subscriber;
 
-import io.reactivex.Flowable;
-import io.reactivex.functions.Predicate;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.functions.Predicate;
+import io.reactivex.rxjava3.internal.subscriptions.BooleanSubscription;
 
 public class FlowableIndexOfTest {
 

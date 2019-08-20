@@ -20,9 +20,9 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.Scheduler.Worker;
-import io.reactivex.internal.util.BackpressureHelper;
+import io.reactivex.rxjava3.core.*;
+import io.reactivex.rxjava3.core.Scheduler.Worker;
+import io.reactivex.rxjava3.internal.util.BackpressureHelper;
 
 /**
  * Requests one-by-one and emits those items on the given {@link Scheduler}, allowing an

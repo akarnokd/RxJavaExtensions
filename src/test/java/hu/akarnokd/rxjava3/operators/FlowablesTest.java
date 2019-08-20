@@ -19,7 +19,7 @@ package hu.akarnokd.rxjava3.operators;
 import org.junit.Test;
 
 import hu.akarnokd.rxjava3.test.TestHelper;
-import io.reactivex.internal.functions.Functions;
+import io.reactivex.rxjava3.internal.functions.Functions;
 
 public class FlowablesTest {
 

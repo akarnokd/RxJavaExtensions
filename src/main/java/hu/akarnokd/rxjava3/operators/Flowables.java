@@ -17,17 +17,17 @@
 package hu.akarnokd.rxjava3.operators;
 
 import java.util.Comparator;
-import java.util.concurrent.*;
+import java.util.concurrent.TimeUnit;
 
 import org.reactivestreams.Publisher;
 
-import io.reactivex.*;
-import io.reactivex.annotations.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.*;
-import io.reactivex.internal.schedulers.ImmediateThinScheduler;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.rxjava3.annotations.*;
+import io.reactivex.rxjava3.core.*;
+import io.reactivex.rxjava3.functions.*;
+import io.reactivex.rxjava3.internal.functions.*;
+import io.reactivex.rxjava3.internal.schedulers.ImmediateThinScheduler;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 /**
  * Utility class to create Flowable sources.

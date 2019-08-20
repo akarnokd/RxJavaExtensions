@@ -20,16 +20,16 @@ import java.util.concurrent.*;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.*;
-import io.reactivex.internal.subscribers.LambdaSubscriber;
-import io.reactivex.internal.util.ExceptionHelper;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.rxjava3.core.*;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.exceptions.Exceptions;
+import io.reactivex.rxjava3.functions.*;
+import io.reactivex.rxjava3.internal.functions.*;
+import io.reactivex.rxjava3.internal.subscribers.LambdaSubscriber;
+import io.reactivex.rxjava3.internal.util.ExceptionHelper;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+import io.reactivex.rxjava3.subscribers.TestSubscriber;
 
 /**
  * A 0-1-error base reactive type, similar to Maybe, implementing the Reactive-Streams Publisher

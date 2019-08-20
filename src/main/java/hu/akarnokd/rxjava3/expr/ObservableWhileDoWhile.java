@@ -18,11 +18,11 @@ package hu.akarnokd.rxjava3.expr;
 
 import java.util.concurrent.atomic.*;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.BooleanSupplier;
-import io.reactivex.internal.disposables.*;
+import io.reactivex.rxjava3.core.*;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.exceptions.Exceptions;
+import io.reactivex.rxjava3.functions.BooleanSupplier;
+import io.reactivex.rxjava3.internal.disposables.*;
 
 final class ObservableWhileDoWhile<T> extends Observable<T> {
 

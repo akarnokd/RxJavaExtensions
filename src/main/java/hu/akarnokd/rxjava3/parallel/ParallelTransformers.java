@@ -18,12 +18,10 @@ package hu.akarnokd.rxjava3.parallel;
 
 import java.util.Comparator;
 
-import io.reactivex.Flowable;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.parallel.ParallelFlowable;
-import io.reactivex.parallel.ParallelTransformer;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.internal.functions.*;
+import io.reactivex.rxjava3.parallel.*;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 /**
  * Transformers for RxJava 2 ParallelFlowable sequences.

@@ -20,9 +20,9 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.reactivestreams.*;
 
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.Predicate;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.rxjava3.exceptions.*;
+import io.reactivex.rxjava3.functions.Predicate;
+import io.reactivex.rxjava3.internal.subscriptions.SubscriptionHelper;
 
 /**
  * Retry while the predicate returns true.

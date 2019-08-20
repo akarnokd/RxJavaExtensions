@@ -16,12 +16,10 @@
 
 package hu.akarnokd.rxjava3.expr;
 
-import io.reactivex.Maybe;
-import io.reactivex.MaybeObserver;
-import io.reactivex.MaybeSource;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.BooleanSupplier;
-import io.reactivex.internal.disposables.EmptyDisposable;
+import io.reactivex.rxjava3.core.*;
+import io.reactivex.rxjava3.exceptions.Exceptions;
+import io.reactivex.rxjava3.functions.BooleanSupplier;
+import io.reactivex.rxjava3.internal.disposables.EmptyDisposable;
 
 /**
  * When an Observer subscribes, the condition is evaluated and the appropriate

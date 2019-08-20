@@ -21,10 +21,10 @@ import java.util.concurrent.TimeUnit;
 
 import org.junit.Test;
 
-import io.reactivex.Flowable;
-import io.reactivex.internal.schedulers.ImmediateThinScheduler;
-import io.reactivex.schedulers.*;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.internal.schedulers.ImmediateThinScheduler;
+import io.reactivex.rxjava3.schedulers.*;
+import io.reactivex.rxjava3.subscribers.TestSubscriber;
 
 public class FlowableRequestObserveOnTest {
 

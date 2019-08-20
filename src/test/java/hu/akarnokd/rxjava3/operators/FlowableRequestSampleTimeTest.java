@@ -24,12 +24,12 @@ import org.junit.Test;
 import org.reactivestreams.Subscriber;
 
 import hu.akarnokd.rxjava3.test.TestHelper;
-import io.reactivex.Flowable;
-import io.reactivex.exceptions.MissingBackpressureException;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.exceptions.MissingBackpressureException;
+import io.reactivex.rxjava3.internal.functions.Functions;
+import io.reactivex.rxjava3.internal.subscriptions.BooleanSubscription;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class FlowableRequestSampleTimeTest {
 

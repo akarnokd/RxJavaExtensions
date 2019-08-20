@@ -16,7 +16,7 @@
 
 package hu.akarnokd.rxjava3.util;
 
-import io.reactivex.functions.BiFunction;
+import io.reactivex.rxjava3.functions.BiFunction;
 
 /**
  * A BiFunction that returns its second parameter; use {@link #instance()} to

@@ -20,8 +20,8 @@ import java.util.NoSuchElementException;
 
 import org.reactivestreams.*;
 
-import io.reactivex.internal.subscribers.DeferredScalarSubscriber;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.internal.subscribers.DeferredScalarSubscriber;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 /**
  * Signals the solo value of the source Publisher.

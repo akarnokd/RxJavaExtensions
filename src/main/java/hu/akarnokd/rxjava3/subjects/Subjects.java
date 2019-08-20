@@ -16,9 +16,9 @@
 
 package hu.akarnokd.rxjava3.subjects;
 
-import io.reactivex.annotations.*;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.subjects.Subject;
+import io.reactivex.rxjava3.annotations.*;
+import io.reactivex.rxjava3.internal.functions.ObjectHelper;
+import io.reactivex.rxjava3.subjects.Subject;
 
 /**
  * Utility methods to work with RxJava 2 Subjects.

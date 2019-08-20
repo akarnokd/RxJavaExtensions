@@ -18,15 +18,15 @@ package hu.akarnokd.rxjava3.subjects;
 
 import java.util.concurrent.atomic.*;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.internal.disposables.DisposableHelper;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.fuseable.SimplePlainQueue;
-import io.reactivex.internal.queue.SpscLinkedArrayQueue;
-import io.reactivex.internal.util.ExceptionHelper;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.subjects.Subject;
+import io.reactivex.rxjava3.core.*;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.internal.disposables.DisposableHelper;
+import io.reactivex.rxjava3.internal.functions.ObjectHelper;
+import io.reactivex.rxjava3.internal.fuseable.SimplePlainQueue;
+import io.reactivex.rxjava3.internal.queue.SpscLinkedArrayQueue;
+import io.reactivex.rxjava3.internal.util.ExceptionHelper;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.subjects.Subject;
 
 /**
  * A {@link Subject} that holds an unbounded queue of items and relays/replays it to

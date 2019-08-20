@@ -21,7 +21,7 @@ import java.io.IOException;
 import org.junit.Test;
 
 import hu.akarnokd.rxjava3.test.BaseTest;
-import io.reactivex.Flowable;
+import io.reactivex.rxjava3.core.Flowable;
 
 public class StringFlowableTest extends BaseTest {
 

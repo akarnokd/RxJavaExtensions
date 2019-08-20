@@ -24,9 +24,9 @@ import java.util.concurrent.TimeUnit;
 import org.junit.Test;
 
 import hu.akarnokd.rxjava3.test.TestHelper;
-import io.reactivex.Flowable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.functions.Consumer;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class FlowableCacheLastTest implements Consumer<Object> {
 

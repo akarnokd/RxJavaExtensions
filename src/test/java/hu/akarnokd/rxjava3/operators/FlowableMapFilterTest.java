@@ -22,10 +22,10 @@ import java.io.IOException;
 import org.junit.Test;
 
 import hu.akarnokd.rxjava3.test.*;
-import io.reactivex.Flowable;
-import io.reactivex.functions.BiConsumer;
-import io.reactivex.internal.fuseable.QueueFuseable;
-import io.reactivex.processors.*;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.functions.BiConsumer;
+import io.reactivex.rxjava3.internal.fuseable.QueueFuseable;
+import io.reactivex.rxjava3.processors.*;
 
 public class FlowableMapFilterTest {
 

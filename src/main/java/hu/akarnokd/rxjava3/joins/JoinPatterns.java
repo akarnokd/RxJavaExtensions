@@ -18,11 +18,11 @@ package hu.akarnokd.rxjava3.joins;
 
 import java.util.*;
 
-import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.disposables.*;
-import io.reactivex.functions.*;
-import io.reactivex.observers.SafeObserver;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Observer;
+import io.reactivex.rxjava3.disposables.*;
+import io.reactivex.rxjava3.functions.*;
+import io.reactivex.rxjava3.observers.SafeObserver;
 
 /**
  * Join patterns  And, Then and When.

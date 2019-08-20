@@ -25,12 +25,12 @@ import java.util.concurrent.TimeUnit;
 import org.junit.Test;
 
 import hu.akarnokd.rxjava3.test.*;
-import io.reactivex.Single;
-import io.reactivex.disposables.*;
-import io.reactivex.functions.BiFunction;
-import io.reactivex.observers.TestObserver;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.disposables.*;
+import io.reactivex.rxjava3.functions.BiFunction;
+import io.reactivex.rxjava3.observers.TestObserver;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class DispatchWorkSubjectTest {
 

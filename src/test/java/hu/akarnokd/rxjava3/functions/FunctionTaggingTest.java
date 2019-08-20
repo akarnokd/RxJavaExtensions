@@ -25,9 +25,9 @@ import org.junit.Test;
 
 import hu.akarnokd.rxjava3.functions.FunctionTagging.FunctionTaggingException;
 import hu.akarnokd.rxjava3.test.TestHelper;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.functions.*;
+import io.reactivex.rxjava3.internal.functions.Functions;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 public class FunctionTaggingTest {
 

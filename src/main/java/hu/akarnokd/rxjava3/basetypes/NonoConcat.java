@@ -20,12 +20,12 @@ import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
 
-import io.reactivex.exceptions.*;
-import io.reactivex.internal.fuseable.*;
-import io.reactivex.internal.queue.*;
-import io.reactivex.internal.subscriptions.*;
-import io.reactivex.internal.util.*;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.exceptions.*;
+import io.reactivex.rxjava3.internal.fuseable.*;
+import io.reactivex.rxjava3.internal.queue.*;
+import io.reactivex.rxjava3.internal.subscriptions.*;
+import io.reactivex.rxjava3.internal.util.*;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 /**
  * Concatenate sources emitted by a Publisher one after another and complete after each complete.

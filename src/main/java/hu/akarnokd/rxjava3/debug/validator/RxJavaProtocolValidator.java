@@ -18,14 +18,14 @@ package hu.akarnokd.rxjava3.debug.validator;
 
 import hu.akarnokd.rxjava3.debug.SavedHooks;
 import hu.akarnokd.rxjava3.functions.PlainConsumer;
-import io.reactivex.*;
-import io.reactivex.annotations.Nullable;
-import io.reactivex.flowables.ConnectableFlowable;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.observables.ConnectableObservable;
-import io.reactivex.parallel.ParallelFlowable;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.annotations.Nullable;
+import io.reactivex.rxjava3.core.*;
+import io.reactivex.rxjava3.flowables.ConnectableFlowable;
+import io.reactivex.rxjava3.functions.Function;
+import io.reactivex.rxjava3.internal.functions.Functions;
+import io.reactivex.rxjava3.observables.ConnectableObservable;
+import io.reactivex.rxjava3.parallel.ParallelFlowable;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 /**
  * Installs assembly hooks that validate the Reactive-Streams and derived

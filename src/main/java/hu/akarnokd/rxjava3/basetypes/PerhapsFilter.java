@@ -18,8 +18,8 @@ package hu.akarnokd.rxjava3.basetypes;
 
 import org.reactivestreams.Subscriber;
 
-import io.reactivex.functions.Predicate;
-import io.reactivex.internal.subscribers.BasicFuseableSubscriber;
+import io.reactivex.rxjava3.functions.Predicate;
+import io.reactivex.rxjava3.internal.subscribers.BasicFuseableSubscriber;
 
 /**
  * Filter the upstream value with a predicate.

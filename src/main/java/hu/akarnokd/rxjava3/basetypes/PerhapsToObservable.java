@@ -18,9 +18,9 @@ package hu.akarnokd.rxjava3.basetypes;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.internal.observers.DeferredScalarDisposable;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.rxjava3.core.*;
+import io.reactivex.rxjava3.internal.observers.DeferredScalarDisposable;
+import io.reactivex.rxjava3.internal.subscriptions.SubscriptionHelper;
 
 /**
  * Convert the Perhaps into an Observable.

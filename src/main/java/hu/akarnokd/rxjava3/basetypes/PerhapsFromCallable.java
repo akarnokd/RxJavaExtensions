@@ -20,9 +20,9 @@ import java.util.concurrent.Callable;
 
 import org.reactivestreams.Subscriber;
 
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.subscriptions.DeferredScalarSubscription;
+import io.reactivex.rxjava3.exceptions.Exceptions;
+import io.reactivex.rxjava3.internal.functions.ObjectHelper;
+import io.reactivex.rxjava3.internal.subscriptions.DeferredScalarSubscription;
 
 /**
  * Executes a callable and signals its resulting value.

@@ -16,7 +16,7 @@
 
 package hu.akarnokd.rxjava3.util;
 
-import io.reactivex.functions.BooleanSupplier;
+import io.reactivex.rxjava3.functions.BooleanSupplier;
 
 /**
  * A {@link BooleanSupplier} implementation that is always false.

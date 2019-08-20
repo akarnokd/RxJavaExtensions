@@ -21,10 +21,10 @@ import java.util.*;
 import org.junit.Test;
 
 import hu.akarnokd.rxjava3.test.*;
-import io.reactivex.*;
-import io.reactivex.Observable;
-import io.reactivex.exceptions.CompositeException;
-import io.reactivex.observers.TestObserver;
+import io.reactivex.rxjava3.core.*;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.exceptions.CompositeException;
+import io.reactivex.rxjava3.observers.TestObserver;
 
 public class ObservableErrorJumpTest {
 

@@ -22,10 +22,10 @@ import org.reactivestreams.Subscriber;
 
 import hu.akarnokd.rxjava3.basetypes.SoloMap.MapSubscriber;
 import hu.akarnokd.rxjava3.basetypes.SoloZipArray.ZipCoordinator;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.subscriptions.EmptySubscription;
+import io.reactivex.rxjava3.exceptions.Exceptions;
+import io.reactivex.rxjava3.functions.Function;
+import io.reactivex.rxjava3.internal.functions.ObjectHelper;
+import io.reactivex.rxjava3.internal.subscriptions.EmptySubscription;
 
 /**
  * Combines the solo values of all the sources via a zipper function into a

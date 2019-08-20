@@ -18,8 +18,8 @@ package hu.akarnokd.rxjava3.basetypes;
 
 import org.reactivestreams.Subscriber;
 
-import io.reactivex.functions.Supplier;
-import io.reactivex.internal.subscriptions.EmptySubscription;
+import io.reactivex.rxjava3.functions.Supplier;
+import io.reactivex.rxjava3.internal.subscriptions.EmptySubscription;
 
 /**
  * Signals a Throwable.

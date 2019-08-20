@@ -18,11 +18,11 @@ package hu.akarnokd.rxjava3.operators;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.*;
-import io.reactivex.internal.disposables.EmptyDisposable;
-import io.reactivex.internal.functions.ObjectHelper;
+import io.reactivex.rxjava3.core.*;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.exceptions.*;
+import io.reactivex.rxjava3.internal.disposables.EmptyDisposable;
+import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 
 /**
  * Makes sure an upstream error skips the flow created with a

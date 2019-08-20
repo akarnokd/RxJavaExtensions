@@ -21,9 +21,9 @@ import java.io.IOException;
 import org.junit.*;
 
 import hu.akarnokd.rxjava3.test.TestHelper;
-import io.reactivex.Flowable;
-import io.reactivex.functions.*;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.functions.*;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class ParallelSumTest {
 

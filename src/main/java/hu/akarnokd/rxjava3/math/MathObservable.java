@@ -19,8 +19,8 @@ package hu.akarnokd.rxjava3.math;
 import java.util.Comparator;
 
 import hu.akarnokd.rxjava3.util.SelfComparator;
-import io.reactivex.*;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.core.*;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 /**
  * Utility methods to work with numerical Observable sources: sum, min, max and average.

@@ -21,13 +21,13 @@ import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.MissingBackpressureException;
-import io.reactivex.internal.disposables.DisposableHelper;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.internal.util.BackpressureHelper;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.core.*;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.exceptions.MissingBackpressureException;
+import io.reactivex.rxjava3.internal.disposables.DisposableHelper;
+import io.reactivex.rxjava3.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.rxjava3.internal.util.BackpressureHelper;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 /**
  * Issues {@link Subscription#request(long)}(1) after the initial delay and then at each period.

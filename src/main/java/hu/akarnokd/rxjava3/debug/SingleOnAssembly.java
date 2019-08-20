@@ -16,9 +16,9 @@
 
 package hu.akarnokd.rxjava3.debug;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.internal.disposables.DisposableHelper;
+import io.reactivex.rxjava3.core.*;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.internal.disposables.DisposableHelper;
 
 /**
  * Wraps a Publisher and inject the assembly info.

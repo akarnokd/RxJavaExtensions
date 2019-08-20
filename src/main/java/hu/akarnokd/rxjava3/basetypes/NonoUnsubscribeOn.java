@@ -18,7 +18,7 @@ package hu.akarnokd.rxjava3.basetypes;
 
 import org.reactivestreams.Subscriber;
 
-import io.reactivex.Scheduler;
+import io.reactivex.rxjava3.core.Scheduler;
 
 /**
  * Execute the downstream cancel call on the specified scheduler.

@@ -16,7 +16,7 @@
 
 package hu.akarnokd.rxjava3.operators;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
 
 import java.io.IOException;
 import java.util.List;
@@ -26,14 +26,14 @@ import org.junit.Test;
 import org.reactivestreams.*;
 
 import hu.akarnokd.rxjava3.test.TestHelper;
-import io.reactivex.Flowable;
-import io.reactivex.exceptions.MissingBackpressureException;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.processors.PublishProcessor;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.exceptions.MissingBackpressureException;
+import io.reactivex.rxjava3.functions.Function;
+import io.reactivex.rxjava3.internal.functions.Functions;
+import io.reactivex.rxjava3.internal.subscriptions.BooleanSubscription;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.processors.PublishProcessor;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class FlowableRequestSampleTest {
 

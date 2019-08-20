@@ -18,9 +18,9 @@ package hu.akarnokd.rxjava3.test;
 
 import org.reactivestreams.Publisher;
 
-import io.reactivex.*;
-import io.reactivex.observers.TestObserver;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.rxjava3.core.*;
+import io.reactivex.rxjava3.observers.TestObserver;
+import io.reactivex.rxjava3.subscribers.TestSubscriber;
 
 public abstract class BaseTest {
 
