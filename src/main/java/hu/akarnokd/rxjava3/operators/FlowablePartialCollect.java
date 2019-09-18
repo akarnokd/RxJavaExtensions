@@ -152,11 +152,9 @@ implements FlowableTransformer<T, R> {
 
         @Override
         public void onError(Throwable t) {
-            if (errors.addThrowable(t)) {
+            if (errors.tryAddThrowableOrReport(t)) {
                 done = true;
                 drain();
-            } else {
-                RxJavaPlugins.onError(t);
             }
         }
 
@@ -170,6 +168,7 @@ implements FlowableTransformer<T, R> {
         public void cancel() {
             cancelled = true;
             upstream.cancel();
+            errors.tryTerminateAndReport();
             drain();
         }
 
@@ -317,20 +316,14 @@ implements FlowableTransformer<T, R> {
                         boolean d = this.done;
 
                         if (d && errors.get() != null) {
-                            Throwable ex = errors.terminate();
-                            downstream.onError(ex);
+                            errors.tryTerminateConsumer(downstream);
                             cleanup();
                             cancelled = true;
                             break;
                         }
 
                         if (this.handlerDone) {
-                            Throwable ex = errors.terminate();
-                            if (ex == null) {
-                                downstream.onComplete();
-                            } else {
-                                downstream.onError(ex);
-                            }
+                            errors.tryTerminateConsumer(downstream);
                             cleanup();
                             cancelled = true;
                             break;
@@ -344,7 +337,7 @@ implements FlowableTransformer<T, R> {
                         } catch (Throwable ex) {
                             Exceptions.throwIfFatal(ex);
                             upstream.cancel();
-                            errors.addThrowable(ex);
+                            errors.tryAddThrowableOrReport(ex);
                             this.handlerDone = true;
                             continue;
                         }

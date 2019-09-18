@@ -81,6 +81,9 @@ final class NonoConcatIterable extends Nono {
         @Override
         public void cancel() {
             SubscriptionHelper.cancel(this);
+            if (errors != null) {
+                errors.tryTerminateAndReport();
+            }
         }
 
         @Override
@@ -97,9 +100,10 @@ final class NonoConcatIterable extends Nono {
         public void onError(Throwable t) {
             AtomicThrowable err = errors;
             if (err != null) {
-                err.addThrowable(t);
-                active = false;
-                drain();
+                if (err.tryAddThrowableOrReport(t)) {
+                    active = false;
+                    drain();
+                }
             } else {
                 downstream.onError(t);
             }
@@ -133,17 +137,16 @@ final class NonoConcatIterable extends Nono {
                     } catch (Throwable ex) {
                         Exceptions.throwIfFatal(ex);
                         if (errors != null) {
-                            errors.addThrowable(ex);
-                            downstream.onError(errors.terminate());
+                            errors.tryAddThrowableOrReport(ex);
+                            errors.tryTerminateConsumer(downstream);
                         } else {
                             downstream.onError(ex);
                         }
                         return;
                     }
                     if (!b) {
-                        Throwable ex = errors != null ? errors.terminate() : null;
-                        if (ex != null) {
-                            downstream.onError(ex);
+                        if (errors != null) {
+                            errors.tryTerminateConsumer(downstream);
                         } else {
                             downstream.onComplete();
                         }

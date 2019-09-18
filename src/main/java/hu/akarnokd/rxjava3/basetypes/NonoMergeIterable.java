@@ -27,7 +27,6 @@ import io.reactivex.rxjava3.exceptions.Exceptions;
 import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 import io.reactivex.rxjava3.internal.subscriptions.*;
 import io.reactivex.rxjava3.internal.util.AtomicThrowable;
-import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 /**
  * Run Nono sources in parallel and complete when all complete.
@@ -119,6 +118,7 @@ final class NonoMergeIterable extends Nono {
         public void cancel() {
             cancelled = true;
             set.cancel();
+            errors.tryTerminateAndReport();
         }
 
         void subscribe(int n) {
@@ -158,7 +158,7 @@ final class NonoMergeIterable extends Nono {
                         }
                     } catch (Throwable ex) {
                         Exceptions.throwIfFatal(ex);
-                        errors.addThrowable(ex);
+                        errors.tryAddThrowableOrReport(ex);
                         complete();
                         return;
                     }
@@ -190,17 +190,15 @@ final class NonoMergeIterable extends Nono {
         @Override
         public void innerError(InnerSubscriber inner, Throwable ex) {
             set.delete(inner);
-            if (errors.addThrowable(ex)) {
+            if (errors.tryAddThrowableOrReport(ex)) {
                 if (!delayErrors) {
                     set.cancel();
 
-                    downstream.onError(errors.terminate());
+                    errors.tryTerminateConsumer(downstream);
                 } else {
                     subscribe(1);
                     complete();
                 }
-            } else {
-                RxJavaPlugins.onError(ex);
             }
         }
 

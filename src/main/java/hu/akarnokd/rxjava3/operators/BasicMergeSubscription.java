@@ -27,7 +27,6 @@ import io.reactivex.rxjava3.internal.subscribers.*;
 import io.reactivex.rxjava3.internal.subscriptions.*;
 import io.reactivex.rxjava3.internal.util.*;
 import io.reactivex.rxjava3.parallel.ParallelFlowable;
-import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 /**
  * Subscription coordinator that merges items from a fixed set of source Publishers by
@@ -131,6 +130,7 @@ implements Subscription, InnerQueuedSubscriberSupport<T> {
         if (!cancelled) {
             cancelled = true;
             cancelSources();
+            errors.tryTerminateAndReport();
             if (getAndIncrement() == 0) {
                 clearSources();
             }
@@ -145,15 +145,13 @@ implements Subscription, InnerQueuedSubscriberSupport<T> {
 
     @Override
     public void innerError(InnerQueuedSubscriber<T> inner, Throwable e) {
-        if (errors.addThrowable(e)) {
+        if (errors.tryAddThrowableOrReport(e)) {
             if (!delayErrors) {
                 cancelSources();
             } else {
                 inner.setDone();
             }
             drain();
-        } else {
-            RxJavaPlugins.onError(e);
         }
     }
 
@@ -216,11 +214,11 @@ implements Subscription, InnerQueuedSubscriberSupport<T> {
                             v = q != null ? q.poll() : null;
                         } catch (Throwable ex) {
                             Exceptions.throwIfFatal(ex);
-                            err.addThrowable(ex);
+                            err.tryAddThrowableOrReport(ex);
                             inner.setDone();
                             if (!delayErrors) {
                                 cancelAndClearSources();
-                                a.onError(err.terminate());
+                                err.tryTerminateConsumer(a);
                                 return;
                             }
                             v = this;
@@ -252,7 +250,7 @@ implements Subscription, InnerQueuedSubscriberSupport<T> {
                             }
                         } catch (Throwable ex) {
                             Exceptions.throwIfFatal(ex);
-                            err.addThrowable(ex);
+                            err.tryAddThrowableOrReport(ex);
                             cancelAndClearSources();
                             a.onError(err.terminate());
                             return;
@@ -311,10 +309,10 @@ implements Subscription, InnerQueuedSubscriberSupport<T> {
                             o = q.poll();
                         } catch (Throwable ex) {
                             Exceptions.throwIfFatal(ex);
-                            err.addThrowable(ex);
+                            err.tryAddThrowableOrReport(ex);
                             if (!delayErrors) {
                                 cancelAndClearSources();
-                                a.onError(ex);
+                                err.tryTerminateConsumer(a);
                                 return;
                             }
                             o = this;

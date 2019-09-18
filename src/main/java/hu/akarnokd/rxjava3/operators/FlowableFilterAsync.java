@@ -75,7 +75,7 @@ final class FlowableFilterAsync<T> extends Flowable<T> implements FlowableTransf
 
         final int bufferSize;
 
-        final AtomicThrowable error;
+        final AtomicThrowable errors;
 
         final AtomicLong requested;
 
@@ -114,7 +114,7 @@ final class FlowableFilterAsync<T> extends Flowable<T> implements FlowableTransf
             this.downstream = downstream;
             this.asyncPredicate = asyncPredicate;
             this.bufferSize = bufferSize;
-            this.error = new AtomicThrowable();
+            this.errors = new AtomicThrowable();
             this.requested = new AtomicLong();
             this.wip = new AtomicInteger();
             this.current = new AtomicReference<InnerSubscriber<Boolean>>();
@@ -133,7 +133,7 @@ final class FlowableFilterAsync<T> extends Flowable<T> implements FlowableTransf
 
         @Override
         public void onError(Throwable t) {
-            error.addThrowable(t);
+            errors.tryAddThrowableOrReport(t);
             done = true;
             drain();
         }
@@ -157,6 +157,7 @@ final class FlowableFilterAsync<T> extends Flowable<T> implements FlowableTransf
             if (!cancelled) {
                 cancelled = true;
                 upstream.cancel();
+                errors.tryTerminateAndReport();
                 cancelInner();
                 if (wip.getAndIncrement() == 0) {
                     clear();
@@ -224,7 +225,7 @@ final class FlowableFilterAsync<T> extends Flowable<T> implements FlowableTransf
                     boolean empty = t == null;
 
                     if (d && empty) {
-                        Throwable ex = error.terminate();
+                        Throwable ex = errors.terminate();
                         if (ex == null) {
                             a.onComplete();
                         } else {
@@ -245,7 +246,7 @@ final class FlowableFilterAsync<T> extends Flowable<T> implements FlowableTransf
                             p = ObjectHelper.requireNonNull(asyncPredicate.apply(t), "The asyncPredicate returned a null value");
                         } catch (Throwable ex) {
                             Exceptions.throwIfFatal(ex);
-                            error.addThrowable(ex);
+                            errors.tryAddThrowableOrReport(ex);
                             p = null;
                         }
 
@@ -257,7 +258,7 @@ final class FlowableFilterAsync<T> extends Flowable<T> implements FlowableTransf
                                     u = ((Supplier<Boolean>)p).get();
                                 } catch (Throwable ex) {
                                     Exceptions.throwIfFatal(ex);
-                                    error.addThrowable(ex);
+                                    errors.tryAddThrowableOrReport(ex);
                                     u = null;
                                 }
 
@@ -316,7 +317,7 @@ final class FlowableFilterAsync<T> extends Flowable<T> implements FlowableTransf
                     boolean empty = t == null;
 
                     if (d && empty) {
-                        Throwable ex = error.terminate();
+                        Throwable ex = errors.terminate();
                         if (ex == null) {
                             a.onComplete();
                         } else {
@@ -358,7 +359,7 @@ final class FlowableFilterAsync<T> extends Flowable<T> implements FlowableTransf
 
         @Override
         public void innerError(Throwable ex) {
-            error.addThrowable(ex);
+            errors.tryAddThrowableOrReport(ex);
             state = STATE_RESULT;
             clearCurrent();
             drain();

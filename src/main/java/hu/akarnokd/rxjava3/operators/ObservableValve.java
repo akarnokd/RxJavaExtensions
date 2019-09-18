@@ -24,7 +24,6 @@ import io.reactivex.rxjava3.internal.disposables.DisposableHelper;
 import io.reactivex.rxjava3.internal.fuseable.SimplePlainQueue;
 import io.reactivex.rxjava3.internal.queue.SpscLinkedArrayQueue;
 import io.reactivex.rxjava3.internal.util.AtomicThrowable;
-import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 /**
  * Allows stopping and resuming the flow of the main source when a secondary flow
@@ -108,10 +107,8 @@ final class ObservableValve<T> extends Observable<T> implements ObservableTransf
 
         @Override
         public void onError(Throwable t) {
-            if (error.addThrowable(t)) {
+            if (error.tryAddThrowableOrReport(t)) {
                 drain();
-            } else {
-                RxJavaPlugins.onError(t);
             }
         }
 
@@ -131,6 +128,7 @@ final class ObservableValve<T> extends Observable<T> implements ObservableTransf
             cancelled = true;
             DisposableHelper.dispose(upstream);
             DisposableHelper.dispose(other);
+            error.tryTerminateAndReport();
         }
 
         void drain() {
@@ -152,11 +150,10 @@ final class ObservableValve<T> extends Observable<T> implements ObservableTransf
                     }
 
                     if (error.get() != null) {
-                        Throwable ex = error.terminate();
                         q.clear();
                         DisposableHelper.dispose(upstream);
                         DisposableHelper.dispose(other);
-                        a.onError(ex);
+                        error.tryTerminateConsumer(a);
                         return;
                     }
 

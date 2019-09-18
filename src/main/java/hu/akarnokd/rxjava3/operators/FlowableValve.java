@@ -25,7 +25,6 @@ import io.reactivex.rxjava3.internal.fuseable.SimplePlainQueue;
 import io.reactivex.rxjava3.internal.queue.SpscLinkedArrayQueue;
 import io.reactivex.rxjava3.internal.subscriptions.SubscriptionHelper;
 import io.reactivex.rxjava3.internal.util.AtomicThrowable;
-import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 /**
  * Allows stopping and resuming the flow of the main source when a secondary flow
@@ -117,10 +116,8 @@ final class FlowableValve<T> extends Flowable<T> implements FlowableOperator<T, 
 
         @Override
         public void onError(Throwable t) {
-            if (error.addThrowable(t)) {
+            if (error.tryAddThrowableOrReport(t)) {
                 drain();
-            } else {
-                RxJavaPlugins.onError(t);
             }
         }
 
@@ -140,6 +137,7 @@ final class FlowableValve<T> extends Flowable<T> implements FlowableOperator<T, 
             cancelled = true;
             SubscriptionHelper.cancel(upstream);
             SubscriptionHelper.cancel(other);
+            error.tryTerminateAndReport();
         }
 
         void drain() {
@@ -161,11 +159,10 @@ final class FlowableValve<T> extends Flowable<T> implements FlowableOperator<T, 
                     }
 
                     if (error.get() != null) {
-                        Throwable ex = error.terminate();
                         q.clear();
                         SubscriptionHelper.cancel(upstream);
                         SubscriptionHelper.cancel(other);
-                        a.onError(ex);
+                        error.tryTerminateConsumer(a);
                         return;
                     }
 

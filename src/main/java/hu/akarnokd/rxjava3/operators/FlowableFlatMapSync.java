@@ -28,7 +28,6 @@ import io.reactivex.rxjava3.internal.fuseable.*;
 import io.reactivex.rxjava3.internal.queue.SpscArrayQueue;
 import io.reactivex.rxjava3.internal.subscriptions.SubscriptionHelper;
 import io.reactivex.rxjava3.internal.util.*;
-import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 /**
  * FlatMap a bounded number of inner, non-trivial flows (unbound not supported).
@@ -158,11 +157,9 @@ final class FlowableFlatMapSync<T, R> extends Flowable<R> implements FlowableTra
                 Exceptions.throwIfFatal(ex);
                 upstream.cancel();
                 cancelInners();
-                if (error.addThrowable(ex)) {
+                if (error.tryAddThrowableOrReport(ex)) {
                     done = true;
                     drain();
-                } else {
-                    RxJavaPlugins.onError(ex);
                 }
                 return;
             }
@@ -195,11 +192,9 @@ final class FlowableFlatMapSync<T, R> extends Flowable<R> implements FlowableTra
 
         @Override
         public final void onError(Throwable t) {
-            if (error.addThrowable(t)) {
+            if (error.tryAddThrowableOrReport(t)) {
                 done = true;
                 drain();
-            } else {
-                RxJavaPlugins.onError(t);
             }
         }
 
@@ -222,6 +217,7 @@ final class FlowableFlatMapSync<T, R> extends Flowable<R> implements FlowableTra
             if (!cancelled) {
                 cancelled = true;
                 upstream.cancel();
+                error.tryTerminateAndReport();
                 cancelInners();
                 cleanupAfter();
             }
@@ -283,7 +279,7 @@ final class FlowableFlatMapSync<T, R> extends Flowable<R> implements FlowableTra
                                     if (d) {
                                         Throwable ex = error.get();
                                         if (ex != null) {
-                                            a.onError(error.terminate());
+                                            error.tryTerminateConsumer(a);
                                             cleanupAfter();
                                             return;
                                         }
@@ -295,10 +291,10 @@ final class FlowableFlatMapSync<T, R> extends Flowable<R> implements FlowableTra
                                         v = q.poll();
                                     } catch (Throwable ex) {
                                         Exceptions.throwIfFatal(ex);
-                                        error.addThrowable(ex);
+                                        error.tryAddThrowableOrReport(ex);
                                         upstream.cancel();
                                         cancelInners();
-                                        a.onError(error.terminate());
+                                        error.tryTerminateConsumer(a);
                                         cleanupAfter();
                                         return;
                                     }
@@ -356,7 +352,7 @@ final class FlowableFlatMapSync<T, R> extends Flowable<R> implements FlowableTra
 
                         Throwable ex = error.get();
                         if (ex != null) {
-                            a.onError(error.terminate());
+                            error.tryTerminateConsumer(a);
                             cleanupAfter();
                             return;
                         }
@@ -409,7 +405,7 @@ final class FlowableFlatMapSync<T, R> extends Flowable<R> implements FlowableTra
                         if (done) {
                             Throwable ex = error.get();
                             if (ex != null) {
-                                a.onError(error.terminate());
+                                error.tryTerminateConsumer(a);
                                 cleanupAfter();
                                 return;
                             }
@@ -435,10 +431,10 @@ final class FlowableFlatMapSync<T, R> extends Flowable<R> implements FlowableTra
                                         v = q.poll();
                                     } catch (Throwable ex) {
                                         Exceptions.throwIfFatal(ex);
-                                        error.addThrowable(ex);
+                                        error.tryAddThrowableOrReport(ex);
                                         upstream.cancel();
                                         cancelInners();
-                                        a.onError(error.terminate());
+                                        error.tryTerminateConsumer(a);
                                         cleanupAfter();
                                         return;
                                     }
@@ -465,7 +461,7 @@ final class FlowableFlatMapSync<T, R> extends Flowable<R> implements FlowableTra
                         if (done) {
                             Throwable ex = error.get();
                             if (ex != null) {
-                                a.onError(error.terminate());
+                                error.tryTerminateConsumer(a);
                                 cleanupAfter();
                                 return;
                             }
@@ -587,14 +583,12 @@ final class FlowableFlatMapSync<T, R> extends Flowable<R> implements FlowableTra
         @Override
         public void innerError(FlatMapInnerSubscriber<T, R> inner, Throwable ex) {
             remove(inner);
-            if (error.addThrowable(ex)) {
+            if (error.tryAddThrowableOrReport(ex)) {
                 inner.done = true;
                 done = true;
                 upstream.cancel();
                 cancelInners();
                 drain();
-            } else {
-                RxJavaPlugins.onError(ex);
             }
         }
 

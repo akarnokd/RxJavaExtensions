@@ -22,8 +22,7 @@ import org.reactivestreams.*;
 
 import hu.akarnokd.rxjava3.util.CompositeSubscription;
 import io.reactivex.rxjava3.internal.subscriptions.*;
-import io.reactivex.rxjava3.internal.util.*;
-import io.reactivex.rxjava3.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.internal.util.AtomicThrowable;
 
 /**
  * Run Nono sources in parallel and complete when all complete.
@@ -108,6 +107,7 @@ final class NonoMergeArray extends Nono {
         public void cancel() {
             cancelled = true;
             set.cancel();
+            errors.tryTerminateAndReport();
         }
 
         void subscribe(int n) {
@@ -143,16 +143,13 @@ final class NonoMergeArray extends Nono {
                     Nono np = srcs[i];
 
                     if (np == null) {
-                        errors.addThrowable(new NullPointerException("A source is null"));
+                        errors.tryAddThrowableOrReport(new NullPointerException("A source is null"));
                         if (delayErrors) {
                             i = f;
                             break;
                         }
                         set.cancel();
-                        Throwable ex = errors.terminate();
-                        if (ex != ExceptionHelper.TERMINATED) {
-                            downstream.onError(ex);
-                        }
+                        errors.tryTerminateConsumer(downstream);
                         return;
                     }
 
@@ -190,20 +187,15 @@ final class NonoMergeArray extends Nono {
         @Override
         public void innerError(InnerSubscriber inner, Throwable ex) {
             set.delete(inner);
-            if (errors.addThrowable(ex)) {
+            if (errors.tryAddThrowableOrReport(ex)) {
                 if (!delayErrors) {
                     set.cancel();
 
-                    ex = errors.terminate();
-                    if (ex != ExceptionHelper.TERMINATED) {
-                        downstream.onError(ex);
-                    }
+                    errors.tryTerminateConsumer(downstream);
                 } else {
                     subscribe(1);
                     complete();
                 }
-            } else {
-                RxJavaPlugins.onError(ex);
             }
         }
 

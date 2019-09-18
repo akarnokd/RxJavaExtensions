@@ -22,7 +22,6 @@ import hu.akarnokd.rxjava3.operators.FlowableFlatMapSync.*;
 import io.reactivex.rxjava3.core.*;
 import io.reactivex.rxjava3.functions.Function;
 import io.reactivex.rxjava3.internal.fuseable.SimpleQueue;
-import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 /**
  * FlatMap a bounded number of inner, non-trivial flows (unbound not supported).
@@ -109,14 +108,12 @@ final class FlowableFlatMapAsync<T, R> extends Flowable<R> implements FlowableTr
         @Override
         public void innerError(FlatMapInnerSubscriber<T, R> inner, Throwable ex) {
             remove(inner);
-            if (error.addThrowable(ex)) {
+            if (error.tryAddThrowableOrReport(ex)) {
                 inner.done = true;
                 done = true;
                 upstream.cancel();
                 cancelInners();
                 drain();
-            } else {
-                RxJavaPlugins.onError(ex);
             }
         }
 

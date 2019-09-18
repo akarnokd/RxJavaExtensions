@@ -110,6 +110,7 @@ implements ObservableTransformer<T, T> {
             disposed = true;
             upstream.dispose();
             DisposableHelper.dispose(innerDisposable);
+            errors.tryTerminateAndReport();
             drain();
         }
 
@@ -135,11 +136,9 @@ implements ObservableTransformer<T, T> {
         @Override
         public void onError(Throwable e) {
             DisposableHelper.dispose(innerDisposable);
-            if (errors.addThrowable(e)) {
+            if (errors.tryAddThrowableOrReport(e)) {
                 done = true;
                 drain();
-            } else {
-                RxJavaPlugins.onError(e);
             }
         }
 
@@ -162,9 +161,8 @@ implements ObservableTransformer<T, T> {
                     queue.clear();
                 } else {
                     if (errors.get() != null) {
-                        Throwable ex = errors.terminate();
                         disposed = true;
-                        downstream.onError(ex);
+                        errors.tryTerminateConsumer(downstream);
                         continue;
                     }
                     int s = state;
@@ -185,11 +183,10 @@ implements ObservableTransformer<T, T> {
                                 innerSource = ObjectHelper.requireNonNull(asyncPredicate.apply(item), "The mapper returned a null ObservableSource");
                             } catch (Throwable ex) {
                                 Exceptions.throwIfFatal(ex);
-                                upstream.dispose();
-                                errors.addThrowable(ex);
-                                ex = errors.terminate();
                                 disposed = true;
-                                downstream.onError(ex);
+                                upstream.dispose();
+                                errors.tryAddThrowableOrReport(ex);
+                                errors.tryTerminateConsumer(downstream);
                                 continue;
                             }
 
@@ -226,13 +223,11 @@ implements ObservableTransformer<T, T> {
         }
 
         void innerError(Throwable ex) {
-            if (errors.addThrowable(ex)) {
+            if (errors.tryAddThrowableOrReport(ex)) {
                 state = STATE_FALSE;
                 DisposableHelper.replace(innerDisposable, null);
                 upstream.dispose();
                 drain();
-            } else {
-                RxJavaPlugins.onError(ex);
             }
         }
 

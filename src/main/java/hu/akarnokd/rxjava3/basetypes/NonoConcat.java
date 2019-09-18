@@ -25,7 +25,6 @@ import io.reactivex.rxjava3.internal.fuseable.*;
 import io.reactivex.rxjava3.internal.queue.*;
 import io.reactivex.rxjava3.internal.subscriptions.*;
 import io.reactivex.rxjava3.internal.util.*;
-import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 /**
  * Concatenate sources emitted by a Publisher one after another and complete after each complete.
@@ -64,7 +63,7 @@ final class NonoConcat extends Nono {
 
         final int limit;
 
-        final AtomicThrowable error;
+        final AtomicThrowable errors;
 
         final InnerSubscriber inner;
 
@@ -86,7 +85,7 @@ final class NonoConcat extends Nono {
             this.downstream = downstream;
             this.prefetch = prefetch;
             this.limit = prefetch - (prefetch >> 2);
-            this.error = new AtomicThrowable();
+            this.errors = new AtomicThrowable();
             this.inner = new InnerSubscriber();
         }
 
@@ -240,14 +239,14 @@ final class NonoConcat extends Nono {
 
         @Override
         public void onError(Throwable t) {
-            cancel();
-            HalfSerializer.onError(downstream, t, this, error);
+            cancelIf(true);
+            HalfSerializer.onError(downstream, t, this, errors);
         }
 
         @Override
         public void innerError(Throwable t) {
-            cancel();
-            HalfSerializer.onError(downstream, t, this, error);
+            cancelIf(true);
+            HalfSerializer.onError(downstream, t, this, errors);
         }
 
         @Override
@@ -258,13 +257,21 @@ final class NonoConcat extends Nono {
 
         @Override
         public void cancel() {
+            cancelIf(false);
+        }
+        
+        void cancelIf(boolean error) {
             cancelled = true;
             upstream.cancel();
             inner.dispose();
+            if (!error) {
+                errors.tryTerminateAndReport();
+            }
 
             if (wip.getAndIncrement() == 0) {
                 queue.clear();
             }
+
         }
 
         @Override
@@ -289,14 +296,14 @@ final class NonoConcat extends Nono {
                         Exceptions.throwIfFatal(ex);
                         upstream.cancel();
                         queue.clear();
-                        HalfSerializer.onError(downstream, ex, this, error);
+                        HalfSerializer.onError(downstream, ex, this, errors);
                         return;
                     }
 
                     boolean empty = np == null;
 
                     if (d && empty) {
-                        HalfSerializer.onComplete(downstream, this, error);
+                        HalfSerializer.onComplete(downstream, this, errors);
                         return;
                     }
 
@@ -324,11 +331,9 @@ final class NonoConcat extends Nono {
 
         @Override
         public void onError(Throwable t) {
-            if (error.addThrowable(t)) {
+            if (errors.tryAddThrowableOrReport(t)) {
                 done = true;
                 drain();
-            } else {
-                RxJavaPlugins.onError(t);
             }
         }
 
@@ -343,6 +348,7 @@ final class NonoConcat extends Nono {
             cancelled = true;
             upstream.cancel();
             inner.dispose();
+            errors.tryTerminateAndReport();
 
             if (getAndIncrement() == 0) {
                 queue.clear();
@@ -362,9 +368,9 @@ final class NonoConcat extends Nono {
                 }
 
                 if (!active) {
-                    if (!tillTheEnd && error.get() != null) {
+                    if (!tillTheEnd && errors.get() != null) {
                         queue.clear();
-                        downstream.onError(error.terminate());
+                        errors.tryTerminateConsumer(downstream);
                         return;
                     }
 
@@ -378,21 +384,16 @@ final class NonoConcat extends Nono {
                         Exceptions.throwIfFatal(ex);
                         upstream.cancel();
                         queue.clear();
-                        error.addThrowable(ex);
+                        errors.tryAddThrowableOrReport(ex);
 
-                        downstream.onError(error.terminate());
+                        errors.tryTerminateConsumer(downstream);
                         return;
                     }
 
                     boolean empty = np == null;
 
                     if (d && empty) {
-                        Throwable ex = error.terminate();
-                        if (ex != null) {
-                            downstream.onError(ex);
-                        } else {
-                            downstream.onComplete();
-                        }
+                        errors.tryTerminateConsumer(downstream);
                         return;
                     }
 
@@ -408,14 +409,12 @@ final class NonoConcat extends Nono {
 
         @Override
         void innerError(Throwable t) {
-            if (error.addThrowable(t)) {
+            if (errors.tryAddThrowableOrReport(t)) {
                 if (!tillTheEnd) {
                     upstream.cancel();
                 }
                 active = false;
                 drain();
-            } else {
-                RxJavaPlugins.onError(t);
             }
         }
     }

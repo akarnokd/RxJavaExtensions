@@ -25,7 +25,6 @@ import io.reactivex.rxjava3.functions.Function;
 import io.reactivex.rxjava3.internal.disposables.DisposableHelper;
 import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 import io.reactivex.rxjava3.internal.util.AtomicThrowable;
-import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 /**
  * FlatMap only one {@link ObservableSource} at a time and keep the latest upstream value until it terminates
@@ -105,10 +104,8 @@ final class ObservableFlatMapLatest<T, R> extends Observable<R> implements Obser
 
         @Override
         public void onError(Throwable e) {
-            if (errors.addThrowable(e)) {
+            if (errors.tryAddThrowableOrReport(e)) {
                 onComplete();
-            } else {
-                RxJavaPlugins.onError(e);
             }
         }
 
@@ -123,6 +120,7 @@ final class ObservableFlatMapLatest<T, R> extends Observable<R> implements Obser
             disposed = true;
             upstream.dispose();
             DisposableHelper.dispose(innerObserver);
+            errors.tryTerminateAndReport();
             if (getAndIncrement() == 0) {
                 latest.lazySet(null);
             }
@@ -138,10 +136,8 @@ final class ObservableFlatMapLatest<T, R> extends Observable<R> implements Obser
         }
 
         void innerError(Throwable e) {
-            if (errors.addThrowable(e)) {
+            if (errors.tryAddThrowableOrReport(e)) {
                 innerComplete();
-            } else {
-                RxJavaPlugins.onError(e);
             }
         }
 
@@ -164,12 +160,7 @@ final class ObservableFlatMapLatest<T, R> extends Observable<R> implements Obser
                     boolean d = done;
                     T v = latest.getAndSet(null);
                     if (d && v == null) {
-                        Throwable ex = errors.terminate();
-                        if (ex == null) {
-                            downstream.onComplete();
-                        } else {
-                            downstream.onError(ex);
-                        }
+                        errors.tryTerminateConsumer(downstream);
                         return;
                     }
                     if (v != null) {
@@ -180,9 +171,8 @@ final class ObservableFlatMapLatest<T, R> extends Observable<R> implements Obser
                         } catch (Throwable ex) {
                             Exceptions.throwIfFatal(ex);
                             upstream.dispose();
-                            errors.addThrowable(ex);
-                            ex = errors.terminate();
-                            downstream.onError(ex);
+                            errors.tryAddThrowableOrReport(ex);
+                            errors.tryTerminateConsumer(downstream);
                             return;
                         }
 

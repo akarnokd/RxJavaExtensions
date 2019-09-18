@@ -131,6 +131,7 @@ final class FlowableGenerateAsync<T, S> extends Flowable<T> {
         @Override
         public void cancel() {
             cancelled = true;
+            errors.tryTerminateAndReport();
             resource.cancel();
             if (getAndIncrement() == 0) {
                 cleanup();
@@ -162,12 +163,10 @@ final class FlowableGenerateAsync<T, S> extends Flowable<T> {
             if (error == null) {
                 error = new NullPointerException("error is null");
             }
-            if (errors.addThrowable(error)) {
+            if (errors.tryAddThrowableOrReport(error)) {
                 itemState |= ITEM_STATE_DONE;
                 done = true;
                 drain();
-            } else {
-                RxJavaPlugins.onError(error);
             }
         }
 
@@ -239,12 +238,7 @@ final class FlowableGenerateAsync<T, S> extends Flowable<T> {
                     int s = itemState;
 
                     if (d && s == ITEM_STATE_DONE) {
-                        Throwable ex = errors.terminate();
-                        if (ex != null) {
-                            downstream.onError(ex);
-                        } else {
-                            downstream.onComplete();
-                        }
+                        errors.tryTerminateConsumer(downstream);
                         resource.cancel();
                         cleanup();
                         return;

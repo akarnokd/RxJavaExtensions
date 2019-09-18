@@ -25,7 +25,6 @@ import io.reactivex.rxjava3.functions.Function;
 import io.reactivex.rxjava3.internal.disposables.DisposableHelper;
 import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 import io.reactivex.rxjava3.internal.util.AtomicThrowable;
-import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 /**
  * FlatMap only one {@link ObservableSource} at a time and ignore upstream values until it terminates.
@@ -112,22 +111,15 @@ final class ObservableFlatMapDrop<T, R> extends Observable<R> implements Observa
 
         @Override
         public void onError(Throwable e) {
-            if (errors.addThrowable(e)) {
+            if (errors.tryAddThrowableOrReport(e)) {
                 onComplete();
-            } else {
-                RxJavaPlugins.onError(e);
             }
         }
 
         @Override
         public void onComplete() {
             if (done.decrementAndGet() == 0) {
-                Throwable ex = errors.terminate();
-                if (ex == null) {
-                    downstream.onComplete();
-                } else {
-                    downstream.onError(ex);
-                }
+                errors.tryTerminateConsumer(downstream);
             }
         }
 
@@ -135,6 +127,7 @@ final class ObservableFlatMapDrop<T, R> extends Observable<R> implements Observa
         public void dispose() {
             upstream.dispose();
             DisposableHelper.dispose(innerObserver);
+            errors.tryTerminateAndReport();
         }
 
         @Override
@@ -147,22 +140,15 @@ final class ObservableFlatMapDrop<T, R> extends Observable<R> implements Observa
         }
 
         void innerError(Throwable e) {
-            if (errors.addThrowable(e)) {
+            if (errors.tryAddThrowableOrReport(e)) {
                 innerComplete();
-            } else {
-                RxJavaPlugins.onError(e);
             }
         }
 
         void innerComplete() {
             active = false;
             if (done.decrementAndGet() == 0) {
-                Throwable ex = errors.terminate();
-                if (ex == null) {
-                    downstream.onComplete();
-                } else {
-                    downstream.onError(ex);
-                }
+                errors.tryTerminateConsumer(downstream);
             }
         }
 

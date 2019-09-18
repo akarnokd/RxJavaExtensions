@@ -501,7 +501,7 @@ public class DispatchWorkProcessorTest {
         dws.onNext(2);
         dws.onComplete();
 
-        dws.limit(1).test().assertResult(1);
+        dws.take(1).test().assertResult(1);
 
         assertFalse(dws.hasSubscribers());
     }

@@ -70,6 +70,9 @@ final class NonoConcatArray extends Nono {
         @Override
         public void cancel() {
             SubscriptionHelper.cancel(this);
+            if (errors != null) {
+                errors.tryTerminateAndReport();
+            }
         }
 
         @Override
@@ -86,9 +89,10 @@ final class NonoConcatArray extends Nono {
         public void onError(Throwable t) {
             AtomicThrowable err = errors;
             if (err != null) {
-                err.addThrowable(t);
-                active = false;
-                drain();
+                if (err.tryAddThrowableOrReport(t)) {
+                    active = false;
+                    drain();
+                }
             } else {
                 downstream.onError(t);
             }
@@ -113,9 +117,8 @@ final class NonoConcatArray extends Nono {
                 if (!active) {
                     int idx = index;
                     if (idx == sources.length) {
-                        Throwable ex = errors != null ? errors.terminate() : null;
-                        if (ex != null) {
-                            downstream.onError(ex);
+                        if (errors != null) {
+                            errors.tryTerminateConsumer(downstream);
                         } else {
                             downstream.onComplete();
                         }
@@ -129,8 +132,8 @@ final class NonoConcatArray extends Nono {
                     if (np == null) {
                         NullPointerException npe = new NullPointerException("One of the sources is null");
                         if (errors != null) {
-                            errors.addThrowable(npe);
-                            downstream.onError(errors.terminate());
+                            errors.tryAddThrowableOrReport(npe);
+                            errors.tryTerminateConsumer(downstream);
                         } else {
                             downstream.onError(npe);
                         }

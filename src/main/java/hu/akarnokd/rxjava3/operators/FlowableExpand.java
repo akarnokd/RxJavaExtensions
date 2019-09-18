@@ -134,7 +134,7 @@ final class FlowableExpand<T> extends Flowable<T> implements FlowableTransformer
         public void onError(Throwable t) {
             setSubscription(SubscriptionHelper.CANCELLED);
             if (delayErrors) {
-                errors.addThrowable(t);
+                errors.tryAddThrowableOrReport(t);
                 active = false;
             } else {
                 super.cancel();
@@ -152,6 +152,7 @@ final class FlowableExpand<T> extends Flowable<T> implements FlowableTransformer
         @Override
         public void cancel() {
             super.cancel();
+            errors.tryTerminateAndReport();
             drainQueue();
         }
 
@@ -166,12 +167,7 @@ final class FlowableExpand<T> extends Flowable<T> implements FlowableTransformer
                             if (q.isEmpty()) {
                                 setSubscription(SubscriptionHelper.CANCELLED);
                                 super.cancel();
-                                Throwable ex = errors.terminate();
-                                if (ex == null) {
-                                    downstream.onComplete();
-                                } else {
-                                    downstream.onError(ex);
-                                }
+                                errors.tryTerminateConsumer(downstream);
                             } else {
                                 Publisher<? extends T> p = q.poll();
                                 long c = produced;
@@ -333,7 +329,7 @@ final class FlowableExpand<T> extends Flowable<T> implements FlowableTransformer
 
                     if (!delayErrors && error.get() != null) {
                         cancel();
-                        a.onError(error.terminate());
+                        error.tryTerminateConsumer(a);
                         return;
                     }
 
@@ -354,7 +350,7 @@ final class FlowableExpand<T> extends Flowable<T> implements FlowableTransformer
                             curr.done = true;
                             currentDone = true;
                             v = null;
-                            error.addThrowable(ex);
+                            error.tryAddThrowableOrReport(ex);
                         }
 
                         if (p != null) {
@@ -374,12 +370,7 @@ final class FlowableExpand<T> extends Flowable<T> implements FlowableTransformer
                     if (!newSource) {
                         if (currentDone && v == null) {
                             if (n.decrementAndGet() == 0) {
-                                Throwable ex = error.terminate();
-                                if (ex != null) {
-                                    a.onError(ex);
-                                } else {
-                                    a.onComplete();
-                                }
+                                error.tryTerminateConsumer(a);
                                 return;
                             }
                             curr = pop();
@@ -410,7 +401,7 @@ final class FlowableExpand<T> extends Flowable<T> implements FlowableTransformer
         }
 
         void innerError(ExpandDepthSubscriber inner, Throwable t) {
-            error.addThrowable(t);
+            error.tryAddThrowableOrReport(t);
             inner.done = true;
             drainQueue();
         }

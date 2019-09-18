@@ -150,7 +150,7 @@ final class FlowableMapAsync<T, U, R> extends Flowable<R> implements FlowableTra
 
         @Override
         public void onError(Throwable t) {
-            error.addThrowable(t);
+            error.tryAddThrowableOrReport(t);
             done = true;
             drain();
         }
@@ -174,6 +174,7 @@ final class FlowableMapAsync<T, U, R> extends Flowable<R> implements FlowableTra
             if (!cancelled) {
                 cancelled = true;
                 upstream.cancel();
+                error.tryTerminateAndReport();
                 cancelInner();
                 if (wip.getAndIncrement() == 0) {
                     clear();
@@ -261,7 +262,7 @@ final class FlowableMapAsync<T, U, R> extends Flowable<R> implements FlowableTra
                             p = ObjectHelper.requireNonNull(mapper.apply(t), "The mapper returned a null value");
                         } catch (Throwable ex) {
                             Exceptions.throwIfFatal(ex);
-                            error.addThrowable(ex);
+                            error.tryAddThrowableOrReport(ex);
                             p = null;
                         }
 
@@ -279,7 +280,7 @@ final class FlowableMapAsync<T, U, R> extends Flowable<R> implements FlowableTra
                                     }
                                 } catch (Throwable ex) {
                                     Exceptions.throwIfFatal(ex);
-                                    error.addThrowable(ex);
+                                    error.tryAddThrowableOrReport(ex);
                                     v = null;
                                 }
 
@@ -315,7 +316,7 @@ final class FlowableMapAsync<T, U, R> extends Flowable<R> implements FlowableTra
                                 v = ObjectHelper.requireNonNull(combiner.apply(t, u), "The combiner returned a null value");
                             } catch (Throwable ex) {
                                 Exceptions.throwIfFatal(ex);
-                                error.addThrowable(ex);
+                                error.tryAddThrowableOrReport(ex);
                                 v = null;
                             }
 
@@ -350,12 +351,7 @@ final class FlowableMapAsync<T, U, R> extends Flowable<R> implements FlowableTra
                     boolean empty = t == null;
 
                     if (d && empty) {
-                        Throwable ex = error.terminate();
-                        if (ex == null) {
-                            a.onComplete();
-                        } else {
-                            a.onError(ex);
-                        }
+                        error.tryTerminateConsumer(a);
                         return;
                     }
                 }
@@ -392,7 +388,7 @@ final class FlowableMapAsync<T, U, R> extends Flowable<R> implements FlowableTra
 
         @Override
         public void innerError(Throwable ex) {
-            error.addThrowable(ex);
+            error.tryAddThrowableOrReport(ex);
             state = STATE_RESULT;
             clearCurrent();
             drain();

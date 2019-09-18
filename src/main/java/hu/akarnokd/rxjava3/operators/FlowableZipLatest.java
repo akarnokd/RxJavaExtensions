@@ -28,7 +28,6 @@ import io.reactivex.rxjava3.functions.Function;
 import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 import io.reactivex.rxjava3.internal.subscriptions.SubscriptionHelper;
 import io.reactivex.rxjava3.internal.util.*;
-import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 /**
  * Takes only the latest value from the sources in each zip round and applies a transformer function
@@ -140,6 +139,7 @@ final class FlowableZipLatest<T, R> extends Flowable<R> {
         public void cancel() {
             cancelled = true;
             cancelAll();
+            errors.tryTerminateAndReport();
             if (wip.getAndIncrement() == 0) {
                 clear();
             }
@@ -189,12 +189,7 @@ final class FlowableZipLatest<T, R> extends Flowable<R> {
                             cancelled = true;
                             cancelAll();
                             clear();
-                            Throwable ex = errors.terminate();
-                            if (ex == null) {
-                                a.onComplete();
-                            } else {
-                                a.onError(ex);
-                            }
+                            errors.tryTerminateConsumer(a);
                             worker.dispose();
                             return;
                         }
@@ -217,11 +212,11 @@ final class FlowableZipLatest<T, R> extends Flowable<R> {
                         v = ObjectHelper.requireNonNull(combiner.apply(array), "The combiner returned a null value");
                     } catch (Throwable ex) {
                         Exceptions.throwIfFatal(ex);
-                        errors.addThrowable(ex);
+                        errors.tryAddThrowableOrReport(ex);
                         cancelled = true;
                         cancelAll();
                         clear();
-                        a.onError(errors.terminate());
+                        errors.tryTerminateConsumer(a);
                         worker.dispose();
                         return;
                     }
@@ -242,12 +237,7 @@ final class FlowableZipLatest<T, R> extends Flowable<R> {
                             cancelled = true;
                             cancelAll();
                             clear();
-                            Throwable ex = errors.terminate();
-                            if (ex == null) {
-                                a.onComplete();
-                            } else {
-                                a.onError(ex);
-                            }
+                            errors.tryTerminateConsumer(a);
                             worker.dispose();
                             return;
                         }
@@ -303,12 +293,10 @@ final class FlowableZipLatest<T, R> extends Flowable<R> {
             @Override
             public void onError(Throwable t) {
                 ZipLatestCoordinator<T, ?> p = parent;
-                if (p.errors.addThrowable(t)) {
+                if (p.errors.tryAddThrowableOrReport(t)) {
                     lazySet(SubscriptionHelper.CANCELLED);
                     done = true;
                     p.drain();
-                } else {
-                    RxJavaPlugins.onError(t);
                 }
             }
 

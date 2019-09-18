@@ -98,14 +98,11 @@ final class NonoMerge extends Nono {
 
         @Override
         public void onError(Throwable t) {
-            if (errors.addThrowable(t)) {
+            if (errors.tryAddThrowable(t)) {
                 if (!delayErrors) {
                     set.dispose();
 
-                    Throwable ex = errors.terminate();
-                    if (ex != ExceptionHelper.TERMINATED) {
-                        downstream.onError(ex);
-                    }
+                    errors.tryTerminateConsumer(downstream);
                 } else {
                     onComplete();
                 }
@@ -117,12 +114,7 @@ final class NonoMerge extends Nono {
         @Override
         public void onComplete() {
             if (decrementAndGet() == 0) {
-                Throwable ex = errors.terminate();
-                if (ex != null) {
-                    downstream.onError(ex);
-                } else {
-                    downstream.onComplete();
-                }
+                errors.tryTerminateConsumer(downstream);
             }
         }
 
@@ -146,7 +138,7 @@ final class NonoMerge extends Nono {
 
         void innerError(Disposable inner, Throwable error) {
             set.delete(inner);
-            if (errors.addThrowable(error)) {
+            if (errors.tryAddThrowableOrReport(error)) {
                 if (!delayErrors) {
                     set.dispose();
 
@@ -157,8 +149,6 @@ final class NonoMerge extends Nono {
                 } else {
                     complete();
                 }
-            } else {
-                RxJavaPlugins.onError(error);
             }
         }
 
@@ -166,6 +156,7 @@ final class NonoMerge extends Nono {
         public void cancel() {
             upstream.cancel();
             set.dispose();
+            errors.tryTerminateAndReport();
         }
 
         final class MergeInnerSubscriber extends AtomicReference<Subscription> implements Subscriber<Void>, Disposable {
