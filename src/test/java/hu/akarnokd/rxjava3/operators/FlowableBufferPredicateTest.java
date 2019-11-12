@@ -18,15 +18,17 @@ package hu.akarnokd.rxjava3.operators;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.Test;
-import org.reactivestreams.Subscriber;
+import org.reactivestreams.*;
 
 import hu.akarnokd.rxjava3.test.TestHelper;
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.functions.*;
 import io.reactivex.rxjava3.internal.subscriptions.BooleanSubscription;
 import io.reactivex.rxjava3.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class FlowableBufferPredicateTest {
 
@@ -496,5 +498,54 @@ public class FlowableBufferPredicateTest {
                 Arrays.<Integer>asList(),
                 Arrays.asList(1, 2)
         );
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void untilAlways() {
+        Flowable.range(1, 5)
+        .compose(FlowableTransformers.bufferUntil(new Predicate<Integer>() {
+            @Override
+            public boolean test(Integer v) throws Exception {
+                return true;
+            }
+        }))
+        .test(0)
+        .assertEmpty()
+        .requestMore(1)
+        .assertValuesOnly(Arrays.<Integer>asList(1))
+        .requestMore(2)
+        .assertValuesOnly(
+                Arrays.<Integer>asList(1),
+                Arrays.<Integer>asList(2),
+                Arrays.<Integer>asList(3)
+        )
+        .requestMore(2)
+        .assertResult(
+                Arrays.<Integer>asList(1),
+                Arrays.<Integer>asList(2),
+                Arrays.<Integer>asList(3),
+                Arrays.<Integer>asList(4),
+                Arrays.<Integer>asList(5)
+        )
+        ;
+    }
+
+    @Test
+    public void untilAlways2() {
+        Flowable.range(1, 1000)
+        .compose(FlowableTransformers.bufferUntil(new Predicate<Integer>() {
+            @Override
+            public boolean test(Integer v) throws Exception {
+                return true;
+            }
+        }))
+        .flatMap(new Function<List<Integer>, Publisher<Long>>() {
+            @Override
+            public Publisher<Long> apply(List<Integer> v) throws Throwable {
+                return Flowable.timer(10, TimeUnit.MILLISECONDS);
+            }
+        })
+        .blockingLast();
     }
 }
