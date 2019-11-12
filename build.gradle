@@ -61,7 +61,7 @@ apply plugin: 'biz.aQute.bnd.builder'
 jar {
     bnd ('Bundle-Name': 'rxjava3-bridge',
             'Bundle-Vendor': 'akarnokd',
-            'Bundle-Description': 'RxJava 2.x & 3.x extra sources, operators and components and ports of many 1.x companion libraries.',
+            'Bundle-Description': 'RxJava 3.x extra sources, operators and components and ports of many 1.x companion libraries.',
             'Import-Package': '!org.junit,!junit.framework,!org.mockito.*,*',
             'Bundle-DocURL': 'https://github.com/akarnokd/RxJavaExtensions')
 }
