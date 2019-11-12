@@ -28,7 +28,6 @@ import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.functions.*;
 import io.reactivex.rxjava3.internal.subscriptions.BooleanSubscription;
 import io.reactivex.rxjava3.plugins.RxJavaPlugins;
-import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class FlowableBufferPredicateTest {
 
