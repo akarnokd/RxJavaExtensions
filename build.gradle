@@ -7,9 +7,11 @@ buildscript {
     }
 
     dependencies {
-        classpath 'gradle.plugin.nl.javadude.gradle.plugins:license-gradle-plugin:0.14.0'
-        classpath "me.champeau.gradle:jmh-gradle-plugin:0.2.0"
-        classpath 'ru.vyarus:gradle-animalsniffer-plugin:1.2.0'
+        classpath "me.champeau.gradle:jmh-gradle-plugin:0.5.0"
+        classpath 'ru.vyarus:gradle-animalsniffer-plugin:1.5.0'
+        classpath "biz.aQute.bnd:biz.aQute.bnd.gradle:4.3.0"
+        classpath 'com.vanniktech:gradle-maven-publish-plugin:0.8.0'
+        classpath "gradle.plugin.com.hierynomus.gradle.plugins:license-gradle-plugin:0.15.0"
     }
 }
 
@@ -41,10 +43,6 @@ repositories {
     maven { url 'http://repo.spring.io/libs-snapshot' }
 }
 
-apply from: file('gradle/maven.gradle')
-apply plugin: 'maven'
-apply plugin: 'osgi'
-
 dependencies {
     signature 'org.codehaus.mojo.signature:java16:1.1@signature'
 
@@ -56,59 +54,22 @@ dependencies {
     testCompile 'org.mockito:mockito-core:3.1.0'
 }
 
-task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
+apply plugin: 'maven'
 
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
-
-artifacts {
-    archives jar
-    archives sourcesJar
-    archives javadocJar
-}
-
-//uploadMavenCentral {
-//    repositories {
-//        mavenDeployer {
-//            pom.whenConfigured {
-//                p -> p.dependencies = p.dependencies.findAll { 
-//                    dep -> dep.artifactId != "rxjava" 
-//                }
-//            }
-//        }
-//    }
-//}
+apply plugin: 'biz.aQute.bnd.builder'
 
 jar {
-    manifest {
-        name = 'rxjava3-extensions'
-        instruction 'Bundle-Vendor', 'akarnokd'
-        instruction 'Bundle-DocURL', 'https://github.com/akarnokd/RxJavaExtensions'
-        instruction 'Import-Package', '!org.junit,!junit.framework,!org.mockito.*,*'
-        instruction 'Eclipse-ExtensibleAPI', 'true'
-    }
+    bnd ('Bundle-Name': 'rxjava3-bridge',
+            'Bundle-Vendor': 'akarnokd',
+            'Bundle-Description': 'RxJava 2.x & 3.x extra sources, operators and components and ports of many 1.x companion libraries.',
+            'Import-Package': '!org.junit,!junit.framework,!org.mockito.*,*',
+            'Bundle-DocURL': 'https://github.com/akarnokd/RxJavaExtensions')
 }
 
-apply plugin: 'maven-publish'
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-            artifact (sourcesJar) { 
-                classifier = 'sources'
-            }
-        }
-    }
-}
+apply plugin: "com.vanniktech.maven.publish"
 
 jmh {
-    jmhVersion = '1.16'
+    jmhVersion = '1.21'
     humanOutputFile = null
     if (project.hasProperty('jmh')) {
         include = ".*" + project.jmh + ".*"
@@ -127,7 +88,7 @@ javadoc {
     
     options.links(
         "https://docs.oracle.com/javase/7/docs/api/",
-        "http://www.reactive-streams.org/reactive-streams-1.0.2-javadoc/",
+        "http://www.reactive-streams.org/reactive-streams-1.0.3-javadoc/",
         "http://reactivex.io/RxJava/3.x/javadoc/"
     )
     
@@ -151,7 +112,7 @@ license {
 }
 
 jacoco {
-    toolVersion = '0.7.7.201606060606' // See http://www.eclemma.org/jacoco/.
+    toolVersion = '0.8.5' // See http://www.eclemma.org/jacoco/.
 }
 
 jacocoTestReport {
@@ -180,7 +141,7 @@ pmdMain {
     }
 }
 
-task pmdPrint(dependsOn: 'pmdMain') << {
+task pmdPrint(dependsOn: 'pmdMain') doLast {
     File file = rootProject.file('build/reports/pmd/main.xml')
     if (file.exists()) {
 
@@ -201,5 +162,5 @@ build.dependsOn pmdPrint
 check.dependsOn pmdPrint
 
 animalsniffer {
-    annotation = 'rx.internal.util.SuppressAnimalSniffer'
+    annotation = 'io.reactivex.rxjava3.internal.util.SuppressAnimalSniffer'
 }

@@ -15,7 +15,7 @@
  */
 
 /**
- * Utility methods for parallel aggregation and reduction for {@link io.reactivex.parallel.ParallelFlowable ParallelFlowable}s via
+ * Utility methods for parallel aggregation and reduction for {@link io.reactivex.rxjava3.parallel.ParallelFlowable ParallelFlowable}s via
  * {@link hu.akarnokd.rxjava3.parallel.ParallelTransformers ParallelTransformers}.
  */
 package hu.akarnokd.rxjava3.parallel;

@@ -15,8 +15,8 @@
  */
 
 /**
- * Functional interface definitions for {@link io.reactivex.functions.Consumer Consumer}s with
- * 3..9 arguments and {@link io.reactivex.functions.Function Function}s without the
+ * Functional interface definitions for {@link io.reactivex.rxjava3.functions.Consumer Consumer}s with
+ * 3..9 arguments and {@link io.reactivex.rxjava3.functions.Function Function}s without the
  * {@code throws Exception} clause in their definition.
  */
 package hu.akarnokd.rxjava3.functions;

@@ -259,7 +259,7 @@ final class NonoConcat extends Nono {
         public void cancel() {
             cancelIf(false);
         }
-        
+
         void cancelIf(boolean error) {
             cancelled = true;
             upstream.cancel();

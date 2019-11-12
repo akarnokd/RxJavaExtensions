@@ -34,8 +34,6 @@ import io.reactivex.rxjava3.plugins.RxJavaPlugins;
  * should be passed to the downstream.
  *
  * @param <T> the upstream value type
- * @param <U> the inner Observable's element type
- * @param <R> the result element type
  * @since 0.20.4
  */
 final class ObservableFilterAsync<T> extends Observable<T>

@@ -15,7 +15,7 @@
  */
 
 /**
- * Protocol validation support via {@link io.reactivex.plugins.RxJavaPlugins RxJavaPlugins}
+ * Protocol validation support via {@link io.reactivex.rxjava3.plugins.RxJavaPlugins RxJavaPlugins}
  * hook implementations enalbed via
  * {@link hu.akarnokd.rxjava3.debug.validator.RxJavaProtocolValidator RxJavaProtocolValidator}.
  */

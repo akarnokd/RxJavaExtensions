@@ -16,7 +16,7 @@
 
 /**
  * Debugging support to remember where operators have been created in the
- * code via {@link io.reactivex.plugins.RxJavaPlugins RxJavaPlugins}' assembly hooks, enabled via
+ * code via {@link io.reactivex.rxjava3.plugins.RxJavaPlugins RxJavaPlugins}' assembly hooks, enabled via
  * {@link hu.akarnokd.rxjava3.debug.RxJavaAssemblyTracking RxJavaAssemblyTracking}.
  */
 package hu.akarnokd.rxjava3.debug;

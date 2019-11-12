@@ -24,7 +24,7 @@ import io.reactivex.rxjava3.internal.disposables.DisposableHelper;
 
 /**
  * Wraps lambda callbacks and when the upstream terminates or this observer gets disposed,
- * removes itself from a {@link io.reactivex.disposables.CompositeDisposable}.
+ * removes itself from a {@link io.reactivex.rxjava3.disposables.CompositeDisposable}.
  * @param <T> the element type consumed
  * @since 0.18.0
  */

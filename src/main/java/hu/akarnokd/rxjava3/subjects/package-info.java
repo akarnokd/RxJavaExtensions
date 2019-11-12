@@ -18,7 +18,7 @@
  * Special subjects such as
  * {@link hu.akarnokd.rxjava3.subjects.UnicastWorkSubject UnicastWorkSubject},
  * {@link hu.akarnokd.rxjava3.subjects.DispatchWorkSubject DispatchWorkSubject}
- * and generic utilities for {@link io.reactivex.subjects.Subject Subject}s
+ * and generic utilities for {@link io.reactivex.rxjava3.subjects.Subject Subject}s
  * via {@link hu.akarnokd.rxjava3.subjects.Subjects} methods.
  */
 package hu.akarnokd.rxjava3.subjects;

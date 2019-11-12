@@ -27,7 +27,7 @@ import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 /**
  * Wraps lambda callbacks and when the upstream terminates or the observer gets disposed,
- * removes itself from a {@link io.reactivex.disposables.CompositeDisposable}.
+ * removes itself from a {@link io.reactivex.rxjava3.disposables.CompositeDisposable}.
  * @since 0.18.0
  */
 abstract class AbstractDisposableAutoRelease

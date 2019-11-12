@@ -17,7 +17,7 @@
 /**
  * Special processors such as
  * {@link hu.akarnokd.rxjava3.processors.DispatchWorkProcessor DispatchWorkProcessor}
- * and generic utilities for {@link io.reactivex.processors.FlowableProcessor FlowableProcessor}s
+ * and generic utilities for {@link io.reactivex.rxjava3.processors.FlowableProcessor FlowableProcessor}s
  * via {@link hu.akarnokd.rxjava3.processors.FlowableProcessors} methods.
  */
 package hu.akarnokd.rxjava3.processors;

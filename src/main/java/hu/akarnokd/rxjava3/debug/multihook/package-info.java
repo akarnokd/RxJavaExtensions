@@ -15,7 +15,7 @@
  */
 
 /**
- * Proof of concept {@link io.reactivex.plugins.RxJavaPlugins RxJavaPlugins}
+ * Proof of concept {@link io.reactivex.rxjava3.plugins.RxJavaPlugins RxJavaPlugins}
  * hook implementation for handling multiple hooks to
  * the {@code onSchedule} callback via
  * {@link hu.akarnokd.rxjava3.debug.multihook.OnScheduleMultiHandlerManager OnScheduleMultiHandlerManager}.
