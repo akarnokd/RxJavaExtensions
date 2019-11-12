@@ -59,7 +59,7 @@ apply plugin: 'maven'
 apply plugin: 'biz.aQute.bnd.builder'
 
 jar {
-    bnd ('Bundle-Name': 'rxjava3-bridge',
+    bnd ('Bundle-Name': 'rxjava3-extensions',
             'Bundle-Vendor': 'akarnokd',
             'Bundle-Description': 'RxJava 3.x extra sources, operators and components and ports of many 1.x companion libraries.',
             'Import-Package': '!org.junit,!junit.framework,!org.mockito.*,*',
