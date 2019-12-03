@@ -616,7 +616,7 @@ assertEquals(1000000, to.values().get().size());
 ### DispatchWorkProcessor
 
 A `FlowableProcessor` variant that buffers items and allows one or more `Subscriber`s to exclusively consume one of the items in the buffer
-asynchronously. If there are no `Subscriber`s (or they all disposed), the `DispatchWorkSubscriber` will keep buffering and later
+asynchronously. If there are no `Subscriber`s (or they all canceled), the `DispatchWorkProcessor` will keep buffering and later
 `Subscriber`s can resume the consumption of the buffer.
 
 ```java
