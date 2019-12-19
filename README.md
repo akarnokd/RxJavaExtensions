@@ -595,7 +595,7 @@ asynchronously. If there are no `Observer`s (or they all disposed), the `Dispatc
 `Observer`s can resume the consumption of the buffer.
 
 ```java
-DispatchWorkSubject<Integer> dws = DispatchWorkSubject.create();
+DispatchWorkSubject<Integer> dws = DispatchWorkSubject.create(Schedulers.computation());
 
 Single<List<Integer>> asList = dws.toList();
 
@@ -620,7 +620,7 @@ asynchronously. If there are no `Subscriber`s (or they all canceled), the `Dispa
 `Subscriber`s can resume the consumption of the buffer.
 
 ```java
-DispatchWorkProcessor<Integer> dwp = DispatchWorkProcessor.create();
+DispatchWorkProcessor<Integer> dwp = DispatchWorkProcessor.create(Schedulers.computation());
 
 Single<List<Integer>> asList = dwp.toList();
 
