@@ -628,7 +628,7 @@ TestObserver<List<Integer>> to = Single
     .zip(asList, asList, (a, b) -> a.addAll(b))
     .test();
     
-Flowable.range(1, 1000000).subscribe(dws);
+Flowable.range(1, 1000000).subscribe(dwp);
 
 to.awaitDone(5, TimeUnit.SECONDS)
 .assertValueCount(1)
