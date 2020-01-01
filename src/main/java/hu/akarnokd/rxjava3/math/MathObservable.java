@@ -53,7 +53,7 @@ public final class MathObservable {
     }
 
     public static <T> Observable<T> max(ObservableSource<T> source, Comparator<? super T> comparator) {
-        return RxJavaPlugins.onAssembly(new ObservableMinMax<T>(source, comparator, -1));
+        return RxJavaPlugins.onAssembly(new ObservableMinMax<>(source, comparator, -1));
     }
 
     public static <T extends Comparable<? super T>> Observable<T> min(ObservableSource<T> source) {
@@ -62,7 +62,7 @@ public final class MathObservable {
     }
 
     public static <T> Observable<T> min(ObservableSource<T> source, Comparator<? super T> comparator) {
-        return RxJavaPlugins.onAssembly(new ObservableMinMax<T>(source, comparator, 1));
+        return RxJavaPlugins.onAssembly(new ObservableMinMax<>(source, comparator, 1));
     }
 
     @SuppressWarnings("unchecked")

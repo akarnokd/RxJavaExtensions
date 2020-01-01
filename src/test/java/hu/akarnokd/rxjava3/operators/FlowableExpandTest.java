@@ -187,7 +187,7 @@ public class FlowableExpandTest {
 
         Node(String name, Node... nodes) {
             this.name = name;
-            this.children = new ArrayList<Node>();
+            this.children = new ArrayList<>();
             for (Node n : nodes) {
                 children.add(n);
             }
@@ -364,7 +364,7 @@ public class FlowableExpandTest {
 
         final PublishProcessor<Integer> pp = PublishProcessor.create();
 
-        final TestSubscriber<Integer> ts = new TestSubscriber<Integer>();
+        final TestSubscriber<Integer> ts = new TestSubscriber<>();
 
         FlowableSubscriber<Integer> s = new FlowableSubscriber<Integer>() {
 

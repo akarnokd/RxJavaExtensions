@@ -58,16 +58,16 @@ implements FlowableTransformer<T, T> {
 
     @Override
     public Publisher<T> apply(Flowable<T> upstream) {
-        return new FlowableTimeoutLast<T>(upstream, timeout, unit, scheduler, fromStart);
+        return new FlowableTimeoutLast<>(upstream, timeout, unit, scheduler, fromStart);
     }
 
     @Override
     protected void subscribeActual(Subscriber<? super T> s) {
-        SerializedSubscriber<T> serial = new SerializedSubscriber<T>(s);
+        SerializedSubscriber<T> serial = new SerializedSubscriber<>(s);
         if (fromStart) {
-            source.subscribe(new TimeoutStartLast<T>(serial, timeout, unit, scheduler));
+            source.subscribe(new TimeoutStartLast<>(serial, timeout, unit, scheduler));
         } else {
-            source.subscribe(new TimeoutLast<T>(serial, timeout, unit, scheduler.createWorker()));
+            source.subscribe(new TimeoutLast<>(serial, timeout, unit, scheduler.createWorker()));
         }
     }
 
@@ -98,7 +98,7 @@ implements FlowableTransformer<T, T> {
             this.worker = worker;
             this.task = new SequentialDisposable();
             this.index = new AtomicLong();
-            this.value = new AtomicReference<T>();
+            this.value = new AtomicReference<>();
         }
 
         @Override
@@ -205,7 +205,7 @@ implements FlowableTransformer<T, T> {
             this.scheduler = scheduler;
             this.task = new SequentialDisposable();
             this.once = new AtomicBoolean();
-            this.value = new AtomicReference<T>();
+            this.value = new AtomicReference<>();
         }
 
         @Override

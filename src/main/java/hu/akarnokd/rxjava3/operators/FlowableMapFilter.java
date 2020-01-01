@@ -44,7 +44,7 @@ final class FlowableMapFilter<T, R> extends Flowable<R> implements FlowableTrans
 
     @Override
     public Publisher<R> apply(Flowable<T> upstream) {
-        return new FlowableMapFilter<T, R>(upstream, consumer);
+        return new FlowableMapFilter<>(upstream, consumer);
     }
 
     @Override

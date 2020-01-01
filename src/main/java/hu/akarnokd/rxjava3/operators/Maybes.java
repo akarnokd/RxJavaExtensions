@@ -16,11 +16,12 @@
 
 package hu.akarnokd.rxjava3.operators;
 
+import java.util.Objects;
+
 import org.reactivestreams.Publisher;
 
 import io.reactivex.rxjava3.core.*;
 import io.reactivex.rxjava3.functions.*;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 
 /**
  * Additional operators in the form of {@link MaybeConverter}s,
@@ -54,10 +55,10 @@ public final class Maybes {
             Function<? super T, ? extends CompletableSource> onSuccessHandler,
             Function<? super Throwable, ? extends CompletableSource> onErrorHandler,
             Supplier<? extends CompletableSource> onCompleteHandler) {
-        ObjectHelper.requireNonNull(onSuccessHandler, "onSuccessHandler is null");
-        ObjectHelper.requireNonNull(onErrorHandler, "onErrorHandler is null");
-        ObjectHelper.requireNonNull(onCompleteHandler, "onCompleteHandler is null");
-        return new MaybeFlatMapSignalCompletable<T>(null, onSuccessHandler, onErrorHandler, onCompleteHandler);
+        Objects.requireNonNull(onSuccessHandler, "onSuccessHandler is null");
+        Objects.requireNonNull(onErrorHandler, "onErrorHandler is null");
+        Objects.requireNonNull(onCompleteHandler, "onCompleteHandler is null");
+        return new MaybeFlatMapSignalCompletable<>(null, onSuccessHandler, onErrorHandler, onCompleteHandler);
     }
 
     /**
@@ -78,10 +79,10 @@ public final class Maybes {
             Function<? super T, ? extends SingleSource<? extends R>> onSuccessHandler,
             Function<? super Throwable, ? extends SingleSource<? extends R>> onErrorHandler,
                     Supplier<? extends SingleSource<? extends R>> onCompleteHandler) {
-        ObjectHelper.requireNonNull(onSuccessHandler, "onSuccessHandler is null");
-        ObjectHelper.requireNonNull(onErrorHandler, "onErrorHandler is null");
-        ObjectHelper.requireNonNull(onCompleteHandler, "onCompleteHandler is null");
-        return new MaybeFlatMapSignalSingle<T, R>(null, onSuccessHandler, onErrorHandler, onCompleteHandler);
+        Objects.requireNonNull(onSuccessHandler, "onSuccessHandler is null");
+        Objects.requireNonNull(onErrorHandler, "onErrorHandler is null");
+        Objects.requireNonNull(onCompleteHandler, "onCompleteHandler is null");
+        return new MaybeFlatMapSignalSingle<>(null, onSuccessHandler, onErrorHandler, onCompleteHandler);
     }
 
     /**
@@ -102,10 +103,10 @@ public final class Maybes {
             Function<? super T, ? extends ObservableSource<? extends R>> onSuccessHandler,
             Function<? super Throwable, ? extends ObservableSource<? extends R>> onErrorHandler,
                     Supplier<? extends ObservableSource<? extends R>> onCompleteHandler) {
-        ObjectHelper.requireNonNull(onSuccessHandler, "onSuccessHandler is null");
-        ObjectHelper.requireNonNull(onErrorHandler, "onErrorHandler is null");
-        ObjectHelper.requireNonNull(onCompleteHandler, "onCompleteHandler is null");
-        return new MaybeFlatMapSignalObservable<T, R>(null, onSuccessHandler, onErrorHandler, onCompleteHandler);
+        Objects.requireNonNull(onSuccessHandler, "onSuccessHandler is null");
+        Objects.requireNonNull(onErrorHandler, "onErrorHandler is null");
+        Objects.requireNonNull(onCompleteHandler, "onCompleteHandler is null");
+        return new MaybeFlatMapSignalObservable<>(null, onSuccessHandler, onErrorHandler, onCompleteHandler);
     }
 
     /**
@@ -126,9 +127,9 @@ public final class Maybes {
             Function<? super T, ? extends Publisher<? extends R>> onSuccessHandler,
             Function<? super Throwable, ? extends Publisher<? extends R>> onErrorHandler,
                     Supplier<? extends Publisher<? extends R>> onCompleteHandler) {
-        ObjectHelper.requireNonNull(onSuccessHandler, "onSuccessHandler is null");
-        ObjectHelper.requireNonNull(onErrorHandler, "onErrorHandler is null");
-        ObjectHelper.requireNonNull(onCompleteHandler, "onCompleteHandler is null");
-        return new MaybeFlatMapSignalFlowable<T, R>(null, onSuccessHandler, onErrorHandler, onCompleteHandler);
+        Objects.requireNonNull(onSuccessHandler, "onSuccessHandler is null");
+        Objects.requireNonNull(onErrorHandler, "onErrorHandler is null");
+        Objects.requireNonNull(onCompleteHandler, "onCompleteHandler is null");
+        return new MaybeFlatMapSignalFlowable<>(null, onSuccessHandler, onErrorHandler, onCompleteHandler);
     }
 }

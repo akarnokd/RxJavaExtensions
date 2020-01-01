@@ -44,8 +44,8 @@ import io.reactivex.rxjava3.subjects.Subject;
     @SuppressWarnings("unchecked")
     RefCountSubject(Subject<T> actual) {
         this.actual = actual;
-        this.upstream = new AtomicReference<Disposable>();
-        this.observers = new AtomicReference<RefCountObserver<T>[]>(EMPTY);
+        this.upstream = new AtomicReference<>();
+        this.observers = new AtomicReference<>(EMPTY);
     }
 
     @Override
@@ -74,7 +74,7 @@ import io.reactivex.rxjava3.subjects.Subject;
 
     @Override
     protected void subscribeActual(Observer<? super T> observer) {
-        RefCountObserver<T> rcs = new RefCountObserver<T>(observer, this);
+        RefCountObserver<T> rcs = new RefCountObserver<>(observer, this);
         if (!add(rcs)) {
             EmptyDisposable.error(new IllegalStateException("RefCountSubject terminated"), observer);
             return;

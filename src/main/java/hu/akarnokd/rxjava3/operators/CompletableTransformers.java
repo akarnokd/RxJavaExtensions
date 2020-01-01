@@ -16,9 +16,10 @@
 
 package hu.akarnokd.rxjava3.operators;
 
+import java.util.Objects;
+
 import io.reactivex.rxjava3.core.*;
 import io.reactivex.rxjava3.functions.*;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 
 /**
  * Additional operators in the form of {@link CompletableTransformer},
@@ -48,8 +49,8 @@ public final class CompletableTransformers {
     public static CompletableTransformer flatMap(
             Supplier<? extends CompletableSource> onCompleteHandler,
             Function<? super Throwable, ? extends CompletableSource> onErrorHandler) {
-        ObjectHelper.requireNonNull(onCompleteHandler, "onCompleteHandler is null");
-        ObjectHelper.requireNonNull(onErrorHandler, "onErrorHandler is null");
+        Objects.requireNonNull(onCompleteHandler, "onCompleteHandler is null");
+        Objects.requireNonNull(onErrorHandler, "onErrorHandler is null");
         return new CompletableFlatMapSignalCompletable(null, onCompleteHandler, onErrorHandler);
     }
 }

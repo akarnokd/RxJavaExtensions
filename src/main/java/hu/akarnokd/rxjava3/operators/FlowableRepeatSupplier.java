@@ -16,12 +16,13 @@
 
 package hu.akarnokd.rxjava3.operators;
 
+import java.util.Objects;
+
 import org.reactivestreams.Subscriber;
 
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.exceptions.Exceptions;
 import io.reactivex.rxjava3.functions.Supplier;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 import io.reactivex.rxjava3.internal.fuseable.ConditionalSubscriber;
 import io.reactivex.rxjava3.internal.subscriptions.*;
 import io.reactivex.rxjava3.internal.util.BackpressureHelper;
@@ -44,9 +45,9 @@ final class FlowableRepeatSupplier<T> extends Flowable<T> {
     @Override
     protected void subscribeActual(Subscriber<? super T> s) {
         if (s instanceof ConditionalSubscriber) {
-            s.onSubscribe(new RepeatCallableConditionalSubscription<T>((ConditionalSubscriber<? super T>)s, supplier));
+            s.onSubscribe(new RepeatCallableConditionalSubscription<>((ConditionalSubscriber<? super T>)s, supplier));
         } else {
-            s.onSubscribe(new RepeatCallableSubscription<T>(s, supplier));
+            s.onSubscribe(new RepeatCallableSubscription<>(s, supplier));
         }
     }
 
@@ -88,7 +89,7 @@ final class FlowableRepeatSupplier<T> extends Flowable<T> {
                 T v;
 
                 try {
-                    v = ObjectHelper.requireNonNull(c.get(), "The supplier returned a null value");
+                    v = Objects.requireNonNull(c.get(), "The supplier returned a null value");
                 } catch (Throwable ex) {
                     Exceptions.throwIfFatal(ex);
                     downstream.onError(ex);
@@ -114,7 +115,7 @@ final class FlowableRepeatSupplier<T> extends Flowable<T> {
                     T v;
 
                     try {
-                        v = ObjectHelper.requireNonNull(c.get(), "The supplier returned a null value");
+                        v = Objects.requireNonNull(c.get(), "The supplier returned a null value");
                     } catch (Throwable ex) {
                         Exceptions.throwIfFatal(ex);
                         downstream.onError(ex);
@@ -156,7 +157,7 @@ final class FlowableRepeatSupplier<T> extends Flowable<T> {
 
         @Override
         public T poll() throws Throwable {
-            return ObjectHelper.requireNonNull(supplier.get(), "The supplier returned a null value");
+            return Objects.requireNonNull(supplier.get(), "The supplier returned a null value");
         }
 
         @Override
@@ -208,7 +209,7 @@ final class FlowableRepeatSupplier<T> extends Flowable<T> {
                 T v;
 
                 try {
-                    v = ObjectHelper.requireNonNull(c.get(), "The supplier returned a null value");
+                    v = Objects.requireNonNull(c.get(), "The supplier returned a null value");
                 } catch (Throwable ex) {
                     Exceptions.throwIfFatal(ex);
                     downstream.onError(ex);
@@ -234,7 +235,7 @@ final class FlowableRepeatSupplier<T> extends Flowable<T> {
                     T v;
 
                     try {
-                        v = ObjectHelper.requireNonNull(c.get(), "The supplier returned a null value");
+                        v = Objects.requireNonNull(c.get(), "The supplier returned a null value");
                     } catch (Throwable ex) {
                         Exceptions.throwIfFatal(ex);
                         downstream.onError(ex);
@@ -276,7 +277,7 @@ final class FlowableRepeatSupplier<T> extends Flowable<T> {
 
         @Override
         public T poll() throws Throwable {
-            return ObjectHelper.requireNonNull(supplier.get(), "The supplier returned a null value");
+            return Objects.requireNonNull(supplier.get(), "The supplier returned a null value");
         }
 
         @Override

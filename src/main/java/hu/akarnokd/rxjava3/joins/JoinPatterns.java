@@ -45,7 +45,7 @@ final class JoinPatterns {
         if (right == null) {
             throw new NullPointerException("right");
         }
-        return new Pattern2<T1, T2>(left, right);
+        return new Pattern2<>(left, right);
     }
 
     /**
@@ -63,7 +63,7 @@ final class JoinPatterns {
         if (selector == null) {
             throw new NullPointerException("selector");
         }
-        return new Pattern1<T1>(source).then(selector);
+        return new Pattern1<>(source).then(selector);
     }
 
     /**
@@ -72,6 +72,7 @@ final class JoinPatterns {
      * @param <R> the result type
      * @return the Observable coining the plans
      */
+    @SafeVarargs
     public static <R> Observable<R> when(Plan<R>... plans) {
         if (plans == null) {
             throw new NullPointerException("plans");
@@ -92,11 +93,11 @@ final class JoinPatterns {
         return new Observable<R>() {
             @Override
             protected void subscribeActual(final Observer<? super R> t1) {
-                final Map<Object, JoinObserver> externalSubscriptions = new HashMap<Object, JoinObserver>();
+                final Map<Object, JoinObserver> externalSubscriptions = new HashMap<>();
                 final Object gate = new Object();
-                final List<ActivePlan0> activePlans = new ArrayList<ActivePlan0>();
+                final List<ActivePlan0> activePlans = new ArrayList<>();
 
-                final Observer<R> out = new SafeObserver<R>(new Observer<R>() {
+                final Observer<R> out = new SafeObserver<>(new Observer<R>() {
 
                     @Override
                     public void onSubscribe(Disposable d) {
@@ -121,7 +122,7 @@ final class JoinPatterns {
                     }
                 });
 
-                out.onSubscribe(Disposables.empty());
+                out.onSubscribe(Disposable.empty());
 
                 try {
                     for (Plan<R> plan : plans) {

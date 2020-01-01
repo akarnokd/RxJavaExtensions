@@ -59,12 +59,12 @@ final class FlowableRequestSampleTime<T> extends Flowable<T> implements Flowable
 
     @Override
     public Publisher<T> apply(Flowable<T> upstream) {
-        return new FlowableRequestSampleTime<T>(upstream, initialDelay, period, unit, scheduler);
+        return new FlowableRequestSampleTime<>(upstream, initialDelay, period, unit, scheduler);
     }
 
     @Override
     protected void subscribeActual(Subscriber<? super T> s) {
-        RequestSample<T> parent = new RequestSample<T>(s);
+        RequestSample<T> parent = new RequestSample<>(s);
         s.onSubscribe(parent);
         DisposableHelper.setOnce(parent.timer, scheduler.schedulePeriodicallyDirect(parent, initialDelay, period, unit));
         source.subscribe(parent);
@@ -91,8 +91,8 @@ final class FlowableRequestSampleTime<T> extends Flowable<T> implements Flowable
             this.downstream = downstream;
             this.downstreamRequests = new AtomicLong();
             this.upstreamRequests = new AtomicLong();
-            this.upstream = new AtomicReference<Subscription>();
-            this.timer = new AtomicReference<Disposable>();
+            this.upstream = new AtomicReference<>();
+            this.timer = new AtomicReference<>();
         }
 
         @Override

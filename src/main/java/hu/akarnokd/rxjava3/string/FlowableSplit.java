@@ -101,7 +101,7 @@ final class FlowableSplit extends Flowable<String> implements FlowableTransforme
             this.pattern = pattern;
             this.bufferSize = bufferSize;
             this.limit = bufferSize - (bufferSize >> 2);
-            this.queue = new SpscArrayQueue<String[]>(bufferSize);
+            this.queue = new SpscArrayQueue<>(bufferSize);
             this.requested = new AtomicLong();
         }
 

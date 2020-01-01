@@ -50,7 +50,7 @@ public final class NonoProcessor extends Nono implements Processor<Void, Void> {
     }
 
     NonoProcessor() {
-        subscribers = new AtomicReference<NonoSubscription[]>(EMPTY);
+        subscribers = new AtomicReference<>(EMPTY);
         once = new AtomicBoolean();
     }
 

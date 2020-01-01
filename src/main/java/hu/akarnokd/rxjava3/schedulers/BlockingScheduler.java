@@ -16,6 +16,7 @@
 
 package hu.akarnokd.rxjava3.schedulers;
 
+import java.util.Objects;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
 import java.util.concurrent.locks.*;
@@ -24,7 +25,7 @@ import io.reactivex.rxjava3.core.Scheduler;
 import io.reactivex.rxjava3.disposables.*;
 import io.reactivex.rxjava3.functions.Action;
 import io.reactivex.rxjava3.internal.disposables.SequentialDisposable;
-import io.reactivex.rxjava3.internal.functions.*;
+import io.reactivex.rxjava3.internal.functions.Functions;
 import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
@@ -83,7 +84,7 @@ public final class BlockingScheduler extends Scheduler {
     volatile Thread thread;
 
     public BlockingScheduler() {
-        this.queue = new ConcurrentLinkedQueue<Action>();
+        this.queue = new ConcurrentLinkedQueue<>();
         this.lock = new ReentrantLock();
         this.condition = this.lock.newCondition();
         this.running = new AtomicBoolean();
@@ -110,7 +111,7 @@ public final class BlockingScheduler extends Scheduler {
      * @param action the action to execute
      */
     public void execute(Action action) {
-        ObjectHelper.requireNonNull(action, "action is null");
+        Objects.requireNonNull(action, "action is null");
         if (!running.get() && running.compareAndSet(false, true)) {
             thread = Thread.currentThread();
             queue.offer(action);
@@ -170,10 +171,10 @@ public final class BlockingScheduler extends Scheduler {
 
     @Override
     public Disposable scheduleDirect(Runnable run, long delay, TimeUnit unit) {
-        ObjectHelper.requireNonNull(run, "run is null");
-        ObjectHelper.requireNonNull(unit, "unit is null");
+        Objects.requireNonNull(run, "run is null");
+        Objects.requireNonNull(unit, "unit is null");
         if (shutdown.get()) {
-            return Disposables.disposed();
+            return Disposable.disposed();
         }
 
         final BlockingDirectTask task = new BlockingDirectTask(run);
@@ -194,7 +195,7 @@ public final class BlockingScheduler extends Scheduler {
             }
         }, delay, unit);
 
-        if (d == Disposables.disposed()) {
+        if (d == Disposable.disposed()) {
             return d;
         }
 
@@ -312,11 +313,11 @@ public final class BlockingScheduler extends Scheduler {
 
         @Override
         public Disposable schedule(Runnable run, long delay, TimeUnit unit) {
-            ObjectHelper.requireNonNull(run, "run is null");
-            ObjectHelper.requireNonNull(unit, "unit is null");
+            Objects.requireNonNull(run, "run is null");
+            Objects.requireNonNull(unit, "unit is null");
 
             if (shutdown.get() || isDisposed()) {
-                return Disposables.disposed();
+                return Disposable.disposed();
             }
 
             final BlockingTask task = new BlockingTask(run);
@@ -338,7 +339,7 @@ public final class BlockingScheduler extends Scheduler {
                 }
             }, delay, unit);
 
-            if (d == Disposables.disposed()) {
+            if (d == Disposable.disposed()) {
                 return d;
             }
 

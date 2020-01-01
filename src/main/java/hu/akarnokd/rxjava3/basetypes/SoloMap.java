@@ -16,10 +16,11 @@
 
 package hu.akarnokd.rxjava3.basetypes;
 
+import java.util.Objects;
+
 import org.reactivestreams.Subscriber;
 
 import io.reactivex.rxjava3.functions.Function;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 import io.reactivex.rxjava3.internal.subscribers.BasicFuseableSubscriber;
 
 /**
@@ -60,7 +61,7 @@ final class SoloMap<T, R> extends Solo<R> {
                     R v;
 
                     try {
-                        v = ObjectHelper.requireNonNull(mapper.apply(t), "The mapper returned a null value");
+                        v = Objects.requireNonNull(mapper.apply(t), "The mapper returned a null value");
                     } catch (Throwable ex) {
                         fail(ex);
                         return;
@@ -82,7 +83,7 @@ final class SoloMap<T, R> extends Solo<R> {
         public R poll() throws Throwable {
             T v = qs.poll();
             if (v != null) {
-                return ObjectHelper.requireNonNull(mapper.apply(v), "The mapper returned a null value");
+                return Objects.requireNonNull(mapper.apply(v), "The mapper returned a null value");
             }
             return null;
         }

@@ -16,12 +16,12 @@
 
 package hu.akarnokd.rxjava3.expr;
 
-import java.util.Map;
+import java.util.*;
 
 import hu.akarnokd.rxjava3.util.AlwaysTrueBooleanSupplier;
 import io.reactivex.rxjava3.core.*;
+import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.functions.*;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 /**
@@ -105,9 +105,9 @@ public final class StatementObservable {
     public static <K, R> Observable<R> switchCase(Supplier<? extends K> caseSelector,
             Map<? super K, ? extends ObservableSource<? extends R>> mapOfCases,
                     ObservableSource<? extends R> defaultCase) {
-        ObjectHelper.requireNonNull(caseSelector, "caseSelector is null");
-        ObjectHelper.requireNonNull(mapOfCases, "mapOfCases is null");
-        ObjectHelper.requireNonNull(defaultCase, "defaultCase is null");
+        Objects.requireNonNull(caseSelector, "caseSelector is null");
+        Objects.requireNonNull(mapOfCases, "mapOfCases is null");
+        Objects.requireNonNull(defaultCase, "defaultCase is null");
         return RxJavaPlugins.onAssembly(new ObservableSwitchCase<R, K>(caseSelector, mapOfCases, defaultCase));
     }
 
@@ -128,8 +128,8 @@ public final class StatementObservable {
      *         condition is true
      */
     public static <T> Observable<T> doWhile(ObservableSource<? extends T> source, BooleanSupplier postCondition) {
-        ObjectHelper.requireNonNull(source, "source is null");
-        ObjectHelper.requireNonNull(postCondition, "postCondition is null");
+        Objects.requireNonNull(source, "source is null");
+        Objects.requireNonNull(postCondition, "postCondition is null");
         return RxJavaPlugins.onAssembly(new ObservableWhileDoWhile<T>(source, AlwaysTrueBooleanSupplier.INSTANCE, postCondition));
     }
 
@@ -148,8 +148,8 @@ public final class StatementObservable {
      *         Observable so long as <code>preCondition</code> is true
      */
     public static <T> Observable<T> whileDo(ObservableSource<? extends T> source, BooleanSupplier preCondition) {
-        ObjectHelper.requireNonNull(source, "source is null");
-        ObjectHelper.requireNonNull(preCondition, "preCondition is null");
+        Objects.requireNonNull(source, "source is null");
+        Objects.requireNonNull(preCondition, "preCondition is null");
         return RxJavaPlugins.onAssembly(new ObservableWhileDoWhile<T>(source, preCondition, preCondition));
     }
 
@@ -217,9 +217,9 @@ public final class StatementObservable {
      */
     public static <R> Observable<R> ifThen(BooleanSupplier condition, ObservableSource<? extends R> then,
             Observable<? extends R> orElse) {
-        ObjectHelper.requireNonNull(condition, "condition is null");
-        ObjectHelper.requireNonNull(then, "then is null");
-        ObjectHelper.requireNonNull(orElse, "orElse is null");
-        return RxJavaPlugins.onAssembly(new ObservableIfThen<R>(condition, then, orElse));
+        Objects.requireNonNull(condition, "condition is null");
+        Objects.requireNonNull(then, "then is null");
+        Objects.requireNonNull(orElse, "orElse is null");
+        return RxJavaPlugins.onAssembly(new ObservableIfThen<>(condition, then, orElse));
     }
 }

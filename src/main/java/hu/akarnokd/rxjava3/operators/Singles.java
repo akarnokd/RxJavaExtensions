@@ -16,11 +16,12 @@
 
 package hu.akarnokd.rxjava3.operators;
 
+import java.util.Objects;
+
 import org.reactivestreams.Publisher;
 
 import io.reactivex.rxjava3.core.*;
 import io.reactivex.rxjava3.functions.Function;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 
 /**
  * Additional operators in the form of {@link SingleConverter}s,
@@ -51,9 +52,9 @@ public final class Singles {
     public static <T> SingleConverter<T, Completable> flatMapCompletable(
             Function<? super T, ? extends CompletableSource> onSuccessHandler,
             Function<? super Throwable, ? extends CompletableSource> onErrorHandler) {
-        ObjectHelper.requireNonNull(onSuccessHandler, "onSuccessHandler is null");
-        ObjectHelper.requireNonNull(onErrorHandler, "onErrorHandler is null");
-        return new SingleFlatMapSignalCompletable<T>(null, onSuccessHandler, onErrorHandler);
+        Objects.requireNonNull(onSuccessHandler, "onSuccessHandler is null");
+        Objects.requireNonNull(onErrorHandler, "onErrorHandler is null");
+        return new SingleFlatMapSignalCompletable<>(null, onSuccessHandler, onErrorHandler);
     }
 
     /**
@@ -71,9 +72,9 @@ public final class Singles {
     public static <T, R> SingleConverter<T, Maybe<R>> flatMapMaybe(
             Function<? super T, ? extends MaybeSource<? extends R>> onSuccessHandler,
             Function<? super Throwable, ? extends MaybeSource<? extends R>> onErrorHandler) {
-        ObjectHelper.requireNonNull(onSuccessHandler, "onSuccessHandler is null");
-        ObjectHelper.requireNonNull(onErrorHandler, "onErrorHandler is null");
-        return new SingleFlatMapSignalMaybe<T, R>(null, onSuccessHandler, onErrorHandler);
+        Objects.requireNonNull(onSuccessHandler, "onSuccessHandler is null");
+        Objects.requireNonNull(onErrorHandler, "onErrorHandler is null");
+        return new SingleFlatMapSignalMaybe<>(null, onSuccessHandler, onErrorHandler);
     }
 
     /**
@@ -91,9 +92,9 @@ public final class Singles {
     public static <T, R> SingleConverter<T, Observable<R>> flatMapObservable(
             Function<? super T, ? extends ObservableSource<? extends R>> onSuccessHandler,
             Function<? super Throwable, ? extends ObservableSource<? extends R>> onErrorHandler) {
-        ObjectHelper.requireNonNull(onSuccessHandler, "onSuccessHandler is null");
-        ObjectHelper.requireNonNull(onErrorHandler, "onErrorHandler is null");
-        return new SingleFlatMapSignalObservable<T, R>(null, onSuccessHandler, onErrorHandler);
+        Objects.requireNonNull(onSuccessHandler, "onSuccessHandler is null");
+        Objects.requireNonNull(onErrorHandler, "onErrorHandler is null");
+        return new SingleFlatMapSignalObservable<>(null, onSuccessHandler, onErrorHandler);
     }
 
     /**
@@ -111,8 +112,8 @@ public final class Singles {
     public static <T, R> SingleConverter<T, Flowable<R>> flatMapFlowable(
             Function<? super T, ? extends Publisher<? extends R>> onSuccessHandler,
             Function<? super Throwable, ? extends Publisher<? extends R>> onErrorHandler) {
-        ObjectHelper.requireNonNull(onSuccessHandler, "onSuccessHandler is null");
-        ObjectHelper.requireNonNull(onErrorHandler, "onErrorHandler is null");
-        return new SingleFlatMapSignalFlowable<T, R>(null, onSuccessHandler, onErrorHandler);
+        Objects.requireNonNull(onSuccessHandler, "onSuccessHandler is null");
+        Objects.requireNonNull(onErrorHandler, "onErrorHandler is null");
+        return new SingleFlatMapSignalFlowable<>(null, onSuccessHandler, onErrorHandler);
     }
 }

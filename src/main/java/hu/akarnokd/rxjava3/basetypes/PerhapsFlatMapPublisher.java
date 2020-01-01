@@ -16,6 +16,7 @@
 
 package hu.akarnokd.rxjava3.basetypes;
 
+import java.util.Objects;
 import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
@@ -23,7 +24,6 @@ import org.reactivestreams.*;
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.exceptions.Exceptions;
 import io.reactivex.rxjava3.functions.Function;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 import io.reactivex.rxjava3.internal.subscriptions.SubscriptionHelper;
 
 /**
@@ -88,7 +88,7 @@ final class PerhapsFlatMapPublisher<T, R> extends Flowable<R> {
             Publisher<? extends R> ph;
 
             try {
-                ph = ObjectHelper.requireNonNull(mapper.apply(t), "The mapper returned a null Publisher");
+                ph = Objects.requireNonNull(mapper.apply(t), "The mapper returned a null Publisher");
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
                 downstream.onError(ex);

@@ -65,7 +65,7 @@ final class NonoRepeatUntil extends Nono {
             this.downstream = downstream;
             this.stop = stop;
             this.source = source;
-            this.upstream = new AtomicReference<Subscription>();
+            this.upstream = new AtomicReference<>();
         }
 
         @Override

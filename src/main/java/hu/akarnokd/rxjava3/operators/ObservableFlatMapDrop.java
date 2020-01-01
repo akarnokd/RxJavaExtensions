@@ -16,6 +16,7 @@
 
 package hu.akarnokd.rxjava3.operators;
 
+import java.util.Objects;
 import java.util.concurrent.atomic.*;
 
 import io.reactivex.rxjava3.core.*;
@@ -23,7 +24,6 @@ import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.exceptions.Exceptions;
 import io.reactivex.rxjava3.functions.Function;
 import io.reactivex.rxjava3.internal.disposables.DisposableHelper;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 import io.reactivex.rxjava3.internal.util.AtomicThrowable;
 
 /**
@@ -46,7 +46,7 @@ final class ObservableFlatMapDrop<T, R> extends Observable<R> implements Observa
 
     @Override
     public ObservableSource<R> apply(Observable<T> upstream) {
-        return new ObservableFlatMapDrop<T, R>(upstream, mapper);
+        return new ObservableFlatMapDrop<>(upstream, mapper);
     }
 
     @Override
@@ -95,7 +95,7 @@ final class ObservableFlatMapDrop<T, R> extends Observable<R> implements Observa
                 ObservableSource<? extends R> o;
 
                 try {
-                    o = ObjectHelper.requireNonNull(mapper.apply(t), "The mapper returned a null ObservableSource");
+                    o = Objects.requireNonNull(mapper.apply(t), "The mapper returned a null ObservableSource");
                 } catch (Throwable ex) {
                     Exceptions.throwIfFatal(ex);
                     upstream.dispose();

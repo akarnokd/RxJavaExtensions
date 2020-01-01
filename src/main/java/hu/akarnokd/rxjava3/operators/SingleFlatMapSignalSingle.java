@@ -16,6 +16,7 @@
 
 package hu.akarnokd.rxjava3.operators;
 
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
 import io.reactivex.rxjava3.core.*;
@@ -23,7 +24,6 @@ import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.exceptions.Exceptions;
 import io.reactivex.rxjava3.functions.Function;
 import io.reactivex.rxjava3.internal.disposables.DisposableHelper;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 
 /**
  * Maps the signals of the upstream into SingleSources and consumes them.
@@ -48,7 +48,7 @@ implements SingleTransformer<T, R> {
 
     @Override
     public Single<R> apply(Single<T> t) {
-        return new SingleFlatMapSignalSingle<T, R>(t, onSuccessHandler, onErrorHandler);
+        return new SingleFlatMapSignalSingle<>(t, onSuccessHandler, onErrorHandler);
     }
 
     @Override
@@ -69,7 +69,7 @@ implements SingleTransformer<T, R> {
                 SingleObserver<? super R> downstream,
                 Function<? super T, ? extends SingleSource<? extends R>> onSuccessHandler,
                 Function<? super Throwable, ? extends SingleSource<? extends R>> onErrorHandler) {
-            this.consumer = new SignalConsumer<R>(downstream);
+            this.consumer = new SignalConsumer<>(downstream);
             this.onSuccessHandler = onSuccessHandler;
             this.onErrorHandler = onErrorHandler;
         }
@@ -97,7 +97,7 @@ implements SingleTransformer<T, R> {
             SingleSource<? extends R> next;
 
             try {
-                next = ObjectHelper.requireNonNull(onSuccessHandler.apply(t), "The onSuccessHandler returned a null SingleSource");
+                next = Objects.requireNonNull(onSuccessHandler.apply(t), "The onSuccessHandler returned a null SingleSource");
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
                 consumer.onError(ex);
@@ -112,7 +112,7 @@ implements SingleTransformer<T, R> {
             SingleSource<? extends R> next;
 
             try {
-                next = ObjectHelper.requireNonNull(onErrorHandler.apply(e), "The onErrorHandler returned a null SingleSource");
+                next = Objects.requireNonNull(onErrorHandler.apply(e), "The onErrorHandler returned a null SingleSource");
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
                 consumer.onError(ex);

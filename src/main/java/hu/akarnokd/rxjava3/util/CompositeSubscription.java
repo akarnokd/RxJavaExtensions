@@ -35,7 +35,7 @@ public final class CompositeSubscription implements Subscription {
                 if (!cancelled) {
                     OpenHashSet<Subscription> h = set;
                     if (h == null) {
-                        h = new OpenHashSet<Subscription>();
+                        h = new OpenHashSet<>();
                         set = h;
                     }
                     h.add(s);

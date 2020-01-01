@@ -16,6 +16,7 @@
 
 package hu.akarnokd.rxjava3.string;
 
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 import io.reactivex.rxjava3.core.*;
@@ -37,7 +38,7 @@ public final class StringFlowable {
      * @return the new Flowable instance
      */
     public static Flowable<Integer> characters(CharSequence string) {
-        ObjectHelper.requireNonNull(string, "string is null");
+        Objects.requireNonNull(string, "string is null");
         return RxJavaPlugins.onAssembly(new FlowableCharSequence(string));
     }
 
@@ -63,7 +64,7 @@ public final class StringFlowable {
      * @since 0.13.0
      */
     public static FlowableTransformer<String, String> split(Pattern pattern, int bufferSize) {
-        ObjectHelper.requireNonNull(pattern, "pattern is null");
+        Objects.requireNonNull(pattern, "pattern is null");
         ObjectHelper.verifyPositive(bufferSize, "bufferSize");
         return new FlowableSplit(null, pattern, bufferSize);
     }

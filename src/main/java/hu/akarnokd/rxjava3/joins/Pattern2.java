@@ -53,7 +53,7 @@ public final class Pattern2<T1, T2> {
         if (other == null) {
             throw new NullPointerException();
         }
-        return new Pattern3<T1, T2, T3>(o1, o2, other);
+        return new Pattern3<>(o1, o2, other);
     }
 
     /**
@@ -71,6 +71,6 @@ public final class Pattern2<T1, T2> {
         if (selector == null) {
             throw new NullPointerException();
         }
-        return new Plan2<T1, T2, R>(this, selector);
+        return new Plan2<>(this, selector);
     }
 }

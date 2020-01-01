@@ -68,7 +68,6 @@ public class ObservableErrorJumpTest {
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     public void errorJump() {
         Observable.range(1, 5)
         .concatWith(Observable.<Integer>error(new TestException()))

@@ -55,12 +55,12 @@ final class FlowableCoalesce<T, R> extends Flowable<R> implements FlowableTransf
 
     @Override
     public Publisher<R> apply(Flowable<T> upstream) {
-        return new FlowableCoalesce<T, R>(upstream, containerSupplier, coalescer, bufferSize);
+        return new FlowableCoalesce<>(upstream, containerSupplier, coalescer, bufferSize);
     }
 
     @Override
     protected void subscribeActual(Subscriber<? super R> s) {
-        source.subscribe(new CoalesceSubscriber<T, R>(s, containerSupplier, coalescer, bufferSize));
+        source.subscribe(new CoalesceSubscriber<>(s, containerSupplier, coalescer, bufferSize));
     }
 
     static final class CoalesceSubscriber<T, R> extends AtomicInteger
@@ -144,7 +144,7 @@ final class FlowableCoalesce<T, R> extends Flowable<R> implements FlowableTransf
             } else {
                 SimplePlainQueue<T> q = queue;
                 if (q == null) {
-                    q = new SpscLinkedArrayQueue<T>(bufferSize);
+                    q = new SpscLinkedArrayQueue<>(bufferSize);
                     queue = q;
                 }
                 q.offer(t);

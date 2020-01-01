@@ -16,11 +16,10 @@
 
 package hu.akarnokd.rxjava3.expr;
 
-import java.util.Map;
+import java.util.*;
 
 import io.reactivex.rxjava3.core.*;
 import io.reactivex.rxjava3.functions.*;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 /**
@@ -104,9 +103,9 @@ public final class StatementMaybe {
     public static <K, R> Maybe<R> switchCase(Supplier<? extends K> caseSelector,
             Map<? super K, ? extends MaybeSource<? extends R>> mapOfCases,
                     MaybeSource<? extends R> defaultCase) {
-        ObjectHelper.requireNonNull(caseSelector, "caseSelector is null");
-        ObjectHelper.requireNonNull(mapOfCases, "mapOfCases is null");
-        ObjectHelper.requireNonNull(defaultCase, "defaultCase is null");
+        Objects.requireNonNull(caseSelector, "caseSelector is null");
+        Objects.requireNonNull(mapOfCases, "mapOfCases is null");
+        Objects.requireNonNull(defaultCase, "defaultCase is null");
         return RxJavaPlugins.onAssembly(new MaybeSwitchCase<R, K>(caseSelector, mapOfCases, defaultCase));
     }
 
@@ -174,9 +173,9 @@ public final class StatementMaybe {
      */
     public static <R> Maybe<R> ifThen(BooleanSupplier condition, MaybeSource<? extends R> then,
             Maybe<? extends R> orElse) {
-        ObjectHelper.requireNonNull(condition, "condition is null");
-        ObjectHelper.requireNonNull(then, "then is null");
-        ObjectHelper.requireNonNull(orElse, "orElse is null");
-        return RxJavaPlugins.onAssembly(new MaybeIfThen<R>(condition, then, orElse));
+        Objects.requireNonNull(condition, "condition is null");
+        Objects.requireNonNull(then, "then is null");
+        Objects.requireNonNull(orElse, "orElse is null");
+        return RxJavaPlugins.onAssembly(new MaybeIfThen<>(condition, then, orElse));
     }
 }

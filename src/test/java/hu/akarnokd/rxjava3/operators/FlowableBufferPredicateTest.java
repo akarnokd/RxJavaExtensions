@@ -31,7 +31,6 @@ import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 public class FlowableBufferPredicateTest {
 
-    @SuppressWarnings("unchecked")
     @Test
     public void whileNormal() {
         Flowable.just(1, 2, -1, 3, 4, 5, -1, -1, 6)
@@ -50,7 +49,6 @@ public class FlowableBufferPredicateTest {
         );
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void whileNormalHidden() {
         Flowable.just(1, 2, -1, 3, 4, 5, -1, -1, 6).hide()
@@ -69,7 +67,6 @@ public class FlowableBufferPredicateTest {
         );
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void whileNormalBackpressured() {
         Flowable.just(1, 2, -1, 3, 4, 5, -1, -1, 6)
@@ -96,7 +93,6 @@ public class FlowableBufferPredicateTest {
         );
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void whileMatchBegin() {
         Flowable.just(-1, 1, 2)
@@ -113,7 +109,6 @@ public class FlowableBufferPredicateTest {
         );
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void untilNormal() {
         Flowable.just(1, 2, -1, 3, 4, 5, -1, -1, 6)
@@ -132,7 +127,6 @@ public class FlowableBufferPredicateTest {
         );
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void untilNormalHidden() {
         Flowable.just(1, 2, -1, 3, 4, 5, -1, -1, 6).hide()
@@ -151,7 +145,6 @@ public class FlowableBufferPredicateTest {
         );
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void untilNormalBackpressured() {
         Flowable.just(1, 2, -1, 3, 4, 5, -1, -1, 6)
@@ -178,7 +171,6 @@ public class FlowableBufferPredicateTest {
         );
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void untilMatchBegin() {
         Flowable.just(-1, 1, 2)
@@ -195,7 +187,6 @@ public class FlowableBufferPredicateTest {
         );
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void emptyWhile() {
         Flowable.<Integer>empty()
@@ -209,7 +200,6 @@ public class FlowableBufferPredicateTest {
         .assertResult();
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void emptyUntil() {
         Flowable.<Integer>empty()
@@ -223,7 +213,6 @@ public class FlowableBufferPredicateTest {
         .assertResult();
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void errorWhile() {
         Flowable.<Integer>error(new IOException())
@@ -237,7 +226,6 @@ public class FlowableBufferPredicateTest {
         .assertFailure(IOException.class);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void errorUntil() {
         Flowable.<Integer>error(new IOException())
@@ -251,7 +239,6 @@ public class FlowableBufferPredicateTest {
         .assertFailure(IOException.class);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void whileTake() {
         Flowable.just(1, 2, -1, 3, 4, 5, -1, -1, 6)
@@ -269,7 +256,6 @@ public class FlowableBufferPredicateTest {
         );
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void untilTake() {
         Flowable.just(1, 2, -1, 3, 4, 5, -1, -1, 6)
@@ -287,7 +273,6 @@ public class FlowableBufferPredicateTest {
         );
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void predicateCrash() {
         Flowable.just(1, 2, -1, 3, 4, 5, -1, -1, 6)
@@ -301,7 +286,6 @@ public class FlowableBufferPredicateTest {
         .assertFailure(IllegalArgumentException.class);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void bufferSupplierCrash0() {
         Flowable.just(1, 2, -1, 3, 4, 5, -1, -1, 6)
@@ -320,7 +304,6 @@ public class FlowableBufferPredicateTest {
         .assertFailure(IllegalArgumentException.class);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void bufferSupplierCrash1() {
         Flowable.just(1, 2, -1, 3, 4, 5, -1, -1, 6)
@@ -336,14 +319,13 @@ public class FlowableBufferPredicateTest {
                 if (c++ == 1) {
                     throw new IllegalArgumentException();
                 }
-                return new ArrayList<Integer>();
+                return new ArrayList<>();
             }
         }))
         .test()
         .assertFailure(IllegalArgumentException.class, Arrays.asList(1, 2, -1));
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void bufferSupplierCrash2() {
         Flowable.just(1, 2, -1, 3, 4, 5, -1, -1, 6)
@@ -359,14 +341,13 @@ public class FlowableBufferPredicateTest {
                 if (c++ == 1) {
                     throw new IllegalArgumentException();
                 }
-                return new ArrayList<Integer>();
+                return new ArrayList<>();
             }
         }))
         .test()
         .assertFailure(IllegalArgumentException.class, Arrays.asList(1, 2));
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void bufferSupplierCrash3() {
         Flowable.just(1, 2, -1, 3, 4, 5, -1, -1, 6)
@@ -382,14 +363,13 @@ public class FlowableBufferPredicateTest {
                 if (c++ == 1) {
                     throw new IllegalArgumentException();
                 }
-                return new ArrayList<Integer>();
+                return new ArrayList<>();
             }
         }))
         .test()
         .assertFailure(IllegalArgumentException.class, Arrays.asList(1, 2));
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void doubleError() {
         List<Throwable> errors = TestHelper.trackPluginErrors();
@@ -417,7 +397,6 @@ public class FlowableBufferPredicateTest {
         }
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void splitNormal() {
         Flowable.just(1, 2, -1, 3, 4, 5, -1, -1, 6)
@@ -436,7 +415,6 @@ public class FlowableBufferPredicateTest {
         );
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void splitNormalHidden() {
         Flowable.just(1, 2, -1, 3, 4, 5, -1, -1, 6).hide()
@@ -455,7 +433,6 @@ public class FlowableBufferPredicateTest {
         );
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void splitNormalBackpressured() {
         Flowable.just(1, 2, -1, 3, 4, 5, -1, -1, 6)
@@ -482,7 +459,6 @@ public class FlowableBufferPredicateTest {
         );
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void splitMatchBegin() {
         Flowable.just(-1, 1, 2)
@@ -499,7 +475,6 @@ public class FlowableBufferPredicateTest {
         );
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void untilAlways() {
         Flowable.range(1, 5)

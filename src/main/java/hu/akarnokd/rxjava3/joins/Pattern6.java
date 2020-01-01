@@ -88,7 +88,7 @@ public final class Pattern6<T1, T2, T3, T4, T5, T6> {
         if (other == null) {
             throw new NullPointerException();
         }
-        return new Pattern7<T1, T2, T3, T4, T5, T6, T7>(o1, o2, o3, o4, o5, o6, other);
+        return new Pattern7<>(o1, o2, o3, o4, o5, o6, other);
     }
     /**
      * Matches when all observable sequences have an available
@@ -105,6 +105,6 @@ public final class Pattern6<T1, T2, T3, T4, T5, T6> {
         if (selector == null) {
             throw new NullPointerException();
         }
-        return new Plan6<T1, T2, T3, T4, T5, T6, R>(this, selector);
+        return new Plan6<>(this, selector);
     }
 }

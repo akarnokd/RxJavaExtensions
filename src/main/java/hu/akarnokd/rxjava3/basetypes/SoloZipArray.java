@@ -16,14 +16,13 @@
 
 package hu.akarnokd.rxjava3.basetypes;
 
-import java.util.Arrays;
+import java.util.*;
 import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
 
 import io.reactivex.rxjava3.exceptions.Exceptions;
 import io.reactivex.rxjava3.functions.Function;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 import io.reactivex.rxjava3.internal.subscriptions.*;
 import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
@@ -48,7 +47,7 @@ final class SoloZipArray<T, R> extends Solo<R> {
     protected void subscribeActual(Subscriber<? super R> s) {
         Solo<? extends T>[] a = sources;
         int n = a.length;
-        ZipCoordinator<T, R> parent = new ZipCoordinator<T, R>(s, zipper, n);
+        ZipCoordinator<T, R> parent = new ZipCoordinator<>(s, zipper, n);
         s.onSubscribe(parent);
 
         parent.subscribe(a, n);
@@ -73,7 +72,7 @@ final class SoloZipArray<T, R> extends Solo<R> {
             @SuppressWarnings("unchecked")
             ZipSubscriber<T, R>[] a = new ZipSubscriber[n];
             for (int i = 0; i < n; i++) {
-                a[i] = new ZipSubscriber<T, R>(i, this);
+                a[i] = new ZipSubscriber<>(i, this);
             }
             this.subscribers = a;
             this.wip = new AtomicInteger(n);
@@ -100,7 +99,7 @@ final class SoloZipArray<T, R> extends Solo<R> {
             if (wip.decrementAndGet() == 0) {
                 R v;
                 try {
-                    v = ObjectHelper.requireNonNull(zipper.apply(values), "The zipper returned a null value");
+                    v = Objects.requireNonNull(zipper.apply(values), "The zipper returned a null value");
                 } catch (Throwable ex) {
                     Exceptions.throwIfFatal(ex);
                     Arrays.fill(values, null);

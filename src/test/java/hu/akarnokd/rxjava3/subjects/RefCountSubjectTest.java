@@ -21,7 +21,7 @@ import org.junit.Test;
 
 import hu.akarnokd.rxjava3.test.TestHelper;
 import io.reactivex.rxjava3.core.Observer;
-import io.reactivex.rxjava3.disposables.*;
+import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.observers.TestObserver;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import io.reactivex.rxjava3.subjects.*;
@@ -192,7 +192,7 @@ public class RefCountSubjectTest {
 
         assertTrue(source.hasObservers());
 
-        final TestObserver<Integer> to = new TestObserver<Integer>();
+        final TestObserver<Integer> to = new TestObserver<>();
 
         rcp.subscribe(new Observer<Integer>() {
 
@@ -239,7 +239,7 @@ public class RefCountSubjectTest {
 
         TestObserver<Integer> to0 = rcp.test();
 
-        final TestObserver<Integer> to = new TestObserver<Integer>();
+        final TestObserver<Integer> to = new TestObserver<>();
 
         rcp.subscribe(new Observer<Integer>() {
 
@@ -311,11 +311,11 @@ public class RefCountSubjectTest {
     public void doubleOnSubscribe() {
         final Subject<Integer> rcp = Subjects.refCount(PublishSubject.<Integer>create());
 
-        Disposable bs1 = Disposables.empty();
+        Disposable bs1 = Disposable.empty();
 
         rcp.onSubscribe(bs1);
 
-        Disposable bs2 = Disposables.empty();
+        Disposable bs2 = Disposable.empty();
 
         rcp.onSubscribe(bs2);
 

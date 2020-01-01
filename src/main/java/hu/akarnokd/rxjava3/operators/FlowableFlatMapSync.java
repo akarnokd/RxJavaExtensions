@@ -16,6 +16,7 @@
 
 package hu.akarnokd.rxjava3.operators;
 
+import java.util.Objects;
 import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
@@ -23,7 +24,6 @@ import org.reactivestreams.*;
 import io.reactivex.rxjava3.core.*;
 import io.reactivex.rxjava3.exceptions.Exceptions;
 import io.reactivex.rxjava3.functions.Function;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 import io.reactivex.rxjava3.internal.fuseable.*;
 import io.reactivex.rxjava3.internal.queue.SpscArrayQueue;
 import io.reactivex.rxjava3.internal.subscriptions.SubscriptionHelper;
@@ -65,7 +65,7 @@ final class FlowableFlatMapSync<T, R> extends Flowable<R> implements FlowableTra
 
     @Override
     public Publisher<R> apply(Flowable<T> upstream) {
-        return new FlowableFlatMapSync<T, R>(upstream, mapper, maxConcurrency, bufferSize, depthFirst);
+        return new FlowableFlatMapSync<>(upstream, mapper, maxConcurrency, bufferSize, depthFirst);
     }
 
     interface FlatMapInnerSubscriberSupport<T, R> {
@@ -131,7 +131,7 @@ final class FlowableFlatMapSync<T, R> extends Flowable<R> implements FlowableTra
             this.active = new AtomicLong();
 
             int c = Pow2.roundToPowerOfTwo(maxConcurrency);
-            this.subscribers = new AtomicReferenceArray<FlatMapInnerSubscriber<T, R>>(c);
+            this.subscribers = new AtomicReferenceArray<>(c);
             this.freelist = new AtomicIntegerArray(c + CONSUMER_INDEX + 16);
         }
 
@@ -152,7 +152,7 @@ final class FlowableFlatMapSync<T, R> extends Flowable<R> implements FlowableTra
             Publisher<? extends R> p;
 
             try {
-                p = ObjectHelper.requireNonNull(mapper.apply(t), "The mapper returned a null value");
+                p = Objects.requireNonNull(mapper.apply(t), "The mapper returned a null value");
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
                 upstream.cancel();
@@ -175,7 +175,7 @@ final class FlowableFlatMapSync<T, R> extends Flowable<R> implements FlowableTra
                     idx = ci + 1;
                 }
 
-                FlatMapInnerSubscriber<T, R> inner = new FlatMapInnerSubscriber<T, R>(this, bufferSize, idx);
+                FlatMapInnerSubscriber<T, R> inner = new FlatMapInnerSubscriber<>(this, bufferSize, idx);
                 s.lazySet(idx - 1, inner);
                 fl.lazySet(m + CONSUMER_INDEX, (ci + 1) & (m - 1));
 
@@ -692,7 +692,7 @@ final class FlowableFlatMapSync<T, R> extends Flowable<R> implements FlowableTra
         SimpleQueue<R> queue() {
             SimpleQueue<R> q = queue;
             if (q == null) {
-                q = new SpscArrayQueue<R>(bufferSize);
+                q = new SpscArrayQueue<>(bufferSize);
                 queue = q;
             }
             return q;

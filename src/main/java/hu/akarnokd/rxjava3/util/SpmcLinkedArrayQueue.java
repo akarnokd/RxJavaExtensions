@@ -16,9 +16,9 @@
 
 package hu.akarnokd.rxjava3.util;
 
+import java.util.Objects;
 import java.util.concurrent.atomic.*;
 
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 import io.reactivex.rxjava3.internal.fuseable.SimplePlainQueue;
 
 /**
@@ -38,12 +38,12 @@ public final class SpmcLinkedArrayQueue<T> implements SimplePlainQueue<T> {
     public SpmcLinkedArrayQueue(int capacity) {
         ARA a = new ARA(Math.max(2, capacity) + 1);
         this.producerArray = a;
-        this.consumerArray = new AtomicReference<ARA>(a);
+        this.consumerArray = new AtomicReference<>(a);
     }
 
     @Override
     public boolean offer(T value) {
-        ObjectHelper.requireNonNull(value, "value is null");
+        Objects.requireNonNull(value, "value is null");
         ARA pa = producerArray;
         int pi = producerIndex;
 
@@ -63,8 +63,8 @@ public final class SpmcLinkedArrayQueue<T> implements SimplePlainQueue<T> {
 
     @Override
     public boolean offer(T v1, T v2) {
-        ObjectHelper.requireNonNull(v1, "v1 is null");
-        ObjectHelper.requireNonNull(v2, "v2 is null");
+        Objects.requireNonNull(v1, "v1 is null");
+        Objects.requireNonNull(v2, "v2 is null");
 
         ARA pa = producerArray;
         int pi = producerIndex;

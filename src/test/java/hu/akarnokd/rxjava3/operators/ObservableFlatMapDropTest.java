@@ -26,7 +26,7 @@ import org.junit.Test;
 
 import hu.akarnokd.rxjava3.test.TestHelper;
 import io.reactivex.rxjava3.core.*;
-import io.reactivex.rxjava3.disposables.Disposables;
+import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.functions.*;
 import io.reactivex.rxjava3.observers.TestObserver;
 import io.reactivex.rxjava3.plugins.RxJavaPlugins;
@@ -205,7 +205,7 @@ public class ObservableFlatMapDropTest {
                 @Override
                 protected void subscribeActual(
                         Observer<? super Integer> observer) {
-                    observer.onSubscribe(Disposables.empty());
+                    observer.onSubscribe(Disposable.empty());
                     observer.onError(new IOException("first"));
                     observer.onError(new IOException("second"));
                 }
@@ -231,7 +231,7 @@ public class ObservableFlatMapDropTest {
     public void lateErrorInner() {
         List<Throwable> errors = TestHelper.trackPluginErrors();
         try {
-            final AtomicReference<Observer<? super Integer>> ref = new AtomicReference<Observer<? super Integer>>();
+            final AtomicReference<Observer<? super Integer>> ref = new AtomicReference<>();
 
             TestObserver<Integer> to = Observable.just(1)
             .compose(ObservableTransformers.flatMapDrop(new Function<Integer, ObservableSource<Integer>>() {
@@ -242,7 +242,7 @@ public class ObservableFlatMapDropTest {
                         @Override
                         protected void subscribeActual(
                                 Observer<? super Integer> observer) {
-                            observer.onSubscribe(Disposables.empty());
+                            observer.onSubscribe(Disposable.empty());
                             ref.set(observer);
                         }
                     };

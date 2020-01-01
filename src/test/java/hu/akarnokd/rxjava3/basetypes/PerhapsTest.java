@@ -115,7 +115,7 @@ public class PerhapsTest implements Consumer<Object>, Action, LongConsumer, Canc
 
     @Test
     public void fromFuture() {
-        FutureTask<Integer> ft = new FutureTask<Integer>(Functions.EMPTY_RUNNABLE, 1);
+        FutureTask<Integer> ft = new FutureTask<>(Functions.EMPTY_RUNNABLE, 1);
         ft.run();
 
         Perhaps.fromFuture(ft)
@@ -125,7 +125,7 @@ public class PerhapsTest implements Consumer<Object>, Action, LongConsumer, Canc
 
     @Test
     public void fromFutureNull() {
-        FutureTask<Integer> ft = new FutureTask<Integer>(Functions.EMPTY_RUNNABLE, null);
+        FutureTask<Integer> ft = new FutureTask<>(Functions.EMPTY_RUNNABLE, null);
         ft.run();
 
         Perhaps.fromFuture(ft)
@@ -135,7 +135,7 @@ public class PerhapsTest implements Consumer<Object>, Action, LongConsumer, Canc
 
     @Test
     public void fromFutureTimeout() {
-        FutureTask<Integer> ft = new FutureTask<Integer>(Functions.EMPTY_RUNNABLE, 1);
+        FutureTask<Integer> ft = new FutureTask<>(Functions.EMPTY_RUNNABLE, 1);
 
         Perhaps.fromFuture(ft, 1, TimeUnit.MILLISECONDS)
         .test()
@@ -144,7 +144,7 @@ public class PerhapsTest implements Consumer<Object>, Action, LongConsumer, Canc
 
     @Test
     public void fromFutureCrash() {
-        FutureTask<Integer> ft = new FutureTask<Integer>(new Callable<Integer>() {
+        FutureTask<Integer> ft = new FutureTask<>(new Callable<Integer>() {
             @Override
             public Integer call() throws Exception {
                 throw new IOException();
@@ -423,7 +423,6 @@ public class PerhapsTest implements Consumer<Object>, Action, LongConsumer, Canc
         .assertResult(1);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void ambIterable1() {
         PerhapsProcessor<Integer> sp1 = PerhapsProcessor.create();
@@ -445,7 +444,6 @@ public class PerhapsTest implements Consumer<Object>, Action, LongConsumer, Canc
         assertFalse(sp2.hasSubscribers());
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void ambIterable2() {
         PerhapsProcessor<Integer> sp1 = PerhapsProcessor.create();
@@ -467,7 +465,6 @@ public class PerhapsTest implements Consumer<Object>, Action, LongConsumer, Canc
         assertFalse(sp2.hasSubscribers());
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void ambIterable1Error() {
         PerhapsProcessor<Integer> sp1 = PerhapsProcessor.create();
@@ -489,7 +486,6 @@ public class PerhapsTest implements Consumer<Object>, Action, LongConsumer, Canc
         assertFalse(sp2.hasSubscribers());
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void ambIterable2Error() {
         PerhapsProcessor<Integer> sp1 = PerhapsProcessor.create();
@@ -511,7 +507,6 @@ public class PerhapsTest implements Consumer<Object>, Action, LongConsumer, Canc
         assertFalse(sp2.hasSubscribers());
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void ambArray1() {
         PerhapsProcessor<Integer> sp1 = PerhapsProcessor.create();
@@ -533,7 +528,6 @@ public class PerhapsTest implements Consumer<Object>, Action, LongConsumer, Canc
         assertFalse(sp2.hasSubscribers());
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void ambArray2() {
         PerhapsProcessor<Integer> sp1 = PerhapsProcessor.create();
@@ -555,7 +549,6 @@ public class PerhapsTest implements Consumer<Object>, Action, LongConsumer, Canc
         assertFalse(sp2.hasSubscribers());
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void ambArray1Error() {
         PerhapsProcessor<Integer> sp1 = PerhapsProcessor.create();
@@ -577,7 +570,6 @@ public class PerhapsTest implements Consumer<Object>, Action, LongConsumer, Canc
         assertFalse(sp2.hasSubscribers());
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void ambArray2Error() {
         PerhapsProcessor<Integer> sp1 = PerhapsProcessor.create();
@@ -599,7 +591,6 @@ public class PerhapsTest implements Consumer<Object>, Action, LongConsumer, Canc
         assertFalse(sp2.hasSubscribers());
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void concatIterable() {
         Perhaps.concat(Arrays.asList(Perhaps.just(1), Perhaps.just(2)))
@@ -607,7 +598,6 @@ public class PerhapsTest implements Consumer<Object>, Action, LongConsumer, Canc
         .assertResult(1, 2);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void concatIterableError() {
         Perhaps.concat(Arrays.asList(Perhaps.just(1), Perhaps.error(new IOException())))
@@ -615,7 +605,6 @@ public class PerhapsTest implements Consumer<Object>, Action, LongConsumer, Canc
         .assertFailure(IOException.class, 1);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void concatIterableError2() {
         Perhaps.concat(Arrays.asList(Perhaps.error(new IOException()), Perhaps.just(2)))
@@ -661,7 +650,6 @@ public class PerhapsTest implements Consumer<Object>, Action, LongConsumer, Canc
         .assertFailure(IOException.class, 1);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void concatArray() {
         Perhaps.concatArray(Perhaps.just(1), Perhaps.just(2))
@@ -669,7 +657,6 @@ public class PerhapsTest implements Consumer<Object>, Action, LongConsumer, Canc
         .assertResult(1, 2);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void concatArrayError() {
         Perhaps.concatArray(Perhaps.just(1), Perhaps.error(new IOException()))
@@ -677,7 +664,6 @@ public class PerhapsTest implements Consumer<Object>, Action, LongConsumer, Canc
         .assertFailure(IOException.class, 1);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void concatArrayError2() {
         Perhaps.concatArray(Perhaps.error(new IOException()), Perhaps.just(2))
@@ -685,7 +671,6 @@ public class PerhapsTest implements Consumer<Object>, Action, LongConsumer, Canc
         .assertFailure(IOException.class);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void concatIterableDelayError() {
         Perhaps.concatDelayError(Arrays.asList(Perhaps.just(1), Perhaps.just(2)))
@@ -693,7 +678,6 @@ public class PerhapsTest implements Consumer<Object>, Action, LongConsumer, Canc
         .assertResult(1, 2);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void concatIterableDelayErrorError() {
         Perhaps.concatDelayError(Arrays.asList(Perhaps.just(1), Perhaps.error(new IOException())))
@@ -701,7 +685,6 @@ public class PerhapsTest implements Consumer<Object>, Action, LongConsumer, Canc
         .assertFailure(IOException.class, 1);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void concatIterableDelayErrorError2() {
         Perhaps.concatDelayError(Arrays.asList(Perhaps.error(new IOException()), Perhaps.just(2)))
@@ -747,7 +730,6 @@ public class PerhapsTest implements Consumer<Object>, Action, LongConsumer, Canc
         .assertFailure(IOException.class, 1);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void concatArrayDelayError() {
         Perhaps.concatArrayDelayError(Perhaps.just(1), Perhaps.just(2))
@@ -755,7 +737,6 @@ public class PerhapsTest implements Consumer<Object>, Action, LongConsumer, Canc
         .assertResult(1, 2);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void concatArrayDelayErrorError() {
         Perhaps.concatArrayDelayError(Perhaps.just(1), Perhaps.error(new IOException()))
@@ -763,7 +744,6 @@ public class PerhapsTest implements Consumer<Object>, Action, LongConsumer, Canc
         .assertFailure(IOException.class, 1);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void concatArrayDelayErrorError2() {
         Perhaps.concatArrayDelayError(Perhaps.error(new IOException()), Perhaps.just(2))
@@ -771,7 +751,6 @@ public class PerhapsTest implements Consumer<Object>, Action, LongConsumer, Canc
         .assertFailure(IOException.class, 2);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void mergeIterable() {
         Perhaps.merge(Arrays.asList(Perhaps.just(1), Perhaps.just(2)))
@@ -779,7 +758,6 @@ public class PerhapsTest implements Consumer<Object>, Action, LongConsumer, Canc
         .assertResult(1, 2);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void mergeIterableError() {
         Perhaps.merge(Arrays.asList(Perhaps.just(1), Perhaps.error(new IOException())))
@@ -787,7 +765,6 @@ public class PerhapsTest implements Consumer<Object>, Action, LongConsumer, Canc
         .assertFailure(IOException.class, 1);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void mergeIterableError2() {
         Perhaps.merge(Arrays.asList(Perhaps.error(new IOException()), Perhaps.just(2)))
@@ -833,7 +810,6 @@ public class PerhapsTest implements Consumer<Object>, Action, LongConsumer, Canc
         .assertFailure(IOException.class, 1);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void mergeArray() {
         Perhaps.mergeArray(Perhaps.just(1), Perhaps.just(2))
@@ -841,7 +817,6 @@ public class PerhapsTest implements Consumer<Object>, Action, LongConsumer, Canc
         .assertResult(1, 2);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void mergeArrayError() {
         Perhaps.mergeArray(Perhaps.just(1), Perhaps.error(new IOException()))
@@ -849,7 +824,6 @@ public class PerhapsTest implements Consumer<Object>, Action, LongConsumer, Canc
         .assertFailure(IOException.class, 1);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void mergeArrayError2() {
         Perhaps.mergeArray(Perhaps.error(new IOException()), Perhaps.just(2))
@@ -857,7 +831,6 @@ public class PerhapsTest implements Consumer<Object>, Action, LongConsumer, Canc
         .assertFailure(IOException.class);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void mergeIterableDelayError() {
         Perhaps.mergeDelayError(Arrays.asList(Perhaps.just(1), Perhaps.just(2)))
@@ -865,7 +838,6 @@ public class PerhapsTest implements Consumer<Object>, Action, LongConsumer, Canc
         .assertResult(1, 2);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void mergeIterableDelayErrorError() {
         Perhaps.mergeDelayError(Arrays.asList(Perhaps.just(1), Perhaps.error(new IOException())))
@@ -873,7 +845,6 @@ public class PerhapsTest implements Consumer<Object>, Action, LongConsumer, Canc
         .assertFailure(IOException.class, 1);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void mergeIterableDelayErrorError2() {
         Perhaps.mergeDelayError(Arrays.asList(Perhaps.error(new IOException()), Perhaps.just(2)))
@@ -919,7 +890,6 @@ public class PerhapsTest implements Consumer<Object>, Action, LongConsumer, Canc
         .assertFailure(IOException.class, 1);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void mergeArrayDelayError() {
         Perhaps.mergeArrayDelayError(Perhaps.just(1), Perhaps.just(2))
@@ -927,7 +897,6 @@ public class PerhapsTest implements Consumer<Object>, Action, LongConsumer, Canc
         .assertResult(1, 2);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void mergeArrayDelayErrorError() {
         Perhaps.mergeArrayDelayError(Perhaps.just(1), Perhaps.error(new IOException()))
@@ -935,7 +904,6 @@ public class PerhapsTest implements Consumer<Object>, Action, LongConsumer, Canc
         .assertFailure(IOException.class, 1);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void mergeArrayDelayErrorError2() {
         Perhaps.mergeArrayDelayError(Perhaps.error(new IOException()), Perhaps.just(2))
@@ -990,7 +958,6 @@ public class PerhapsTest implements Consumer<Object>, Action, LongConsumer, Canc
         assertEquals(1, count);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void zip() {
         Perhaps.zip(Arrays.asList(Perhaps.just(1), Perhaps.just(2)), new Function<Object[], Object>() {
@@ -1003,7 +970,6 @@ public class PerhapsTest implements Consumer<Object>, Action, LongConsumer, Canc
         .assertResult("12");
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void zipError1() {
         Perhaps.zip(Arrays.asList(Perhaps.error(new IOException()), Perhaps.just(2)), new Function<Object[], Object>() {
@@ -1016,7 +982,6 @@ public class PerhapsTest implements Consumer<Object>, Action, LongConsumer, Canc
         .assertFailure(IOException.class);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void zipError2() {
         Perhaps.zip(Arrays.asList(Perhaps.just(1), Perhaps.error(new IOException())), new Function<Object[], Object>() {
@@ -1029,7 +994,6 @@ public class PerhapsTest implements Consumer<Object>, Action, LongConsumer, Canc
         .assertFailure(IOException.class);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void zipArray() {
         Perhaps.zipArray(new Function<Object[], Object>() {
@@ -1042,7 +1006,6 @@ public class PerhapsTest implements Consumer<Object>, Action, LongConsumer, Canc
         .assertResult("12");
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void zipArrayError1() {
         Perhaps.zipArray(new Function<Object[], Object>() {
@@ -1055,7 +1018,6 @@ public class PerhapsTest implements Consumer<Object>, Action, LongConsumer, Canc
         .assertFailure(IOException.class);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void zipArrayError2() {
         Perhaps.zipArray(new Function<Object[], Object>() {
@@ -2607,7 +2569,6 @@ public class PerhapsTest implements Consumer<Object>, Action, LongConsumer, Canc
         .assertResult(1, 2);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void mergeIterableMaxConcurrent() {
         Perhaps.merge(Arrays.asList(Perhaps.just(1), Perhaps.just(2)), 1)
@@ -2615,7 +2576,6 @@ public class PerhapsTest implements Consumer<Object>, Action, LongConsumer, Canc
         .assertResult(1, 2);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void mergeArrayMaxConcurrent() {
         Perhaps.mergeArray(1, Perhaps.just(1), Perhaps.just(2))
@@ -2623,7 +2583,6 @@ public class PerhapsTest implements Consumer<Object>, Action, LongConsumer, Canc
         .assertResult(1, 2);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void mergeArrayDelayErrorMaxConcurrent() {
         Perhaps.mergeArrayDelayError(1, Perhaps.just(1), Perhaps.just(2))
@@ -2631,7 +2590,6 @@ public class PerhapsTest implements Consumer<Object>, Action, LongConsumer, Canc
         .assertResult(1, 2);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void mergeIterableDelayErrorMaxConcurrent() {
         Perhaps.mergeDelayError(Arrays.asList(Perhaps.just(1), Perhaps.just(2)), 1)

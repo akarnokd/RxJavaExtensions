@@ -65,7 +65,7 @@ final class FlowableGenerateAsync<T, S> extends Flowable<T> {
             return;
         }
 
-        GenerateAsyncSubscription<T, S> parent = new GenerateAsyncSubscription<T, S>(s, state, asyncGenerator, stateCleanup);
+        GenerateAsyncSubscription<T, S> parent = new GenerateAsyncSubscription<>(s, state, asyncGenerator, stateCleanup);
         s.onSubscribe(parent);
         parent.moveNext();
     }

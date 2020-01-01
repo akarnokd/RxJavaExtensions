@@ -47,7 +47,7 @@ final class FlowableEvery<T> extends Flowable<T> implements FlowableTransformer<
 
     @Override
     public Publisher<T> apply(Flowable<T> upstream) {
-        return new FlowableEvery<T>(upstream, keep);
+        return new FlowableEvery<>(upstream, keep);
     }
 
     static final class EverySubscriber<T> implements Subscriber<T>, Subscription {

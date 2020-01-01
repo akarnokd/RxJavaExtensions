@@ -44,7 +44,7 @@ final class FlowableRequestObserveOn<T> extends Flowable<T> implements FlowableT
 
     @Override
     public Publisher<T> apply(Flowable<T> upstream) {
-        return new FlowableRequestObserveOn<T>(upstream, scheduler);
+        return new FlowableRequestObserveOn<>(upstream, scheduler);
     }
 
     @Override

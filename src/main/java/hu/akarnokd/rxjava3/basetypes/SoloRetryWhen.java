@@ -16,7 +16,7 @@
 
 package hu.akarnokd.rxjava3.basetypes;
 
-import java.util.NoSuchElementException;
+import java.util.*;
 import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
@@ -24,7 +24,6 @@ import org.reactivestreams.*;
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.exceptions.Exceptions;
 import io.reactivex.rxjava3.functions.Function;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 import io.reactivex.rxjava3.internal.subscriptions.*;
 import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 import io.reactivex.rxjava3.processors.*;
@@ -52,14 +51,14 @@ final class SoloRetryWhen<T> extends Solo<T> {
 
         Publisher<?> when;
         try {
-            when = ObjectHelper.requireNonNull(handler.apply(pp), "The handler returned a null Publisher");
+            when = Objects.requireNonNull(handler.apply(pp), "The handler returned a null Publisher");
         } catch (Throwable ex) {
             Exceptions.throwIfFatal(ex);
             EmptySubscription.error(ex, s);
             return;
         }
 
-        RetrySubscriber<T> parent = new RetrySubscriber<T>(s, pp, source);
+        RetrySubscriber<T> parent = new RetrySubscriber<>(s, pp, source);
         s.onSubscribe(parent);
 
         when.subscribe(parent.other);
@@ -91,7 +90,7 @@ final class SoloRetryWhen<T> extends Solo<T> {
             this.source = source;
             this.other = new OtherSubscriber();
             this.wip = new AtomicInteger();
-            this.upstream = new AtomicReference<Subscription>();
+            this.upstream = new AtomicReference<>();
             this.once = new AtomicBoolean();
         }
 

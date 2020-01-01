@@ -184,7 +184,7 @@ public class OperatorJoinsTest {
             return call();
         }
     }
-    ThrowFunc<Integer> throwFunc = new ThrowFunc<Integer>();
+    ThrowFunc<Integer> throwFunc = new ThrowFunc<>();
 
     Observable<Integer> some = Observable.just(1);
 
@@ -447,7 +447,7 @@ public class OperatorJoinsTest {
                 JoinObservable.from(ys).and(zs).then(sub2)  // 4-7=-3, 5-8=-3, 6-9=-3
                 ).toObservable();
 
-        TestObserver<Integer> to = new TestObserver<Integer>(observer);
+        TestObserver<Integer> to = new TestObserver<>(observer);
         m.subscribe(to);
 
         xs.onNext(1); // t == 210, xs[1], ys[], zs[]

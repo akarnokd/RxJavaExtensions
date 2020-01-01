@@ -16,12 +16,13 @@
 
 package hu.akarnokd.rxjava3.basetypes;
 
+import java.util.Objects;
+
 import org.reactivestreams.Subscriber;
 
 import hu.akarnokd.rxjava3.basetypes.SoloUsing.UsingSubscriber;
 import io.reactivex.rxjava3.exceptions.*;
 import io.reactivex.rxjava3.functions.*;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 import io.reactivex.rxjava3.internal.subscriptions.EmptySubscription;
 import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
@@ -64,7 +65,7 @@ final class PerhapsUsing<T, R> extends Perhaps<T> {
         Perhaps<? extends T> np;
 
         try {
-            np = ObjectHelper.requireNonNull(sourceSupplier.apply(resource), "The sourceSupplier returned a null Nono");
+            np = Objects.requireNonNull(sourceSupplier.apply(resource), "The sourceSupplier returned a null Nono");
         } catch (Throwable ex) {
             Exceptions.throwIfFatal(ex);
             if (eager) {

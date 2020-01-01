@@ -41,7 +41,7 @@ final class SoloDelaySubscription<T> extends Solo<T> {
 
     @Override
     protected void subscribeActual(Subscriber<? super T> s) {
-        DelaySubscriptionSubscriber<T> parent = new DelaySubscriptionSubscriber<T>(s, source);
+        DelaySubscriptionSubscriber<T> parent = new DelaySubscriptionSubscriber<>(s, source);
         s.onSubscribe(parent);
 
         other.subscribe(parent.other);

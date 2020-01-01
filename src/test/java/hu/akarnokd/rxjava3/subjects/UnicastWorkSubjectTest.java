@@ -24,7 +24,7 @@ import java.util.List;
 import org.junit.Test;
 
 import hu.akarnokd.rxjava3.test.*;
-import io.reactivex.rxjava3.disposables.*;
+import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.observers.TestObserver;
 import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
@@ -173,7 +173,7 @@ public class UnicastWorkSubjectTest {
     public void dispose() {
         UnicastWorkSubject<Integer> uws = UnicastWorkSubject.create();
 
-        Disposable d = Disposables.empty();
+        Disposable d = Disposable.empty();
 
         uws.onSubscribe(d);
 
@@ -272,7 +272,7 @@ public class UnicastWorkSubjectTest {
 
             assertFalse(uws.hasObservers());
 
-            uws.subscribeWith(new TestObserverEx<Object>()).assertNotTerminated();
+            uws.subscribeWith(new TestObserverEx<>()).assertNotTerminated();
         }
     }
 
@@ -360,7 +360,7 @@ public class UnicastWorkSubjectTest {
     public void onNextSubscribeRace() {
         for (int i = 0; i < TestHelper.RACE_LONG_LOOPS; i++) {
             final UnicastWorkSubject<Integer> uws = UnicastWorkSubject.create();
-            final TestObserver<Integer> to = new TestObserver<Integer>();
+            final TestObserver<Integer> to = new TestObserver<>();
 
             Runnable r1 = new Runnable() {
                 @Override
@@ -409,7 +409,7 @@ public class UnicastWorkSubjectTest {
 
             assertFalse(uws.hasObservers());
 
-            uws.subscribeWith(new TestObserverEx<Object>()).assertNotTerminated();
+            uws.subscribeWith(new TestObserverEx<>()).assertNotTerminated();
         }
     }
 }

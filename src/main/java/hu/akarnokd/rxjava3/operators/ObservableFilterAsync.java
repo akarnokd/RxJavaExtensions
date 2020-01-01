@@ -16,6 +16,7 @@
 
 package hu.akarnokd.rxjava3.operators;
 
+import java.util.Objects;
 import java.util.concurrent.atomic.*;
 
 import io.reactivex.rxjava3.core.*;
@@ -23,7 +24,6 @@ import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.exceptions.Exceptions;
 import io.reactivex.rxjava3.functions.Function;
 import io.reactivex.rxjava3.internal.disposables.DisposableHelper;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 import io.reactivex.rxjava3.internal.queue.SpscLinkedArrayQueue;
 import io.reactivex.rxjava3.internal.util.AtomicThrowable;
 import io.reactivex.rxjava3.plugins.RxJavaPlugins;
@@ -56,7 +56,7 @@ implements ObservableTransformer<T, T> {
 
     @Override
     public ObservableSource<T> apply(Observable<T> upstream) {
-        return new ObservableFilterAsync<T>(upstream, asyncPredicate, capacityHint);
+        return new ObservableFilterAsync<>(upstream, asyncPredicate, capacityHint);
     }
 
     @Override
@@ -98,9 +98,9 @@ implements ObservableTransformer<T, T> {
                 int capacityHint) {
             this.downstream = downstream;
             this.asyncPredicate = asyncPredicate;
-            this.queue = new SpscLinkedArrayQueue<T>(capacityHint);
+            this.queue = new SpscLinkedArrayQueue<>(capacityHint);
             this.errors = new AtomicThrowable();
-            this.innerDisposable = new AtomicReference<Disposable>();
+            this.innerDisposable = new AtomicReference<>();
         }
 
         @Override
@@ -178,7 +178,7 @@ implements ObservableTransformer<T, T> {
                             ObservableSource<Boolean> innerSource;
 
                             try {
-                                innerSource = ObjectHelper.requireNonNull(asyncPredicate.apply(item), "The mapper returned a null ObservableSource");
+                                innerSource = Objects.requireNonNull(asyncPredicate.apply(item), "The mapper returned a null ObservableSource");
                             } catch (Throwable ex) {
                                 Exceptions.throwIfFatal(ex);
                                 disposed = true;

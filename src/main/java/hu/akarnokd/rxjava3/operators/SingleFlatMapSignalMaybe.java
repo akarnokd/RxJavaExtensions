@@ -16,6 +16,7 @@
 
 package hu.akarnokd.rxjava3.operators;
 
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
 import io.reactivex.rxjava3.core.*;
@@ -23,7 +24,6 @@ import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.exceptions.Exceptions;
 import io.reactivex.rxjava3.functions.Function;
 import io.reactivex.rxjava3.internal.disposables.DisposableHelper;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 
 /**
  * Maps the signals of the upstream into MaybeSources and consumes them.
@@ -48,7 +48,7 @@ implements SingleConverter<T, Maybe<R>> {
 
     @Override
     public Maybe<R> apply(Single<T> t) {
-        return new SingleFlatMapSignalMaybe<T, R>(t, onSuccessHandler, onErrorHandler);
+        return new SingleFlatMapSignalMaybe<>(t, onSuccessHandler, onErrorHandler);
     }
 
     @Override
@@ -69,7 +69,7 @@ implements SingleConverter<T, Maybe<R>> {
                 MaybeObserver<? super R> downstream,
                 Function<? super T, ? extends MaybeSource<? extends R>> onSuccessHandler,
                 Function<? super Throwable, ? extends MaybeSource<? extends R>> onErrorHandler) {
-            this.consumer = new SignalConsumer<R>(downstream);
+            this.consumer = new SignalConsumer<>(downstream);
             this.onSuccessHandler = onSuccessHandler;
             this.onErrorHandler = onErrorHandler;
         }
@@ -97,7 +97,7 @@ implements SingleConverter<T, Maybe<R>> {
             MaybeSource<? extends R> next;
 
             try {
-                next = ObjectHelper.requireNonNull(onSuccessHandler.apply(t), "The onSuccessHandler returned a null MaybeSource");
+                next = Objects.requireNonNull(onSuccessHandler.apply(t), "The onSuccessHandler returned a null MaybeSource");
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
                 consumer.onError(ex);
@@ -112,7 +112,7 @@ implements SingleConverter<T, Maybe<R>> {
             MaybeSource<? extends R> next;
 
             try {
-                next = ObjectHelper.requireNonNull(onErrorHandler.apply(e), "The onErrorHandler returned a null MaybeSource");
+                next = Objects.requireNonNull(onErrorHandler.apply(e), "The onErrorHandler returned a null MaybeSource");
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
                 consumer.onError(ex);

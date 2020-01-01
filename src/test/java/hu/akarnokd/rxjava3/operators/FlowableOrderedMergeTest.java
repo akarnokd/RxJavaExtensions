@@ -31,7 +31,6 @@ import io.reactivex.rxjava3.subscribers.TestSubscriber;
 
 public class FlowableOrderedMergeTest {
 
-    @SuppressWarnings("unchecked")
     @Test
     public void normal1() {
         Flowables.orderedMerge(Functions.<Integer>naturalComparator(),
@@ -40,7 +39,6 @@ public class FlowableOrderedMergeTest {
         .assertResult(1, 2);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void normal2() {
         Flowables.orderedMerge(Functions.<Integer>naturalComparator(),
@@ -49,7 +47,6 @@ public class FlowableOrderedMergeTest {
         .assertResult(1, 2, 3, 4, 5, 6, 7, 8);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void normal3() {
         Flowables.orderedMerge(Functions.<Integer>naturalComparator(),
@@ -58,7 +55,6 @@ public class FlowableOrderedMergeTest {
         .assertResult(1, 2, 3, 4, 5, 6, 7);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void normal4() {
         Flowables.orderedMerge(Functions.<Integer>naturalComparator(),
@@ -67,7 +63,6 @@ public class FlowableOrderedMergeTest {
         .assertResult(1, 1, 3, 3, 5, 5, 7, 7);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void normal1Hidden() {
         Flowables.orderedMerge(Functions.<Integer>naturalComparator(),
@@ -76,7 +71,6 @@ public class FlowableOrderedMergeTest {
         .assertResult(1, 2);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void normal2Hidden() {
         Flowables.orderedMerge(Functions.<Integer>naturalComparator(),
@@ -85,7 +79,6 @@ public class FlowableOrderedMergeTest {
         .assertResult(1, 2, 3, 4, 5, 6, 7, 8);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void normal3Hidden() {
         Flowables.orderedMerge(Functions.<Integer>naturalComparator(),
@@ -94,7 +87,6 @@ public class FlowableOrderedMergeTest {
         .assertResult(1, 2, 3, 4, 5, 6, 7);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void normal4Hidden() {
         Flowables.orderedMerge(Functions.<Integer>naturalComparator(),
@@ -103,7 +95,6 @@ public class FlowableOrderedMergeTest {
         .assertResult(1, 1, 3, 3, 5, 5, 7, 7);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void backpressure1() {
         Flowables.orderedMerge(Functions.<Integer>naturalComparator(),
@@ -113,7 +104,6 @@ public class FlowableOrderedMergeTest {
         .assertResult(1, 2, 3, 4, 5, 6, 7, 8);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void backpressure2() {
         Flowables.orderedMerge(Functions.<Integer>naturalComparator(),
@@ -123,7 +113,6 @@ public class FlowableOrderedMergeTest {
         .assertResult(1, 2);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void backpressure3() {
         Flowables.orderedMerge(Functions.<Integer>naturalComparator(), false, 1,
@@ -133,7 +122,6 @@ public class FlowableOrderedMergeTest {
         .assertResult(1, 2, 3, 4, 5, 6, 7, 8);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void take() {
         Flowables.orderedMerge(Functions.<Integer>naturalComparator(),
@@ -143,7 +131,6 @@ public class FlowableOrderedMergeTest {
         .assertResult(1, 2, 3, 4, 5);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void firstErrors() {
         Flowables.orderedMerge(Functions.<Integer>naturalComparator(),
@@ -153,7 +140,6 @@ public class FlowableOrderedMergeTest {
         .assertFailure(IOException.class);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void firstErrorsBackpressured() {
         Flowables.orderedMerge(Functions.<Integer>naturalComparator(),
@@ -163,7 +149,6 @@ public class FlowableOrderedMergeTest {
         .assertFailure(IOException.class);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void secondErrors() {
         Flowables.orderedMerge(Functions.<Integer>naturalComparator(),
@@ -174,7 +159,6 @@ public class FlowableOrderedMergeTest {
         .assertFailure(IOException.class);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void secondErrorsBackpressured() {
         Flowables.orderedMerge(Functions.<Integer>naturalComparator(),
@@ -185,7 +169,6 @@ public class FlowableOrderedMergeTest {
         .assertFailure(IOException.class);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void bothError() {
         List<Throwable> errors = TestHelper.trackPluginErrors();
@@ -204,7 +187,6 @@ public class FlowableOrderedMergeTest {
         }
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void bothErrorDelayed() {
         Flowables.orderedMerge(Functions.<Integer>naturalComparator(),
@@ -226,7 +208,6 @@ public class FlowableOrderedMergeTest {
         });
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void bothErrorDelayedBackpressured() {
         Flowables.orderedMerge(Functions.<Integer>naturalComparator(),
@@ -248,7 +229,6 @@ public class FlowableOrderedMergeTest {
         });
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void nonEmptyBothErrorDelayed() {
         Flowables.orderedMerge(Functions.<Integer>naturalComparator(),
@@ -270,7 +250,6 @@ public class FlowableOrderedMergeTest {
         });
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void nonEmptyBothErrorDelayed2() {
         Flowables.orderedMerge(Functions.<Integer>naturalComparator(),
@@ -293,7 +272,6 @@ public class FlowableOrderedMergeTest {
         });
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void never() {
         TestSubscriber<Integer> ts = Flowables.orderedMerge(Functions.<Integer>naturalComparator(),
@@ -304,7 +282,6 @@ public class FlowableOrderedMergeTest {
         ts.assertEmpty();
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void fusedThrowsInDrainLoop() {
         Flowables.orderedMerge(Functions.<Integer>naturalComparator(),
@@ -319,7 +296,6 @@ public class FlowableOrderedMergeTest {
         .assertFailure(IllegalArgumentException.class);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void fusedThrowsInDrainLoopDelayed() {
         Flowables.orderedMerge(Functions.<Integer>naturalComparator(),
@@ -335,7 +311,6 @@ public class FlowableOrderedMergeTest {
         .assertFailure(IllegalArgumentException.class, 2, 3);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void fusedThrowsInPostEmissionCheck() {
         Flowables.orderedMerge(Functions.<Integer>naturalComparator(),
@@ -350,7 +325,6 @@ public class FlowableOrderedMergeTest {
         .assertFailure(IllegalArgumentException.class);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void fusedThrowsInPostEmissionCheckErrorDelayed() {
         Flowables.orderedMerge(Functions.<Integer>naturalComparator(),
@@ -367,7 +341,6 @@ public class FlowableOrderedMergeTest {
         .assertFailure(IllegalArgumentException.class, 2, 3);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void iterable() {
         Flowables.orderedMerge(Arrays.asList(Flowable.just(1, 3, 5, 7), Flowable.just(2, 4, 6, 8)),
@@ -386,7 +359,6 @@ public class FlowableOrderedMergeTest {
         .assertResult();
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void iterableSingleton() {
         Flowables.orderedMerge(Arrays.asList(Flowable.just(1, 3, 5, 7)),
@@ -396,7 +368,6 @@ public class FlowableOrderedMergeTest {
         .assertResult(1, 3, 5, 7);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void iterableDelayErrors() {
         Flowables.orderedMerge(Arrays.asList(Flowable.just(1, 3, 5, 7), Flowable.just(2, 4, 6, 8)),
@@ -406,7 +377,6 @@ public class FlowableOrderedMergeTest {
         .assertResult(1, 2, 3, 4, 5, 6, 7, 8);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void iterableDelayErrorsAndPrefetch() {
         Flowables.orderedMerge(Arrays.asList(Flowable.just(1, 3, 5, 7), Flowable.just(2, 4, 6, 8)),
@@ -418,7 +388,7 @@ public class FlowableOrderedMergeTest {
 
     @Test
     public void iterableMany() {
-        List<Flowable<Integer>> sources = new ArrayList<Flowable<Integer>>();
+        List<Flowable<Integer>> sources = new ArrayList<>();
 
         for (int i = 0; i < 32; i++) {
             sources.add(Flowable.just(i));
@@ -434,7 +404,6 @@ public class FlowableOrderedMergeTest {
                 24, 25, 26, 27, 28, 29, 30, 31);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void iterableNull() {
         Flowables.orderedMerge(Arrays.asList(Flowable.just(1, 3, 5, 7), null),
@@ -444,7 +413,6 @@ public class FlowableOrderedMergeTest {
         .assertFailure(NullPointerException.class);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void nullSecond() {
         Flowables.orderedMerge(Functions.<Integer>naturalComparator(),
@@ -453,7 +421,6 @@ public class FlowableOrderedMergeTest {
         .assertFailure(NullPointerException.class);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void nullSecondDelayErrors() {
         Flowables.orderedMerge(Functions.<Integer>naturalComparator(),
@@ -463,7 +430,6 @@ public class FlowableOrderedMergeTest {
         .assertFailure(NullPointerException.class, 1);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void nullFirst() {
         Flowables.orderedMerge(Functions.<Integer>naturalComparator(),
@@ -472,7 +438,6 @@ public class FlowableOrderedMergeTest {
         .assertFailure(NullPointerException.class);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void comparatorThrows() {
         Flowables.orderedMerge(new Comparator<Integer>() {
@@ -486,7 +451,6 @@ public class FlowableOrderedMergeTest {
         .assertFailure(IllegalArgumentException.class);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void selfComparableArray() {
         Flowables.orderedMerge(
@@ -495,7 +459,6 @@ public class FlowableOrderedMergeTest {
         .assertResult(1, 2);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void selfComparableArrayDelayError() {
         Flowables.orderedMerge(true,
@@ -504,7 +467,6 @@ public class FlowableOrderedMergeTest {
         .assertResult(1, 2);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void selfComparableArrayDelayErrorPrefetch() {
         Flowables.orderedMerge(true, 1,
@@ -513,7 +475,6 @@ public class FlowableOrderedMergeTest {
         .assertResult(1, 2);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void selfComparableIterable() {
         Flowables.orderedMerge(
@@ -522,7 +483,6 @@ public class FlowableOrderedMergeTest {
         .assertResult(1, 2);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void selfComparableIterableDelayError() {
         Flowables.orderedMerge(
@@ -533,7 +493,6 @@ public class FlowableOrderedMergeTest {
         .assertResult(1, 2);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void selfComparableIterableDelayErrorPrefetch() {
         Flowables.orderedMerge(

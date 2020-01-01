@@ -16,11 +16,12 @@
 
 package hu.akarnokd.rxjava3.basetypes;
 
+import java.util.Objects;
+
 import org.reactivestreams.Subscriber;
 
 import io.reactivex.rxjava3.exceptions.Exceptions;
 import io.reactivex.rxjava3.functions.Supplier;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 import io.reactivex.rxjava3.internal.subscriptions.EmptySubscription;
 
 /**
@@ -41,7 +42,7 @@ final class SoloDefer<T> extends Solo<T> {
         Solo<T> sp;
 
         try {
-            sp = ObjectHelper.requireNonNull(supplier.get(), "The supplier returned a null Solo");
+            sp = Objects.requireNonNull(supplier.get(), "The supplier returned a null Solo");
         } catch (Throwable ex) {
             Exceptions.throwIfFatal(ex);
             EmptySubscription.error(ex, s);

@@ -58,7 +58,7 @@ final class FlowableValve<T> extends Flowable<T> implements FlowableOperator<T, 
 
     @Override
     public Subscriber<? super T> apply(Subscriber<? super T> subscriber) {
-        ValveMainSubscriber<T> parent = new ValveMainSubscriber<T>(subscriber, bufferSize, defaultOpen);
+        ValveMainSubscriber<T> parent = new ValveMainSubscriber<>(subscriber, bufferSize, defaultOpen);
         subscriber.onSubscribe(parent);
         other.subscribe(parent.other);
         return parent;
@@ -66,7 +66,7 @@ final class FlowableValve<T> extends Flowable<T> implements FlowableOperator<T, 
 
     @Override
     public Publisher<T> apply(Flowable<T> upstream) {
-        return new FlowableValve<T>(upstream, other, defaultOpen, bufferSize);
+        return new FlowableValve<>(upstream, other, defaultOpen, bufferSize);
     }
 
     static final class ValveMainSubscriber<T>
@@ -95,12 +95,12 @@ final class FlowableValve<T> extends Flowable<T> implements FlowableOperator<T, 
 
         ValveMainSubscriber(Subscriber<? super T> downstream, int bufferSize, boolean defaultOpen) {
             this.downstream = downstream;
-            this.queue = new SpscLinkedArrayQueue<T>(bufferSize);
+            this.queue = new SpscLinkedArrayQueue<>(bufferSize);
             this.gate = defaultOpen;
             this.other = new OtherSubscriber();
             this.requested = new AtomicLong();
             this.error = new AtomicThrowable();
-            this.upstream = new AtomicReference<Subscription>();
+            this.upstream = new AtomicReference<>();
         }
 
         @Override

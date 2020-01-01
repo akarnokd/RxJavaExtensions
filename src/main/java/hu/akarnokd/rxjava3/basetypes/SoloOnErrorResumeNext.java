@@ -16,13 +16,13 @@
 
 package hu.akarnokd.rxjava3.basetypes;
 
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.reactivestreams.*;
 
 import io.reactivex.rxjava3.exceptions.*;
 import io.reactivex.rxjava3.functions.Function;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 import io.reactivex.rxjava3.internal.subscriptions.*;
 
 /**
@@ -43,7 +43,7 @@ final class SoloOnErrorResumeNext<T> extends Solo<T> {
 
     @Override
     protected void subscribeActual(Subscriber<? super T> s) {
-        source.subscribe(new OnErrorReturnItemSubscriber<T>(s, errorHandler));
+        source.subscribe(new OnErrorReturnItemSubscriber<>(s, errorHandler));
     }
 
     static final class OnErrorReturnItemSubscriber<T> extends DeferredScalarSubscription<T>
@@ -84,7 +84,7 @@ final class SoloOnErrorResumeNext<T> extends Solo<T> {
             Solo<T> sp;
 
             try {
-                sp = ObjectHelper.requireNonNull(errorHandler.apply(t), "The errorHandler returned a null Solo");
+                sp = Objects.requireNonNull(errorHandler.apply(t), "The errorHandler returned a null Solo");
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
                 downstream.onError(new CompositeException(t, ex));

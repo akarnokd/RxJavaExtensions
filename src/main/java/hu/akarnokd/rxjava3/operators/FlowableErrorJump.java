@@ -16,13 +16,13 @@
 
 package hu.akarnokd.rxjava3.operators;
 
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.reactivestreams.*;
 
 import io.reactivex.rxjava3.core.*;
 import io.reactivex.rxjava3.exceptions.*;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 import io.reactivex.rxjava3.internal.subscriptions.EmptySubscription;
 
 /**
@@ -49,18 +49,18 @@ final class FlowableErrorJump<T, R> extends Flowable<R> implements FlowableTrans
 
     @Override
     public Publisher<R> apply(Flowable<T> upstream) {
-        return new FlowableErrorJump<T, R>(upstream, transformer);
+        return new FlowableErrorJump<>(upstream, transformer);
     }
 
     @Override
     protected void subscribeActual(Subscriber<? super R> s) {
 
-        ErrorJumpFront<T, R> front = new ErrorJumpFront<T, R>(source, s);
+        ErrorJumpFront<T, R> front = new ErrorJumpFront<>(source, s);
 
         Publisher<R> downstream;
 
         try {
-            downstream = ObjectHelper.requireNonNull(
+            downstream = Objects.requireNonNull(
                     transformer.apply(front),
                     "The transformer returned a null Publisher");
         } catch (Throwable ex) {
@@ -84,7 +84,7 @@ final class FlowableErrorJump<T, R> extends Flowable<R> implements FlowableTrans
 
         ErrorJumpFront(Flowable<T> source, Subscriber<? super R> downstream) {
             this.source = source;
-            this.middle = new AtomicReference<Subscriber<? super T>>();
+            this.middle = new AtomicReference<>();
             this.end = new EndSubscriber(downstream);
         }
 

@@ -224,8 +224,9 @@ public class AsyncObservableTest {
     @Test
     public void toAsyncConsumerN() {
         MultiFunction f = new MultiFunction();
+        Consumer<Object[]> f2 = f;
 
-        AsyncObservable.toAsyncArray((Consumer<Object[]>)f)
+        AsyncObservable.toAsyncArray(f2)
         .apply(new Object[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 })
         .test()
         .awaitDone(5, TimeUnit.SECONDS)
@@ -524,8 +525,9 @@ public class AsyncObservableTest {
     @Test
     public void toAsyncConsumerNScheduler() {
         MultiFunction f = new MultiFunction();
+        Consumer<Object[]> f2 = f;
 
-        AsyncObservable.toAsyncArray((Consumer<Object[]>)f, Schedulers.single())
+        AsyncObservable.toAsyncArray(f2, Schedulers.single())
         .apply(new Object[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 })
         .test()
         .awaitDone(5, TimeUnit.SECONDS)
@@ -680,7 +682,7 @@ public class AsyncObservableTest {
 
     @Test
     public void startFuture() {
-        final FutureTask<Integer> ft = new FutureTask<Integer>(Functions.EMPTY_RUNNABLE, 1);
+        final FutureTask<Integer> ft = new FutureTask<>(Functions.EMPTY_RUNNABLE, 1);
         ft.run();
         AsyncObservable.startFuture(new Supplier<Future<Integer>>() {
             @Override
@@ -695,7 +697,7 @@ public class AsyncObservableTest {
 
     @Test
     public void startFutureNull() {
-        final FutureTask<Integer> ft = new FutureTask<Integer>(Functions.EMPTY_RUNNABLE, null);
+        final FutureTask<Integer> ft = new FutureTask<>(Functions.EMPTY_RUNNABLE, null);
         ft.run();
         AsyncObservable.startFuture(new Supplier<Future<Integer>>() {
             @Override
@@ -710,7 +712,7 @@ public class AsyncObservableTest {
 
     @Test
     public void startFutureCustomScheduler() {
-        final FutureTask<Integer> ft = new FutureTask<Integer>(Functions.EMPTY_RUNNABLE, 1);
+        final FutureTask<Integer> ft = new FutureTask<>(Functions.EMPTY_RUNNABLE, 1);
         ft.run();
         AsyncObservable.startFuture(new Supplier<Future<Integer>>() {
             @Override
@@ -725,7 +727,7 @@ public class AsyncObservableTest {
 
     @Test
     public void deferFuture() {
-        final FutureTask<Observable<Integer>> ft = new FutureTask<Observable<Integer>>(Functions.EMPTY_RUNNABLE, Observable.just(1));
+        final FutureTask<Observable<Integer>> ft = new FutureTask<>(Functions.EMPTY_RUNNABLE, Observable.just(1));
         ft.run();
 
         AsyncObservable.deferFuture(new Supplier<Future<Observable<Integer>>>() {
@@ -741,7 +743,7 @@ public class AsyncObservableTest {
 
     @Test
     public void deferFutureCustomScheduler() {
-        final FutureTask<Observable<Integer>> ft = new FutureTask<Observable<Integer>>(Functions.EMPTY_RUNNABLE, Observable.just(1));
+        final FutureTask<Observable<Integer>> ft = new FutureTask<>(Functions.EMPTY_RUNNABLE, Observable.just(1));
         ft.run();
 
         AsyncObservable.deferFuture(new Supplier<Future<Observable<Integer>>>() {
@@ -757,7 +759,7 @@ public class AsyncObservableTest {
 
     @Test
     public void forEachFutureC1() throws Exception {
-        final List<Integer> list = new ArrayList<Integer>();
+        final List<Integer> list = new ArrayList<>();
 
         assertNull(AsyncObservable.forEachFuture(Observable.range(1, 5), new Consumer<Integer>() {
             @Override
@@ -772,7 +774,7 @@ public class AsyncObservableTest {
 
     @Test
     public void forEachFutureC1Error() throws Exception {
-        final List<Integer> list = new ArrayList<Integer>();
+        final List<Integer> list = new ArrayList<>();
 
         try {
             AsyncObservable.forEachFuture(Observable.<Integer>error(new IOException()), new Consumer<Integer>() {
@@ -793,7 +795,7 @@ public class AsyncObservableTest {
 
     @Test
     public void forEachFutureC1C2() throws Exception {
-        final List<Integer> list = new ArrayList<Integer>();
+        final List<Integer> list = new ArrayList<>();
 
         assertNull(AsyncObservable.forEachFuture(Observable.range(1, 5), new Consumer<Integer>() {
             @Override
@@ -813,7 +815,7 @@ public class AsyncObservableTest {
 
     @Test
     public void forEachFutureC1C2Error() throws Exception {
-        final List<Integer> list = new ArrayList<Integer>();
+        final List<Integer> list = new ArrayList<>();
         try {
             AsyncObservable.forEachFuture(Observable.<Integer>error(new IOException()), new Consumer<Integer>() {
                 @Override
@@ -838,7 +840,7 @@ public class AsyncObservableTest {
 
     @Test
     public void forEachFutureC1C2A3() throws Exception {
-        final List<Integer> list = new ArrayList<Integer>();
+        final List<Integer> list = new ArrayList<>();
 
         assertNull(AsyncObservable.forEachFuture(Observable.range(1, 5), new Consumer<Integer>() {
             @Override
@@ -863,7 +865,7 @@ public class AsyncObservableTest {
 
     @Test
     public void forEachFutureC1C2A3Error() throws Exception {
-        final List<Integer> list = new ArrayList<Integer>();
+        final List<Integer> list = new ArrayList<>();
         try {
             AsyncObservable.forEachFuture(Observable.<Integer>error(new IOException()), new Consumer<Integer>() {
                 @Override
@@ -893,7 +895,7 @@ public class AsyncObservableTest {
 
     @Test
     public void forEachFutureC1Scheduler() throws Exception {
-        final List<Integer> list = new ArrayList<Integer>();
+        final List<Integer> list = new ArrayList<>();
 
         assertNull(AsyncObservable.forEachFuture(Observable.range(1, 5), new Consumer<Integer>() {
             @Override
@@ -908,7 +910,7 @@ public class AsyncObservableTest {
 
     @Test
     public void forEachFutureC1ErrorScheduler() throws Exception {
-        final List<Integer> list = new ArrayList<Integer>();
+        final List<Integer> list = new ArrayList<>();
 
         try {
             AsyncObservable.forEachFuture(Observable.<Integer>error(new IOException()), new Consumer<Integer>() {
@@ -929,7 +931,7 @@ public class AsyncObservableTest {
 
     @Test
     public void forEachFutureC1C2Scheduler() throws Exception {
-        final List<Integer> list = new ArrayList<Integer>();
+        final List<Integer> list = new ArrayList<>();
 
         assertNull(AsyncObservable.forEachFuture(Observable.range(1, 5), new Consumer<Integer>() {
             @Override
@@ -949,7 +951,7 @@ public class AsyncObservableTest {
 
     @Test
     public void forEachFutureC1C2ErrorScheduler() throws Exception {
-        final List<Integer> list = new ArrayList<Integer>();
+        final List<Integer> list = new ArrayList<>();
         try {
             AsyncObservable.forEachFuture(Observable.<Integer>error(new IOException()), new Consumer<Integer>() {
                 @Override
@@ -974,7 +976,7 @@ public class AsyncObservableTest {
 
     @Test
     public void forEachFutureC1C2A3Scheduler() throws Exception {
-        final List<Integer> list = new ArrayList<Integer>();
+        final List<Integer> list = new ArrayList<>();
 
         assertNull(AsyncObservable.forEachFuture(Observable.range(1, 5), new Consumer<Integer>() {
             @Override
@@ -999,7 +1001,7 @@ public class AsyncObservableTest {
 
     @Test
     public void forEachFutureC1C2A3ErrorScheduler() throws Exception {
-        final List<Integer> list = new ArrayList<Integer>();
+        final List<Integer> list = new ArrayList<>();
         try {
             AsyncObservable.forEachFuture(Observable.<Integer>error(new IOException()), new Consumer<Integer>() {
                 @Override
@@ -1030,7 +1032,7 @@ public class AsyncObservableTest {
     @Test
     public void runAsync() {
 
-        AsyncObservable.runAsync(Schedulers.single(), new BiConsumer<Observer<Object>, Disposable>() {
+        AsyncObservable.runAsync(Schedulers.single(), new BiConsumer<Observer<? super Object>, Disposable>() {
             @Override
             public void accept(Observer<? super Object> observer, Disposable d) throws Exception {
                 Thread.sleep(200);
@@ -1052,7 +1054,7 @@ public class AsyncObservableTest {
     public void runAsyncProcessor() {
         AsyncObservable.runAsync(Schedulers.single(),
             UnicastSubject.<Object>create(),
-        new BiConsumer<Observer<Object>, Disposable>() {
+        new BiConsumer<Observer<? super Object>, Disposable>() {
             @Override
             public void accept(Observer<? super Object> observer, Disposable d) throws Exception {
                 observer.onNext(1);

@@ -81,7 +81,8 @@ public class StatementFlowableTest {
         };
     }
 
-    <T> void observe(Flowable<T> source, T... values) {
+    @SafeVarargs
+    static <T> void observe(Flowable<T> source, T... values) {
         source.test().assertResult(values);
     }
 
@@ -89,7 +90,8 @@ public class StatementFlowableTest {
         source.test().assertValueSequence(values).assertNoErrors().assertComplete();
     }
 
-    <T> void observeError(Flowable<T> source, Class<? extends Throwable> error, T... valuesBeforeError) {
+    @SafeVarargs
+    static <T> void observeError(Flowable<T> source, Class<? extends Throwable> error, T... valuesBeforeError) {
         source.test().assertFailure(error, valuesBeforeError);
     }
 
@@ -102,7 +104,7 @@ public class StatementFlowableTest {
         Flowable<Integer> source1 = Flowable.just(1, 2, 3);
         Flowable<Integer> source2 = Flowable.just(4, 5, 6);
 
-        Map<Integer, Flowable<Integer>> map = new HashMap<Integer, Flowable<Integer>>();
+        Map<Integer, Flowable<Integer>> map = new HashMap<>();
         map.put(1, source1);
         map.put(2, source2);
 
@@ -118,7 +120,7 @@ public class StatementFlowableTest {
         Flowable<Integer> source1 = Flowable.just(1, 2, 3);
         Flowable<Integer> source2 = Flowable.just(4, 5, 6);
 
-        Map<Integer, Flowable<Integer>> map = new HashMap<Integer, Flowable<Integer>>();
+        Map<Integer, Flowable<Integer>> map = new HashMap<>();
         map.put(1, source1);
 
         Flowable<Integer> result = StatementFlowable.switchCase(func, map, source2);
@@ -132,7 +134,7 @@ public class StatementFlowableTest {
     public void testCaseSelectorThrows() {
         Flowable<Integer> source1 = Flowable.just(1, 2, 3);
 
-        Map<Integer, Flowable<Integer>> map = new HashMap<Integer, Flowable<Integer>>();
+        Map<Integer, Flowable<Integer>> map = new HashMap<>();
         map.put(1, source1);
 
         Flowable<Integer> result = StatementFlowable.switchCase(funcError, map);
@@ -196,7 +198,7 @@ public class StatementFlowableTest {
         Flowable<Integer> source1 = Flowable.just(1, 2, 3);
         Flowable<Integer> source2 = Flowable.error(new RuntimeException("Forced failure"));
 
-        Map<Integer, Flowable<Integer>> map = new HashMap<Integer, Flowable<Integer>>();
+        Map<Integer, Flowable<Integer>> map = new HashMap<>();
         map.put(1, source1);
         map.put(2, source2);
 
@@ -322,7 +324,7 @@ public class StatementFlowableTest {
     public void testDoWhileManyTimes() {
         Flowable<Integer> source1 = Flowable.just(1, 2, 3).subscribeOn(Schedulers.trampoline());
 
-        List<Integer> expected = new ArrayList<Integer>(numRecursion * 3);
+        List<Integer> expected = new ArrayList<>(numRecursion * 3);
         for (int i = 0; i < numRecursion; i++) {
             expected.add(1);
             expected.add(2);
@@ -362,7 +364,7 @@ public class StatementFlowableTest {
     public void testWhileDoManyTimes() {
         Flowable<Integer> source1 = Flowable.just(1, 2, 3).subscribeOn(Schedulers.trampoline());
 
-        List<Integer> expected = new ArrayList<Integer>(numRecursion * 3);
+        List<Integer> expected = new ArrayList<>(numRecursion * 3);
         for (int i = 0; i < numRecursion; i++) {
             expected.add(1);
             expected.add(2);

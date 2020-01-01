@@ -41,7 +41,7 @@ implements ObservableTransformer<T, Long> {
 
     @Override
     public ObservableSource<Long> apply(Observable<T> upstream) {
-        return new ObservableIndexOf<T>(upstream, predicate);
+        return new ObservableIndexOf<>(upstream, predicate);
     }
 
     @Override

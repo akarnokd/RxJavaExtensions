@@ -113,9 +113,9 @@ public final class FlowableTransformers {
     @SchedulerSupport(SchedulerSupport.NONE)
     @BackpressureSupport(BackpressureKind.PASS_THROUGH)
     public static <T> FlowableTransformer<T, T> valve(Publisher<Boolean> other, boolean defaultOpen, int bufferSize) {
-        ObjectHelper.requireNonNull(other, "other is null");
+        Objects.requireNonNull(other, "other is null");
         ObjectHelper.verifyPositive(bufferSize, "bufferSize");
-        return new FlowableValve<T>(null, other, defaultOpen, bufferSize);
+        return new FlowableValve<>(null, other, defaultOpen, bufferSize);
     }
 
     /**
@@ -149,7 +149,7 @@ public final class FlowableTransformers {
     @SchedulerSupport(SchedulerSupport.NONE)
     @BackpressureSupport(BackpressureKind.FULL)
     public static <T, C extends Collection<? super T>> FlowableTransformer<T, C> bufferWhile(Predicate<? super T> predicate, Supplier<C> bufferSupplier) {
-        return new FlowableBufferPredicate<T, C>(null, predicate, FlowableBufferPredicate.Mode.BEFORE, bufferSupplier);
+        return new FlowableBufferPredicate<>(null, predicate, FlowableBufferPredicate.Mode.BEFORE, bufferSupplier);
     }
 
     /**
@@ -183,7 +183,7 @@ public final class FlowableTransformers {
     @SchedulerSupport(SchedulerSupport.NONE)
     @BackpressureSupport(BackpressureKind.FULL)
     public static <T, C extends Collection<? super T>> FlowableTransformer<T, C> bufferUntil(Predicate<? super T> predicate, Supplier<C> bufferSupplier) {
-        return new FlowableBufferPredicate<T, C>(null, predicate, FlowableBufferPredicate.Mode.AFTER, bufferSupplier);
+        return new FlowableBufferPredicate<>(null, predicate, FlowableBufferPredicate.Mode.AFTER, bufferSupplier);
     }
 
     /**
@@ -217,7 +217,7 @@ public final class FlowableTransformers {
     @SchedulerSupport(SchedulerSupport.NONE)
     @BackpressureSupport(BackpressureKind.FULL)
     public static <T, C extends Collection<? super T>> FlowableTransformer<T, C> bufferSplit(Predicate<? super T> predicate, Supplier<C> bufferSupplier) {
-        return new FlowableBufferPredicate<T, C>(null, predicate, FlowableBufferPredicate.Mode.SPLIT, bufferSupplier);
+        return new FlowableBufferPredicate<>(null, predicate, FlowableBufferPredicate.Mode.SPLIT, bufferSupplier);
     }
 
     /**
@@ -405,9 +405,9 @@ public final class FlowableTransformers {
     @BackpressureSupport(BackpressureKind.PASS_THROUGH)
     @SchedulerSupport(SchedulerSupport.CUSTOM)
     public static <T> FlowableTransformer<T, T> spanout(long initialDelay, long betweenDelay, TimeUnit unit, Scheduler scheduler, boolean delayError) {
-        ObjectHelper.requireNonNull(unit, "unit is null");
-        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
-        return new FlowableSpanout<T>(null, initialDelay, betweenDelay, unit, scheduler, delayError, Flowable.bufferSize());
+        Objects.requireNonNull(unit, "unit is null");
+        Objects.requireNonNull(scheduler, "scheduler is null");
+        return new FlowableSpanout<>(null, initialDelay, betweenDelay, unit, scheduler, delayError, Flowable.bufferSize());
     }
 
     /**
@@ -423,8 +423,8 @@ public final class FlowableTransformers {
     @BackpressureSupport(BackpressureKind.PASS_THROUGH)
     @SchedulerSupport(SchedulerSupport.NONE)
     public static <T, R> FlowableTransformer<T, R> mapFilter(BiConsumer<? super T, ? super BasicEmitter<R>> consumer) {
-        ObjectHelper.requireNonNull(consumer, "consumer is null");
-        return new FlowableMapFilter<T, R>(null, consumer);
+        Objects.requireNonNull(consumer, "consumer is null");
+        return new FlowableMapFilter<>(null, consumer);
     }
 
     /**
@@ -459,11 +459,11 @@ public final class FlowableTransformers {
     @BackpressureSupport(BackpressureKind.UNBOUNDED_IN)
     @SchedulerSupport(SchedulerSupport.CUSTOM)
     public static <T> FlowableTransformer<T, T> onBackpressureTimeout(long timeout, TimeUnit unit, Scheduler scheduler, Consumer<? super T> onEvict) {
-        ObjectHelper.requireNonNull(unit, "unit is null");
-        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
-        ObjectHelper.requireNonNull(onEvict, "onEvict is null");
+        Objects.requireNonNull(unit, "unit is null");
+        Objects.requireNonNull(scheduler, "scheduler is null");
+        Objects.requireNonNull(onEvict, "onEvict is null");
 
-        return new FlowableOnBackpressureTimeout<T>(null, Integer.MAX_VALUE, timeout, unit, scheduler, onEvict);
+        return new FlowableOnBackpressureTimeout<>(null, Integer.MAX_VALUE, timeout, unit, scheduler, onEvict);
     }
 
     /**
@@ -502,11 +502,11 @@ public final class FlowableTransformers {
     @SchedulerSupport(SchedulerSupport.CUSTOM)
     public static <T> FlowableTransformer<T, T> onBackpressureTimeout(int maxSize, long timeout, TimeUnit unit, Scheduler scheduler, Consumer<? super T> onEvict) {
         ObjectHelper.verifyPositive(maxSize, "maxSize");
-        ObjectHelper.requireNonNull(unit, "unit is null");
-        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
-        ObjectHelper.requireNonNull(onEvict, "onEvict is null");
+        Objects.requireNonNull(unit, "unit is null");
+        Objects.requireNonNull(scheduler, "scheduler is null");
+        Objects.requireNonNull(onEvict, "onEvict is null");
 
-        return new FlowableOnBackpressureTimeout<T>(null, maxSize, timeout, unit, scheduler, onEvict);
+        return new FlowableOnBackpressureTimeout<>(null, maxSize, timeout, unit, scheduler, onEvict);
     }
 
     /**
@@ -528,7 +528,7 @@ public final class FlowableTransformers {
     @SchedulerSupport(SchedulerSupport.NONE)
     public static <T> FlowableTransformer<T, T> every(long keep) {
         ObjectHelper.verifyPositive(keep, "keep");
-        return new FlowableEvery<T>(null, keep);
+        return new FlowableEvery<>(null, keep);
     }
 
     /**
@@ -549,7 +549,7 @@ public final class FlowableTransformers {
     @BackpressureSupport(BackpressureKind.UNBOUNDED_IN)
     @SchedulerSupport(SchedulerSupport.NONE)
     public static <T> FlowableTransformer<T, T> cacheLast() {
-        return new FlowableCacheLast<T>(null);
+        return new FlowableCacheLast<>(null);
     }
 
     /**
@@ -584,9 +584,9 @@ public final class FlowableTransformers {
     @BackpressureSupport(BackpressureKind.UNBOUNDED_IN)
     @SchedulerSupport(SchedulerSupport.CUSTOM)
     public static <T> FlowableTransformer<T, T> timeoutLast(long timeout, TimeUnit unit, Scheduler scheduler) {
-        ObjectHelper.requireNonNull(unit, "unit is null");
-        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
-        return new FlowableTimeoutLast<T>(null, timeout, unit, scheduler, false);
+        Objects.requireNonNull(unit, "unit is null");
+        Objects.requireNonNull(scheduler, "scheduler is null");
+        return new FlowableTimeoutLast<>(null, timeout, unit, scheduler, false);
     }
 
     /**
@@ -621,9 +621,9 @@ public final class FlowableTransformers {
     @BackpressureSupport(BackpressureKind.UNBOUNDED_IN)
     @SchedulerSupport(SchedulerSupport.CUSTOM)
     public static <T> FlowableTransformer<T, T> timeoutLastAbsolute(long timeout, TimeUnit unit, Scheduler scheduler) {
-        ObjectHelper.requireNonNull(unit, "unit is null");
-        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
-        return new FlowableTimeoutLast<T>(null, timeout, unit, scheduler, true);
+        Objects.requireNonNull(unit, "unit is null");
+        Objects.requireNonNull(scheduler, "scheduler is null");
+        return new FlowableTimeoutLast<>(null, timeout, unit, scheduler, true);
     }
 
     /**
@@ -669,9 +669,9 @@ public final class FlowableTransformers {
     @BackpressureSupport(BackpressureKind.PASS_THROUGH)
     @SchedulerSupport(SchedulerSupport.CUSTOM)
     public static <T> FlowableTransformer<T, T> debounceFirst(long timeout, TimeUnit unit, Scheduler scheduler) {
-        ObjectHelper.requireNonNull(unit, "unit is null");
-        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
-        return new FlowableDebounceFirst<T>(null, timeout, unit, scheduler);
+        Objects.requireNonNull(unit, "unit is null");
+        Objects.requireNonNull(scheduler, "scheduler is null");
+        return new FlowableDebounceFirst<>(null, timeout, unit, scheduler);
     }
 
     /**
@@ -710,10 +710,10 @@ public final class FlowableTransformers {
     @BackpressureSupport(BackpressureKind.FULL)
     @SchedulerSupport(SchedulerSupport.NONE)
     public static <T, R> FlowableTransformer<T, R> switchFlatMap(Function<? super T, ? extends Publisher<? extends R>> mapper, int maxActive, int bufferSize) {
-        ObjectHelper.requireNonNull(mapper, "mapper is null");
+        Objects.requireNonNull(mapper, "mapper is null");
         ObjectHelper.verifyPositive(maxActive, "maxActive");
         ObjectHelper.verifyPositive(bufferSize, "bufferSize");
-        return new FlowableSwitchFlatMap<T, R>(null, mapper, maxActive, bufferSize);
+        return new FlowableSwitchFlatMap<>(null, mapper, maxActive, bufferSize);
     }
 
     /**
@@ -761,7 +761,7 @@ public final class FlowableTransformers {
      * @since 0.16.0
      */
     public static <T, R> FlowableTransformer<T, R> flatMapSync(Function<? super T, ? extends Publisher<? extends R>> mapper, int maxConcurrency, int bufferSize, boolean depthFirst) {
-        return new FlowableFlatMapSync<T, R>(null, mapper, maxConcurrency, bufferSize, depthFirst);
+        return new FlowableFlatMapSync<>(null, mapper, maxConcurrency, bufferSize, depthFirst);
     }
 
     /**
@@ -818,7 +818,7 @@ public final class FlowableTransformers {
      * @since 0.16.0
      */
     public static <T, R> FlowableTransformer<T, R> flatMapAsync(Function<? super T, ? extends Publisher<? extends R>> mapper, Scheduler scheduler, int maxConcurrency, int bufferSize, boolean depthFirst) {
-        return new FlowableFlatMapAsync<T, R>(null, mapper, maxConcurrency, bufferSize, depthFirst, scheduler);
+        return new FlowableFlatMapAsync<>(null, mapper, maxConcurrency, bufferSize, depthFirst, scheduler);
     }
 
     /**
@@ -830,8 +830,9 @@ public final class FlowableTransformers {
      *
      * @since 0.16.0
      */
+    @SafeVarargs
     public static <T> FlowableTransformer<T, T> switchIfEmptyArray(Publisher<? extends T>... alternatives) {
-        return new FlowableSwitchIfEmptyManyArray<T>(null, alternatives);
+        return new FlowableSwitchIfEmptyManyArray<>(null, alternatives);
     }
 
     /**
@@ -844,7 +845,7 @@ public final class FlowableTransformers {
      * @since 0.16.0
      */
     public static <T> FlowableTransformer<T, T> switchIfEmpty(Iterable<? extends Publisher<? extends T>> alternatives) {
-        return new FlowableSwitchIfEmptyMany<T>(null, alternatives);
+        return new FlowableSwitchIfEmptyMany<>(null, alternatives);
     }
 
     /**
@@ -892,10 +893,10 @@ public final class FlowableTransformers {
      * @since 0.16.1
      */
     public static <T> FlowableTransformer<T, T> expand(Function<? super T, ? extends Publisher<? extends T>> expander, ExpandStrategy strategy, int capacityHint) {
-        ObjectHelper.requireNonNull(expander, "expander is null");
-        ObjectHelper.requireNonNull(strategy, "strategy is null");
+        Objects.requireNonNull(expander, "expander is null");
+        Objects.requireNonNull(strategy, "strategy is null");
         ObjectHelper.verifyPositive(capacityHint, "capacityHint");
-        return new FlowableExpand<T>(null, expander, strategy, capacityHint, false);
+        return new FlowableExpand<>(null, expander, strategy, capacityHint, false);
     }
 
     /**
@@ -946,10 +947,10 @@ public final class FlowableTransformers {
      * @since 0.18.4
      */
     public static <T> FlowableTransformer<T, T> expandDelayError(Function<? super T, ? extends Publisher<? extends T>> expander, ExpandStrategy strategy, int capacityHint) {
-        ObjectHelper.requireNonNull(expander, "expander is null");
-        ObjectHelper.requireNonNull(strategy, "strategy is null");
+        Objects.requireNonNull(expander, "expander is null");
+        Objects.requireNonNull(strategy, "strategy is null");
         ObjectHelper.verifyPositive(capacityHint, "capacityHint");
-        return new FlowableExpand<T>(null, expander, strategy, capacityHint, true);
+        return new FlowableExpand<>(null, expander, strategy, capacityHint, true);
     }
 
     /**
@@ -1031,10 +1032,10 @@ public final class FlowableTransformers {
      * @since 0.16.2
      */
     public static <T, U, R> FlowableTransformer<T, R> mapAsync(Function<? super T, ? extends Publisher<? extends U>> mapper, BiFunction<? super T, ? super U, ? extends R> combiner, int bufferSize) {
-        ObjectHelper.requireNonNull("mapper", "mapper is null");
-        ObjectHelper.requireNonNull("combiner", "combiner is null");
+        Objects.requireNonNull("mapper", "mapper is null");
+        Objects.requireNonNull("combiner", "combiner is null");
         ObjectHelper.verifyPositive(bufferSize, "bufferSize");
-        return new FlowableMapAsync<T, U, R>(null, mapper, combiner, bufferSize);
+        return new FlowableMapAsync<>(null, mapper, combiner, bufferSize);
     }
 
     /**
@@ -1068,9 +1069,9 @@ public final class FlowableTransformers {
      * @since 0.16.2
      */
     public static <T> FlowableTransformer<T, T> filterAsync(Function<? super T, ? extends Publisher<Boolean>> asyncPredicate, int bufferSize) {
-        ObjectHelper.requireNonNull("asyncPredicate", "asyncPredicate is null");
+        Objects.requireNonNull("asyncPredicate", "asyncPredicate is null");
         ObjectHelper.verifyPositive(bufferSize, "bufferSize");
-        return new FlowableFilterAsync<T>(null, asyncPredicate, bufferSize);
+        return new FlowableFilterAsync<>(null, asyncPredicate, bufferSize);
     }
 
     /**
@@ -1099,10 +1100,10 @@ public final class FlowableTransformers {
      * @since 0.17.3
      */
     public static <T, R> FlowableTransformer<T, R> coalesce(Supplier<R> containerSupplier, BiConsumer<R, T> coalescer, int bufferSize) {
-        ObjectHelper.requireNonNull(containerSupplier, "containerSupplier is null");
-        ObjectHelper.requireNonNull(coalescer, "coalescer is null");
+        Objects.requireNonNull(containerSupplier, "containerSupplier is null");
+        Objects.requireNonNull(coalescer, "coalescer is null");
         ObjectHelper.verifyPositive(bufferSize, "bufferSize");
-        return new FlowableCoalesce<T, R>(null, containerSupplier, coalescer, bufferSize);
+        return new FlowableCoalesce<>(null, containerSupplier, coalescer, bufferSize);
     }
 
     /**
@@ -1135,7 +1136,7 @@ public final class FlowableTransformers {
     @SchedulerSupport(SchedulerSupport.NONE)
     @BackpressureSupport(BackpressureKind.FULL)
     public static <T> FlowableTransformer<T, Flowable<T>> windowWhile(final Predicate<? super T> predicate, int bufferSize) {
-        return new FlowableWindowPredicate<T>(null, predicate, FlowableWindowPredicate.Mode.BEFORE, bufferSize);
+        return new FlowableWindowPredicate<>(null, predicate, FlowableWindowPredicate.Mode.BEFORE, bufferSize);
     }
 
     /**
@@ -1168,7 +1169,7 @@ public final class FlowableTransformers {
     @SchedulerSupport(SchedulerSupport.NONE)
     @BackpressureSupport(BackpressureKind.FULL)
     public static <T> FlowableTransformer<T, Flowable<T>> windowUntil(Predicate<? super T> predicate, int bufferSize) {
-        return new FlowableWindowPredicate<T>(null, predicate, FlowableWindowPredicate.Mode.AFTER, bufferSize);
+        return new FlowableWindowPredicate<>(null, predicate, FlowableWindowPredicate.Mode.AFTER, bufferSize);
     }
 
     /**
@@ -1201,7 +1202,7 @@ public final class FlowableTransformers {
     @SchedulerSupport(SchedulerSupport.NONE)
     @BackpressureSupport(BackpressureKind.FULL)
     public static <T> FlowableTransformer<T, Flowable<T>> windowSplit(Predicate<? super T> predicate, int bufferSize) {
-        return new FlowableWindowPredicate<T>(null, predicate, FlowableWindowPredicate.Mode.SPLIT, bufferSize);
+        return new FlowableWindowPredicate<>(null, predicate, FlowableWindowPredicate.Mode.SPLIT, bufferSize);
     }
 
     /**
@@ -1216,7 +1217,7 @@ public final class FlowableTransformers {
     @SchedulerSupport(SchedulerSupport.NONE)
     @BackpressureSupport(BackpressureKind.UNBOUNDED_IN)
     public static <T> FlowableTransformer<T, Long> indexOf(Predicate<? super T> predicate) {
-        return new FlowableIndexOf<T>(null, predicate);
+        return new FlowableIndexOf<>(null, predicate);
     }
 
     /**
@@ -1247,7 +1248,7 @@ public final class FlowableTransformers {
     @SchedulerSupport(SchedulerSupport.CUSTOM)
     @BackpressureSupport(BackpressureKind.FULL)
     public static <T> FlowableTransformer<T, T> requestObserveOn(Scheduler scheduler) {
-        return new FlowableRequestObserveOn<T>(null, ObjectHelper.requireNonNull(scheduler, "scheduler == null"));
+        return new FlowableRequestObserveOn<>(null, Objects.requireNonNull(scheduler, "scheduler == null"));
     }
 
     /**
@@ -1297,7 +1298,7 @@ public final class FlowableTransformers {
      * @since 0.18.6
      */
     public static <T> FlowableTransformer<T, T> requestSample(long initialDelay, long period, TimeUnit unit, Scheduler scheduler) {
-        return new FlowableRequestSampleTime<T>(null, initialDelay, period, unit, scheduler);
+        return new FlowableRequestSampleTime<>(null, initialDelay, period, unit, scheduler);
     }
 
     /**
@@ -1322,7 +1323,7 @@ public final class FlowableTransformers {
      * @since 0.18.6
      */
     public static <T, U> FlowableTransformer<T, T> requestSample(Publisher<U> other) {
-        return new FlowableRequestSample<T>(null, other);
+        return new FlowableRequestSample<>(null, other);
     }
 
     /**
@@ -1354,10 +1355,10 @@ public final class FlowableTransformers {
             Consumer<? super T> cleaner,
             int prefetch
     ) {
-        ObjectHelper.requireNonNull(handler, "handler is null");
-        ObjectHelper.requireNonNull(cleaner, "cleaner is null");
+        Objects.requireNonNull(handler, "handler is null");
+        Objects.requireNonNull(cleaner, "cleaner is null");
         ObjectHelper.verifyPositive(prefetch, "prefetch");
-        return new FlowablePartialCollect<T, I, A, R>(null, handler, cleaner, prefetch);
+        return new FlowablePartialCollect<>(null, handler, cleaner, prefetch);
     }
 
     /**
@@ -1370,8 +1371,8 @@ public final class FlowableTransformers {
      * @since 0.19.1
      */
     public static <T, R> FlowableTransformer<T, R> errorJump(FlowableTransformer<T, R> transformer) {
-        ObjectHelper.requireNonNull(transformer, "transformer");
-        return new FlowableErrorJump<T, R>(null, transformer);
+        Objects.requireNonNull(transformer, "transformer");
+        return new FlowableErrorJump<>(null, transformer);
     }
 
     /**
@@ -1392,8 +1393,8 @@ public final class FlowableTransformers {
      */
     public static <T> FlowableTransformer<T, T> switchOnFirst(Predicate<? super T> predicate,
             Function<? super T, ? extends Publisher<? extends T>> selector) {
-        ObjectHelper.requireNonNull(predicate, "predicate");
-        ObjectHelper.requireNonNull(selector, "selector");
-        return new FlowableSwitchOnFirst<T>(null, predicate, selector);
+        Objects.requireNonNull(predicate, "predicate");
+        Objects.requireNonNull(selector, "selector");
+        return new FlowableSwitchOnFirst<>(null, predicate, selector);
     }
 }

@@ -16,7 +16,7 @@
 
 package hu.akarnokd.rxjava3.basetypes;
 
-import java.util.Iterator;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.reactivestreams.Subscriber;
@@ -24,7 +24,6 @@ import org.reactivestreams.Subscriber;
 import hu.akarnokd.rxjava3.basetypes.NonoMergeArray.*;
 import hu.akarnokd.rxjava3.util.CompositeSubscription;
 import io.reactivex.rxjava3.exceptions.Exceptions;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 import io.reactivex.rxjava3.internal.subscriptions.*;
 import io.reactivex.rxjava3.internal.util.AtomicThrowable;
 
@@ -50,7 +49,7 @@ final class NonoMergeIterable extends Nono {
 
         Iterator<? extends Nono> it;
         try {
-            it = ObjectHelper.requireNonNull(sources.iterator(), "The source Iterable returned a null Iterator");
+            it = Objects.requireNonNull(sources.iterator(), "The source Iterable returned a null Iterator");
         } catch (Throwable ex) {
             Exceptions.throwIfFatal(ex);
             EmptySubscription.error(ex, s);
@@ -154,7 +153,7 @@ final class NonoMergeIterable extends Nono {
                     try {
                         hasNext = srcs.hasNext();
                         if (hasNext) {
-                            np = ObjectHelper.requireNonNull(srcs.next(), "The iterator returned a null Nono");
+                            np = Objects.requireNonNull(srcs.next(), "The iterator returned a null Nono");
                         }
                     } catch (Throwable ex) {
                         Exceptions.throwIfFatal(ex);

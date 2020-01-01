@@ -55,7 +55,7 @@ public final class MathFlowable {
     }
 
     public static <T> Flowable<T> max(Publisher<T> source, Comparator<? super T> comparator) {
-        return RxJavaPlugins.onAssembly(new FlowableMinMax<T>(source, comparator, -1));
+        return RxJavaPlugins.onAssembly(new FlowableMinMax<>(source, comparator, -1));
     }
 
     public static <T extends Comparable<? super T>> Flowable<T> min(Publisher<T> source) {
@@ -64,7 +64,7 @@ public final class MathFlowable {
     }
 
     public static <T> Flowable<T> min(Publisher<T> source, Comparator<? super T> comparator) {
-        return RxJavaPlugins.onAssembly(new FlowableMinMax<T>(source, comparator, 1));
+        return RxJavaPlugins.onAssembly(new FlowableMinMax<>(source, comparator, 1));
     }
 
     @SuppressWarnings("unchecked")

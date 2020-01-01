@@ -39,7 +39,7 @@ final class SoloAmbArray<T> extends Solo<T> {
 
     @Override
     protected void subscribeActual(Subscriber<? super T> s) {
-        AmbSubscriber<T> parent = new AmbSubscriber<T>(s);
+        AmbSubscriber<T> parent = new AmbSubscriber<>(s);
         s.onSubscribe(parent);
 
         for (Solo<? extends T> source : sources) {

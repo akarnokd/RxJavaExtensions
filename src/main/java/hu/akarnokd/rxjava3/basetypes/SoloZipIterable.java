@@ -16,7 +16,7 @@
 
 package hu.akarnokd.rxjava3.basetypes;
 
-import java.util.Arrays;
+import java.util.*;
 
 import org.reactivestreams.Subscriber;
 
@@ -24,7 +24,6 @@ import hu.akarnokd.rxjava3.basetypes.SoloMap.MapSubscriber;
 import hu.akarnokd.rxjava3.basetypes.SoloZipArray.ZipCoordinator;
 import io.reactivex.rxjava3.exceptions.Exceptions;
 import io.reactivex.rxjava3.functions.Function;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 import io.reactivex.rxjava3.internal.subscriptions.EmptySubscription;
 
 /**
@@ -60,7 +59,7 @@ final class SoloZipIterable<T, R> extends Solo<R> implements Function<T, R> {
                 if (n == array.length) {
                     array = Arrays.copyOf(array, n + (n >> 1));
                 }
-                array[n++] = ObjectHelper.requireNonNull(inner, "One of the source Solo is null");
+                array[n++] = Objects.requireNonNull(inner, "One of the source Solo is null");
             }
         } catch (Throwable ex) {
             Exceptions.throwIfFatal(ex);
@@ -73,11 +72,11 @@ final class SoloZipIterable<T, R> extends Solo<R> implements Function<T, R> {
             return;
         } else
         if (n == 1) {
-            array[0].subscribe(new MapSubscriber<T, R>(s, this));
+            array[0].subscribe(new MapSubscriber<>(s, this));
             return;
         }
 
-        ZipCoordinator<T, R> parent = new ZipCoordinator<T, R>(s, zipper, n);
+        ZipCoordinator<T, R> parent = new ZipCoordinator<>(s, zipper, n);
         s.onSubscribe(parent);
 
         parent.subscribe(array, n);

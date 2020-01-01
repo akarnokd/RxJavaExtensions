@@ -39,7 +39,7 @@ public class ObservableConsumersTest implements Consumer<Object>, Action {
 
     final PublishSubject<Integer> processor = PublishSubject.create();
 
-    final List<Object> events = new ArrayList<Object>();
+    final List<Object> events = new ArrayList<>();
 
     @Override
     public void run() throws Exception {
@@ -291,11 +291,11 @@ public class ObservableConsumersTest implements Consumer<Object>, Action {
                         @Override
                         protected void subscribeActual(
                                 Observer<? super Integer> observer) {
-                            observer.onSubscribe(Disposables.empty());
+                            observer.onSubscribe(Disposable.empty());
                             observer.onNext(1);
                             observer.onComplete();
 
-                            observer.onSubscribe(Disposables.empty());
+                            observer.onSubscribe(Disposable.empty());
                             observer.onNext(2);
                             observer.onComplete();
                             observer.onError(new IOException());

@@ -53,7 +53,7 @@ final class FlowableWhileDoWhile<T> extends Flowable<T> {
         }
 
         if (b) {
-            WhileDoWhileObserver<T> parent = new WhileDoWhileObserver<T>(s, postCondition, source);
+            WhileDoWhileObserver<T> parent = new WhileDoWhileObserver<>(s, postCondition, source);
             s.onSubscribe(parent);
             parent.subscribeNext();
         } else {

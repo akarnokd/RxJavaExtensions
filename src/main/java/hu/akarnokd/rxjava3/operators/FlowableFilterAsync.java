@@ -16,6 +16,7 @@
 
 package hu.akarnokd.rxjava3.operators;
 
+import java.util.Objects;
 import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
@@ -25,7 +26,6 @@ import hu.akarnokd.rxjava3.operators.FlowableMapAsync.MapAsyncSubscriber.InnerSu
 import io.reactivex.rxjava3.core.*;
 import io.reactivex.rxjava3.exceptions.Exceptions;
 import io.reactivex.rxjava3.functions.*;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 import io.reactivex.rxjava3.internal.subscriptions.SubscriptionHelper;
 import io.reactivex.rxjava3.internal.util.*;
 
@@ -55,7 +55,7 @@ final class FlowableFilterAsync<T> extends Flowable<T> implements FlowableTransf
 
     @Override
     public Publisher<T> apply(Flowable<T> upstream) {
-        return new FlowableFilterAsync<T>(upstream, asyncPredicate, bufferSize);
+        return new FlowableFilterAsync<>(upstream, asyncPredicate, bufferSize);
     }
 
     @Override
@@ -117,7 +117,7 @@ final class FlowableFilterAsync<T> extends Flowable<T> implements FlowableTransf
             this.errors = new AtomicThrowable();
             this.requested = new AtomicLong();
             this.wip = new AtomicInteger();
-            this.current = new AtomicReference<InnerSubscriber<Boolean>>();
+            this.current = new AtomicReference<>();
         }
 
         @Override
@@ -243,7 +243,7 @@ final class FlowableFilterAsync<T> extends Flowable<T> implements FlowableTransf
                         Publisher<Boolean> p;
 
                         try {
-                            p = ObjectHelper.requireNonNull(asyncPredicate.apply(t), "The asyncPredicate returned a null value");
+                            p = Objects.requireNonNull(asyncPredicate.apply(t), "The asyncPredicate returned a null value");
                         } catch (Throwable ex) {
                             Exceptions.throwIfFatal(ex);
                             errors.tryAddThrowableOrReport(ex);
@@ -267,7 +267,7 @@ final class FlowableFilterAsync<T> extends Flowable<T> implements FlowableTransf
                                     e++;
                                 }
                             } else {
-                                InnerSubscriber<Boolean> inner = new InnerSubscriber<Boolean>(this);
+                                InnerSubscriber<Boolean> inner = new InnerSubscriber<>(this);
                                 if (current.compareAndSet(null, inner)) {
                                     state = STATE_RUNNING;
                                     p.subscribe(inner);

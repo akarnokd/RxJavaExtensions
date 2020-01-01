@@ -16,7 +16,7 @@
 
 package hu.akarnokd.rxjava3.operators;
 
-import java.util.Arrays;
+import java.util.*;
 import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
@@ -25,7 +25,6 @@ import io.reactivex.rxjava3.core.*;
 import io.reactivex.rxjava3.core.Scheduler.Worker;
 import io.reactivex.rxjava3.exceptions.Exceptions;
 import io.reactivex.rxjava3.functions.Function;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 import io.reactivex.rxjava3.internal.subscriptions.SubscriptionHelper;
 import io.reactivex.rxjava3.internal.util.*;
 
@@ -83,7 +82,7 @@ final class FlowableZipLatest<T, R> extends Flowable<R> {
         if (n == 0) {
             Flowable.<R>empty().observeOn(scheduler).subscribe(s);
         } else {
-            ZipLatestCoordinator<T, R> zc = new ZipLatestCoordinator<T, R>(s, n, scheduler.createWorker(), combiner);
+            ZipLatestCoordinator<T, R> zc = new ZipLatestCoordinator<>(s, n, scheduler.createWorker(), combiner);
             s.onSubscribe(zc);
 
             zc.subscribe(srcs, n);
@@ -122,7 +121,7 @@ final class FlowableZipLatest<T, R> extends Flowable<R> {
             this.errors = new AtomicThrowable();
             this.worker = worker;
             for (int i = 0; i < n; i++) {
-                subscribers[i] = new InnerSubscriber<T>(this, i);
+                subscribers[i] = new InnerSubscriber<>(this, i);
             }
             this.combiner = combiner;
         }
@@ -209,7 +208,7 @@ final class FlowableZipLatest<T, R> extends Flowable<R> {
                     R v;
 
                     try {
-                        v = ObjectHelper.requireNonNull(combiner.apply(array), "The combiner returned a null value");
+                        v = Objects.requireNonNull(combiner.apply(array), "The combiner returned a null value");
                     } catch (Throwable ex) {
                         Exceptions.throwIfFatal(ex);
                         errors.tryAddThrowableOrReport(ex);

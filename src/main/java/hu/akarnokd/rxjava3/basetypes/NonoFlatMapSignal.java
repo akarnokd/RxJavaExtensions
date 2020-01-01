@@ -16,6 +16,7 @@
 
 package hu.akarnokd.rxjava3.basetypes;
 
+import java.util.Objects;
 import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
@@ -23,7 +24,6 @@ import org.reactivestreams.*;
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.exceptions.Exceptions;
 import io.reactivex.rxjava3.functions.*;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 import io.reactivex.rxjava3.internal.subscriptions.SubscriptionHelper;
 
 /**
@@ -48,7 +48,7 @@ final class NonoFlatMapSignal<T> extends Flowable<T> {
 
     @Override
     protected void subscribeActual(Subscriber<? super T> s) {
-        source.subscribe(new FlatMapSignalSubscriber<T>(s, onErrorMapper, onCompleteMapper));
+        source.subscribe(new FlatMapSignalSubscriber<>(s, onErrorMapper, onCompleteMapper));
     }
 
     static final class FlatMapSignalSubscriber<T> extends AtomicReference<Subscription>
@@ -104,7 +104,7 @@ final class NonoFlatMapSignal<T> extends Flowable<T> {
         public void onError(Throwable t) {
             Publisher<? extends T> p;
             try {
-                p = ObjectHelper.requireNonNull(onErrorMapper.apply(t), "The onErrorMapper returned a null Nono");
+                p = Objects.requireNonNull(onErrorMapper.apply(t), "The onErrorMapper returned a null Nono");
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
                 downstream.onError(ex);
@@ -118,7 +118,7 @@ final class NonoFlatMapSignal<T> extends Flowable<T> {
         public void onComplete() {
             Publisher<? extends T> p;
             try {
-                p = ObjectHelper.requireNonNull(onCompleteMapper.get(), "The onCompleteMapper returned a null Nono");
+                p = Objects.requireNonNull(onCompleteMapper.get(), "The onCompleteMapper returned a null Nono");
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
                 downstream.onError(ex);

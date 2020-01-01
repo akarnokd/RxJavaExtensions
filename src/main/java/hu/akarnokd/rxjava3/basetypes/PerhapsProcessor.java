@@ -53,7 +53,7 @@ public final class PerhapsProcessor<T> extends Perhaps<T> implements Processor<T
      * @return the new PerhapsProcessor instance
      */
     public static <T> PerhapsProcessor<T> create() {
-        return new PerhapsProcessor<T>();
+        return new PerhapsProcessor<>();
     }
 
     /**
@@ -61,13 +61,13 @@ public final class PerhapsProcessor<T> extends Perhaps<T> implements Processor<T
      */
     @SuppressWarnings("unchecked")
     private PerhapsProcessor() {
-        subscribers = new AtomicReference<InnerSubscription<T>[]>(EMPTY);
+        subscribers = new AtomicReference<>(EMPTY);
         once = new AtomicBoolean();
     }
 
     @Override
     protected void subscribeActual(Subscriber<? super T> s) {
-        InnerSubscription<T> inner = new InnerSubscription<T>(s, this);
+        InnerSubscription<T> inner = new InnerSubscription<>(s, this);
         s.onSubscribe(inner);
         if (add(inner)) {
             if (inner.isCancelled()) {

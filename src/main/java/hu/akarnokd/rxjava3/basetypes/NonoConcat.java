@@ -147,13 +147,13 @@ final class NonoConcat extends Nono {
                 }
 
                 if (prefetch == Integer.MAX_VALUE) {
-                    queue = new SpscLinkedArrayQueue<Nono>(bufferSize());
+                    queue = new SpscLinkedArrayQueue<>(bufferSize());
 
                     downstream.onSubscribe(this);
 
                     s.request(Long.MAX_VALUE);
                 } else {
-                    queue = new SpscArrayQueue<Nono>(prefetch);
+                    queue = new SpscArrayQueue<>(prefetch);
 
                     downstream.onSubscribe(this);
 

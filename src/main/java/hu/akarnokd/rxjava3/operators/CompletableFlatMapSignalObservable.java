@@ -16,6 +16,7 @@
 
 package hu.akarnokd.rxjava3.operators;
 
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
 import io.reactivex.rxjava3.core.*;
@@ -23,7 +24,6 @@ import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.exceptions.Exceptions;
 import io.reactivex.rxjava3.functions.*;
 import io.reactivex.rxjava3.internal.disposables.DisposableHelper;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 
 /**
  * Maps the terminal signals of the upstream into ObservableSources and consumes them.
@@ -48,12 +48,12 @@ implements CompletableConverter<Observable<R>> {
 
     @Override
     public Observable<R> apply(Completable t) {
-        return new CompletableFlatMapSignalObservable<R>(t, onCompleteHandler, onErrorHandler);
+        return new CompletableFlatMapSignalObservable<>(t, onCompleteHandler, onErrorHandler);
     }
 
     @Override
     protected void subscribeActual(Observer<? super R> observer) {
-        source.subscribe(new FlatMapSignalConsumer<R>(observer, onCompleteHandler, onErrorHandler));
+        source.subscribe(new FlatMapSignalConsumer<>(observer, onCompleteHandler, onErrorHandler));
     }
 
     static final class FlatMapSignalConsumer<R>
@@ -68,7 +68,7 @@ implements CompletableConverter<Observable<R>> {
         FlatMapSignalConsumer(Observer<? super R> downstream,
                 Supplier<? extends ObservableSource<? extends R>> onCompleteHandler,
                 Function<? super Throwable, ? extends ObservableSource<? extends R>> onErrorHandler) {
-            this.consumer = new SignalConsumer<R>(downstream);
+            this.consumer = new SignalConsumer<>(downstream);
             this.onCompleteHandler = onCompleteHandler;
             this.onErrorHandler = onErrorHandler;
         }
@@ -96,7 +96,7 @@ implements CompletableConverter<Observable<R>> {
             ObservableSource<? extends R> next;
 
             try {
-                next = ObjectHelper.requireNonNull(onCompleteHandler.get(), "The onCompleteHandler returned a null ObservableSource");
+                next = Objects.requireNonNull(onCompleteHandler.get(), "The onCompleteHandler returned a null ObservableSource");
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
                 consumer.onError(ex);
@@ -111,7 +111,7 @@ implements CompletableConverter<Observable<R>> {
             ObservableSource<? extends R> next;
 
             try {
-                next = ObjectHelper.requireNonNull(onErrorHandler.apply(e), "The onErrorHandler returned a null ObservableSource");
+                next = Objects.requireNonNull(onErrorHandler.apply(e), "The onErrorHandler returned a null ObservableSource");
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
                 consumer.onError(ex);

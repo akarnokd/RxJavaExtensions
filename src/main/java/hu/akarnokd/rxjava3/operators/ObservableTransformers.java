@@ -16,6 +16,8 @@
 
 package hu.akarnokd.rxjava3.operators;
 
+import java.util.Objects;
+
 import hu.akarnokd.rxjava3.util.BiFunctionSecondIdentity;
 import io.reactivex.rxjava3.annotations.*;
 import io.reactivex.rxjava3.core.*;
@@ -52,8 +54,8 @@ public final class ObservableTransformers {
     @CheckReturnValue
     @NonNull
     public static <T> ObservableTransformer<T, Long> indexOf(@NonNull Predicate<? super T> predicate) {
-        ObjectHelper.requireNonNull(predicate, "predicate is null");
-        return new ObservableIndexOf<T>(null, predicate);
+        Objects.requireNonNull(predicate, "predicate is null");
+        return new ObservableIndexOf<>(null, predicate);
     }
 
     /**
@@ -70,8 +72,8 @@ public final class ObservableTransformers {
     @CheckReturnValue
     @NonNull
     public static <T> ObservableTransformer<T, T> observeOnDrop(@NonNull Scheduler scheduler) {
-        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
-        return new ObservableObserveOnDrop<T>(null, scheduler);
+        Objects.requireNonNull(scheduler, "scheduler is null");
+        return new ObservableObserveOnDrop<>(null, scheduler);
     }
 
     /**
@@ -89,8 +91,8 @@ public final class ObservableTransformers {
     @CheckReturnValue
     @NonNull
     public static <T> ObservableTransformer<T, T> observeOnLatest(@NonNull Scheduler scheduler) {
-        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
-        return new ObservableObserveOnLatest<T>(null, scheduler);
+        Objects.requireNonNull(scheduler, "scheduler is null");
+        return new ObservableObserveOnLatest<>(null, scheduler);
     }
 
     /**
@@ -108,8 +110,8 @@ public final class ObservableTransformers {
     @CheckReturnValue
     @NonNull
     public static <T, R> ObservableTransformer<T, R> flatMapDrop(Function<? super T, ? extends ObservableSource<? extends R>> mapper) {
-        ObjectHelper.requireNonNull(mapper, "mapper is null");
-        return new ObservableFlatMapDrop<T, R>(null, mapper);
+        Objects.requireNonNull(mapper, "mapper is null");
+        return new ObservableFlatMapDrop<>(null, mapper);
     }
 
     /**
@@ -128,8 +130,8 @@ public final class ObservableTransformers {
     @CheckReturnValue
     @NonNull
     public static <T, R> ObservableTransformer<T, R> flatMapLatest(Function<? super T, ? extends ObservableSource<? extends R>> mapper) {
-        ObjectHelper.requireNonNull(mapper, "mapper is null");
-        return new ObservableFlatMapLatest<T, R>(null, mapper);
+        Objects.requireNonNull(mapper, "mapper is null");
+        return new ObservableFlatMapLatest<>(null, mapper);
     }
 
     /**
@@ -142,8 +144,8 @@ public final class ObservableTransformers {
      * @since 0.19.1
      */
     public static <T, R> ObservableTransformer<T, R> errorJump(ObservableTransformer<T, R> transformer) {
-        ObjectHelper.requireNonNull(transformer, "transformer");
-        return new ObservableErrorJump<T, R>(null, transformer);
+        Objects.requireNonNull(transformer, "transformer");
+        return new ObservableErrorJump<>(null, transformer);
     }
 
     /**
@@ -215,9 +217,9 @@ public final class ObservableTransformers {
      */
     @SchedulerSupport(SchedulerSupport.NONE)
     public static <T> ObservableTransformer<T, T> valve(ObservableSource<Boolean> other, boolean defaultOpen, int bufferSize) {
-        ObjectHelper.requireNonNull(other, "other is null");
+        Objects.requireNonNull(other, "other is null");
         ObjectHelper.verifyPositive(bufferSize, "bufferSize");
-        return new ObservableValve<T>(null, other, defaultOpen, bufferSize);
+        return new ObservableValve<>(null, other, defaultOpen, bufferSize);
     }
 
     /**
@@ -297,10 +299,10 @@ public final class ObservableTransformers {
      * @since 0.20.4
      */
     public static <T, U, R> ObservableTransformer<T, R> mapAsync(Function<? super T, ? extends ObservableSource<? extends U>> mapper, BiFunction<? super T, ? super U, ? extends R> combiner, int capacityHint) {
-        ObjectHelper.requireNonNull(mapper, "mapper is null");
-        ObjectHelper.requireNonNull(combiner, "combiner is null");
+        Objects.requireNonNull(mapper, "mapper is null");
+        Objects.requireNonNull(combiner, "combiner is null");
         ObjectHelper.verifyPositive(capacityHint, "capacityHint");
-        return new ObservableMapAsync<T, U, R>(null, mapper, combiner, capacityHint);
+        return new ObservableMapAsync<>(null, mapper, combiner, capacityHint);
     }
 
     /**
@@ -334,8 +336,8 @@ public final class ObservableTransformers {
      * @since 0.20.4
      */
     public static <T> ObservableTransformer<T, T> filterAsync(Function<? super T, ? extends ObservableSource<Boolean>> asyncPredicate, int bufferSize) {
-        ObjectHelper.requireNonNull("asyncPredicate", "asyncPredicate is null");
+        Objects.requireNonNull("asyncPredicate", "asyncPredicate is null");
         ObjectHelper.verifyPositive(bufferSize, "capacityHint");
-        return new ObservableFilterAsync<T>(null, asyncPredicate, bufferSize);
+        return new ObservableFilterAsync<>(null, asyncPredicate, bufferSize);
     }
 }

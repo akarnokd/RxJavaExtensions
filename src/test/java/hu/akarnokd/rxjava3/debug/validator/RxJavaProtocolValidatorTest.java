@@ -26,7 +26,7 @@ import hu.akarnokd.rxjava3.debug.*;
 import hu.akarnokd.rxjava3.functions.PlainConsumer;
 import hu.akarnokd.rxjava3.test.TestHelper;
 import io.reactivex.rxjava3.core.*;
-import io.reactivex.rxjava3.disposables.*;
+import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.flowables.ConnectableFlowable;
 import io.reactivex.rxjava3.functions.Consumer;
 import io.reactivex.rxjava3.internal.subscriptions.BooleanSubscription;
@@ -70,8 +70,8 @@ public class RxJavaProtocolValidatorTest implements PlainConsumer<ProtocolNonCon
                 observer.onError(null);
                 observer.onError(new IOException());
                 observer.onSubscribe(null);
-                observer.onSubscribe(Disposables.empty());
-                observer.onSubscribe(Disposables.empty());
+                observer.onSubscribe(Disposable.empty());
+                observer.onSubscribe(Disposable.empty());
                 observer.onComplete();
             }
         };
@@ -116,8 +116,8 @@ public class RxJavaProtocolValidatorTest implements PlainConsumer<ProtocolNonCon
                 observer.onSuccess(null);
                 observer.onSuccess(1);
                 observer.onSubscribe(null);
-                observer.onSubscribe(Disposables.empty());
-                observer.onSubscribe(Disposables.empty());
+                observer.onSubscribe(Disposable.empty());
+                observer.onSubscribe(Disposable.empty());
                 observer.onComplete();
                 observer.onSuccess(2);
             }
@@ -173,8 +173,8 @@ public class RxJavaProtocolValidatorTest implements PlainConsumer<ProtocolNonCon
                 observer.onSuccess(null);
                 observer.onSuccess(1);
                 observer.onSubscribe(null);
-                observer.onSubscribe(Disposables.empty());
-                observer.onSubscribe(Disposables.empty());
+                observer.onSubscribe(Disposable.empty());
+                observer.onSubscribe(Disposable.empty());
                 observer.onSuccess(2);
             }
         };
@@ -226,8 +226,8 @@ public class RxJavaProtocolValidatorTest implements PlainConsumer<ProtocolNonCon
                 observer.onNext(null);
                 observer.onNext(1);
                 observer.onSubscribe(null);
-                observer.onSubscribe(Disposables.empty());
-                observer.onSubscribe(Disposables.empty());
+                observer.onSubscribe(Disposable.empty());
+                observer.onSubscribe(Disposable.empty());
                 observer.onComplete();
                 observer.onNext(2);
             }
@@ -408,8 +408,8 @@ public class RxJavaProtocolValidatorTest implements PlainConsumer<ProtocolNonCon
                 observer.onNext(null);
                 observer.onNext(1);
                 observer.onSubscribe(null);
-                observer.onSubscribe(Disposables.empty());
-                observer.onSubscribe(Disposables.empty());
+                observer.onSubscribe(Disposable.empty());
+                observer.onSubscribe(Disposable.empty());
                 observer.onComplete();
                 observer.onNext(2);
             }

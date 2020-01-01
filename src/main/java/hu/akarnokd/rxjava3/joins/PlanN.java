@@ -40,11 +40,11 @@ final class PlanN<R> extends Plan<R> {
             final Observer<R> observer, final Consumer<ActivePlan0> deactivate) {
         Consumer<Throwable> onError = onErrorFrom(observer);
 
-        final List<JoinObserver1<? extends Object>> observers = new ArrayList<JoinObserver1<? extends Object>>();
+        final List<JoinObserver1<? extends Object>> observers = new ArrayList<>();
         for (int i = 0; i < expression.size(); i++) {
             observers.add(createObserver(externalSubscriptions, expression.get(i), onError));
         }
-        final AtomicReference<ActivePlanN> self = new AtomicReference<ActivePlanN>();
+        final AtomicReference<ActivePlanN> self = new AtomicReference<>();
 
         ActivePlanN activePlan = new ActivePlanN(observers, new Consumer<Object[]>() {
                     @Override

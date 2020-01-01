@@ -38,7 +38,7 @@ public class MaybeConsumersTest implements Consumer<Object>, Action {
 
     final MaybeSubject<Integer> processor = MaybeSubject.create();
 
-    final List<Object> events = new ArrayList<Object>();
+    final List<Object> events = new ArrayList<>();
 
     @Override
     public void run() throws Exception {
@@ -238,10 +238,10 @@ public class MaybeConsumersTest implements Consumer<Object>, Action {
                         @Override
                         protected void subscribeActual(
                                 MaybeObserver<? super Integer> observer) {
-                            observer.onSubscribe(Disposables.empty());
+                            observer.onSubscribe(Disposable.empty());
                             observer.onComplete();
 
-                            observer.onSubscribe(Disposables.empty());
+                            observer.onSubscribe(Disposable.empty());
                             observer.onSuccess(2);
                             observer.onComplete();
                             observer.onError(new IOException());

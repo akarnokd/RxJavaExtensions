@@ -126,27 +126,27 @@ public class ParallelSchedulerTest implements Runnable {
 
             w.dispose();
 
-            assertSame(Disposables.disposed(), w.schedule(this));
+            assertSame(Disposable.disposed(), w.schedule(this));
 
-            assertSame(Disposables.disposed(), w.schedule(this, 100, TimeUnit.MILLISECONDS));
+            assertSame(Disposable.disposed(), w.schedule(this, 100, TimeUnit.MILLISECONDS));
 
-            assertSame(Disposables.disposed(), w.schedulePeriodically(this, 100, 100, TimeUnit.MILLISECONDS));
+            assertSame(Disposable.disposed(), w.schedulePeriodically(this, 100, 100, TimeUnit.MILLISECONDS));
 
             s.shutdown();
 
-            assertSame(Disposables.disposed(), s.scheduleDirect(this));
+            assertSame(Disposable.disposed(), s.scheduleDirect(this));
 
-            assertSame(Disposables.disposed(), s.scheduleDirect(this, 100, TimeUnit.MILLISECONDS));
+            assertSame(Disposable.disposed(), s.scheduleDirect(this, 100, TimeUnit.MILLISECONDS));
 
-            assertSame(Disposables.disposed(), s.schedulePeriodicallyDirect(this, 100, 100, TimeUnit.MILLISECONDS));
+            assertSame(Disposable.disposed(), s.schedulePeriodicallyDirect(this, 100, 100, TimeUnit.MILLISECONDS));
 
             w = s.createWorker();
 
-            assertSame(Disposables.disposed(), w.schedule(this));
+            assertSame(Disposable.disposed(), w.schedule(this));
 
-            assertSame(Disposables.disposed(), w.schedule(this, 100, TimeUnit.MILLISECONDS));
+            assertSame(Disposable.disposed(), w.schedule(this, 100, TimeUnit.MILLISECONDS));
 
-            assertSame(Disposables.disposed(), w.schedulePeriodically(this, 100, 100, TimeUnit.MILLISECONDS));
+            assertSame(Disposable.disposed(), w.schedulePeriodically(this, 100, 100, TimeUnit.MILLISECONDS));
 
             assertEquals(0, calls.get());
 
@@ -285,19 +285,19 @@ public class ParallelSchedulerTest implements Runnable {
             exec.shutdown();
         }
 
-        assertSame(Disposables.disposed(), s.scheduleDirect(this));
+        assertSame(Disposable.disposed(), s.scheduleDirect(this));
 
-        assertSame(Disposables.disposed(), s.scheduleDirect(this, 100, TimeUnit.MILLISECONDS));
+        assertSame(Disposable.disposed(), s.scheduleDirect(this, 100, TimeUnit.MILLISECONDS));
 
-        assertSame(Disposables.disposed(), s.schedulePeriodicallyDirect(this, 100, 100, TimeUnit.MILLISECONDS));
+        assertSame(Disposable.disposed(), s.schedulePeriodicallyDirect(this, 100, 100, TimeUnit.MILLISECONDS));
 
         Worker w = s.createWorker();
 
-        assertSame(Disposables.disposed(), w.schedule(this));
+        assertSame(Disposable.disposed(), w.schedule(this));
 
-        assertSame(Disposables.disposed(), w.schedule(this, 100, TimeUnit.MILLISECONDS));
+        assertSame(Disposable.disposed(), w.schedule(this, 100, TimeUnit.MILLISECONDS));
 
-        assertSame(Disposables.disposed(), w.schedulePeriodically(this, 100, 100, TimeUnit.MILLISECONDS));
+        assertSame(Disposable.disposed(), w.schedulePeriodically(this, 100, 100, TimeUnit.MILLISECONDS));
 
         assertEquals(0, calls.get());
     }
@@ -353,7 +353,7 @@ public class ParallelSchedulerTest implements Runnable {
             for (int i = 0; i < 1000; i++) {
                 final CompositeDisposable cd = new CompositeDisposable();
                 final TrackedAction tt = new TrackedAction(this, cd);
-                final FutureTask<Object> ft = new FutureTask<Object>(Functions.EMPTY_RUNNABLE, null);
+                final FutureTask<Object> ft = new FutureTask<>(Functions.EMPTY_RUNNABLE, null);
 
                 Runnable r1 = new Runnable() {
                     @Override
@@ -382,7 +382,7 @@ public class ParallelSchedulerTest implements Runnable {
             for (int i = 0; i < 1000; i++) {
                 final CompositeDisposable cd = new CompositeDisposable();
                 final TrackedAction tt = new TrackedAction(this, cd);
-                final FutureTask<Object> ft = new FutureTask<Object>(Functions.EMPTY_RUNNABLE, null);
+                final FutureTask<Object> ft = new FutureTask<>(Functions.EMPTY_RUNNABLE, null);
 
                 Runnable r1 = new Runnable() {
                     @Override

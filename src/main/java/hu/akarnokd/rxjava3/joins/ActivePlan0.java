@@ -22,7 +22,7 @@ import java.util.*;
  * Represents an activated plan.
  */
 abstract class ActivePlan0 {
-    protected final Map<JoinObserver, JoinObserver> joinObservers = new HashMap<JoinObserver, JoinObserver>();
+    protected final Map<JoinObserver, JoinObserver> joinObservers = new HashMap<>();
 
     protected abstract void match() throws Throwable;
 

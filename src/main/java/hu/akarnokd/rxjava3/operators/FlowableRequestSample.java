@@ -45,12 +45,12 @@ final class FlowableRequestSample<T> extends Flowable<T> implements FlowableTran
 
     @Override
     public Publisher<T> apply(Flowable<T> upstream) {
-        return new FlowableRequestSample<T>(upstream, other);
+        return new FlowableRequestSample<>(upstream, other);
     }
 
     @Override
     protected void subscribeActual(Subscriber<? super T> s) {
-        RequestSample<T> parent = new RequestSample<T>(s);
+        RequestSample<T> parent = new RequestSample<>(s);
         s.onSubscribe(parent);
         other.subscribe(parent.otherConsumer);
         source.subscribe(parent);
@@ -81,7 +81,7 @@ final class FlowableRequestSample<T> extends Flowable<T> implements FlowableTran
             this.downstream = downstream;
             this.downstreamRequests = new AtomicLong();
             this.upstreamRequests = new AtomicLong();
-            this.upstream = new AtomicReference<Subscription>();
+            this.upstream = new AtomicReference<>();
             this.otherConsumer = new OtherConsumer(this);
             this.error = new AtomicThrowable();
             this.wip = new AtomicInteger();

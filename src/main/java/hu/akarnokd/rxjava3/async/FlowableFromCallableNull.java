@@ -38,7 +38,7 @@ final class FlowableFromSupplierNull<T> extends Flowable<T> implements Supplier<
 
     @Override
     protected void subscribeActual(Subscriber<? super T> s) {
-        CallableNullSubscription<T> deferred = new CallableNullSubscription<T>(s);
+        CallableNullSubscription<T> deferred = new CallableNullSubscription<>(s);
         s.onSubscribe(deferred);
 
         if (!deferred.isCancelled()) {

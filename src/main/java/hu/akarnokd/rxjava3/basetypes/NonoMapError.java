@@ -16,11 +16,12 @@
 
 package hu.akarnokd.rxjava3.basetypes;
 
+import java.util.Objects;
+
 import org.reactivestreams.Subscriber;
 
 import io.reactivex.rxjava3.exceptions.*;
 import io.reactivex.rxjava3.functions.Function;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 
 /**
  * Map an upstream error into another Throwable.
@@ -54,7 +55,7 @@ final class NonoMapError extends Nono {
         public void onError(Throwable t) {
             Throwable ex;
             try {
-                ex = ObjectHelper.requireNonNull(mapper.apply(t), "The mapper returned a null Throwable");
+                ex = Objects.requireNonNull(mapper.apply(t), "The mapper returned a null Throwable");
             } catch (Throwable exc) {
                 Exceptions.throwIfFatal(exc);
                 ex = new CompositeException(t, exc);

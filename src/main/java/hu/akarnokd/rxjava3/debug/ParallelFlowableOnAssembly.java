@@ -53,9 +53,9 @@ final class ParallelFlowableOnAssembly<T> extends ParallelFlowable<T> {
             for (int i = 0; i < n; i++) {
                 Subscriber<? super T> z = s[i];
                 if (z instanceof ConditionalSubscriber) {
-                    parents[i] = new OnAssemblyConditionalSubscriber<T>((ConditionalSubscriber<? super T>)z, assembled);
+                    parents[i] = new OnAssemblyConditionalSubscriber<>((ConditionalSubscriber<? super T>)z, assembled);
                 } else {
-                    parents[i] = new OnAssemblySubscriber<T>(z, assembled);
+                    parents[i] = new OnAssemblySubscriber<>(z, assembled);
                 }
             }
 

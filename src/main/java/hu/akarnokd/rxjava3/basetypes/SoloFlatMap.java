@@ -16,13 +16,13 @@
 
 package hu.akarnokd.rxjava3.basetypes;
 
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.reactivestreams.*;
 
 import io.reactivex.rxjava3.exceptions.Exceptions;
 import io.reactivex.rxjava3.functions.Function;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 import io.reactivex.rxjava3.internal.subscriptions.*;
 
 /**
@@ -80,7 +80,7 @@ final class SoloFlatMap<T, R> extends Solo<R> {
             Solo<? extends R> sp;
 
             try {
-                sp = ObjectHelper.requireNonNull(mapper.apply(t), "The mapper returned a null Solo");
+                sp = Objects.requireNonNull(mapper.apply(t), "The mapper returned a null Solo");
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
                 downstream.onError(ex);

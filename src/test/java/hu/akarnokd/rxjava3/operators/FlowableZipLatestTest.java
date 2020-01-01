@@ -126,7 +126,6 @@ public class FlowableZipLatestTest {
         .assertResult("[2, 3, 6, 7]");
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void zipLatestArrayEmpty() {
         Flowables.zipLatest(toString)
@@ -134,7 +133,6 @@ public class FlowableZipLatestTest {
         .assertResult();
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void zipLatestArrayEmptyScheduler() {
         Flowables.zipLatest(toString, Schedulers.single())
@@ -158,7 +156,6 @@ public class FlowableZipLatestTest {
         .assertResult();
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void zipLatestArray() {
         TestScheduler scheduler = new TestScheduler();
@@ -182,7 +179,6 @@ public class FlowableZipLatestTest {
         ts.assertResult("[2, 4]", "[4, 5]", "[6, 6]");
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void zipLatestIterable() {
         TestScheduler scheduler = new TestScheduler();
@@ -210,8 +206,8 @@ public class FlowableZipLatestTest {
     @Test
     public void zipLatestIterableMany() {
         int n = 20;
-        List<Flowable<Integer>> sources = new ArrayList<Flowable<Integer>>();
-        List<Integer> results = new ArrayList<Integer>();
+        List<Flowable<Integer>> sources = new ArrayList<>();
+        List<Integer> results = new ArrayList<>();
         for (int i = 0; i < n; i++) {
             sources.add(Flowable.just(i));
             results.add(i);
@@ -222,7 +218,6 @@ public class FlowableZipLatestTest {
         .assertResult(results.toString());
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void zipLatestTake2() {
         TestScheduler scheduler = new TestScheduler();
@@ -543,7 +538,7 @@ public class FlowableZipLatestTest {
                 final PublishProcessor<Integer> pp1 = PublishProcessor.create();
                 final PublishProcessor<Integer> pp2 = PublishProcessor.create();
 
-                TestSubscriberEx<String> ts = new TestSubscriberEx<String>();
+                TestSubscriberEx<String> ts = new TestSubscriberEx<>();
 
                 Flowables.zipLatest(pp1, pp2, toString2).subscribe(ts);
 

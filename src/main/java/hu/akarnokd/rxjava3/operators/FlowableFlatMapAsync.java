@@ -62,7 +62,7 @@ final class FlowableFlatMapAsync<T, R> extends Flowable<R> implements FlowableTr
 
     @Override
     public Publisher<R> apply(Flowable<T> upstream) {
-        return new FlowableFlatMapAsync<T, R>(upstream, mapper, maxConcurrency, bufferSize, depthFirst, scheduler);
+        return new FlowableFlatMapAsync<>(upstream, mapper, maxConcurrency, bufferSize, depthFirst, scheduler);
     }
 
     static final class FlatMapOuterSubscriber<T, R> extends BaseFlatMapOuterSubscriber<T, R> implements Runnable {

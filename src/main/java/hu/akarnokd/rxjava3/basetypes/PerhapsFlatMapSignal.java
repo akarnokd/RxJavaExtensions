@@ -16,13 +16,13 @@
 
 package hu.akarnokd.rxjava3.basetypes;
 
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.reactivestreams.*;
 
 import io.reactivex.rxjava3.exceptions.Exceptions;
 import io.reactivex.rxjava3.functions.*;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 import io.reactivex.rxjava3.internal.subscriptions.*;
 
 /**
@@ -103,7 +103,7 @@ final class PerhapsFlatMapSignal<T, R> extends Perhaps<R> {
             Perhaps<? extends R> ph;
 
             try {
-                ph = ObjectHelper.requireNonNull(onSuccessMapper.apply(t), "The onSuccessMapper returned a null Perhaps");
+                ph = Objects.requireNonNull(onSuccessMapper.apply(t), "The onSuccessMapper returned a null Perhaps");
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
                 downstream.onError(ex);
@@ -117,7 +117,7 @@ final class PerhapsFlatMapSignal<T, R> extends Perhaps<R> {
         public void onError(Throwable t) {
             Perhaps<? extends R> ph;
             try {
-                ph = ObjectHelper.requireNonNull(onErrorMapper.apply(t), "The onErrorMapper returned a null Perhaps");
+                ph = Objects.requireNonNull(onErrorMapper.apply(t), "The onErrorMapper returned a null Perhaps");
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
                 downstream.onError(ex);
@@ -131,7 +131,7 @@ final class PerhapsFlatMapSignal<T, R> extends Perhaps<R> {
             if (!hasValue) {
                 Perhaps<? extends R> ph;
                 try {
-                    ph = ObjectHelper.requireNonNull(onCompleteMapper.get(), "The onCompleteMapper returned a null Perhaps");
+                    ph = Objects.requireNonNull(onCompleteMapper.get(), "The onCompleteMapper returned a null Perhaps");
                 } catch (Throwable ex) {
                     Exceptions.throwIfFatal(ex);
                     downstream.onError(ex);

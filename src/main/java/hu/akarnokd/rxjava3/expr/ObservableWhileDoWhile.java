@@ -52,7 +52,7 @@ final class ObservableWhileDoWhile<T> extends Observable<T> {
         }
 
         if (b) {
-            WhileDoWhileObserver<T> parent = new WhileDoWhileObserver<T>(observer, postCondition, source);
+            WhileDoWhileObserver<T> parent = new WhileDoWhileObserver<>(observer, postCondition, source);
             observer.onSubscribe(parent);
             parent.subscribeNext();
         } else {

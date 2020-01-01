@@ -16,11 +16,12 @@
 
 package hu.akarnokd.rxjava3.basetypes;
 
+import java.util.Objects;
+
 import org.reactivestreams.Subscriber;
 
 import io.reactivex.rxjava3.exceptions.Exceptions;
 import io.reactivex.rxjava3.functions.Supplier;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 import io.reactivex.rxjava3.internal.subscriptions.EmptySubscription;
 
 /**
@@ -38,7 +39,7 @@ final class NonoErrorSupplier extends Nono implements Supplier<Void> {
     protected void subscribeActual(Subscriber<? super Void> s) {
         Throwable ex;
         try {
-        ex = ObjectHelper.requireNonNull(errorSupplier.get(), "The errorSupplier returned a null Throwable");
+        ex = Objects.requireNonNull(errorSupplier.get(), "The errorSupplier returned a null Throwable");
         } catch (Throwable e) {
             Exceptions.throwIfFatal(e);
             ex = e;
@@ -51,7 +52,7 @@ final class NonoErrorSupplier extends Nono implements Supplier<Void> {
     public Void get() throws Throwable {
         Throwable ex;
         try {
-        ex = ObjectHelper.requireNonNull(errorSupplier.get(), "The errorSupplier returned a null Throwable");
+        ex = Objects.requireNonNull(errorSupplier.get(), "The errorSupplier returned a null Throwable");
         } catch (Throwable e) {
             Exceptions.throwIfFatal(e);
             ex = e;

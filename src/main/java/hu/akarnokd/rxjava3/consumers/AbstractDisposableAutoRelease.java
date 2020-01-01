@@ -49,7 +49,7 @@ implements Disposable, LambdaConsumerIntrospection {
     ) {
         this.onError = onError;
         this.onComplete = onComplete;
-        this.composite = new AtomicReference<CompositeDisposable>(composite);
+        this.composite = new AtomicReference<>(composite);
     }
 
     public final void onError(Throwable t) {

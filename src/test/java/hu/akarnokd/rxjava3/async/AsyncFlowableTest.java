@@ -84,7 +84,7 @@ public class AsyncFlowableTest {
     SimpleCallable, Function, BiFunction, Function3, Function4, Function5,
     Function6, Function7, Function8, Function9, Supplier {
 
-        final AtomicReference<String> state = new AtomicReference<String>();
+        final AtomicReference<String> state = new AtomicReference<>();
 
         void setState(String s) {
             state.set(s);
@@ -359,8 +359,9 @@ public class AsyncFlowableTest {
     @Test
     public void toAsyncConsumerN() {
         MultiFunction f = new MultiFunction();
+        Consumer<Object[]> f2 = f;
 
-        AsyncFlowable.toAsyncArray((Consumer<Object[]>)f)
+        AsyncFlowable.toAsyncArray(f2)
         .apply(new Object[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 })
         .test()
         .awaitDone(5, TimeUnit.SECONDS)
@@ -659,8 +660,9 @@ public class AsyncFlowableTest {
     @Test
     public void toAsyncConsumerNScheduler() {
         MultiFunction f = new MultiFunction();
+        Consumer<Object[]> f2 = f;
 
-        AsyncFlowable.toAsyncArray((Consumer<Object[]>)f, Schedulers.single())
+        AsyncFlowable.toAsyncArray(f2, Schedulers.single())
         .apply(new Object[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 })
         .test()
         .awaitDone(5, TimeUnit.SECONDS)
@@ -815,7 +817,7 @@ public class AsyncFlowableTest {
 
     @Test
     public void startFuture() {
-        final FutureTask<Integer> ft = new FutureTask<Integer>(Functions.EMPTY_RUNNABLE, 1);
+        final FutureTask<Integer> ft = new FutureTask<>(Functions.EMPTY_RUNNABLE, 1);
         ft.run();
         AsyncFlowable.startFuture(new Supplier<Future<Integer>>() {
             @Override
@@ -830,7 +832,7 @@ public class AsyncFlowableTest {
 
     @Test
     public void startFutureNull() {
-        final FutureTask<Integer> ft = new FutureTask<Integer>(Functions.EMPTY_RUNNABLE, null);
+        final FutureTask<Integer> ft = new FutureTask<>(Functions.EMPTY_RUNNABLE, null);
         ft.run();
         AsyncFlowable.startFuture(new Supplier<Future<Integer>>() {
             @Override
@@ -845,7 +847,7 @@ public class AsyncFlowableTest {
 
     @Test
     public void startFutureCustomScheduler() {
-        final FutureTask<Integer> ft = new FutureTask<Integer>(Functions.EMPTY_RUNNABLE, 1);
+        final FutureTask<Integer> ft = new FutureTask<>(Functions.EMPTY_RUNNABLE, 1);
         ft.run();
         AsyncFlowable.startFuture(new Supplier<Future<Integer>>() {
             @Override
@@ -860,7 +862,7 @@ public class AsyncFlowableTest {
 
     @Test
     public void deferFuture() {
-        final FutureTask<Flowable<Integer>> ft = new FutureTask<Flowable<Integer>>(Functions.EMPTY_RUNNABLE, Flowable.just(1));
+        final FutureTask<Flowable<Integer>> ft = new FutureTask<>(Functions.EMPTY_RUNNABLE, Flowable.just(1));
         ft.run();
 
         AsyncFlowable.deferFuture(new Supplier<Future<Flowable<Integer>>>() {
@@ -876,7 +878,7 @@ public class AsyncFlowableTest {
 
     @Test
     public void deferFutureCustomScheduler() {
-        final FutureTask<Flowable<Integer>> ft = new FutureTask<Flowable<Integer>>(Functions.EMPTY_RUNNABLE, Flowable.just(1));
+        final FutureTask<Flowable<Integer>> ft = new FutureTask<>(Functions.EMPTY_RUNNABLE, Flowable.just(1));
         ft.run();
 
         AsyncFlowable.deferFuture(new Supplier<Future<Flowable<Integer>>>() {
@@ -892,7 +894,7 @@ public class AsyncFlowableTest {
 
     @Test
     public void forEachFutureC1() throws Exception {
-        final List<Integer> list = new ArrayList<Integer>();
+        final List<Integer> list = new ArrayList<>();
 
         assertNull(AsyncFlowable.forEachFuture(Flowable.range(1, 5), new Consumer<Integer>() {
             @Override
@@ -907,7 +909,7 @@ public class AsyncFlowableTest {
 
     @Test
     public void forEachFutureC1Error() throws Exception {
-        final List<Integer> list = new ArrayList<Integer>();
+        final List<Integer> list = new ArrayList<>();
 
         try {
             AsyncFlowable.forEachFuture(Flowable.<Integer>error(new IOException()), new Consumer<Integer>() {
@@ -928,7 +930,7 @@ public class AsyncFlowableTest {
 
     @Test
     public void forEachFutureC1C2() throws Exception {
-        final List<Integer> list = new ArrayList<Integer>();
+        final List<Integer> list = new ArrayList<>();
 
         assertNull(AsyncFlowable.forEachFuture(Flowable.range(1, 5), new Consumer<Integer>() {
             @Override
@@ -948,7 +950,7 @@ public class AsyncFlowableTest {
 
     @Test
     public void forEachFutureC1C2Error() throws Exception {
-        final List<Integer> list = new ArrayList<Integer>();
+        final List<Integer> list = new ArrayList<>();
         try {
             AsyncFlowable.forEachFuture(Flowable.<Integer>error(new IOException()), new Consumer<Integer>() {
                 @Override
@@ -973,7 +975,7 @@ public class AsyncFlowableTest {
 
     @Test
     public void forEachFutureC1C2A3() throws Exception {
-        final List<Integer> list = new ArrayList<Integer>();
+        final List<Integer> list = new ArrayList<>();
 
         assertNull(AsyncFlowable.forEachFuture(Flowable.range(1, 5), new Consumer<Integer>() {
             @Override
@@ -998,7 +1000,7 @@ public class AsyncFlowableTest {
 
     @Test
     public void forEachFutureC1C2A3Error() throws Exception {
-        final List<Integer> list = new ArrayList<Integer>();
+        final List<Integer> list = new ArrayList<>();
         try {
             AsyncFlowable.forEachFuture(Flowable.<Integer>error(new IOException()), new Consumer<Integer>() {
                 @Override
@@ -1028,7 +1030,7 @@ public class AsyncFlowableTest {
 
     @Test
     public void forEachFutureC1Scheduler() throws Exception {
-        final List<Integer> list = new ArrayList<Integer>();
+        final List<Integer> list = new ArrayList<>();
 
         assertNull(AsyncFlowable.forEachFuture(Flowable.range(1, 5), new Consumer<Integer>() {
             @Override
@@ -1043,7 +1045,7 @@ public class AsyncFlowableTest {
 
     @Test
     public void forEachFutureC1ErrorScheduler() throws Exception {
-        final List<Integer> list = new ArrayList<Integer>();
+        final List<Integer> list = new ArrayList<>();
 
         try {
             AsyncFlowable.forEachFuture(Flowable.<Integer>error(new IOException()), new Consumer<Integer>() {
@@ -1064,7 +1066,7 @@ public class AsyncFlowableTest {
 
     @Test
     public void forEachFutureC1C2Scheduler() throws Exception {
-        final List<Integer> list = new ArrayList<Integer>();
+        final List<Integer> list = new ArrayList<>();
 
         assertNull(AsyncFlowable.forEachFuture(Flowable.range(1, 5), new Consumer<Integer>() {
             @Override
@@ -1084,7 +1086,7 @@ public class AsyncFlowableTest {
 
     @Test
     public void forEachFutureC1C2ErrorScheduler() throws Exception {
-        final List<Integer> list = new ArrayList<Integer>();
+        final List<Integer> list = new ArrayList<>();
         try {
             AsyncFlowable.forEachFuture(Flowable.<Integer>error(new IOException()), new Consumer<Integer>() {
                 @Override
@@ -1109,7 +1111,7 @@ public class AsyncFlowableTest {
 
     @Test
     public void forEachFutureC1C2A3Scheduler() throws Exception {
-        final List<Integer> list = new ArrayList<Integer>();
+        final List<Integer> list = new ArrayList<>();
 
         assertNull(AsyncFlowable.forEachFuture(Flowable.range(1, 5), new Consumer<Integer>() {
             @Override
@@ -1134,7 +1136,7 @@ public class AsyncFlowableTest {
 
     @Test
     public void forEachFutureC1C2A3ErrorScheduler() throws Exception {
-        final List<Integer> list = new ArrayList<Integer>();
+        final List<Integer> list = new ArrayList<>();
         try {
             AsyncFlowable.forEachFuture(Flowable.<Integer>error(new IOException()), new Consumer<Integer>() {
                 @Override
@@ -1165,7 +1167,7 @@ public class AsyncFlowableTest {
     @Test
     public void runAsync() {
 
-        AsyncFlowable.runAsync(Schedulers.single(), new BiConsumer<Subscriber<Object>, Disposable>() {
+        AsyncFlowable.runAsync(Schedulers.single(), new BiConsumer<Subscriber<? super Object>, Disposable>() {
             @Override
             public void accept(Subscriber<? super Object> s, Disposable d) throws Exception {
                 Thread.sleep(200);
@@ -1187,7 +1189,7 @@ public class AsyncFlowableTest {
     public void runAsyncProcessor() {
         AsyncFlowable.runAsync(Schedulers.single(),
             UnicastProcessor.<Object>create(),
-        new BiConsumer<Subscriber<Object>, Disposable>() {
+        new BiConsumer<Subscriber<? super Object>, Disposable>() {
             @Override
             public void accept(Subscriber<? super Object> s, Disposable d) throws Exception {
                 s.onNext(1);

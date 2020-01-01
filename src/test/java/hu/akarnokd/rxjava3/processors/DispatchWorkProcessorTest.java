@@ -232,7 +232,7 @@ public class DispatchWorkProcessorTest {
 
             final TestSubscriber<Integer> ts = dws.test();
 
-            final TestSubscriber<Integer> ts2 = new TestSubscriber<Integer>();
+            final TestSubscriber<Integer> ts2 = new TestSubscriber<>();
 
             Runnable r1 = new Runnable() {
                 @Override
@@ -264,7 +264,7 @@ public class DispatchWorkProcessorTest {
             @Override
             public HashSet<Integer> apply(List<Integer> a, List<Integer> b)
                     throws Exception {
-                HashSet<Integer> set = new HashSet<Integer>();
+                HashSet<Integer> set = new HashSet<>();
                 set.addAll(a);
                 set.addAll(b);
                 return set;
@@ -368,7 +368,7 @@ public class DispatchWorkProcessorTest {
             @Override
             public HashSet<Integer> apply(List<Integer> a, List<Integer> b)
                     throws Exception {
-                HashSet<Integer> set = new HashSet<Integer>();
+                HashSet<Integer> set = new HashSet<>();
                 set.addAll(a);
                 set.addAll(b);
                 return set;
@@ -406,7 +406,7 @@ public class DispatchWorkProcessorTest {
             @Override
             public HashSet<Integer> apply(List<Integer> a, List<Integer> b)
                     throws Exception {
-                HashSet<Integer> set = new HashSet<Integer>();
+                HashSet<Integer> set = new HashSet<>();
                 set.addAll(a);
                 set.addAll(b);
                 return set;
@@ -453,7 +453,7 @@ public class DispatchWorkProcessorTest {
             @Override
             public HashSet<Integer> apply(List<Integer> a, List<Integer> b)
                     throws Exception {
-                HashSet<Integer> set = new HashSet<Integer>();
+                HashSet<Integer> set = new HashSet<>();
                 set.addAll(a);
                 set.addAll(b);
                 return set;

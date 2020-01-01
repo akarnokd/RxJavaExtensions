@@ -40,7 +40,7 @@ implements Subscriber<T>, Future<T>, Subscription {
 
     FuturePerhapsSubscriber() {
         super(1);
-        this.upstream = new AtomicReference<Subscription>();
+        this.upstream = new AtomicReference<>();
     }
 
     @Override

@@ -40,7 +40,7 @@ public class FlowableConsumersTest implements Consumer<Object>, Action {
 
     final PublishProcessor<Integer> processor = PublishProcessor.create();
 
-    final List<Object> events = new ArrayList<Object>();
+    final List<Object> events = new ArrayList<>();
 
     @Override
     public void run() throws Exception {

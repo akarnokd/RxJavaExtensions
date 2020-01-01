@@ -16,13 +16,13 @@
 
 package hu.akarnokd.rxjava3.operators;
 
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
 import io.reactivex.rxjava3.core.*;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.exceptions.*;
 import io.reactivex.rxjava3.internal.disposables.EmptyDisposable;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 
 /**
  * Makes sure an upstream error skips the flow created with a
@@ -48,18 +48,18 @@ final class ObservableErrorJump<T, R> extends Observable<R> implements Observabl
 
     @Override
     public ObservableSource<R> apply(Observable<T> upstream) {
-        return new ObservableErrorJump<T, R>(upstream, transformer);
+        return new ObservableErrorJump<>(upstream, transformer);
     }
 
     @Override
     protected void subscribeActual(Observer<? super R> observer) {
 
-        ErrorJumpFront<T, R> front = new ErrorJumpFront<T, R>(source, observer);
+        ErrorJumpFront<T, R> front = new ErrorJumpFront<>(source, observer);
 
         ObservableSource<R> downstream;
 
         try {
-            downstream = ObjectHelper.requireNonNull(
+            downstream = Objects.requireNonNull(
                     transformer.apply(front),
                     "The transformer returned a null Publisher");
         } catch (Throwable ex) {
@@ -83,7 +83,7 @@ final class ObservableErrorJump<T, R> extends Observable<R> implements Observabl
 
         ErrorJumpFront(Observable<T> source, Observer<? super R> downstream) {
             this.source = source;
-            this.middle = new AtomicReference<Observer<? super T>>();
+            this.middle = new AtomicReference<>();
             this.end = new EndSubscriber(downstream);
         }
 

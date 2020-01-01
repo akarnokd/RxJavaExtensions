@@ -42,7 +42,7 @@ final class NonoCache extends Nono implements Subscriber<Void> {
     NonoCache(Nono source) {
         this.source = source;
         this.once = new AtomicBoolean();
-        this.subscribers = new AtomicReference<CacheSubscription[]>(EMPTY);
+        this.subscribers = new AtomicReference<>(EMPTY);
     }
 
     @Override

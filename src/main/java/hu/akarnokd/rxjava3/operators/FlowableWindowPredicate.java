@@ -65,12 +65,12 @@ final class FlowableWindowPredicate<T> extends Flowable<Flowable<T>> implements 
 
     @Override
     protected void subscribeActual(Subscriber<? super Flowable<T>> s) {
-        source.subscribe(new WindowPredicateSubscriber<T>(s, predicate, mode, bufferSize));
+        source.subscribe(new WindowPredicateSubscriber<>(s, predicate, mode, bufferSize));
     }
 
     @Override
     public Publisher<Flowable<T>> apply(Flowable<T> upstream) {
-        return new FlowableWindowPredicate<T>(upstream, predicate, mode, bufferSize);
+        return new FlowableWindowPredicate<>(upstream, predicate, mode, bufferSize);
     }
 
     static final class WindowPredicateSubscriber<T>
@@ -108,7 +108,7 @@ final class FlowableWindowPredicate<T> extends Flowable<Flowable<T>> implements 
             // In Mode.BEFORE windows are opened earlier and added to the 1-element drain "queue"
             if (mode == Mode.BEFORE) {
                 requestedWindows = new AtomicLong();
-                pending = new AtomicReference<UnicastProcessor<T>>();
+                pending = new AtomicReference<>();
             } else {
                 requestedWindows = null;
                 pending = null;

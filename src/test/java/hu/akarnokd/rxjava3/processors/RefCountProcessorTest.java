@@ -195,7 +195,7 @@ public class RefCountProcessorTest {
 
         assertTrue(source.hasSubscribers());
 
-        final TestSubscriber<Integer> ts = new TestSubscriber<Integer>();
+        final TestSubscriber<Integer> ts = new TestSubscriber<>();
 
         rcp.subscribe(new FlowableSubscriber<Integer>() {
 
@@ -239,7 +239,7 @@ public class RefCountProcessorTest {
 
         TestSubscriber<Integer> ts0 = rcp.test();
 
-        final TestSubscriber<Integer> ts = new TestSubscriber<Integer>();
+        final TestSubscriber<Integer> ts = new TestSubscriber<>();
 
         rcp.subscribe(new FlowableSubscriber<Integer>() {
 

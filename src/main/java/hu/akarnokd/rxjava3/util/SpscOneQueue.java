@@ -16,9 +16,9 @@
 
 package hu.akarnokd.rxjava3.util;
 
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 import io.reactivex.rxjava3.internal.fuseable.SimplePlainQueue;
 
 /**
@@ -33,7 +33,7 @@ implements  SimplePlainQueue<T> {
 
     @Override
     public boolean offer(T value) {
-        ObjectHelper.requireNonNull(value, "value is null");
+        Objects.requireNonNull(value, "value is null");
         if (get() == null) {
             lazySet(value);
             return true;

@@ -62,7 +62,7 @@ implements FlowableTransformer<T, T> {
 
     @Override
     public Publisher<T> apply(Flowable<T> upstream) {
-        return new FlowableOnBackpressureTimeout<T>(upstream, maxSize, timeout, unit, scheduler, onEvict);
+        return new FlowableOnBackpressureTimeout<>(upstream, maxSize, timeout, unit, scheduler, onEvict);
     }
 
     @Override
@@ -108,7 +108,7 @@ implements FlowableTransformer<T, T> {
             this.worker = worker;
             this.onEvict = onEvict;
             this.requested = new AtomicLong();
-            this.queue = new ArrayDeque<Object>();
+            this.queue = new ArrayDeque<>();
         }
 
         @Override

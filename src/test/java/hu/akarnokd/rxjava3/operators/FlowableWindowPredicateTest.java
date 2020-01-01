@@ -42,7 +42,6 @@ public class FlowableWindowPredicateTest {
         };
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void whileNormal() {
         Flowable.just(1, 2, -1, 3, 4, 5, -1, -1, 6)
@@ -62,7 +61,6 @@ public class FlowableWindowPredicateTest {
         );
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void whileNormalHidden() {
         Flowable.just(1, 2, -1, 3, 4, 5, -1, -1, 6).hide()
@@ -82,7 +80,6 @@ public class FlowableWindowPredicateTest {
         );
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void whileNormalBackpressured() {
         Flowable.just(1, 2, -1, 3, 4, 5, -1, -1, 6)
@@ -129,7 +126,6 @@ public class FlowableWindowPredicateTest {
         .assertValueCount(4);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void whileMatchBegin() {
         Flowable.just(-1, 1, 2)
@@ -147,7 +143,6 @@ public class FlowableWindowPredicateTest {
         );
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void untilNormal() {
         Flowable.just(1, 2, -1, 3, 4, 5, -1, -1, 6)
@@ -167,7 +162,6 @@ public class FlowableWindowPredicateTest {
         );
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void untilNormalHidden() {
         Flowable.just(1, 2, -1, 3, 4, 5, -1, -1, 6).hide()
@@ -187,7 +181,6 @@ public class FlowableWindowPredicateTest {
         );
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void untilNormalBackpressured() {
         Flowable.just(1, 2, -1, 3, 4, 5, -1, -1, 6)
@@ -234,7 +227,6 @@ public class FlowableWindowPredicateTest {
         .assertValueCount(4);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void untilMatchBegin() {
         Flowable.just(-1, 1, 2)
@@ -278,7 +270,6 @@ public class FlowableWindowPredicateTest {
         .assertNoValues();
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void errorWhile() {
         Flowable.<Integer>error(new IOException())
@@ -293,7 +284,6 @@ public class FlowableWindowPredicateTest {
         .assertFailure(IOException.class);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void errorUntil() {
         Flowable.<Integer>error(new IOException())
@@ -308,7 +298,6 @@ public class FlowableWindowPredicateTest {
         .assertFailure(IOException.class);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void whileTake() {
         Flowable.just(1, 2, -1, 3, 4, 5, -1, -1, 6)
@@ -327,7 +316,6 @@ public class FlowableWindowPredicateTest {
         );
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void untilTake() {
         Flowable.just(1, 2, -1, 3, 4, 5, -1, -1, 6)
@@ -346,7 +334,6 @@ public class FlowableWindowPredicateTest {
         );
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void predicateCrash() {
         Flowable.just(1, 2, -1, 3, 4, 5, -1, -1, 6)
@@ -361,7 +348,6 @@ public class FlowableWindowPredicateTest {
         .assertFailure(IllegalArgumentException.class);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void doubleError() {
         List<Throwable> errors = TestHelper.trackPluginErrors();
@@ -390,7 +376,6 @@ public class FlowableWindowPredicateTest {
         }
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void splitNormal() {
         Flowable.just(1, 2, -1, 3, 4, 5, -1, -1, 6)
@@ -410,7 +395,6 @@ public class FlowableWindowPredicateTest {
         );
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void splitNormalHidden() {
         Flowable.just(1, 2, -1, 3, 4, 5, -1, -1, 6).hide()
@@ -430,7 +414,6 @@ public class FlowableWindowPredicateTest {
         );
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void splitNormalBackpressured() {
         Flowable.just(1, 2, -1, 3, 4, 5, -1, -1, 6)
@@ -477,7 +460,6 @@ public class FlowableWindowPredicateTest {
         .assertValueCount(4);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void splitMatchBegin() {
         Flowable.just(-1, 1, 2)
@@ -495,7 +477,6 @@ public class FlowableWindowPredicateTest {
         );
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void cancellation() {
         Flowable.just(1, 2, -1, 3, 4, 5, -1, -1, 6)

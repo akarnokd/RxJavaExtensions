@@ -16,11 +16,11 @@
 
 package hu.akarnokd.rxjava3.async;
 
+import java.util.Objects;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import io.reactivex.rxjava3.disposables.Disposable;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 /**
@@ -79,7 +79,7 @@ final class FutureCompletable<T> extends CountDownLatch implements Future<T> {
      * @param error the error to complete exceptionally
      */
     public void completeExceptionally(Throwable error) {
-        ObjectHelper.requireNonNull(error, "error is null");
+        Objects.requireNonNull(error, "error is null");
         if (once.compareAndSet(0, STATE_ERROR)) {
             this.onCancel = null;
             this.error = error;

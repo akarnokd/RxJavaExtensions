@@ -16,14 +16,13 @@
 
 package hu.akarnokd.rxjava3.operators;
 
-import java.util.Collection;
+import java.util.*;
 
 import org.reactivestreams.*;
 
 import io.reactivex.rxjava3.core.*;
 import io.reactivex.rxjava3.exceptions.Exceptions;
 import io.reactivex.rxjava3.functions.*;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 import io.reactivex.rxjava3.internal.fuseable.ConditionalSubscriber;
 import io.reactivex.rxjava3.internal.subscriptions.*;
 import io.reactivex.rxjava3.plugins.RxJavaPlugins;
@@ -69,19 +68,19 @@ final class FlowableBufferPredicate<T, C extends Collection<? super T>> extends 
         C buffer;
 
         try {
-            buffer = ObjectHelper.requireNonNull(bufferSupplier.get(), "The bufferSupplier returned a null buffer");
+            buffer = Objects.requireNonNull(bufferSupplier.get(), "The bufferSupplier returned a null buffer");
         } catch (Throwable ex) {
             Exceptions.throwIfFatal(ex);
             EmptySubscription.error(ex, s);
             return;
         }
 
-        source.subscribe(new BufferPredicateSubscriber<T, C>(s, buffer, predicate, mode, bufferSupplier));
+        source.subscribe(new BufferPredicateSubscriber<>(s, buffer, predicate, mode, bufferSupplier));
     }
 
     @Override
     public Publisher<C> apply(Flowable<T> upstream) {
-        return new FlowableBufferPredicate<T, C>(upstream, predicate, mode, bufferSupplier);
+        return new FlowableBufferPredicate<>(upstream, predicate, mode, bufferSupplier);
     }
 
     static final class BufferPredicateSubscriber<T, C extends Collection<? super T>>

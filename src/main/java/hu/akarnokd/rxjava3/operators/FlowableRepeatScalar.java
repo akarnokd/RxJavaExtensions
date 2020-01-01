@@ -41,9 +41,9 @@ final class FlowableRepeatScalar<T> extends Flowable<T> {
     @Override
     protected void subscribeActual(Subscriber<? super T> s) {
         if (s instanceof ConditionalSubscriber) {
-            s.onSubscribe(new RepeatScalarConditionalSubscription<T>((ConditionalSubscriber<? super T>)s, value));
+            s.onSubscribe(new RepeatScalarConditionalSubscription<>((ConditionalSubscriber<? super T>)s, value));
         } else {
-            s.onSubscribe(new RepeatScalarSubscription<T>(s, value));
+            s.onSubscribe(new RepeatScalarSubscription<>(s, value));
         }
     }
 

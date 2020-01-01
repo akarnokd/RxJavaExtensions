@@ -41,7 +41,7 @@ final class PerhapsTakeUntil<T> extends Perhaps<T> {
 
     @Override
     protected void subscribeActual(Subscriber<? super T> s) {
-        TakeUntilSubscriber<T> parent = new TakeUntilSubscriber<T>(s);
+        TakeUntilSubscriber<T> parent = new TakeUntilSubscriber<>(s);
         s.onSubscribe(parent);
 
         other.subscribe(parent.other);
@@ -62,7 +62,7 @@ final class PerhapsTakeUntil<T> extends Perhaps<T> {
         TakeUntilSubscriber(Subscriber<? super T> downstream) {
             super(downstream);
             this.other = new OtherSubscriber();
-            this.upstream = new AtomicReference<Subscription>();
+            this.upstream = new AtomicReference<>();
             this.once = new AtomicBoolean();
         }
 

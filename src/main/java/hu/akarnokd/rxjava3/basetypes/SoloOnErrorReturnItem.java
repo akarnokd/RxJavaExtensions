@@ -38,7 +38,7 @@ final class SoloOnErrorReturnItem<T> extends Solo<T> {
 
     @Override
     protected void subscribeActual(Subscriber<? super T> s) {
-        source.subscribe(new OnErrorReturnItemSubscriber<T>(s, item));
+        source.subscribe(new OnErrorReturnItemSubscriber<>(s, item));
     }
 
     static final class OnErrorReturnItemSubscriber<T> extends DeferredScalarSubscription<T>

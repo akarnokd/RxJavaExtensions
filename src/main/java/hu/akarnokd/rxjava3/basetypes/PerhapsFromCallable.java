@@ -16,12 +16,12 @@
 
 package hu.akarnokd.rxjava3.basetypes;
 
+import java.util.Objects;
 import java.util.concurrent.Callable;
 
 import org.reactivestreams.Subscriber;
 
 import io.reactivex.rxjava3.exceptions.Exceptions;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 import io.reactivex.rxjava3.internal.subscriptions.DeferredScalarSubscription;
 
 /**
@@ -39,7 +39,7 @@ final class PerhapsFromCallable<T> extends Perhaps<T> implements Callable<T> {
 
     @Override
     protected void subscribeActual(Subscriber<? super T> s) {
-        DeferredScalarSubscription<T> dss = new DeferredScalarSubscription<T>(s);
+        DeferredScalarSubscription<T> dss = new DeferredScalarSubscription<>(s);
         s.onSubscribe(dss);
 
         T v;
@@ -61,6 +61,6 @@ final class PerhapsFromCallable<T> extends Perhaps<T> implements Callable<T> {
 
     @Override
     public T call() throws Exception {
-        return ObjectHelper.requireNonNull(callable.call(), "The callable returned a null value");
+        return Objects.requireNonNull(callable.call(), "The callable returned a null value");
     }
 }

@@ -52,7 +52,7 @@ implements FlowableTransformer<T, T> {
 
     @Override
     public Publisher<T> apply(Flowable<T> upstream) {
-        return new FlowableDebounceFirst<T>(upstream, timeout, unit, scheduler);
+        return new FlowableDebounceFirst<>(upstream, timeout, unit, scheduler);
     }
 
     @Override

@@ -41,7 +41,7 @@ final class PerhapsDelaySubscription<T> extends Perhaps<T> {
 
     @Override
     protected void subscribeActual(Subscriber<? super T> s) {
-        other.subscribe(new DelaySubscriber<T>(s, source));
+        other.subscribe(new DelaySubscriber<>(s, source));
     }
 
     static final class DelaySubscriber<T> extends DeferredScalarSubscription<T>

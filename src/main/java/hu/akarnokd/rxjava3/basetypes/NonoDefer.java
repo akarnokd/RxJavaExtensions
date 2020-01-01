@@ -16,11 +16,12 @@
 
 package hu.akarnokd.rxjava3.basetypes;
 
+import java.util.Objects;
+
 import org.reactivestreams.Subscriber;
 
 import io.reactivex.rxjava3.exceptions.Exceptions;
 import io.reactivex.rxjava3.functions.Supplier;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 import io.reactivex.rxjava3.internal.subscriptions.EmptySubscription;
 
 final class NonoDefer extends Nono {
@@ -36,7 +37,7 @@ final class NonoDefer extends Nono {
         Nono np;
 
         try {
-            np = ObjectHelper.requireNonNull(supplier.get(), "The supplier returned a null Nono");
+            np = Objects.requireNonNull(supplier.get(), "The supplier returned a null Nono");
         } catch (Throwable ex) {
             Exceptions.throwIfFatal(ex);
             EmptySubscription.error(ex, s);

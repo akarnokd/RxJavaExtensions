@@ -16,6 +16,7 @@
 
 package hu.akarnokd.rxjava3.operators;
 
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
 import io.reactivex.rxjava3.core.*;
@@ -23,7 +24,6 @@ import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.exceptions.Exceptions;
 import io.reactivex.rxjava3.functions.Function;
 import io.reactivex.rxjava3.internal.disposables.DisposableHelper;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 
 /**
  * Maps the signals of the upstream into CompletableSources and consumes them.
@@ -48,7 +48,7 @@ implements SingleConverter<T, Completable> {
 
     @Override
     public Completable apply(Single<T> t) {
-        return new SingleFlatMapSignalCompletable<T>(t, onSuccessHandler, onErrorHandler);
+        return new SingleFlatMapSignalCompletable<>(t, onSuccessHandler, onErrorHandler);
     }
 
     @Override
@@ -97,7 +97,7 @@ implements SingleConverter<T, Completable> {
             CompletableSource next;
 
             try {
-                next = ObjectHelper.requireNonNull(onSuccessHandler.apply(t), "The onSuccessHandler returned a null CompletableSource");
+                next = Objects.requireNonNull(onSuccessHandler.apply(t), "The onSuccessHandler returned a null CompletableSource");
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
                 consumer.onError(ex);
@@ -112,7 +112,7 @@ implements SingleConverter<T, Completable> {
             CompletableSource next;
 
             try {
-                next = ObjectHelper.requireNonNull(onErrorHandler.apply(e), "The onErrorHandler returned a null CompletableSource");
+                next = Objects.requireNonNull(onErrorHandler.apply(e), "The onErrorHandler returned a null CompletableSource");
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
                 consumer.onError(ex);

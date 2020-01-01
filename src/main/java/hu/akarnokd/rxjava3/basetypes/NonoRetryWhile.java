@@ -65,7 +65,7 @@ final class NonoRetryWhile extends Nono {
             this.downstream = downstream;
             this.predicate = predicate;
             this.source = source;
-            this.upstream = new AtomicReference<Subscription>();
+            this.upstream = new AtomicReference<>();
         }
 
         @Override

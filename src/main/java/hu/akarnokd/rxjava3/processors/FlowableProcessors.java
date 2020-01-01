@@ -16,10 +16,11 @@
 
 package hu.akarnokd.rxjava3.processors;
 
+import java.util.Objects;
+
 import org.reactivestreams.Processor;
 
 import io.reactivex.rxjava3.annotations.*;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 import io.reactivex.rxjava3.processors.FlowableProcessor;
 
 /**
@@ -44,7 +45,7 @@ public final class FlowableProcessors {
         if (processor instanceof FlowableProcessor) {
             return (FlowableProcessor<T>)processor;
         }
-        return new FlowableProcessorWrap<T>(ObjectHelper.requireNonNull(processor, "processor is null"));
+        return new FlowableProcessorWrap<>(Objects.requireNonNull(processor, "processor is null"));
     }
 
     /**
@@ -65,6 +66,6 @@ public final class FlowableProcessors {
         if (processor instanceof RefCountProcessor) {
             return processor;
         }
-        return new RefCountProcessor<T>(ObjectHelper.requireNonNull(processor, "processor is null"));
+        return new RefCountProcessor<>(Objects.requireNonNull(processor, "processor is null"));
     }
 }

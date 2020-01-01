@@ -61,7 +61,7 @@ final class SoloTimer extends Solo<Long> {
 
         TimerSubscriber(Subscriber<? super Long> downstream) {
             super(downstream);
-            this.task = new AtomicReference<Disposable>();
+            this.task = new AtomicReference<>();
         }
 
         @Override

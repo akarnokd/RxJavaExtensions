@@ -40,7 +40,7 @@ final class SoloOnErrorResumeWith<T> extends Solo<T> {
 
     @Override
     protected void subscribeActual(Subscriber<? super T> s) {
-        source.subscribe(new OnErrorResumeWithSubscriber<T>(s, next));
+        source.subscribe(new OnErrorResumeWithSubscriber<>(s, next));
     }
 
     static final class OnErrorResumeWithSubscriber<T> extends DeferredScalarSubscription<T>

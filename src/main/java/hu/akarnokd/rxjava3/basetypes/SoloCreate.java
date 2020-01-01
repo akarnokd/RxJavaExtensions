@@ -44,7 +44,7 @@ final class SoloCreate<T> extends Solo<T> {
 
     @Override
     protected void subscribeActual(Subscriber<? super T> s) {
-        SoloEmitter<T> parent = new SoloEmitter<T>(s);
+        SoloEmitter<T> parent = new SoloEmitter<>(s);
         s.onSubscribe(parent);
 
         try {
@@ -63,7 +63,7 @@ final class SoloCreate<T> extends Solo<T> {
 
         SoloEmitter(Subscriber<? super T> downstream) {
             super(downstream);
-            this.resource = new AtomicReference<Disposable>();
+            this.resource = new AtomicReference<>();
         }
 
         @Override

@@ -44,8 +44,8 @@ final class JoinObserver1<T> implements Observer<Notification<T>>, JoinObserver 
     JoinObserver1(Observable<T> source, Consumer<Throwable> onError) {
         this.source = source;
         this.onError = onError;
-        queue = new LinkedList<Notification<T>>();
-        activePlans = new ArrayList<ActivePlan0>();
+        queue = new LinkedList<>();
+        activePlans = new ArrayList<>();
         safeObserver = new InnerObserver();
         // add this subscription so it gets unsubscribed when the parent does
 //        add(safeObserver);
@@ -138,7 +138,7 @@ final class JoinObserver1<T> implements Observer<Notification<T>>, JoinObserver 
                     queue.add(args);
 
                     // remark: activePlans might change while iterating
-                    for (ActivePlan0 a : new ArrayList<ActivePlan0>(activePlans)) {
+                    for (ActivePlan0 a : new ArrayList<>(activePlans)) {
                         try {
                             a.match();
                         } catch (Throwable ex) {

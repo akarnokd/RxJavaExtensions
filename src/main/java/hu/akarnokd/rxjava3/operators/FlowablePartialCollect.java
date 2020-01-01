@@ -65,12 +65,12 @@ implements FlowableTransformer<T, R> {
 
     @Override
     public Publisher<R> apply(Flowable<T> upstream) {
-        return new FlowablePartialCollect<T, I, A, R>(upstream, handler, cleaner, prefetch);
+        return new FlowablePartialCollect<>(upstream, handler, cleaner, prefetch);
     }
 
     @Override
     protected void subscribeActual(Subscriber<? super R> s) {
-        source.subscribe(new PartialCollectSubscriber<T, I, A, R>(s, handler, cleaner, prefetch));
+        source.subscribe(new PartialCollectSubscriber<>(s, handler, cleaner, prefetch));
     }
 
     static final class PartialCollectSubscriber<T, I, A, R>
@@ -124,7 +124,7 @@ implements FlowableTransformer<T, R> {
             this.cleaner = cleaner;
             this.prefetch = prefetch;
             this.errors = new AtomicThrowable();
-            this.queue = new AtomicReferenceArray<T>(Pow2.roundToPowerOfTwo(prefetch));
+            this.queue = new AtomicReferenceArray<>(Pow2.roundToPowerOfTwo(prefetch));
             this.producerIndex = new AtomicLong();
             this.requested = new AtomicLong();
             this.limit = prefetch - (prefetch >> 2);

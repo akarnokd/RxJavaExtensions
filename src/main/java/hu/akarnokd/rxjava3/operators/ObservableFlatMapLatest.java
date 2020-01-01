@@ -16,6 +16,7 @@
 
 package hu.akarnokd.rxjava3.operators;
 
+import java.util.Objects;
 import java.util.concurrent.atomic.*;
 
 import io.reactivex.rxjava3.core.*;
@@ -23,7 +24,6 @@ import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.exceptions.Exceptions;
 import io.reactivex.rxjava3.functions.Function;
 import io.reactivex.rxjava3.internal.disposables.DisposableHelper;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 import io.reactivex.rxjava3.internal.util.AtomicThrowable;
 
 /**
@@ -47,7 +47,7 @@ final class ObservableFlatMapLatest<T, R> extends Observable<R> implements Obser
 
     @Override
     public ObservableSource<R> apply(Observable<T> upstream) {
-        return new ObservableFlatMapLatest<T, R>(upstream, mapper);
+        return new ObservableFlatMapLatest<>(upstream, mapper);
     }
 
     @Override
@@ -85,7 +85,7 @@ final class ObservableFlatMapLatest<T, R> extends Observable<R> implements Obser
             this.mapper = mapper;
             this.innerObserver = new FlatMapLatestInnerObserver();
             this.errors = new AtomicThrowable();
-            this.latest = new AtomicReference<T>();
+            this.latest = new AtomicReference<>();
         }
 
         @Override
@@ -167,7 +167,7 @@ final class ObservableFlatMapLatest<T, R> extends Observable<R> implements Obser
                         ObservableSource<? extends R> o;
 
                         try {
-                            o = ObjectHelper.requireNonNull(mapper.apply(v), "The mapper returned a null ObservableSource");
+                            o = Objects.requireNonNull(mapper.apply(v), "The mapper returned a null ObservableSource");
                         } catch (Throwable ex) {
                             Exceptions.throwIfFatal(ex);
                             upstream.dispose();

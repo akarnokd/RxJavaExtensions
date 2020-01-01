@@ -16,12 +16,12 @@
 
 package hu.akarnokd.rxjava3.subjects;
 
+import java.util.Objects;
 import java.util.concurrent.atomic.*;
 
 import io.reactivex.rxjava3.core.*;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.internal.disposables.DisposableHelper;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 import io.reactivex.rxjava3.internal.fuseable.SimplePlainQueue;
 import io.reactivex.rxjava3.internal.queue.SpscLinkedArrayQueue;
 import io.reactivex.rxjava3.internal.util.ExceptionHelper;
@@ -90,7 +90,7 @@ public final class UnicastWorkSubject<T> extends Subject<T> implements Disposabl
      * @return the new UnicastWorkSubject instance
      */
     public static <T> UnicastWorkSubject<T> create(int capacityHint, boolean delayErrors) {
-        return new UnicastWorkSubject<T>(capacityHint, delayErrors);
+        return new UnicastWorkSubject<>(capacityHint, delayErrors);
     }
 
     final SimplePlainQueue<T> queue;
@@ -108,12 +108,12 @@ public final class UnicastWorkSubject<T> extends Subject<T> implements Disposabl
     T item;
 
     UnicastWorkSubject(int capacityHint, boolean delayErrors) {
-        this.queue = new SpscLinkedArrayQueue<T>(capacityHint);
+        this.queue = new SpscLinkedArrayQueue<>(capacityHint);
         this.delayErrors = delayErrors;
-        this.consumer = new AtomicReference<WorkDisposable>();
-        this.upstream = new AtomicReference<Disposable>();
+        this.consumer = new AtomicReference<>();
+        this.upstream = new AtomicReference<>();
         this.wip = new AtomicInteger();
-        this.error = new AtomicReference<Throwable>();
+        this.error = new AtomicReference<>();
     }
 
     @Override
@@ -123,7 +123,7 @@ public final class UnicastWorkSubject<T> extends Subject<T> implements Disposabl
 
     @Override
     public void onNext(T t) {
-        ObjectHelper.requireNonNull(t, "t is null");
+        Objects.requireNonNull(t, "t is null");
         if (error.get() == null) {
             queue.offer(t);
             drain();
@@ -132,7 +132,7 @@ public final class UnicastWorkSubject<T> extends Subject<T> implements Disposabl
 
     @Override
     public void onError(Throwable e) {
-        ObjectHelper.requireNonNull(e, "e is null");
+        Objects.requireNonNull(e, "e is null");
         if (error.compareAndSet(null, e)) {
             drain();
         } else {

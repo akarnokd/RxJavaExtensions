@@ -16,6 +16,7 @@
 
 package hu.akarnokd.rxjava3.operators;
 
+import java.util.Objects;
 import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
@@ -23,7 +24,6 @@ import org.reactivestreams.*;
 import io.reactivex.rxjava3.core.*;
 import io.reactivex.rxjava3.exceptions.Exceptions;
 import io.reactivex.rxjava3.functions.*;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 import io.reactivex.rxjava3.internal.subscriptions.SubscriptionHelper;
 import io.reactivex.rxjava3.internal.util.*;
 import io.reactivex.rxjava3.plugins.RxJavaPlugins;
@@ -60,7 +60,7 @@ final class FlowableMapAsync<T, U, R> extends Flowable<R> implements FlowableTra
 
     @Override
     public Publisher<R> apply(Flowable<T> upstream) {
-        return new FlowableMapAsync<T, U, R>(upstream, mapper, combiner, bufferSize);
+        return new FlowableMapAsync<>(upstream, mapper, combiner, bufferSize);
     }
 
     @Override
@@ -134,7 +134,7 @@ final class FlowableMapAsync<T, U, R> extends Flowable<R> implements FlowableTra
             this.error = new AtomicThrowable();
             this.requested = new AtomicLong();
             this.wip = new AtomicInteger();
-            this.current = new AtomicReference<InnerSubscriber<U>>();
+            this.current = new AtomicReference<>();
         }
 
         @Override
@@ -259,7 +259,7 @@ final class FlowableMapAsync<T, U, R> extends Flowable<R> implements FlowableTra
                         Publisher<? extends U> p;
 
                         try {
-                            p = ObjectHelper.requireNonNull(mapper.apply(t), "The mapper returned a null value");
+                            p = Objects.requireNonNull(mapper.apply(t), "The mapper returned a null value");
                         } catch (Throwable ex) {
                             Exceptions.throwIfFatal(ex);
                             error.tryAddThrowableOrReport(ex);
@@ -274,7 +274,7 @@ final class FlowableMapAsync<T, U, R> extends Flowable<R> implements FlowableTra
                                     @SuppressWarnings("unchecked")
                                     U u = ((Supplier<U>)p).get();
                                     if (u != null) {
-                                        v = ObjectHelper.requireNonNull(combiner.apply(t, u), "The combiner returned a null value");
+                                        v = Objects.requireNonNull(combiner.apply(t, u), "The combiner returned a null value");
                                     } else {
                                         v = null;
                                     }
@@ -289,7 +289,7 @@ final class FlowableMapAsync<T, U, R> extends Flowable<R> implements FlowableTra
                                     e++;
                                 }
                             } else {
-                                InnerSubscriber<U> inner = new InnerSubscriber<U>(this);
+                                InnerSubscriber<U> inner = new InnerSubscriber<>(this);
                                 if (current.compareAndSet(null, inner)) {
                                     state = STATE_RUNNING;
                                     p.subscribe(inner);
@@ -313,7 +313,7 @@ final class FlowableMapAsync<T, U, R> extends Flowable<R> implements FlowableTra
                             R v;
 
                             try {
-                                v = ObjectHelper.requireNonNull(combiner.apply(t, u), "The combiner returned a null value");
+                                v = Objects.requireNonNull(combiner.apply(t, u), "The combiner returned a null value");
                             } catch (Throwable ex) {
                                 Exceptions.throwIfFatal(ex);
                                 error.tryAddThrowableOrReport(ex);

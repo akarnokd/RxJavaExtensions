@@ -36,7 +36,7 @@ import io.reactivex.rxjava3.subscribers.TestSubscriber;
 
 public class BlockingSchedulerTest {
 
-    TestSubscriber<Integer> ts = new TestSubscriber<Integer>();
+    TestSubscriber<Integer> ts = new TestSubscriber<>();
 
     @Test(timeout = 10000)
     public void workerUntimed() {

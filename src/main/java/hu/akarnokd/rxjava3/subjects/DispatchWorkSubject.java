@@ -16,6 +16,7 @@
 
 package hu.akarnokd.rxjava3.subjects;
 
+import java.util.Objects;
 import java.util.concurrent.atomic.*;
 
 import hu.akarnokd.rxjava3.util.SpmcLinkedArrayQueue;
@@ -23,7 +24,6 @@ import io.reactivex.rxjava3.core.*;
 import io.reactivex.rxjava3.core.Scheduler.Worker;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.internal.disposables.DisposableHelper;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 import io.reactivex.rxjava3.internal.fuseable.SimplePlainQueue;
 import io.reactivex.rxjava3.internal.util.ExceptionHelper;
 import io.reactivex.rxjava3.plugins.RxJavaPlugins;
@@ -88,7 +88,7 @@ public final class DispatchWorkSubject<T> extends Subject<T> implements Disposab
      * @return the new DispatchWorkSubject instance
      */
     public static <T> DispatchWorkSubject<T> create(Scheduler scheduler, int capacityHint, boolean delayErrors) {
-        return new DispatchWorkSubject<T>(capacityHint, delayErrors, scheduler);
+        return new DispatchWorkSubject<>(capacityHint, delayErrors, scheduler);
     }
 
     final SimplePlainQueue<T> queue;
@@ -112,12 +112,12 @@ public final class DispatchWorkSubject<T> extends Subject<T> implements Disposab
 
     @SuppressWarnings("unchecked")
     DispatchWorkSubject(int capacityHint, boolean delayErrors, Scheduler scheduler) {
-        this.queue = new SpmcLinkedArrayQueue<T>(capacityHint);
+        this.queue = new SpmcLinkedArrayQueue<>(capacityHint);
         this.delayErrors = delayErrors;
         this.wip = new AtomicInteger();
-        this.upstream = new AtomicReference<Disposable>();
-        this.error = new AtomicReference<Throwable>();
-        this.observers = new AtomicReference<WorkDisposable<T>[]>(EMPTY);
+        this.upstream = new AtomicReference<>();
+        this.error = new AtomicReference<>();
+        this.observers = new AtomicReference<>(EMPTY);
         this.scheduler = scheduler;
     }
 
@@ -139,7 +139,7 @@ public final class DispatchWorkSubject<T> extends Subject<T> implements Disposab
     @SuppressWarnings("unchecked")
     @Override
     public void onError(Throwable e) {
-        ObjectHelper.requireNonNull(e, "e is null");
+        Objects.requireNonNull(e, "e is null");
         if (error.compareAndSet(null, e)) {
             for (WorkDisposable<T> wd : observers.getAndSet(TERMINATED)) {
                 wd.drain();
@@ -161,7 +161,7 @@ public final class DispatchWorkSubject<T> extends Subject<T> implements Disposab
 
     @Override
     protected void subscribeActual(Observer<? super T> observer) {
-        WorkDisposable<T> wd = new WorkDisposable<T>(observer, this, scheduler.createWorker(), delayErrors);
+        WorkDisposable<T> wd = new WorkDisposable<>(observer, this, scheduler.createWorker(), delayErrors);
         observer.onSubscribe(wd);
         if (add(wd)) {
             if (wd.isDisposed()) {

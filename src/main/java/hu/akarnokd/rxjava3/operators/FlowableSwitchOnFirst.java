@@ -16,13 +16,13 @@
 
 package hu.akarnokd.rxjava3.operators;
 
+import java.util.Objects;
 import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
 
 import io.reactivex.rxjava3.core.*;
 import io.reactivex.rxjava3.functions.*;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 import io.reactivex.rxjava3.internal.subscriptions.SubscriptionHelper;
 import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
@@ -51,12 +51,12 @@ final class FlowableSwitchOnFirst<T> extends Flowable<T> implements FlowableTran
 
     @Override
     protected void subscribeActual(Subscriber<? super T> s) {
-        source.subscribe(new SwitchOnFirstSubscriber<T>(s, predicate, selector));
+        source.subscribe(new SwitchOnFirstSubscriber<>(s, predicate, selector));
     }
 
     @Override
     public Publisher<T> apply(Flowable<T> upstream) {
-        return new FlowableSwitchOnFirst<T>(upstream, predicate, selector);
+        return new FlowableSwitchOnFirst<>(upstream, predicate, selector);
     }
 
     static final class SwitchOnFirstSubscriber<T> extends AtomicBoolean
@@ -83,7 +83,7 @@ final class FlowableSwitchOnFirst<T> extends Flowable<T> implements FlowableTran
             this.downstream = downstream;
             this.predicate = predicate;
             this.selector = selector;
-            this.secondary = new SwitchOnSecondarySubscriber<T>(downstream);
+            this.secondary = new SwitchOnSecondarySubscriber<>(downstream);
         }
 
         @Override
@@ -103,7 +103,7 @@ final class FlowableSwitchOnFirst<T> extends Flowable<T> implements FlowableTran
 
                 try {
                     if (predicate.test(t)) {
-                        resume = ObjectHelper.requireNonNull(selector.apply(t), "The selector returned a null Publisher");
+                        resume = Objects.requireNonNull(selector.apply(t), "The selector returned a null Publisher");
                     }
                 } catch (Throwable ex) {
                     upstream.cancel();
@@ -176,7 +176,7 @@ final class FlowableSwitchOnFirst<T> extends Flowable<T> implements FlowableTran
 
             SwitchOnSecondarySubscriber(Subscriber<? super T> downstream) {
                 this.downstream = downstream;
-                this.upstream = new AtomicReference<Subscription>();
+                this.upstream = new AtomicReference<>();
             }
 
             @Override

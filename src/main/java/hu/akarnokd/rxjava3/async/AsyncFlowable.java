@@ -705,7 +705,7 @@ public final class AsyncFlowable {
         return new SimpleCallable<Flowable<R>>() {
             @Override
             public Flowable<R> call() {
-                return Flowable.fromCallable(func).subscribeOn(scheduler);
+                return Flowable.<R>fromCallable(func).subscribeOn(scheduler);
             }
         };
     }
@@ -731,7 +731,7 @@ public final class AsyncFlowable {
         return new SimpleCallable<Flowable<R>>() {
             @Override
             public Flowable<R> call() {
-                return Flowable.fromSupplier(func).subscribeOn(scheduler);
+                return Flowable.<R>fromSupplier(func).subscribeOn(scheduler);
             }
         };
     }
@@ -1510,7 +1510,7 @@ public final class AsyncFlowable {
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Async-Operators#wiki-startfuture">RxJava Wiki: startFuture()</a>
      */
     public static <T> Flowable<T> startFuture(final Supplier<? extends Future<? extends T>> functionAsync) {
-        return RxJavaPlugins.onAssembly(new FlowableFromSupplierNull<T>(new Supplier<T>() {
+        return RxJavaPlugins.onAssembly(new FlowableFromSupplierNull<>(new Supplier<T>() {
             @Override
             public T get() throws Throwable {
                 return functionAsync.get().get();
@@ -1767,9 +1767,9 @@ public final class AsyncFlowable {
             Scheduler scheduler) {
 
         SequentialDisposable d = new SequentialDisposable();
-        final FutureCompletable<Object> f = new FutureCompletable<Object>(d);
+        final FutureCompletable<Object> f = new FutureCompletable<>(d);
 
-        LambdaSubscriber<T> ls = new LambdaSubscriber<T>(onNext,
+        LambdaSubscriber<T> ls = new LambdaSubscriber<>(onNext,
         new Consumer<Throwable>() {
             @Override
             public void accept(Throwable e) throws Exception {

@@ -52,9 +52,9 @@ final class Plan5<T1, T2, T3, T4, T5, R> extends Plan<R> {
         final JoinObserver1<T4> jo4 = createObserver(externalSubscriptions, expression.o4(), onError);
         final JoinObserver1<T5> jo5 = createObserver(externalSubscriptions, expression.o5(), onError);
 
-        final AtomicReference<ActivePlan0> self = new AtomicReference<ActivePlan0>();
+        final AtomicReference<ActivePlan0> self = new AtomicReference<>();
 
-        ActivePlan0 activePlan = new ActivePlan5<T1, T2, T3, T4, T5>(
+        ActivePlan0 activePlan = new ActivePlan5<>(
                 jo1, jo2, jo3, jo4, jo5,
                 new Consumer5<T1, T2, T3, T4, T5>() {
                     @Override

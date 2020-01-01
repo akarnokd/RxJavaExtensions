@@ -62,7 +62,7 @@ final class NonoRepeat extends Nono {
             this.downstream = downstream;
             this.times = times;
             this.source = source;
-            this.upstream = new AtomicReference<Subscription>();
+            this.upstream = new AtomicReference<>();
         }
 
         @Override

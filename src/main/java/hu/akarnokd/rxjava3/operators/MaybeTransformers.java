@@ -16,9 +16,10 @@
 
 package hu.akarnokd.rxjava3.operators;
 
+import java.util.Objects;
+
 import io.reactivex.rxjava3.core.*;
 import io.reactivex.rxjava3.functions.*;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 
 /**
  * Additional operators in the form of {@link MaybeTransformer},
@@ -53,9 +54,9 @@ public final class MaybeTransformers {
             Function<? super T, ? extends MaybeSource<? extends R>> onSuccessHandler,
             Function<? super Throwable, ? extends MaybeSource<? extends R>> onErrorHandler,
                     Supplier<? extends MaybeSource<? extends R>> onCompleteHandler) {
-        ObjectHelper.requireNonNull(onSuccessHandler, "onSuccessHandler is null");
-        ObjectHelper.requireNonNull(onErrorHandler, "onErrorHandler is null");
-        ObjectHelper.requireNonNull(onCompleteHandler, "onCompleteHandler is null");
-        return new MaybeFlatMapSignalMaybe<T, R>(null, onSuccessHandler, onErrorHandler, onCompleteHandler);
+        Objects.requireNonNull(onSuccessHandler, "onSuccessHandler is null");
+        Objects.requireNonNull(onErrorHandler, "onErrorHandler is null");
+        Objects.requireNonNull(onCompleteHandler, "onCompleteHandler is null");
+        return new MaybeFlatMapSignalMaybe<>(null, onSuccessHandler, onErrorHandler, onCompleteHandler);
     }
 }

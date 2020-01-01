@@ -16,11 +16,12 @@
 
 package hu.akarnokd.rxjava3.basetypes;
 
+import java.util.Objects;
+
 import org.reactivestreams.*;
 
 import io.reactivex.rxjava3.exceptions.*;
 import io.reactivex.rxjava3.functions.*;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 import io.reactivex.rxjava3.internal.subscriptions.*;
 import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
@@ -62,7 +63,7 @@ final class NonoUsing<R> extends Nono {
         Nono np;
 
         try {
-            np = ObjectHelper.requireNonNull(sourceSupplier.apply(resource), "The sourceSupplier returned a null Nono");
+            np = Objects.requireNonNull(sourceSupplier.apply(resource), "The sourceSupplier returned a null Nono");
         } catch (Throwable ex) {
             Exceptions.throwIfFatal(ex);
             if (eager) {
@@ -86,7 +87,7 @@ final class NonoUsing<R> extends Nono {
             return;
         }
 
-        np.subscribe(new UsingSubscriber<R>(s, resource, disposer, eager));
+        np.subscribe(new UsingSubscriber<>(s, resource, disposer, eager));
     }
 
     static final class UsingSubscriber<R> extends BasicNonoIntQueueSubscription

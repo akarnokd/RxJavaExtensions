@@ -38,14 +38,14 @@ implements FlowableTransformer<T, T> {
 
     @Override
     protected void subscribeActual(Subscriber<? super T> s) {
-        SwitchManySubscriber<T> parent = new SwitchManySubscriber<T>(s, alternatives);
+        SwitchManySubscriber<T> parent = new SwitchManySubscriber<>(s, alternatives);
         s.onSubscribe(parent);
         parent.drain(source);
     }
 
     @Override
     public Publisher<T> apply(Flowable<T> upstream) {
-        return new FlowableSwitchIfEmptyManyArray<T>(upstream, alternatives);
+        return new FlowableSwitchIfEmptyManyArray<>(upstream, alternatives);
     }
 
     static final class SwitchManySubscriber<T>
@@ -72,7 +72,7 @@ implements FlowableTransformer<T, T> {
             this.downstream = downstream;
             this.alternatives = alternatives;
             this.requested = new AtomicLong();
-            this.upstream = new AtomicReference<Subscription>();
+            this.upstream = new AtomicReference<>();
         }
 
         @Override

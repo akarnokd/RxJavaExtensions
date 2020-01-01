@@ -16,6 +16,7 @@
 
 package hu.akarnokd.rxjava3.basetypes;
 
+import java.util.Objects;
 import java.util.concurrent.*;
 
 import org.reactivestreams.*;
@@ -24,7 +25,7 @@ import io.reactivex.rxjava3.core.*;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.exceptions.Exceptions;
 import io.reactivex.rxjava3.functions.*;
-import io.reactivex.rxjava3.internal.functions.*;
+import io.reactivex.rxjava3.internal.functions.Functions;
 import io.reactivex.rxjava3.internal.subscribers.LambdaSubscriber;
 import io.reactivex.rxjava3.internal.util.ExceptionHelper;
 import io.reactivex.rxjava3.plugins.RxJavaPlugins;
@@ -94,8 +95,8 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return th new Perhaps instance
      */
     public static <T> Perhaps<T> create(MaybeOnSubscribe<T> onCreate) {
-        ObjectHelper.requireNonNull(onCreate, "onCreate is null");
-        return onAssembly(new PerhapsCreate<T>(onCreate));
+        Objects.requireNonNull(onCreate, "onCreate is null");
+        return onAssembly(new PerhapsCreate<>(onCreate));
     }
 
     /**
@@ -105,8 +106,8 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new Perhaps instance
      */
     public static <T> Perhaps<T> just(T item) {
-        ObjectHelper.requireNonNull(item, "item is null");
-        return onAssembly(new PerhapsJust<T>(item));
+        Objects.requireNonNull(item, "item is null");
+        return onAssembly(new PerhapsJust<>(item));
     }
 
     /**
@@ -125,7 +126,7 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new Perhaps instance
      */
     public static <T> Perhaps<T> error(Throwable error) {
-        ObjectHelper.requireNonNull(error, "error is null");
+        Objects.requireNonNull(error, "error is null");
         return onAssembly(new PerhapsError<T>(error));
     }
 
@@ -138,7 +139,7 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new Perhaps instance
      */
     public static <T> Perhaps<T> error(Supplier<? extends Throwable> errorSupplier) {
-        ObjectHelper.requireNonNull(errorSupplier, "errorSupplier is null");
+        Objects.requireNonNull(errorSupplier, "errorSupplier is null");
         return onAssembly(new PerhapsErrorSupplier<T>(errorSupplier));
     }
 
@@ -159,8 +160,8 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new Perhaps instance
      */
     public static <T> Perhaps<T> fromCallable(Callable<T> callable) {
-        ObjectHelper.requireNonNull(callable, "callable is null");
-        return onAssembly(new PerhapsFromCallable<T>(callable));
+        Objects.requireNonNull(callable, "callable is null");
+        return onAssembly(new PerhapsFromCallable<>(callable));
     }
 
     /**
@@ -170,7 +171,7 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new Perhaps instance
      */
     public static <T> Perhaps<T> fromAction(Action action) {
-        ObjectHelper.requireNonNull(action, "action is null");
+        Objects.requireNonNull(action, "action is null");
         return onAssembly(new PerhapsFromAction<T>(action));
     }
 
@@ -183,7 +184,7 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new Perhaps instance
      */
     public static <T> Perhaps<T> fromFuture(Future<? extends T> future) {
-        ObjectHelper.requireNonNull(future, "future is null");
+        Objects.requireNonNull(future, "future is null");
         return onAssembly(new PerhapsFromFuture<T>(future, 0, null));
     }
 
@@ -199,8 +200,8 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new Perhaps instance
      */
     public static <T> Perhaps<T> fromFuture(Future<? extends T> future, long timeout, TimeUnit unit) {
-        ObjectHelper.requireNonNull(future, "future is null");
-        ObjectHelper.requireNonNull(unit, "unit is null");
+        Objects.requireNonNull(future, "future is null");
+        Objects.requireNonNull(unit, "unit is null");
         return onAssembly(new PerhapsFromFuture<T>(future, timeout, unit));
     }
 
@@ -212,8 +213,8 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new Perhaps instance
      */
     public static <T> Perhaps<T> fromPublisher(Publisher<T> source) {
-        ObjectHelper.requireNonNull(source, "source is null");
-        return onAssembly(new PerhapsFromPublisher<T>(source));
+        Objects.requireNonNull(source, "source is null");
+        return onAssembly(new PerhapsFromPublisher<>(source));
     }
 
     /**
@@ -223,8 +224,8 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new Perhaps instance
      */
     public static <T> Perhaps<T> fromSingle(SingleSource<T> source) {
-        ObjectHelper.requireNonNull(source, "source is null");
-        return onAssembly(new PerhapsFromSingle<T>(source));
+        Objects.requireNonNull(source, "source is null");
+        return onAssembly(new PerhapsFromSingle<>(source));
     }
 
     /**
@@ -234,8 +235,8 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new Perhaps instance
      */
     public static <T> Perhaps<T> fromMaybe(MaybeSource<T> source) {
-        ObjectHelper.requireNonNull(source, "source is null");
-        return onAssembly(new PerhapsFromMaybe<T>(source));
+        Objects.requireNonNull(source, "source is null");
+        return onAssembly(new PerhapsFromMaybe<>(source));
     }
 
     /**
@@ -245,7 +246,7 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new Perhaps instance
      */
     public static <T> Perhaps<T> fromCompletable(CompletableSource source) {
-        ObjectHelper.requireNonNull(source, "source is null");
+        Objects.requireNonNull(source, "source is null");
         return onAssembly(new PerhapsFromCompletable<T>(source));
     }
 
@@ -259,8 +260,8 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new Perhaps instance
      */
     public static <T> Perhaps<T> defer(Supplier<? extends Perhaps<? extends T>> supplier) {
-        ObjectHelper.requireNonNull(supplier, "supplier is null");
-        return onAssembly(new PerhapsDefer<T>(supplier));
+        Objects.requireNonNull(supplier, "supplier is null");
+        return onAssembly(new PerhapsDefer<>(supplier));
     }
 
     /**
@@ -270,8 +271,8 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new Perhaps instance
      */
     public static <T> Perhaps<T> amb(Iterable<? extends Perhaps<? extends T>> sources) {
-        ObjectHelper.requireNonNull(sources, "sources is null");
-        return onAssembly(new PerhapsAmbIterable<T>(sources));
+        Objects.requireNonNull(sources, "sources is null");
+        return onAssembly(new PerhapsAmbIterable<>(sources));
     }
 
     /**
@@ -280,9 +281,10 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @param sources the array of Perhaps sources
      * @return the new Perhaps instance
      */
+    @SafeVarargs
     public static <T> Perhaps<T> ambArray(Perhaps<? extends T>... sources) {
-        ObjectHelper.requireNonNull(sources, "sources is null");
-        return onAssembly(new PerhapsAmbArray<T>(sources));
+        Objects.requireNonNull(sources, "sources is null");
+        return onAssembly(new PerhapsAmbArray<>(sources));
     }
 
     /**
@@ -322,6 +324,7 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @param sources the sequence of sources
      * @return the new Flowable instance
      */
+    @SafeVarargs
     public static <T> Flowable<T> concatArray(Perhaps<? extends T>... sources) {
         return Flowable.concatArray(sources);
     }
@@ -381,6 +384,7 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @param sources the sequence of sources
      * @return the new Flowable instance
      */
+    @SafeVarargs
     public static <T> Flowable<T> concatArrayDelayError(Perhaps<? extends T>... sources) {
         return Flowable.concatArrayDelayError(sources);
     }
@@ -433,6 +437,7 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @param sources the sequence of sources
      * @return the new Flowable instance
      */
+    @SafeVarargs
     public static <T> Flowable<T> mergeArray(Perhaps<? extends T>... sources) {
         return Flowable.mergeArray(sources);
     }
@@ -444,6 +449,7 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @param maxConcurrency the maximum number of active subscriptions
      * @return the new Flowable instance
      */
+    @SafeVarargs
     public static <T> Flowable<T> mergeArray(int maxConcurrency, Perhaps<? extends T>... sources) {
         return Flowable.mergeArray(maxConcurrency, 1, sources);
     }
@@ -501,6 +507,7 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @param sources the sequence of sources
      * @return the new Flowable instance
      */
+    @SafeVarargs
     public static <T> Flowable<T> mergeArrayDelayError(Perhaps<? extends T>... sources) {
         return Flowable.mergeArrayDelayError(sources);
     }
@@ -513,6 +520,7 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @param maxConcurrency the maximum number of active subscriptions
      * @return the new Flowable instance
      */
+    @SafeVarargs
     public static <T> Flowable<T> mergeArrayDelayError(int maxConcurrency, Perhaps<? extends T>... sources) {
         return Flowable.mergeArrayDelayError(maxConcurrency, 1, sources);
     }
@@ -537,8 +545,8 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new Perhaps instance
      */
     public static Perhaps<Long> timer(long delay, TimeUnit unit, Scheduler scheduler) {
-        ObjectHelper.requireNonNull(unit, "unit is null");
-        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
+        Objects.requireNonNull(unit, "unit is null");
+        Objects.requireNonNull(scheduler, "scheduler is null");
         return onAssembly(new PerhapsTimer(delay, unit, scheduler));
     }
 
@@ -577,10 +585,10 @@ public abstract class Perhaps<T> implements Publisher<T> {
     public static <T, R> Perhaps<T> using(Supplier<R> resourceSupplier,
             Function<? super R, ? extends Perhaps<? extends T>> sourceSupplier,
             Consumer<? super R> disposer, boolean eager) {
-        ObjectHelper.requireNonNull(resourceSupplier, "resourceSupplier is null");
-        ObjectHelper.requireNonNull(sourceSupplier, "sourceSupplier is null");
-        ObjectHelper.requireNonNull(disposer, "disposer is null");
-        return onAssembly(new PerhapsUsing<T, R>(resourceSupplier, sourceSupplier, disposer, eager));
+        Objects.requireNonNull(resourceSupplier, "resourceSupplier is null");
+        Objects.requireNonNull(sourceSupplier, "sourceSupplier is null");
+        Objects.requireNonNull(disposer, "disposer is null");
+        return onAssembly(new PerhapsUsing<>(resourceSupplier, sourceSupplier, disposer, eager));
     }
 
     /**
@@ -593,8 +601,8 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new Perhaps instance
      */
     public static <T, R> Perhaps<R> zip(Iterable<? extends Perhaps<? extends T>> sources, Function<? super Object[], ? extends R> zipper) {
-        ObjectHelper.requireNonNull(sources, "sources is null");
-        ObjectHelper.requireNonNull(zipper, "zipper is null");
+        Objects.requireNonNull(sources, "sources is null");
+        Objects.requireNonNull(zipper, "zipper is null");
         return onAssembly(new PerhapsZipIterable<T, R>(sources, zipper));
     }
 
@@ -607,9 +615,10 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @param zipper the function takin in an array of values and returns a Perhaps value
      * @return the new Perhaps instance
      */
+    @SafeVarargs
     public static <T, R> Perhaps<R> zipArray(Function<? super Object[], ? extends R> zipper, Perhaps<? extends T>... sources) {
-        ObjectHelper.requireNonNull(sources, "sources is null");
-        ObjectHelper.requireNonNull(zipper, "zipper is null");
+        Objects.requireNonNull(sources, "sources is null");
+        Objects.requireNonNull(zipper, "zipper is null");
         return onAssembly(new PerhapsZipArray<T, R>(sources, zipper));
     }
 
@@ -623,7 +632,6 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @param other the other Perhaps instance
      * @return the new Perhaps instance
      */
-    @SuppressWarnings("unchecked")
     public final Perhaps<T> ambWith(Perhaps<? extends T> other) {
         return ambArray(this, other);
     }
@@ -636,8 +644,8 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new Perhaps instance
      */
     public final Perhaps<T> andThen(Nono other) {
-        ObjectHelper.requireNonNull(other, "other is null");
-        return onAssembly(new PerhapsAndThenNono<T>(this, other));
+        Objects.requireNonNull(other, "other is null");
+        return onAssembly(new PerhapsAndThenNono<>(this, other));
     }
 
     /**
@@ -647,7 +655,7 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new Flowable instance
      */
     public final Flowable<T> andThen(Publisher<? extends T> other) {
-        ObjectHelper.requireNonNull(other, "other is null");
+        Objects.requireNonNull(other, "other is null");
         return Flowable.concat(this, other);
     }
 
@@ -658,7 +666,7 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new Flowable instance
      */
     public final Flowable<T> concatWith(Publisher<? extends T> other) {
-        ObjectHelper.requireNonNull(other, "other is null");
+        Objects.requireNonNull(other, "other is null");
         return Flowable.concat(this, other);
     }
 
@@ -669,7 +677,7 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new Flowable instance
      */
     public final Flowable<T> mergeWith(Publisher<? extends T> other) {
-        ObjectHelper.requireNonNull(other, "other is null");
+        Objects.requireNonNull(other, "other is null");
         return Flowable.merge(this, other);
     }
 
@@ -683,10 +691,9 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * return a value to be emitted
      * @return the new Perhaps instance
      */
-    @SuppressWarnings("unchecked")
     public final <U, R> Perhaps<R> zipWith(Perhaps<? extends U> other, BiFunction<? super T, ? super U, ? extends R> zipper) {
-        ObjectHelper.requireNonNull(other, "other is null");
-        ObjectHelper.requireNonNull(zipper, "zipper is null");
+        Objects.requireNonNull(other, "other is null");
+        Objects.requireNonNull(zipper, "zipper is null");
         return zipArray(Functions.toFunction(zipper), this, other);
     }
 
@@ -699,7 +706,7 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new Perhaps instance
      */
     public final <R> Perhaps<R> map(Function<? super T, ? extends R> mapper) {
-        ObjectHelper.requireNonNull(mapper, "mapper is null");
+        Objects.requireNonNull(mapper, "mapper is null");
         return onAssembly(new PerhapsMap<T, R>(this, mapper));
     }
 
@@ -710,8 +717,8 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new Perhaps instance
      */
     public final Perhaps<T> mapError(Function<? super Throwable, ? extends Throwable> errorMapper) {
-        ObjectHelper.requireNonNull(errorMapper, "errorMapper is null");
-        return onAssembly(new PerhapsMapError<T>(this, errorMapper));
+        Objects.requireNonNull(errorMapper, "errorMapper is null");
+        return onAssembly(new PerhapsMapError<>(this, errorMapper));
     }
 
     /**
@@ -722,8 +729,8 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new Perhaps instance
      */
     public final Perhaps<T> filter(Predicate<? super T> predicate) {
-        ObjectHelper.requireNonNull(predicate, "predicate is null");
-        return onAssembly(new PerhapsFilter<T>(this, predicate));
+        Objects.requireNonNull(predicate, "predicate is null");
+        return onAssembly(new PerhapsFilter<>(this, predicate));
     }
 
     /**
@@ -742,7 +749,7 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new Perhaps instance
      */
     public final Perhaps<T> hide() {
-        return onAssembly(new PerhapsHide<T>(this));
+        return onAssembly(new PerhapsHide<>(this));
     }
 
     /**
@@ -754,8 +761,8 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new Perhaps instance
      */
     public final <R> Perhaps<R> flatMap(Function<? super T, ? extends Perhaps<? extends R>> mapper) {
-        ObjectHelper.requireNonNull(mapper, "mapper is null");
-        return onAssembly(new PerhapsFlatMap<T, R>(this, mapper));
+        Objects.requireNonNull(mapper, "mapper is null");
+        return onAssembly(new PerhapsFlatMap<>(this, mapper));
     }
 
     /**
@@ -773,10 +780,10 @@ public abstract class Perhaps<T> implements Publisher<T> {
     public final <R> Perhaps<R> flatMap(Function<? super T, ? extends Perhaps<? extends R>> onSuccessMapper,
             Function<? super Throwable, ? extends Perhaps<? extends R>> onErrorMapper,
                     Supplier<? extends Perhaps<? extends R>> onCompleteMapper) {
-        ObjectHelper.requireNonNull(onSuccessMapper, "onSuccessMapper is null");
-        ObjectHelper.requireNonNull(onErrorMapper, "onErrorMapper is null");
-        ObjectHelper.requireNonNull(onCompleteMapper, "onCompleteMapper is null");
-        return onAssembly(new PerhapsFlatMapSignal<T, R>(this, onSuccessMapper, onErrorMapper, onCompleteMapper));
+        Objects.requireNonNull(onSuccessMapper, "onSuccessMapper is null");
+        Objects.requireNonNull(onErrorMapper, "onErrorMapper is null");
+        Objects.requireNonNull(onCompleteMapper, "onCompleteMapper is null");
+        return onAssembly(new PerhapsFlatMapSignal<>(this, onSuccessMapper, onErrorMapper, onCompleteMapper));
     }
 
     /**
@@ -787,8 +794,8 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new Flowable type
      */
     public final <R> Flowable<R> flatMapPublisher(Function<? super T, ? extends Publisher<? extends R>> mapper) {
-        ObjectHelper.requireNonNull(mapper, "mapper is null");
-        return RxJavaPlugins.onAssembly(new PerhapsFlatMapPublisher<T, R>(this, mapper));
+        Objects.requireNonNull(mapper, "mapper is null");
+        return RxJavaPlugins.onAssembly(new PerhapsFlatMapPublisher<>(this, mapper));
     }
 
     /**
@@ -796,7 +803,7 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new Perhaps instance
      */
     public final Perhaps<T> onErrorComplete() {
-        return onAssembly(new PerhapsOnErrorReturnItem<T>(this, null));
+        return onAssembly(new PerhapsOnErrorReturnItem<>(this, null));
     }
 
     /**
@@ -806,8 +813,8 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new Perhaps instance
      */
     public final Perhaps<T> onErrorReturnItem(T item) {
-        ObjectHelper.requireNonNull(item, "item is null");
-        return onAssembly(new PerhapsOnErrorReturnItem<T>(this, item));
+        Objects.requireNonNull(item, "item is null");
+        return onAssembly(new PerhapsOnErrorReturnItem<>(this, item));
     }
 
     /**
@@ -817,8 +824,8 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new Perhaps instance
      */
     public final Perhaps<T> onErrorResumeWith(Perhaps<? extends T> fallback) {
-        ObjectHelper.requireNonNull(fallback, "fallback is null");
-        return onAssembly(new PerhapsOnErrorResumeWith<T>(this, fallback));
+        Objects.requireNonNull(fallback, "fallback is null");
+        return onAssembly(new PerhapsOnErrorResumeWith<>(this, fallback));
     }
 
     /**
@@ -830,8 +837,8 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new Perhaps instance
      */
     public final Perhaps<T> onErrorResumeNext(Function<? super Throwable, ? extends Perhaps<? extends T>> fallbackSupplier) {
-        ObjectHelper.requireNonNull(fallbackSupplier, "fallbackSupplier is null");
-        return onAssembly(new PerhapsOnErrorResumeNext<T>(this, fallbackSupplier));
+        Objects.requireNonNull(fallbackSupplier, "fallbackSupplier is null");
+        return onAssembly(new PerhapsOnErrorResumeNext<>(this, fallbackSupplier));
     }
 
     /**
@@ -889,8 +896,8 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new Perhaps instance
      */
     public final Perhaps<T> timeout(Publisher<?> other) {
-        ObjectHelper.requireNonNull(other, "other is null");
-        return onAssembly(new PerhapsTimeout<T>(this, other, null));
+        Objects.requireNonNull(other, "other is null");
+        return onAssembly(new PerhapsTimeout<>(this, other, null));
     }
 
     /**
@@ -901,9 +908,9 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new Perhaps instance
      */
     public final Perhaps<T> timeout(Publisher<?> other, Perhaps<? extends T> fallback) {
-        ObjectHelper.requireNonNull(other, "other is null");
-        ObjectHelper.requireNonNull(fallback, "fallback is null");
-        return onAssembly(new PerhapsTimeout<T>(this, other, fallback));
+        Objects.requireNonNull(other, "other is null");
+        Objects.requireNonNull(fallback, "fallback is null");
+        return onAssembly(new PerhapsTimeout<>(this, other, fallback));
     }
 
     /**
@@ -912,8 +919,8 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new Perhaps instance
      */
     public final Perhaps<T> defaultIfEmpty(T item) {
-        ObjectHelper.requireNonNull(item, "item is null");
-        return onAssembly(new PerhapsDefaultIfEmpty<T>(this, item));
+        Objects.requireNonNull(item, "item is null");
+        return onAssembly(new PerhapsDefaultIfEmpty<>(this, item));
     }
 
     /**
@@ -922,8 +929,8 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new Perhaps instance
      */
     public final Perhaps<T> switchIfEmpty(Perhaps<? extends T> other) {
-        ObjectHelper.requireNonNull(other, "other is null");
-        return onAssembly(new PerhapsSwitchIfEmpty<T>(this, other));
+        Objects.requireNonNull(other, "other is null");
+        return onAssembly(new PerhapsSwitchIfEmpty<>(this, other));
     }
 
     /**
@@ -971,7 +978,7 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new Perhaps instance
      */
     public final Perhaps<T> retry() {
-        return onAssembly(new PerhapsRetry<T>(this, Long.MAX_VALUE));
+        return onAssembly(new PerhapsRetry<>(this, Long.MAX_VALUE));
     }
 
     /**
@@ -983,7 +990,7 @@ public abstract class Perhaps<T> implements Publisher<T> {
         if (times < 0L) {
             throw new IllegalArgumentException("times >= 0 required but it was " + times);
         }
-        return onAssembly(new PerhapsRetry<T>(this, times));
+        return onAssembly(new PerhapsRetry<>(this, times));
     }
 
     /**
@@ -994,8 +1001,8 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new Perhaps instance
      */
     public final Perhaps<T> retry(Predicate<? super Throwable> predicate) {
-        ObjectHelper.requireNonNull(predicate, "predicate is null");
-        return onAssembly(new PerhapsRetryWhile<T>(this, predicate));
+        Objects.requireNonNull(predicate, "predicate is null");
+        return onAssembly(new PerhapsRetryWhile<>(this, predicate));
     }
 
     /**
@@ -1007,8 +1014,8 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new Perhaps instance
      */
     public final Perhaps<T> retryWhen(Function<? super Flowable<Throwable>, ? extends Publisher<?>> handler) {
-        ObjectHelper.requireNonNull(handler, "handler is null");
-        return onAssembly(new PerhapsRetryWhen<T>(this, handler));
+        Objects.requireNonNull(handler, "handler is null");
+        return onAssembly(new PerhapsRetryWhen<>(this, handler));
     }
 
     /**
@@ -1018,8 +1025,8 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new Perhaps instance
      */
     public final Perhaps<T> subscribeOn(Scheduler scheduler) {
-        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
-        return onAssembly(new PerhapsSubscribeOn<T>(this, scheduler));
+        Objects.requireNonNull(scheduler, "scheduler is null");
+        return onAssembly(new PerhapsSubscribeOn<>(this, scheduler));
     }
 
     /**
@@ -1028,8 +1035,8 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new Perhaps instance
      */
     public final Perhaps<T> observeOn(Scheduler scheduler) {
-        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
-        return onAssembly(new PerhapsObserveOn<T>(this, scheduler));
+        Objects.requireNonNull(scheduler, "scheduler is null");
+        return onAssembly(new PerhapsObserveOn<>(this, scheduler));
     }
 
     /**
@@ -1040,8 +1047,8 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new Perhaps instance
      */
     public final Perhaps<T> unsubscribeOn(Scheduler scheduler) {
-        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
-        return onAssembly(new PerhapsUnsubscribeOn<T>(this, scheduler));
+        Objects.requireNonNull(scheduler, "scheduler is null");
+        return onAssembly(new PerhapsUnsubscribeOn<>(this, scheduler));
     }
 
     /**
@@ -1050,8 +1057,8 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new Perhaps instance
      */
     public final Perhaps<T> doOnSubscribe(Consumer<? super Subscription> onSubscribe) {
-        ObjectHelper.requireNonNull(onSubscribe, "onSubscribe is null");
-        return onAssembly(new PerhapsDoOnLifecycle<T>(this,
+        Objects.requireNonNull(onSubscribe, "onSubscribe is null");
+        return onAssembly(new PerhapsDoOnLifecycle<>(this,
                 Functions.emptyConsumer(),
                 Functions.emptyConsumer(),
                 Functions.emptyConsumer(),
@@ -1069,8 +1076,8 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new Perhaps instance
      */
     public final Perhaps<T> doOnRequest(LongConsumer onRequest) {
-        ObjectHelper.requireNonNull(onRequest, "onRequest is null");
-        return onAssembly(new PerhapsDoOnLifecycle<T>(this,
+        Objects.requireNonNull(onRequest, "onRequest is null");
+        return onAssembly(new PerhapsDoOnLifecycle<>(this,
                 Functions.emptyConsumer(),
                 Functions.emptyConsumer(),
                 Functions.emptyConsumer(),
@@ -1088,8 +1095,8 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new Perhaps instance
      */
     public final Perhaps<T> doOnCancel(Action onCancel) {
-        ObjectHelper.requireNonNull(onCancel, "onCancel is null");
-        return onAssembly(new PerhapsDoOnLifecycle<T>(this,
+        Objects.requireNonNull(onCancel, "onCancel is null");
+        return onAssembly(new PerhapsDoOnLifecycle<>(this,
                 Functions.emptyConsumer(),
                 Functions.emptyConsumer(),
                 Functions.emptyConsumer(),
@@ -1108,8 +1115,8 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new Perhaps instance
      */
     public final Perhaps<T> doOnNext(Consumer<? super T> onNext) {
-        ObjectHelper.requireNonNull(onNext, "onNext is null");
-        return onAssembly(new PerhapsDoOnLifecycle<T>(this,
+        Objects.requireNonNull(onNext, "onNext is null");
+        return onAssembly(new PerhapsDoOnLifecycle<>(this,
                 onNext,
                 Functions.emptyConsumer(),
                 Functions.emptyConsumer(),
@@ -1128,8 +1135,8 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new Perhaps instance
      */
     public final Perhaps<T> doAfterNext(Consumer<? super T> onAfterNext) {
-        ObjectHelper.requireNonNull(onAfterNext, "onAfterNext is null");
-        return onAssembly(new PerhapsDoOnLifecycle<T>(this,
+        Objects.requireNonNull(onAfterNext, "onAfterNext is null");
+        return onAssembly(new PerhapsDoOnLifecycle<>(this,
                 Functions.emptyConsumer(),
                 onAfterNext,
                 Functions.emptyConsumer(),
@@ -1148,8 +1155,8 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new Perhaps instance
      */
     public final Perhaps<T> doOnError(Consumer<? super Throwable> onError) {
-        ObjectHelper.requireNonNull(onError, "onError is null");
-        return onAssembly(new PerhapsDoOnLifecycle<T>(this,
+        Objects.requireNonNull(onError, "onError is null");
+        return onAssembly(new PerhapsDoOnLifecycle<>(this,
                 Functions.emptyConsumer(),
                 Functions.emptyConsumer(),
                 onError,
@@ -1168,8 +1175,8 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new Perhaps instance
      */
     public final Perhaps<T> doOnComplete(Action onComplete) {
-        ObjectHelper.requireNonNull(onComplete, "onComplete is null");
-        return onAssembly(new PerhapsDoOnLifecycle<T>(this,
+        Objects.requireNonNull(onComplete, "onComplete is null");
+        return onAssembly(new PerhapsDoOnLifecycle<>(this,
                 Functions.emptyConsumer(),
                 Functions.emptyConsumer(),
                 Functions.emptyConsumer(),
@@ -1188,8 +1195,8 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new Perhaps instance
      */
     public final Perhaps<T> doAfterTerminate(Action onAfterTerminate) {
-        ObjectHelper.requireNonNull(onAfterTerminate, "onAfterTerminate is null");
-        return onAssembly(new PerhapsDoOnLifecycle<T>(this,
+        Objects.requireNonNull(onAfterTerminate, "onAfterTerminate is null");
+        return onAssembly(new PerhapsDoOnLifecycle<>(this,
                 Functions.emptyConsumer(),
                 Functions.emptyConsumer(),
                 Functions.emptyConsumer(),
@@ -1208,8 +1215,8 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new Perhaps instance
      */
     public final Perhaps<T> doFinally(Action onFinally) {
-        ObjectHelper.requireNonNull(onFinally, "onFinally is null");
-        return onAssembly(new PerhapsDoFinally<T>(this, onFinally));
+        Objects.requireNonNull(onFinally, "onFinally is null");
+        return onAssembly(new PerhapsDoFinally<>(this, onFinally));
     }
 
     /**
@@ -1242,8 +1249,8 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new Perhaps instance
      */
     public final Perhaps<T> delay(Publisher<?> other) {
-        ObjectHelper.requireNonNull(other, "other is null");
-        return onAssembly(new PerhapsDelayPublisher<T>(this, other));
+        Objects.requireNonNull(other, "other is null");
+        return onAssembly(new PerhapsDelayPublisher<>(this, other));
     }
 
     /**
@@ -1276,8 +1283,8 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new Perhaps instance
      */
     public final Perhaps<T> delaySubscription(Publisher<?> other) {
-        ObjectHelper.requireNonNull(other, "other is null");
-        return onAssembly(new PerhapsDelaySubscription<T>(this, other));
+        Objects.requireNonNull(other, "other is null");
+        return onAssembly(new PerhapsDelaySubscription<>(this, other));
     }
 
     /**
@@ -1288,8 +1295,8 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new Perhaps type
      */
     public final <R> Perhaps<R> lift(Function<Subscriber<? super R>, Subscriber<? super T>> onLift) {
-        ObjectHelper.requireNonNull(onLift, "onLift is null");
-        return onAssembly(new PerhapsLift<T, R>(this, onLift));
+        Objects.requireNonNull(onLift, "onLift is null");
+        return onAssembly(new PerhapsLift<>(this, onLift));
     }
 
     /**
@@ -1323,8 +1330,8 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new Perhaps instance
      */
     public final Perhaps<T> takeUntil(Publisher<?> other) {
-        ObjectHelper.requireNonNull(other, "other is null");
-        return onAssembly(new PerhapsTakeUntil<T>(this, other));
+        Objects.requireNonNull(other, "other is null");
+        return onAssembly(new PerhapsTakeUntil<>(this, other));
     }
 
     /**
@@ -1332,7 +1339,7 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new Flowable instance
      */
     public final Flowable<T> toFlowable() {
-        return RxJavaPlugins.onAssembly(new PerhapsToFlowable<T>(this));
+        return RxJavaPlugins.onAssembly(new PerhapsToFlowable<>(this));
     }
 
     /**
@@ -1340,7 +1347,7 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new Observable instance
      */
     public final Observable<T> toObservable() {
-        return RxJavaPlugins.onAssembly(new PerhapsToObservable<T>(this));
+        return RxJavaPlugins.onAssembly(new PerhapsToObservable<>(this));
     }
 
     /**
@@ -1348,7 +1355,7 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new Maybe instance
      */
     public final Maybe<T> toMaybe() {
-        return RxJavaPlugins.onAssembly(new PerhapsToMaybe<T>(this));
+        return RxJavaPlugins.onAssembly(new PerhapsToMaybe<>(this));
     }
 
     /**
@@ -1359,7 +1366,7 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @since 0.14.1
      */
     public final Perhaps<T> cache() {
-        return onAssembly(new PerhapsCache<T>(this));
+        return onAssembly(new PerhapsCache<>(this));
     }
 
     // ----------------------------------------------------
@@ -1368,7 +1375,7 @@ public abstract class Perhaps<T> implements Publisher<T> {
 
     @Override
     public final void subscribe(Subscriber<? super T> s) {
-        ObjectHelper.requireNonNull(s, "s is null");
+        Objects.requireNonNull(s, "s is null");
         try {
             subscribeActual(s);
         } catch (NullPointerException ex) {
@@ -1433,7 +1440,7 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the Disposable that allows cancelling the subscription
      */
     public final Disposable subscribe(Consumer<? super T> onNext, Consumer<? super Throwable> onError, Action onComplete) {
-        LambdaSubscriber<T> s = new LambdaSubscriber<T>(onNext, onError, onComplete, Functions.REQUEST_MAX);
+        LambdaSubscriber<T> s = new LambdaSubscriber<>(onNext, onError, onComplete, Functions.REQUEST_MAX);
         subscribe(s);
         return s;
     }
@@ -1471,10 +1478,10 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @param onComplete called when the Perhaps succeeds after the call to onNext.
      */
     public final void blockingSubscribe(Consumer<? super T> onNext, Consumer<? super Throwable> onError, Action onComplete) {
-        ObjectHelper.requireNonNull(onNext, "onNext is null");
-        ObjectHelper.requireNonNull(onError, "onError is null");
-        ObjectHelper.requireNonNull(onComplete, "onComplete is null");
-        BlockingGetSubscriber<T> s = new BlockingGetSubscriber<T>();
+        Objects.requireNonNull(onNext, "onNext is null");
+        Objects.requireNonNull(onError, "onError is null");
+        Objects.requireNonNull(onComplete, "onComplete is null");
+        BlockingGetSubscriber<T> s = new BlockingGetSubscriber<>();
         subscribe(s);
         s.blockingCall(onNext, onError, onComplete);
     }
@@ -1485,7 +1492,7 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the success value of this Perhaps
      */
     public final T blockingGet() {
-        BlockingGetSubscriber<T> s = new BlockingGetSubscriber<T>();
+        BlockingGetSubscriber<T> s = new BlockingGetSubscriber<>();
         subscribe(s);
         return s.blockingGet();
     }
@@ -1499,7 +1506,7 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the success value of this Perhaps
      */
     public final T blockingGet(long timeout, TimeUnit unit) {
-        BlockingGetSubscriber<T> s = new BlockingGetSubscriber<T>();
+        BlockingGetSubscriber<T> s = new BlockingGetSubscriber<>();
         subscribe(s);
         return s.blockingGet(timeout, unit);
     }
@@ -1542,7 +1549,7 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new TestSubscriber
      */
     public final TestSubscriber<T> test(long initialRequest, boolean cancel) {
-        TestSubscriber<T> ts = new TestSubscriber<T>(initialRequest);
+        TestSubscriber<T> ts = new TestSubscriber<>(initialRequest);
         if (cancel) {
             ts.cancel();
         }
@@ -1556,7 +1563,7 @@ public abstract class Perhaps<T> implements Publisher<T> {
      * @return the new Future instance
      */
     public final Future<T> toFuture() {
-        FuturePerhapsSubscriber<T> fs = new FuturePerhapsSubscriber<T>();
+        FuturePerhapsSubscriber<T> fs = new FuturePerhapsSubscriber<>();
         subscribe(fs);
         return fs;
     }

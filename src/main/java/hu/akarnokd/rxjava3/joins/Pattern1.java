@@ -49,6 +49,6 @@ public final class Pattern1<T1> {
         if (selector == null) {
             throw new NullPointerException();
         }
-        return new Plan1<T1, R>(this, selector);
+        return new Plan1<>(this, selector);
     }
 }

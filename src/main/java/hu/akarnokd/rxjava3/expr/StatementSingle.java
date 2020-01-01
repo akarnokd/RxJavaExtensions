@@ -16,11 +16,10 @@
 
 package hu.akarnokd.rxjava3.expr;
 
-import java.util.Map;
+import java.util.*;
 
 import io.reactivex.rxjava3.core.*;
 import io.reactivex.rxjava3.functions.*;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 /**
@@ -55,9 +54,9 @@ public final class StatementSingle {
     public static <K, R> Single<R> switchCase(Supplier<? extends K> caseSelector,
             Map<? super K, ? extends SingleSource<? extends R>> mapOfCases,
                     SingleSource<? extends R> defaultCase) {
-        ObjectHelper.requireNonNull(caseSelector, "caseSelector is null");
-        ObjectHelper.requireNonNull(mapOfCases, "mapOfCases is null");
-        ObjectHelper.requireNonNull(defaultCase, "defaultCase is null");
+        Objects.requireNonNull(caseSelector, "caseSelector is null");
+        Objects.requireNonNull(mapOfCases, "mapOfCases is null");
+        Objects.requireNonNull(defaultCase, "defaultCase is null");
         return RxJavaPlugins.onAssembly(new SingleSwitchCase<R, K>(caseSelector, mapOfCases, defaultCase));
     }
 
@@ -81,9 +80,9 @@ public final class StatementSingle {
      */
     public static <R> Single<R> ifThen(BooleanSupplier condition, SingleSource<? extends R> then,
             Single<? extends R> orElse) {
-        ObjectHelper.requireNonNull(condition, "condition is null");
-        ObjectHelper.requireNonNull(then, "then is null");
-        ObjectHelper.requireNonNull(orElse, "orElse is null");
-        return RxJavaPlugins.onAssembly(new SingleIfThen<R>(condition, then, orElse));
+        Objects.requireNonNull(condition, "condition is null");
+        Objects.requireNonNull(then, "then is null");
+        Objects.requireNonNull(orElse, "orElse is null");
+        return RxJavaPlugins.onAssembly(new SingleIfThen<>(condition, then, orElse));
     }
 }

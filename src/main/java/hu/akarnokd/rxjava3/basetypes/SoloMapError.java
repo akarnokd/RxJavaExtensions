@@ -16,11 +16,12 @@
 
 package hu.akarnokd.rxjava3.basetypes;
 
+import java.util.Objects;
+
 import org.reactivestreams.Subscriber;
 
 import io.reactivex.rxjava3.exceptions.*;
 import io.reactivex.rxjava3.functions.Function;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 import io.reactivex.rxjava3.internal.fuseable.QueueSubscription;
 import io.reactivex.rxjava3.internal.subscribers.BasicFuseableSubscriber;
 
@@ -65,7 +66,7 @@ final class SoloMapError<T> extends Solo<T> {
             Throwable ex;
 
             try {
-                ex = ObjectHelper.requireNonNull(errorMapper.apply(t), "The errorMapper returned a null Throwable");
+                ex = Objects.requireNonNull(errorMapper.apply(t), "The errorMapper returned a null Throwable");
             } catch (Throwable exc) {
                 Exceptions.throwIfFatal(exc);
                 ex = new CompositeException(t, exc);

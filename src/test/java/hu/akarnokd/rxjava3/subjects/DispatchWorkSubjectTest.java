@@ -26,7 +26,7 @@ import org.junit.Test;
 
 import hu.akarnokd.rxjava3.test.*;
 import io.reactivex.rxjava3.core.Single;
-import io.reactivex.rxjava3.disposables.*;
+import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.functions.BiFunction;
 import io.reactivex.rxjava3.observers.TestObserver;
 import io.reactivex.rxjava3.plugins.RxJavaPlugins;
@@ -123,7 +123,7 @@ public class DispatchWorkSubjectTest {
 
         assertFalse(dws.isDisposed());
 
-        Disposable d = Disposables.empty();
+        Disposable d = Disposable.empty();
 
         dws.onSubscribe(d);
 
@@ -230,7 +230,7 @@ public class DispatchWorkSubjectTest {
 
             final TestObserver<Integer> to = dws.test();
 
-            final TestObserver<Integer> to2 = new TestObserver<Integer>();
+            final TestObserver<Integer> to2 = new TestObserver<>();
 
             Runnable r1 = new Runnable() {
                 @Override
@@ -262,7 +262,7 @@ public class DispatchWorkSubjectTest {
             @Override
             public HashSet<Integer> apply(List<Integer> a, List<Integer> b)
                     throws Exception {
-                HashSet<Integer> set = new HashSet<Integer>();
+                HashSet<Integer> set = new HashSet<>();
                 set.addAll(a);
                 set.addAll(b);
                 return set;

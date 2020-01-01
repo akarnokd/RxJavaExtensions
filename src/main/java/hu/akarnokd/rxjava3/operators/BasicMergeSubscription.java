@@ -63,7 +63,7 @@ implements Subscription, InnerQueuedSubscriberSupport<T> {
         this.delayErrors = delayErrors;
         InnerQueuedSubscriber<T>[] subs = new InnerQueuedSubscriber[n];
         for (int i = 0; i < n; i++) {
-            subs[i] = new InnerQueuedSubscriber<T>(this, prefetch);
+            subs[i] = new InnerQueuedSubscriber<>(this, prefetch);
         }
         this.subscribers = subs;
         this.requested = new AtomicLong();

@@ -16,6 +16,7 @@
 
 package hu.akarnokd.rxjava3.operators;
 
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
 import io.reactivex.rxjava3.core.*;
@@ -23,7 +24,6 @@ import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.exceptions.Exceptions;
 import io.reactivex.rxjava3.functions.*;
 import io.reactivex.rxjava3.internal.disposables.DisposableHelper;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 
 /**
  * Maps the signals of the upstream into MaybeSources and consumes them.
@@ -52,7 +52,7 @@ implements MaybeTransformer<T, R> {
 
     @Override
     public Maybe<R> apply(Maybe<T> t) {
-        return new MaybeFlatMapSignalMaybe<T, R>(t, onSuccessHandler, onErrorHandler, onCompleteHandler);
+        return new MaybeFlatMapSignalMaybe<>(t, onSuccessHandler, onErrorHandler, onCompleteHandler);
     }
 
     @Override
@@ -76,7 +76,7 @@ implements MaybeTransformer<T, R> {
                 Function<? super T, ? extends MaybeSource<? extends R>> onSuccessHandler,
                 Function<? super Throwable, ? extends MaybeSource<? extends R>> onErrorHandler,
                         Supplier<? extends MaybeSource<? extends R>> onCompleteHandler) {
-            this.consumer = new SignalConsumer<R>(downstream);
+            this.consumer = new SignalConsumer<>(downstream);
             this.onSuccessHandler = onSuccessHandler;
             this.onErrorHandler = onErrorHandler;
             this.onCompleteHandler = onCompleteHandler;
@@ -105,7 +105,7 @@ implements MaybeTransformer<T, R> {
             MaybeSource<? extends R> next;
 
             try {
-                next = ObjectHelper.requireNonNull(onSuccessHandler.apply(t), "The onSuccessHandler returned a null MaybeSource");
+                next = Objects.requireNonNull(onSuccessHandler.apply(t), "The onSuccessHandler returned a null MaybeSource");
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
                 consumer.onError(ex);
@@ -120,7 +120,7 @@ implements MaybeTransformer<T, R> {
             MaybeSource<? extends R> next;
 
             try {
-                next = ObjectHelper.requireNonNull(onCompleteHandler.get(), "The onCompleteHandler returned a null MaybeSource");
+                next = Objects.requireNonNull(onCompleteHandler.get(), "The onCompleteHandler returned a null MaybeSource");
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
                 consumer.onError(ex);
@@ -135,7 +135,7 @@ implements MaybeTransformer<T, R> {
             MaybeSource<? extends R> next;
 
             try {
-                next = ObjectHelper.requireNonNull(onErrorHandler.apply(e), "The onErrorHandler returned a null MaybeSource");
+                next = Objects.requireNonNull(onErrorHandler.apply(e), "The onErrorHandler returned a null MaybeSource");
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
                 consumer.onError(ex);

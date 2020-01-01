@@ -16,13 +16,13 @@
 
 package hu.akarnokd.rxjava3.basetypes;
 
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.reactivestreams.*;
 
 import io.reactivex.rxjava3.exceptions.*;
 import io.reactivex.rxjava3.functions.Function;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 import io.reactivex.rxjava3.internal.subscriptions.*;
 import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
@@ -44,7 +44,7 @@ final class PerhapsOnErrorResumeNext<T> extends Perhaps<T> {
 
     @Override
     protected void subscribeActual(Subscriber<? super T> s) {
-        source.subscribe(new OnErrorResumeNextSubscriber<T>(s, fallbackSupplier));
+        source.subscribe(new OnErrorResumeNextSubscriber<>(s, fallbackSupplier));
     }
 
     static final class OnErrorResumeNextSubscriber<T> extends DeferredScalarSubscription<T>
@@ -85,7 +85,7 @@ final class PerhapsOnErrorResumeNext<T> extends Perhaps<T> {
             Perhaps<? extends T> ph;
 
             try {
-                ph = ObjectHelper.requireNonNull(fallbackSupplier.apply(t), "The fallbackSupplier returned a null Perhaps");
+                ph = Objects.requireNonNull(fallbackSupplier.apply(t), "The fallbackSupplier returned a null Perhaps");
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
                 downstream.onError(new CompositeException(t, ex));

@@ -46,7 +46,7 @@ final class SoloSubscribeOn<T> extends Solo<T> {
     protected void subscribeActual(Subscriber<? super T> s) {
         Worker worker = scheduler.createWorker();
 
-        SubscribeOnSubscriber<T> parent = new SubscribeOnSubscriber<T>(s, worker, source);
+        SubscribeOnSubscriber<T> parent = new SubscribeOnSubscriber<>(s, worker, source);
         s.onSubscribe(parent);
 
         DisposableHelper.replace(parent.task, worker.schedule(parent));
@@ -72,7 +72,7 @@ final class SoloSubscribeOn<T> extends Solo<T> {
             this.downstream = downstream;
             this.worker = worker;
             this.source = source;
-            this.task = new AtomicReference<Disposable>();
+            this.task = new AtomicReference<>();
             this.requested = new AtomicBoolean();
         }
 

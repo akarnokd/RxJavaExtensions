@@ -51,12 +51,12 @@ final class PerhapsCache<T> extends Perhaps<T> implements Subscriber<T> {
     PerhapsCache(Perhaps<T> source) {
         this.source = source;
         this.once = new AtomicBoolean();
-        this.subscribers = new AtomicReference<CacheSubscription<T>[]>(EMPTY);
+        this.subscribers = new AtomicReference<>(EMPTY);
     }
 
     @Override
     protected void subscribeActual(Subscriber<? super T> s) {
-        CacheSubscription<T> inner = new CacheSubscription<T>(s, this);
+        CacheSubscription<T> inner = new CacheSubscription<>(s, this);
         s.onSubscribe(inner);
 
         if (add(inner)) {
@@ -180,7 +180,7 @@ final class PerhapsCache<T> extends Perhaps<T> implements Subscriber<T> {
 
         CacheSubscription(Subscriber<? super T> downstream, PerhapsCache<T> parent) {
             super(downstream);
-            this.parent = new AtomicReference<Object>(parent);
+            this.parent = new AtomicReference<>(parent);
         }
 
         @SuppressWarnings("unchecked")

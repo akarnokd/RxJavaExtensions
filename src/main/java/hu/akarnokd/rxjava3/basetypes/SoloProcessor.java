@@ -55,7 +55,7 @@ public final class SoloProcessor<T> extends Solo<T> implements Processor<T, T> {
      * @return the new SoloProcessor instance
      */
     public static <T> SoloProcessor<T> create() {
-        return new SoloProcessor<T>();
+        return new SoloProcessor<>();
     }
 
     /**
@@ -63,13 +63,13 @@ public final class SoloProcessor<T> extends Solo<T> implements Processor<T, T> {
      */
     @SuppressWarnings("unchecked")
     private SoloProcessor() {
-        subscribers = new AtomicReference<InnerSubscription<T>[]>(EMPTY);
+        subscribers = new AtomicReference<>(EMPTY);
         once = new AtomicBoolean();
     }
 
     @Override
     protected void subscribeActual(Subscriber<? super T> s) {
-        InnerSubscription<T> inner = new InnerSubscription<T>(s, this);
+        InnerSubscription<T> inner = new InnerSubscription<>(s, this);
         s.onSubscribe(inner);
         if (add(inner)) {
             if (inner.isCancelled()) {

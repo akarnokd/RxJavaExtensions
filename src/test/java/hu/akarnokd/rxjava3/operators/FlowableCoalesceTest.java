@@ -58,7 +58,6 @@ public class FlowableCoalesceTest {
     };
 
     @Test
-    @SuppressWarnings("unchecked")
     public void empty() {
         Flowable.<Integer>empty()
         .compose(FlowableTransformers.coalesce(listSupplier, listAdd))
@@ -76,7 +75,6 @@ public class FlowableCoalesceTest {
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     public void error() {
         Flowable.<Integer>error(new IOException())
         .compose(FlowableTransformers.coalesce(listSupplier, listAdd))
@@ -85,7 +83,6 @@ public class FlowableCoalesceTest {
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     public void coalescerCrash() {
         Flowable.just(1)
         .compose(FlowableTransformers.coalesce(listSupplier, listAddCrash))
@@ -94,7 +91,6 @@ public class FlowableCoalesceTest {
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     public void range() {
         Flowable.range(1, 5)
         .compose(FlowableTransformers.coalesce(listSupplier, listAdd))
@@ -103,7 +99,6 @@ public class FlowableCoalesceTest {
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     public void take() {
         Flowable.range(1, 5)
         .compose(FlowableTransformers.coalesce(listSupplier, listAdd))
@@ -113,7 +108,6 @@ public class FlowableCoalesceTest {
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     public void rangeBackpressured() {
         Flowable.range(1, 5)
         .compose(FlowableTransformers.coalesce(listSupplier, listAdd))
@@ -124,7 +118,6 @@ public class FlowableCoalesceTest {
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     public void rangeBackpressuredMixed() {
         Flowable.range(1, 5)
         .compose(FlowableTransformers.coalesce(listSupplier, listAdd))
@@ -135,7 +128,6 @@ public class FlowableCoalesceTest {
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     public void onNextRequestRace() {
         for (int i = 0; i < 1000; i++) {
             final PublishProcessor<Integer> pp = PublishProcessor.create();
@@ -167,7 +159,6 @@ public class FlowableCoalesceTest {
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     public void slowPathQueueUse() {
         final PublishProcessor<Integer> pp = PublishProcessor.create();
 
@@ -190,7 +181,6 @@ public class FlowableCoalesceTest {
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     public void slowPathQueueUseCrash() {
         final PublishProcessor<Integer> pp = PublishProcessor.create();
 

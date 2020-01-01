@@ -38,7 +38,7 @@ public abstract class Plan<R> {
         JoinObserver1<T> observer;
         JoinObserver nonGeneric = externalSubscriptions.get(observable);
         if (nonGeneric == null) {
-            observer = new JoinObserver1<T>(observable, onError);
+            observer = new JoinObserver1<>(observable, onError);
             externalSubscriptions.put(observable, observer);
         } else {
             observer = (JoinObserver1<T>) nonGeneric;

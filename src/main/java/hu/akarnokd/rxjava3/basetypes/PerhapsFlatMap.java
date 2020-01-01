@@ -16,13 +16,13 @@
 
 package hu.akarnokd.rxjava3.basetypes;
 
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.reactivestreams.*;
 
 import io.reactivex.rxjava3.exceptions.Exceptions;
 import io.reactivex.rxjava3.functions.Function;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 import io.reactivex.rxjava3.internal.subscriptions.*;
 
 /**
@@ -85,7 +85,7 @@ final class PerhapsFlatMap<T, R> extends Perhaps<R> {
             Perhaps<? extends R> ph;
 
             try {
-                ph = ObjectHelper.requireNonNull(mapper.apply(t), "The mapper returned a null Perhaps");
+                ph = Objects.requireNonNull(mapper.apply(t), "The mapper returned a null Perhaps");
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
                 downstream.onError(ex);

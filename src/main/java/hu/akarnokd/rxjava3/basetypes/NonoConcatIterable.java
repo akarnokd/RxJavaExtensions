@@ -16,13 +16,12 @@
 
 package hu.akarnokd.rxjava3.basetypes;
 
-import java.util.Iterator;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.reactivestreams.*;
 
 import io.reactivex.rxjava3.exceptions.Exceptions;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 import io.reactivex.rxjava3.internal.subscriptions.*;
 import io.reactivex.rxjava3.internal.util.AtomicThrowable;
 
@@ -45,7 +44,7 @@ final class NonoConcatIterable extends Nono {
         Iterator<? extends Nono> it;
 
         try {
-            it = ObjectHelper.requireNonNull(sources.iterator(), "The sources Iterable returned a null Iterator");
+            it = Objects.requireNonNull(sources.iterator(), "The sources Iterable returned a null Iterator");
         } catch (Throwable ex) {
             Exceptions.throwIfFatal(ex);
             EmptySubscription.error(ex, s);
@@ -132,7 +131,7 @@ final class NonoConcatIterable extends Nono {
                     try {
                         b = iterator.hasNext();
                         if (b) {
-                            np = ObjectHelper.requireNonNull(iterator.next(), "The iterator returned a null Nono");
+                            np = Objects.requireNonNull(iterator.next(), "The iterator returned a null Nono");
                         }
                     } catch (Throwable ex) {
                         Exceptions.throwIfFatal(ex);

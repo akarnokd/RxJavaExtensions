@@ -231,7 +231,7 @@ public class NonoProcessorTest {
 
     @Test
     public void crossCancelComplete() {
-        final TestSubscriber<Void> ts1 = new TestSubscriber<Void>();
+        final TestSubscriber<Void> ts1 = new TestSubscriber<>();
 
         TestSubscriber<Void> ts2 = new TestSubscriber<Void>() {
             @Override
@@ -253,7 +253,7 @@ public class NonoProcessorTest {
 
     @Test
     public void crossCancelError() {
-        final TestSubscriber<Void> ts1 = new TestSubscriber<Void>();
+        final TestSubscriber<Void> ts1 = new TestSubscriber<>();
 
         TestSubscriber<Void> ts2 = new TestSubscriber<Void>() {
             @Override

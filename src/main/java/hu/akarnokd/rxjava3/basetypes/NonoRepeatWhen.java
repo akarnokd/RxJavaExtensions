@@ -92,7 +92,7 @@ final class NonoRepeatWhen extends Nono {
 
         RepeatWhenMainSubscriber(Subscriber<? super Void> downstream, FlowableProcessor<Object> processor, Nono source) {
             this.downstream = downstream;
-            this.upstream = new AtomicReference<Subscription>();
+            this.upstream = new AtomicReference<>();
             this.inner = new RedoInnerSubscriber(this);
             this.once = new AtomicBoolean();
             this.processor = processor;

@@ -116,7 +116,7 @@ public final class RxJavaAssemblyException extends RuntimeException {
      */
     public Throwable appendLast(Throwable ex) {
         Throwable r = ex;
-        Set<Throwable> memory = new HashSet<Throwable>();
+        Set<Throwable> memory = new HashSet<>();
         while (ex.getCause() != null) {
             if (memory.add(ex)) {
                 ex = ex.getCause();
@@ -141,7 +141,7 @@ public final class RxJavaAssemblyException extends RuntimeException {
      * @return the RxJavaAssemblyException found or null
      */
     public static RxJavaAssemblyException find(Throwable ex) {
-        Set<Throwable> memory = new HashSet<Throwable>();
+        Set<Throwable> memory = new HashSet<>();
         while (ex != null) {
             if (ex instanceof RxJavaAssemblyException) {
                 return (RxJavaAssemblyException)ex;

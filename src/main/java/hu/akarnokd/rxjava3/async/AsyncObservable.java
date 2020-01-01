@@ -649,7 +649,7 @@ public final class AsyncObservable {
         return new SimpleCallable<Observable<R>>() {
             @Override
             public Observable<R> call() {
-                return Observable.fromCallable(func).subscribeOn(scheduler);
+                return Observable.<R>fromCallable(func).subscribeOn(scheduler);
             }
         };
     }
@@ -673,7 +673,7 @@ public final class AsyncObservable {
         return new SimpleCallable<Observable<R>>() {
             @Override
             public Observable<R> call() {
-                return Observable.fromSupplier(func).subscribeOn(scheduler);
+                return Observable.<R>fromSupplier(func).subscribeOn(scheduler);
             }
         };
     }
@@ -1410,7 +1410,7 @@ public final class AsyncObservable {
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Async-Operators#wiki-startfuture">RxJava Wiki: startFuture()</a>
      */
     public static <T> Observable<T> startFuture(final Supplier<? extends Future<? extends T>> functionAsync) {
-        return RxJavaPlugins.onAssembly(new ObservableFromSupplierNull<T>(new Supplier<T>() {
+        return RxJavaPlugins.onAssembly(new ObservableFromSupplierNull<>(new Supplier<T>() {
             @Override
             public T get() throws Throwable {
                 return functionAsync.get().get();
@@ -1649,9 +1649,9 @@ public final class AsyncObservable {
             Scheduler scheduler) {
 
         SequentialDisposable d = new SequentialDisposable();
-        final FutureCompletable<Object> f = new FutureCompletable<Object>(d);
+        final FutureCompletable<Object> f = new FutureCompletable<>(d);
 
-        LambdaObserver<T> ls = new LambdaObserver<T>(onNext,
+        LambdaObserver<T> ls = new LambdaObserver<>(onNext,
         new Consumer<Throwable>() {
             @Override
             public void accept(Throwable e) throws Exception {

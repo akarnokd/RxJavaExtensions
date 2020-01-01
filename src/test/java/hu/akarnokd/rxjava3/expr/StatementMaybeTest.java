@@ -84,13 +84,11 @@ public class StatementMaybeTest {
         source.test().assertNoValues().assertNoErrors();
     }
 
-    @SuppressWarnings("unchecked")
-    <T> void observe(Maybe<T> source, T value) {
+    static <T> void observe(Maybe<T> source, T value) {
         source.test().assertResult(value);
     }
 
-    @SuppressWarnings("unchecked")
-    <T> void observeError(Maybe<T> source, Class<? extends Throwable> error) {
+    static <T> void observeError(Maybe<T> source, Class<? extends Throwable> error) {
         source.test().assertFailure(error);
     }
 
@@ -99,7 +97,7 @@ public class StatementMaybeTest {
         Maybe<Integer> source1 = Maybe.just(1);
         Maybe<Integer> source2 = Maybe.just(2);
 
-        Map<Integer, Maybe<Integer>> map = new HashMap<Integer, Maybe<Integer>>();
+        Map<Integer, Maybe<Integer>> map = new HashMap<>();
         map.put(1, source1);
         map.put(2, source2);
 
@@ -115,7 +113,7 @@ public class StatementMaybeTest {
         Maybe<Integer> source1 = Maybe.just(1);
         Maybe<Integer> defaultSource = Maybe.just(2);
 
-        Map<Integer, Maybe<Integer>> map = new HashMap<Integer, Maybe<Integer>>();
+        Map<Integer, Maybe<Integer>> map = new HashMap<>();
         map.put(1, source1);
 
         Maybe<Integer> result = StatementMaybe.switchCase(func, map, defaultSource);
@@ -129,7 +127,7 @@ public class StatementMaybeTest {
     public void testCaseSelectorThrows() {
         Maybe<Integer> source1 = Maybe.just(1);
 
-        Map<Integer, Maybe<Integer>> map = new HashMap<Integer, Maybe<Integer>>();
+        Map<Integer, Maybe<Integer>> map = new HashMap<>();
         map.put(1, source1);
 
         Maybe<Integer> result = StatementMaybe.switchCase(funcError, map);
@@ -193,7 +191,7 @@ public class StatementMaybeTest {
         Maybe<Integer> source1 = Maybe.just(1);
         Maybe<Integer> source2 = Maybe.error(new RuntimeException("Forced failure"));
 
-        Map<Integer, Maybe<Integer>> map = new HashMap<Integer, Maybe<Integer>>();
+        Map<Integer, Maybe<Integer>> map = new HashMap<>();
         map.put(1, source1);
         map.put(2, source2);
 

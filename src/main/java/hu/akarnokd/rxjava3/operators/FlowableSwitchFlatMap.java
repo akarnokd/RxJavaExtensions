@@ -24,7 +24,6 @@ import org.reactivestreams.*;
 import io.reactivex.rxjava3.core.*;
 import io.reactivex.rxjava3.exceptions.Exceptions;
 import io.reactivex.rxjava3.functions.Function;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 import io.reactivex.rxjava3.internal.fuseable.SimplePlainQueue;
 import io.reactivex.rxjava3.internal.queue.SpscArrayQueue;
 import io.reactivex.rxjava3.internal.subscriptions.SubscriptionHelper;
@@ -53,7 +52,7 @@ implements FlowableTransformer<T, R> {
 
     @Override
     public Publisher<R> apply(Flowable<T> upstream) {
-        return new FlowableSwitchFlatMap<T, R>(upstream, mapper, maxActive, bufferSize);
+        return new FlowableSwitchFlatMap<>(upstream, mapper, maxActive, bufferSize);
     }
 
     @Override
@@ -100,7 +99,7 @@ implements FlowableTransformer<T, R> {
             this.mapper = mapper;
             this.maxActive = maxActive;
             this.bufferSize = bufferSize;
-            this.active = new ArrayDeque<SfmInnerSubscriber<T, R>>();
+            this.active = new ArrayDeque<>();
             this.requested = new AtomicLong();
             this.error = new AtomicThrowable();
             this.activeCache = new SfmInnerSubscriber[maxActive];
@@ -121,7 +120,7 @@ implements FlowableTransformer<T, R> {
         public void onNext(T t) {
             Publisher<? extends R> p;
             try {
-                p = ObjectHelper.requireNonNull(mapper.apply(t), "The mapper returned a null Publisher");
+                p = Objects.requireNonNull(mapper.apply(t), "The mapper returned a null Publisher");
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
                 upstream.cancel();
@@ -129,7 +128,7 @@ implements FlowableTransformer<T, R> {
                 return;
             }
 
-            SfmInnerSubscriber<T, R> inner = new SfmInnerSubscriber<T, R>(this, bufferSize);
+            SfmInnerSubscriber<T, R> inner = new SfmInnerSubscriber<>(this, bufferSize);
             if (add(inner)) {
                 p.subscribe(inner);
             }
@@ -204,7 +203,7 @@ implements FlowableTransformer<T, R> {
         }
 
         void cancelInners() {
-            List<SfmInnerSubscriber<T, R>> subscribers = new ArrayList<SfmInnerSubscriber<T, R>>();
+            List<SfmInnerSubscriber<T, R>> subscribers = new ArrayList<>();
             synchronized (this) {
                 subscribers.addAll(active);
                 active.clear();
@@ -398,7 +397,7 @@ implements FlowableTransformer<T, R> {
                 this.parent = parent;
                 this.bufferSize = bufferSize;
                 this.limit = bufferSize - (bufferSize >> 2);
-                this.queue = new SpscArrayQueue<R>(bufferSize);
+                this.queue = new SpscArrayQueue<>(bufferSize);
             }
 
             void cancel() {

@@ -33,7 +33,7 @@ public class ObservableObserveOnDropTest {
 
     @Test
     public void normal() {
-        TestObserver<Object> to = Observable.range(1, 1000000)
+        TestObserver<Integer> to = Observable.range(1, 1000000)
         .compose(ObservableTransformers.observeOnDrop(Schedulers.computation()))
         .test()
         .awaitDone(5, TimeUnit.SECONDS)

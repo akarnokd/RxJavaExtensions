@@ -46,7 +46,7 @@ implements FlowableTransformer<T, T> {
 
     @Override
     public Publisher<T> apply(Flowable<T> upstream) {
-        return new FlowableCacheLast<T>(upstream);
+        return new FlowableCacheLast<>(upstream);
     }
 
     @Override

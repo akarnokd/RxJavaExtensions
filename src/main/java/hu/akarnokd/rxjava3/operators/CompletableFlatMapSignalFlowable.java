@@ -16,6 +16,7 @@
 
 package hu.akarnokd.rxjava3.operators;
 
+import java.util.Objects;
 import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
@@ -25,7 +26,6 @@ import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.exceptions.Exceptions;
 import io.reactivex.rxjava3.functions.*;
 import io.reactivex.rxjava3.internal.disposables.DisposableHelper;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 import io.reactivex.rxjava3.internal.subscriptions.SubscriptionHelper;
 
 /**
@@ -51,12 +51,12 @@ implements CompletableConverter<Flowable<R>> {
 
     @Override
     public Flowable<R> apply(Completable t) {
-        return new CompletableFlatMapSignalFlowable<R>(t, onCompleteHandler, onErrorHandler);
+        return new CompletableFlatMapSignalFlowable<>(t, onCompleteHandler, onErrorHandler);
     }
 
     @Override
     protected void subscribeActual(Subscriber<? super R> subscriber) {
-        source.subscribe(new FlatMapSignalConsumer<R>(subscriber, onCompleteHandler, onErrorHandler));
+        source.subscribe(new FlatMapSignalConsumer<>(subscriber, onCompleteHandler, onErrorHandler));
     }
 
     static final class FlatMapSignalConsumer<R>
@@ -73,7 +73,7 @@ implements CompletableConverter<Flowable<R>> {
         FlatMapSignalConsumer(Subscriber<? super R> downstream,
                 Supplier<? extends Publisher<? extends R>> onCompleteHandler,
                 Function<? super Throwable, ? extends Publisher<? extends R>> onErrorHandler) {
-            this.consumer = new SignalConsumer<R>(downstream);
+            this.consumer = new SignalConsumer<>(downstream);
             this.onCompleteHandler = onCompleteHandler;
             this.onErrorHandler = onErrorHandler;
         }
@@ -102,7 +102,7 @@ implements CompletableConverter<Flowable<R>> {
             Publisher<? extends R> next;
 
             try {
-                next = ObjectHelper.requireNonNull(onCompleteHandler.get(), "The onCompleteHandler returned a null Publisher");
+                next = Objects.requireNonNull(onCompleteHandler.get(), "The onCompleteHandler returned a null Publisher");
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
                 consumer.onError(ex);
@@ -117,7 +117,7 @@ implements CompletableConverter<Flowable<R>> {
             Publisher<? extends R> next;
 
             try {
-                next = ObjectHelper.requireNonNull(onErrorHandler.apply(e), "The onErrorHandler returned a null Publisher");
+                next = Objects.requireNonNull(onErrorHandler.apply(e), "The onErrorHandler returned a null Publisher");
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
                 consumer.onError(ex);

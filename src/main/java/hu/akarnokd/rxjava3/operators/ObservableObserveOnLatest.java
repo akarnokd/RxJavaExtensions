@@ -44,7 +44,7 @@ final class ObservableObserveOnLatest<T> extends Observable<T> implements Observ
 
     @Override
     public ObservableSource<T> apply(Observable<T> upstream) {
-        return new ObservableObserveOnLatest<T>(upstream, scheduler);
+        return new ObservableObserveOnLatest<>(upstream, scheduler);
     }
 
     @Override
@@ -74,7 +74,7 @@ final class ObservableObserveOnLatest<T> extends Observable<T> implements Observ
         ObserveOnDropObserver(Observer<? super T> downstream, Worker worker) {
             this.downstream = downstream;
             this.worker = worker;
-            this.item = new AtomicReference<Object>();
+            this.item = new AtomicReference<>();
         }
 
         @Override

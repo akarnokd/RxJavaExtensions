@@ -38,7 +38,7 @@ public class CompletableConsumersTest implements Consumer<Object>, Action {
 
     final CompletableSubject processor = CompletableSubject.create();
 
-    final List<Object> events = new ArrayList<Object>();
+    final List<Object> events = new ArrayList<>();
 
     @Override
     public void run() throws Exception {
@@ -198,10 +198,10 @@ public class CompletableConsumersTest implements Consumer<Object>, Action {
                         @Override
                         protected void subscribeActual(
                                 CompletableObserver observer) {
-                            observer.onSubscribe(Disposables.empty());
+                            observer.onSubscribe(Disposable.empty());
                             observer.onComplete();
 
-                            observer.onSubscribe(Disposables.empty());
+                            observer.onSubscribe(Disposable.empty());
                             observer.onComplete();
                             observer.onError(new IOException());
                         }

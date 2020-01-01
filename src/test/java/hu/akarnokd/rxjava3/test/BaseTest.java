@@ -24,8 +24,9 @@ import io.reactivex.rxjava3.subscribers.TestSubscriber;
 
 public abstract class BaseTest {
 
+    @SafeVarargs
     public static <T> void assertResult(ObservableSource<T> source, T... array) {
-        TestObserver<T> to = new TestObserver<T>();
+        TestObserver<T> to = new TestObserver<>();
 
         source.subscribe(to);
 
@@ -34,8 +35,9 @@ public abstract class BaseTest {
         to.assertComplete();
     }
 
+    @SafeVarargs
     public static <T> void assertResult(Publisher<T> source, T... array) {
-        TestSubscriber<T> ts = new TestSubscriber<T>();
+        TestSubscriber<T> ts = new TestSubscriber<>();
 
         source.subscribe(ts);
 
@@ -44,10 +46,12 @@ public abstract class BaseTest {
         .assertComplete();
     }
 
+    @SafeVarargs
     public static <T> Observable<T> observe(T... array) {
         return Observable.fromArray(array);
     }
 
+    @SafeVarargs
     public static <T> Flowable<T> flow(T... array) {
         return Flowable.fromArray(array);
     }

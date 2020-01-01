@@ -68,7 +68,6 @@ public class FlowableErrorJumpTest {
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     public void errorJump() {
         Flowable.range(1, 5)
         .concatWith(Flowable.<Integer>error(new TestException()))

@@ -16,7 +16,7 @@
 
 package hu.akarnokd.rxjava3.parallel;
 
-import java.util.Comparator;
+import java.util.*;
 
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.internal.functions.*;
@@ -116,10 +116,10 @@ public final class ParallelTransformers {
      * @since 0.17.9
      */
     public static <T> Flowable<T> orderedMerge(ParallelFlowable<T> source, Comparator<? super T> comparator, boolean delayErrors, int prefetch) {
-        ObjectHelper.requireNonNull(comparator, "comparator is null");
-        ObjectHelper.requireNonNull(source, "sources is null");
+        Objects.requireNonNull(comparator, "comparator is null");
+        Objects.requireNonNull(source, "sources is null");
         ObjectHelper.verifyPositive(prefetch, "prefetch");
-        return RxJavaPlugins.onAssembly(new ParallelOrderedMerge<T>(source, comparator, delayErrors, prefetch));
+        return RxJavaPlugins.onAssembly(new ParallelOrderedMerge<>(source, comparator, delayErrors, prefetch));
     }
 
     /**
@@ -129,7 +129,7 @@ public final class ParallelTransformers {
      * @since 0.16.3
      */
     public static <T extends Number> ParallelTransformer<T, Integer> sumInteger() {
-        return new ParallelSumInteger<T>(null);
+        return new ParallelSumInteger<>(null);
     }
 
     /**
@@ -139,7 +139,7 @@ public final class ParallelTransformers {
      * @since 0.16.3
      */
     public static <T extends Number> ParallelTransformer<T, Long> sumLong() {
-        return new ParallelSumLong<T>(null);
+        return new ParallelSumLong<>(null);
     }
 
     /**
@@ -149,6 +149,6 @@ public final class ParallelTransformers {
      * @since 0.16.3
      */
     public static <T extends Number> ParallelTransformer<T, Double> sumDouble() {
-        return new ParallelSumDouble<T>(null);
+        return new ParallelSumDouble<>(null);
     }
 }

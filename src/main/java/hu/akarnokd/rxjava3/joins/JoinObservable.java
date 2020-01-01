@@ -40,7 +40,7 @@ public final class JoinObservable<T> {
      * @return the created JoinObservable instance
      */
     public static <T> JoinObservable<T> from(Observable<T> o) {
-        return new JoinObservable<T>(RxJavaPlugins.onAssembly(o));
+        return new JoinObservable<>(RxJavaPlugins.onAssembly(o));
     }
 
     /**
@@ -96,6 +96,7 @@ public final class JoinObservable<T> {
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Combining-Observables#wiki-and-then-and-when">RxJava Wiki: when()</a>
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh229889.aspx">MSDN: Observable.When</a>
      */
+    @SafeVarargs
     public static <R> JoinObservable<R> when(Plan<R>... plans) {
         return from(JoinPatterns.when(plans));
     }

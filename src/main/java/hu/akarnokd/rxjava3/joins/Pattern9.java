@@ -20,7 +20,6 @@ import java.util.*;
 
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.functions.Function9;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 
 /**
  * Represents a join pattern over observable sequences.
@@ -114,7 +113,7 @@ public final class Pattern9<T1, T2, T3, T4, T5, T6, T7, T8, T9> {
         if (other == null) {
             throw new NullPointerException();
         }
-        List<Observable<? extends Object>> list = new ArrayList<Observable<? extends Object>>();
+        List<Observable<? extends Object>> list = new ArrayList<>();
         list.add(o1);
         list.add(o2);
         list.add(o3);
@@ -139,7 +138,7 @@ public final class Pattern9<T1, T2, T3, T4, T5, T6, T7, T8, T9> {
      *             if selector is null
      */
     public <R> Plan<R> then(Function9<T1, T2, T3, T4, T5, T6, T7, T8, T9, R> selector) {
-        ObjectHelper.requireNonNull(selector, "selector is null");
-        return new Plan9<T1, T2, T3, T4, T5, T6, T7, T8, T9, R>(this, selector);
+        Objects.requireNonNull(selector, "selector is null");
+        return new Plan9<>(this, selector);
     }
 }

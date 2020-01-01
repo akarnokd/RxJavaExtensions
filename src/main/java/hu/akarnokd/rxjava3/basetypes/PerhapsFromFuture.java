@@ -45,7 +45,7 @@ final class PerhapsFromFuture<T> extends Perhaps<T> {
 
     @Override
     protected void subscribeActual(Subscriber<? super T> s) {
-        DeferredScalarSubscription<T> dss = new DeferredScalarSubscription<T>(s);
+        DeferredScalarSubscription<T> dss = new DeferredScalarSubscription<>(s);
         s.onSubscribe(dss);
 
         T v;

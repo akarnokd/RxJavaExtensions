@@ -95,7 +95,7 @@ public class StatementCompletableTest {
         Completable source2 = Completable.complete();
         Completable defaultSource = Completable.error(new RuntimeException("Forced Failure"));
 
-        Map<Integer, Completable> map = new HashMap<Integer, Completable>();
+        Map<Integer, Completable> map = new HashMap<>();
         map.put(1, source1);
         map.put(2, source2);
 
@@ -111,7 +111,7 @@ public class StatementCompletableTest {
         Completable source1 = Completable.error(new RuntimeException("Forced Failure"));
         Completable source2 = Completable.complete();
 
-        Map<Integer, Completable> map = new HashMap<Integer, Completable>();
+        Map<Integer, Completable> map = new HashMap<>();
         map.put(1, source1);
 
         @SuppressWarnings("unchecked")
@@ -126,7 +126,7 @@ public class StatementCompletableTest {
         Completable source1 = Completable.complete();
         Completable defaultSource = Completable.complete();
 
-        Map<Integer, Completable> map = new HashMap<Integer, Completable>();
+        Map<Integer, Completable> map = new HashMap<>();
         map.put(1, source1);
 
         @SuppressWarnings("unchecked")
@@ -196,7 +196,7 @@ public class StatementCompletableTest {
         Completable source2 = Completable.error(new RuntimeException("Forced failure"));
         Completable defaultSource = Completable.complete();
 
-        Map<Integer, Completable> map = new HashMap<Integer, Completable>();
+        Map<Integer, Completable> map = new HashMap<>();
         map.put(1, source1);
         map.put(2, source2);
 

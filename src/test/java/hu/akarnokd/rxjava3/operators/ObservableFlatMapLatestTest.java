@@ -26,7 +26,7 @@ import org.junit.Test;
 
 import hu.akarnokd.rxjava3.test.TestHelper;
 import io.reactivex.rxjava3.core.*;
-import io.reactivex.rxjava3.disposables.Disposables;
+import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.functions.*;
 import io.reactivex.rxjava3.observers.TestObserver;
 import io.reactivex.rxjava3.plugins.RxJavaPlugins;
@@ -211,7 +211,7 @@ public class ObservableFlatMapLatestTest {
                 @Override
                 protected void subscribeActual(
                         Observer<? super Integer> observer) {
-                    observer.onSubscribe(Disposables.empty());
+                    observer.onSubscribe(Disposable.empty());
                     observer.onError(new IOException("first"));
                     observer.onError(new IOException("second"));
                 }
@@ -237,7 +237,7 @@ public class ObservableFlatMapLatestTest {
     public void lateErrorInner() {
         List<Throwable> errors = TestHelper.trackPluginErrors();
         try {
-            final AtomicReference<Observer<? super Integer>> ref = new AtomicReference<Observer<? super Integer>>();
+            final AtomicReference<Observer<? super Integer>> ref = new AtomicReference<>();
 
             TestObserver<Integer> to = Observable.just(1)
             .compose(ObservableTransformers.flatMapLatest(new Function<Integer, ObservableSource<Integer>>() {
@@ -248,7 +248,7 @@ public class ObservableFlatMapLatestTest {
                         @Override
                         protected void subscribeActual(
                                 Observer<? super Integer> observer) {
-                            observer.onSubscribe(Disposables.empty());
+                            observer.onSubscribe(Disposable.empty());
                             ref.set(observer);
                         }
                     };
@@ -271,7 +271,7 @@ public class ObservableFlatMapLatestTest {
 
     @Test
     public void disposeWhileInDrain() {
-        final TestObserver<Integer> to = new TestObserver<Integer>();
+        final TestObserver<Integer> to = new TestObserver<>();
 
         Observable.just(1)
         .compose(ObservableTransformers.flatMapLatest(new Function<Integer, ObservableSource<Integer>>() {

@@ -32,7 +32,7 @@ import io.reactivex.rxjava3.subscribers.TestSubscriber;
 
 public class FlowableOnBackpressureTimeoutTest implements Consumer<Object> {
 
-    final List<Object> evicted = Collections.synchronizedList(new ArrayList<Object>());
+    final List<Object> evicted = Collections.synchronizedList(new ArrayList<>());
 
     @Override
     public void accept(Object t) throws Exception {
@@ -234,7 +234,7 @@ public class FlowableOnBackpressureTimeoutTest implements Consumer<Object> {
 
         PublishProcessor<Integer> pp = PublishProcessor.create();
 
-        final TestSubscriber<Integer> ts = new TestSubscriber<Integer>(0L);
+        final TestSubscriber<Integer> ts = new TestSubscriber<>(0L);
 
         pp
         .compose(FlowableTransformers.<Integer>onBackpressureTimeout(10, 1, TimeUnit.SECONDS, scheduler, new Consumer<Integer>() {
@@ -261,7 +261,7 @@ public class FlowableOnBackpressureTimeoutTest implements Consumer<Object> {
 
             PublishProcessor<Integer> pp = PublishProcessor.create();
 
-            final TestSubscriber<Integer> ts = new TestSubscriber<Integer>(0L);
+            final TestSubscriber<Integer> ts = new TestSubscriber<>(0L);
 
             pp
             .compose(FlowableTransformers.<Integer>onBackpressureTimeout(10, 1, TimeUnit.SECONDS, scheduler, new Consumer<Integer>() {

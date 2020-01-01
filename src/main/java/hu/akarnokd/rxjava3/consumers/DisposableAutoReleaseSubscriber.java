@@ -57,7 +57,7 @@ implements FlowableSubscriber<T>, Disposable, LambdaConsumerIntrospection {
         this.onNext = onNext;
         this.onError = onError;
         this.onComplete = onComplete;
-        this.composite = new AtomicReference<CompositeDisposable>(composite);
+        this.composite = new AtomicReference<>(composite);
     }
 
     @Override

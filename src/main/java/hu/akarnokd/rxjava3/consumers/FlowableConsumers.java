@@ -16,10 +16,12 @@
 
 package hu.akarnokd.rxjava3.consumers;
 
+import java.util.Objects;
+
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.disposables.*;
 import io.reactivex.rxjava3.functions.*;
-import io.reactivex.rxjava3.internal.functions.*;
+import io.reactivex.rxjava3.internal.functions.Functions;
 
 /**
  * Utility methods for creating and using consumers {@link io.reactivex.rxjava3.core.Flowable}s.
@@ -49,11 +51,11 @@ public final class FlowableConsumers {
             Flowable<T> source,
             CompositeDisposable composite,
             Consumer<? super T> onNext) {
-        ObjectHelper.requireNonNull(source, "source is null");
-        ObjectHelper.requireNonNull(composite, "composite is null");
-        ObjectHelper.requireNonNull(onNext, "onNext is null");
+        Objects.requireNonNull(source, "source is null");
+        Objects.requireNonNull(composite, "composite is null");
+        Objects.requireNonNull(onNext, "onNext is null");
 
-        DisposableAutoReleaseSubscriber<T> subscriber = new DisposableAutoReleaseSubscriber<T>(
+        DisposableAutoReleaseSubscriber<T> subscriber = new DisposableAutoReleaseSubscriber<>(
                 composite, onNext, null, Functions.EMPTY_ACTION);
         composite.add(subscriber);
         source.subscribe(subscriber);
@@ -79,12 +81,12 @@ public final class FlowableConsumers {
             CompositeDisposable composite,
             Consumer<? super T> onNext,
             Consumer<? super Throwable> onError) {
-        ObjectHelper.requireNonNull(source, "source is null");
-        ObjectHelper.requireNonNull(composite, "composite is null");
-        ObjectHelper.requireNonNull(onNext, "onNext is null");
-        ObjectHelper.requireNonNull(onError, "onError is null");
+        Objects.requireNonNull(source, "source is null");
+        Objects.requireNonNull(composite, "composite is null");
+        Objects.requireNonNull(onNext, "onNext is null");
+        Objects.requireNonNull(onError, "onError is null");
 
-        DisposableAutoReleaseSubscriber<T> subscriber = new DisposableAutoReleaseSubscriber<T>(
+        DisposableAutoReleaseSubscriber<T> subscriber = new DisposableAutoReleaseSubscriber<>(
                 composite, onNext, onError, Functions.EMPTY_ACTION);
         composite.add(subscriber);
         source.subscribe(subscriber);
@@ -112,13 +114,13 @@ public final class FlowableConsumers {
             Consumer<? super T> onNext,
             Consumer<? super Throwable> onError,
             Action onComplete) {
-        ObjectHelper.requireNonNull(source, "source is null");
-        ObjectHelper.requireNonNull(composite, "composite is null");
-        ObjectHelper.requireNonNull(onNext, "onNext is null");
-        ObjectHelper.requireNonNull(onError, "onError is null");
-        ObjectHelper.requireNonNull(onComplete, "onComplete is null");
+        Objects.requireNonNull(source, "source is null");
+        Objects.requireNonNull(composite, "composite is null");
+        Objects.requireNonNull(onNext, "onNext is null");
+        Objects.requireNonNull(onError, "onError is null");
+        Objects.requireNonNull(onComplete, "onComplete is null");
 
-        DisposableAutoReleaseSubscriber<T> subscriber = new DisposableAutoReleaseSubscriber<T>(
+        DisposableAutoReleaseSubscriber<T> subscriber = new DisposableAutoReleaseSubscriber<>(
                 composite, onNext, onError, onComplete);
         composite.add(subscriber);
         source.subscribe(subscriber);

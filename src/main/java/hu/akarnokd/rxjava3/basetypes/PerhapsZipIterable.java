@@ -63,7 +63,7 @@ final class PerhapsZipIterable<T, R> extends Perhaps<R> {
             return;
         }
 
-        ZipCoordinator<T, R> parent = new ZipCoordinator<T, R>(s, zipper, n);
+        ZipCoordinator<T, R> parent = new ZipCoordinator<>(s, zipper, n);
         s.onSubscribe(parent);
 
         parent.subscribe(srcs, n);

@@ -36,7 +36,7 @@ final class ObservableFromSupplierNull<T> extends Observable<T> implements Suppl
 
     @Override
     protected void subscribeActual(Observer<? super T> observer) {
-        SupplierNullDisposable<T> deferred = new SupplierNullDisposable<T>(observer);
+        SupplierNullDisposable<T> deferred = new SupplierNullDisposable<>(observer);
         observer.onSubscribe(deferred);
 
         if (!deferred.isDisposed()) {

@@ -54,7 +54,7 @@ final class ParallelOrderedMerge<T> extends Flowable<T> {
 
     @Override
     protected void subscribeActual(Subscriber<? super T> s) {
-        final BasicMergeSubscription<T> parent = new BasicMergeSubscription<T>(s, comparator, this.source.parallelism(), prefetch, delayErrors);
+        final BasicMergeSubscription<T> parent = new BasicMergeSubscription<>(s, comparator, this.source.parallelism(), prefetch, delayErrors);
         s.onSubscribe(parent);
         parent.subscribe(this.source);
     }

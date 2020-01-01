@@ -16,6 +16,7 @@
 
 package hu.akarnokd.rxjava3.operators;
 
+import java.util.Objects;
 import java.util.concurrent.atomic.*;
 
 import io.reactivex.rxjava3.core.*;
@@ -23,7 +24,6 @@ import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.exceptions.Exceptions;
 import io.reactivex.rxjava3.functions.*;
 import io.reactivex.rxjava3.internal.disposables.DisposableHelper;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 import io.reactivex.rxjava3.internal.queue.SpscLinkedArrayQueue;
 import io.reactivex.rxjava3.internal.util.AtomicThrowable;
 import io.reactivex.rxjava3.plugins.RxJavaPlugins;
@@ -62,7 +62,7 @@ implements ObservableTransformer<T, R> {
 
     @Override
     public ObservableSource<R> apply(Observable<T> upstream) {
-        return new ObservableMapAsync<T, U, R>(upstream, mapper, combiner, capacityHint);
+        return new ObservableMapAsync<>(upstream, mapper, combiner, capacityHint);
     }
 
     @Override
@@ -109,9 +109,9 @@ implements ObservableTransformer<T, R> {
             this.downstream = downstream;
             this.mapper = mapper;
             this.combiner = combiner;
-            this.queue = new SpscLinkedArrayQueue<T>(capacityHint);
+            this.queue = new SpscLinkedArrayQueue<>(capacityHint);
             this.errors = new AtomicThrowable();
-            this.innerDisposable = new AtomicReference<Disposable>();
+            this.innerDisposable = new AtomicReference<>();
         }
 
         @Override
@@ -190,7 +190,7 @@ implements ObservableTransformer<T, R> {
                             ObservableSource<? extends U> innerSource;
 
                             try {
-                                innerSource = ObjectHelper.requireNonNull(mapper.apply(item), "The mapper returned a null ObservableSource");
+                                innerSource = Objects.requireNonNull(mapper.apply(item), "The mapper returned a null ObservableSource");
                             } catch (Throwable ex) {
                                 Exceptions.throwIfFatal(ex);
                                 disposed = true;
@@ -212,7 +212,7 @@ implements ObservableTransformer<T, R> {
 
                         R result;
                         try {
-                            result = ObjectHelper.requireNonNull(combiner.apply(mainItem, innerItem), "The combiner returned a null value");
+                            result = Objects.requireNonNull(combiner.apply(mainItem, innerItem), "The combiner returned a null value");
                         } catch (Throwable ex) {
                             Exceptions.throwIfFatal(ex);
                             disposed = true;

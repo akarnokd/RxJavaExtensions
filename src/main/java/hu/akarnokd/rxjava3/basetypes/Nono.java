@@ -16,6 +16,7 @@
 
 package hu.akarnokd.rxjava3.basetypes;
 
+import java.util.Objects;
 import java.util.concurrent.*;
 
 import org.reactivestreams.*;
@@ -68,7 +69,7 @@ public abstract class Nono implements Publisher<Void> {
         Function<Nono, Nono> f = onAssemblyHandler;
         if (f != null) {
             try {
-                return ObjectHelper.requireNonNull(f.apply(source), "The onAssemblyHandler returned a null Nono");
+                return Objects.requireNonNull(f.apply(source), "The onAssemblyHandler returned a null Nono");
             } catch (Throwable ex) {
                 throw ExceptionHelper.wrapOrThrow(ex);
             }
@@ -105,7 +106,7 @@ public abstract class Nono implements Publisher<Void> {
      * @return the new Nono instance
      */
     public static Nono create(CompletableOnSubscribe onCreate) {
-        ObjectHelper.requireNonNull(onCreate, "onCreate is null");
+        Objects.requireNonNull(onCreate, "onCreate is null");
         return onAssembly(new NonoCreate(onCreate));
     }
 
@@ -132,7 +133,7 @@ public abstract class Nono implements Publisher<Void> {
      * @return the new Nono instance
      */
     public static Nono error(Throwable ex) {
-        ObjectHelper.requireNonNull(ex, "ex is null");
+        Objects.requireNonNull(ex, "ex is null");
         return onAssembly(new NonoError(ex));
     }
 
@@ -143,7 +144,7 @@ public abstract class Nono implements Publisher<Void> {
      * @return the new Nono instance
      */
     public static Nono error(Supplier<? extends Throwable> errorSupplier) {
-        ObjectHelper.requireNonNull(errorSupplier, "errorSupplier is null");
+        Objects.requireNonNull(errorSupplier, "errorSupplier is null");
         return onAssembly(new NonoErrorSupplier(errorSupplier));
     }
 
@@ -155,7 +156,7 @@ public abstract class Nono implements Publisher<Void> {
      * @return the new Nono instance
      */
     public static Nono defer(Supplier<? extends Nono> supplier) {
-        ObjectHelper.requireNonNull(supplier, "supplier is null");
+        Objects.requireNonNull(supplier, "supplier is null");
         return onAssembly(new NonoDefer(supplier));
     }
 
@@ -166,7 +167,7 @@ public abstract class Nono implements Publisher<Void> {
      * @return the new nono instance
      */
     public static Nono fromAction(Action action) {
-        ObjectHelper.requireNonNull(action, "action is null");
+        Objects.requireNonNull(action, "action is null");
         return onAssembly(new NonoFromAction(action));
     }
 
@@ -177,7 +178,7 @@ public abstract class Nono implements Publisher<Void> {
      * @return the new Nono instance
      */
     public static Nono fromFuture(Future<?> future) {
-        ObjectHelper.requireNonNull(future, "future is null");
+        Objects.requireNonNull(future, "future is null");
         return onAssembly(new NonoFromFuture(future, 0L, TimeUnit.NANOSECONDS));
     }
 
@@ -190,8 +191,8 @@ public abstract class Nono implements Publisher<Void> {
      * @return the new Nono instance
      */
     public static Nono fromFuture(Future<?> future, long timeout, TimeUnit unit) {
-        ObjectHelper.requireNonNull(future, "future is null");
-        ObjectHelper.requireNonNull(unit, "unit is null");
+        Objects.requireNonNull(future, "future is null");
+        Objects.requireNonNull(unit, "unit is null");
         return onAssembly(new NonoFromFuture(future, timeout, unit));
     }
 
@@ -202,7 +203,7 @@ public abstract class Nono implements Publisher<Void> {
      * @return the new Nono instance
      */
     public static Nono amb(Iterable<? extends Nono> sources) {
-        ObjectHelper.requireNonNull(sources, "sources is null");
+        Objects.requireNonNull(sources, "sources is null");
         return onAssembly(new NonoAmbIterable(sources));
     }
 
@@ -213,7 +214,7 @@ public abstract class Nono implements Publisher<Void> {
      * @return the new Nono instance
      */
     public static Nono ambArray(Nono... sources) {
-        ObjectHelper.requireNonNull(sources, "sources is null");
+        Objects.requireNonNull(sources, "sources is null");
         return onAssembly(new NonoAmbArray(sources));
     }
 
@@ -223,7 +224,7 @@ public abstract class Nono implements Publisher<Void> {
      * @return the new Nono instances
      */
     public static Nono concat(Iterable<? extends Nono> sources) {
-        ObjectHelper.requireNonNull(sources, "sources is null");
+        Objects.requireNonNull(sources, "sources is null");
         return onAssembly(new NonoConcatIterable(sources, false));
     }
 
@@ -244,7 +245,7 @@ public abstract class Nono implements Publisher<Void> {
      * @return the new Nono instance
      */
     public static Nono concat(Publisher<? extends Nono> sources, int prefetch) {
-        ObjectHelper.requireNonNull(sources, "sources is null");
+        Objects.requireNonNull(sources, "sources is null");
         ObjectHelper.verifyPositive(prefetch, "prefetch");
         return onAssembly(new NonoConcat(sources, prefetch, ErrorMode.IMMEDIATE));
     }
@@ -255,7 +256,7 @@ public abstract class Nono implements Publisher<Void> {
      * @return the new Nono instances
      */
     public static Nono concatArray(Nono... sources) {
-        ObjectHelper.requireNonNull(sources, "sources is null");
+        Objects.requireNonNull(sources, "sources is null");
         return onAssembly(new NonoConcatArray(sources, false));
     }
 
@@ -266,7 +267,7 @@ public abstract class Nono implements Publisher<Void> {
      * @return the new Nono instances
      */
     public static Nono concatDelayError(Iterable<? extends Nono> sources) {
-        ObjectHelper.requireNonNull(sources, "sources is null");
+        Objects.requireNonNull(sources, "sources is null");
         return onAssembly(new NonoConcatIterable(sources, true));
     }
 
@@ -290,7 +291,7 @@ public abstract class Nono implements Publisher<Void> {
      * @return the new Nono instances
      */
     public static Nono concatDelayError(Publisher<? extends Nono> sources, int prefetch, boolean tillTheEnd) {
-        ObjectHelper.requireNonNull(sources, "sources is null");
+        Objects.requireNonNull(sources, "sources is null");
         ObjectHelper.verifyPositive(prefetch, "prefetch");
         return onAssembly(new NonoConcat(sources, prefetch, tillTheEnd ? ErrorMode.END : ErrorMode.BOUNDARY));
     }
@@ -302,7 +303,7 @@ public abstract class Nono implements Publisher<Void> {
      * @return the new Nono instances
      */
     public static Nono concatArrayDelayError(Nono... sources) {
-        ObjectHelper.requireNonNull(sources, "sources is null");
+        Objects.requireNonNull(sources, "sources is null");
         return onAssembly(new NonoConcatArray(sources, true));
     }
 
@@ -323,7 +324,7 @@ public abstract class Nono implements Publisher<Void> {
      * @return the new Nono instance
      */
     public static Nono merge(Iterable<? extends Nono> sources, int maxConcurrency) {
-        ObjectHelper.requireNonNull(sources, "sources is null");
+        Objects.requireNonNull(sources, "sources is null");
         ObjectHelper.verifyPositive(maxConcurrency, "maxConcurrency");
         return onAssembly(new NonoMergeIterable(sources, false, maxConcurrency));
     }
@@ -345,7 +346,7 @@ public abstract class Nono implements Publisher<Void> {
      * @return the new Nono instance
      */
     public static Nono merge(Publisher<? extends Nono> sources, int maxConcurrency) {
-        ObjectHelper.requireNonNull(sources, "sources is null");
+        Objects.requireNonNull(sources, "sources is null");
         ObjectHelper.verifyPositive(maxConcurrency, "maxConcurrency");
         return onAssembly(new NonoMerge(sources, false, maxConcurrency));
     }
@@ -368,7 +369,7 @@ public abstract class Nono implements Publisher<Void> {
      */
     public static Nono mergeArray(int maxConcurrency, Nono... sources) {
         ObjectHelper.verifyPositive(maxConcurrency, "maxConcurrency");
-        ObjectHelper.requireNonNull(sources, "sources is null");
+        Objects.requireNonNull(sources, "sources is null");
         return onAssembly(new NonoMergeArray(sources, false, maxConcurrency));
     }
 
@@ -390,7 +391,7 @@ public abstract class Nono implements Publisher<Void> {
      * @return the new Nono instance
      */
     public static Nono mergeDelayError(Iterable<? extends Nono> sources, int maxConcurrency) {
-        ObjectHelper.requireNonNull(sources, "sources is null");
+        Objects.requireNonNull(sources, "sources is null");
         ObjectHelper.verifyPositive(maxConcurrency, "maxConcurrency");
         return onAssembly(new NonoMergeIterable(sources, true, maxConcurrency));
     }
@@ -414,7 +415,7 @@ public abstract class Nono implements Publisher<Void> {
      * @return the new Nono instance
      */
     public static Nono mergeDelayError(Publisher<? extends Nono> sources, int maxConcurrency) {
-        ObjectHelper.requireNonNull(sources, "sources is null");
+        Objects.requireNonNull(sources, "sources is null");
         ObjectHelper.verifyPositive(maxConcurrency, "maxConcurrency");
         return onAssembly(new NonoMerge(sources, true, maxConcurrency));
     }
@@ -438,7 +439,7 @@ public abstract class Nono implements Publisher<Void> {
      */
     public static Nono mergeArrayDelayError(int maxConcurrency, Nono... sources) {
         ObjectHelper.verifyPositive(maxConcurrency, "maxConcurrency");
-        ObjectHelper.requireNonNull(sources, "sources is null");
+        Objects.requireNonNull(sources, "sources is null");
         return onAssembly(new NonoMergeArray(sources, true, maxConcurrency));
     }
 
@@ -462,8 +463,8 @@ public abstract class Nono implements Publisher<Void> {
      */
     @SchedulerSupport(SchedulerSupport.CUSTOM)
     public static Nono timer(long delay, TimeUnit unit, Scheduler scheduler) {
-        ObjectHelper.requireNonNull(unit, "unit is null");
-        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
+        Objects.requireNonNull(unit, "unit is null");
+        Objects.requireNonNull(scheduler, "scheduler is null");
         return onAssembly(new NonoTimer(delay, unit, scheduler));
     }
 
@@ -498,10 +499,10 @@ public abstract class Nono implements Publisher<Void> {
      */
     public static <R> Nono using(Supplier<R> resourceSupplier, Function<? super R, ? extends Nono> sourceSupplier,
             Consumer<? super R> disposer, boolean eager) {
-        ObjectHelper.requireNonNull(resourceSupplier, "resourceSupplier is null");
-        ObjectHelper.requireNonNull(sourceSupplier, "sourceSupplier is null");
-        ObjectHelper.requireNonNull(disposer, "disposer is null");
-        return onAssembly(new NonoUsing<R>(resourceSupplier, sourceSupplier, disposer, eager));
+        Objects.requireNonNull(resourceSupplier, "resourceSupplier is null");
+        Objects.requireNonNull(sourceSupplier, "sourceSupplier is null");
+        Objects.requireNonNull(disposer, "disposer is null");
+        return onAssembly(new NonoUsing<>(resourceSupplier, sourceSupplier, disposer, eager));
     }
 
     /**
@@ -514,7 +515,7 @@ public abstract class Nono implements Publisher<Void> {
         if (source instanceof Nono) {
             return (Nono)source;
         }
-        ObjectHelper.requireNonNull(source, "source is null");
+        Objects.requireNonNull(source, "source is null");
         return onAssembly(new NonoFromPublisher(source));
     }
 
@@ -525,7 +526,7 @@ public abstract class Nono implements Publisher<Void> {
      * @return the new Nono instance
      */
     public static Nono fromSingle(SingleSource<?> source) {
-        ObjectHelper.requireNonNull(source, "source is null");
+        Objects.requireNonNull(source, "source is null");
         return onAssembly(new NonoFromSingle(source));
     }
 
@@ -536,7 +537,7 @@ public abstract class Nono implements Publisher<Void> {
      * @return the new Nono instance
      */
     public static Nono fromMaybe(MaybeSource<?> source) {
-        ObjectHelper.requireNonNull(source, "source is null");
+        Objects.requireNonNull(source, "source is null");
         return onAssembly(new NonoFromMaybe(source));
     }
 
@@ -547,7 +548,7 @@ public abstract class Nono implements Publisher<Void> {
      * @return the new Nono instance
      */
     public static Nono fromCompletable(CompletableSource source) {
-        ObjectHelper.requireNonNull(source, "source is null");
+        Objects.requireNonNull(source, "source is null");
         return onAssembly(new NonoFromCompletable(source));
     }
 
@@ -558,7 +559,7 @@ public abstract class Nono implements Publisher<Void> {
      * @return the new Nono instance
      */
     public static Nono fromObservable(ObservableSource<?> source) {
-        ObjectHelper.requireNonNull(source, "source is null");
+        Objects.requireNonNull(source, "source is null");
         return onAssembly(new NonoFromObservable(source));
     }
 
@@ -574,7 +575,7 @@ public abstract class Nono implements Publisher<Void> {
      * @return the new Flowable instance
      */
     public final <T> Flowable<T> andThen(Publisher<? extends T> other) {
-        ObjectHelper.requireNonNull(other, "other is null");
+        Objects.requireNonNull(other, "other is null");
         return RxJavaPlugins.onAssembly(new NonoAndThenPublisher<T>(this, other));
     }
 
@@ -584,7 +585,7 @@ public abstract class Nono implements Publisher<Void> {
      * @return the new Nono instance
      */
     public final Nono andThen(Nono other) {
-        ObjectHelper.requireNonNull(other, "other is null");
+        Objects.requireNonNull(other, "other is null");
         return onAssembly(new NonoAndThen(this, other));
     }
 
@@ -610,8 +611,8 @@ public abstract class Nono implements Publisher<Void> {
      */
     @SchedulerSupport(SchedulerSupport.CUSTOM)
     public final Nono delay(long delay, TimeUnit unit, Scheduler scheduler) {
-        ObjectHelper.requireNonNull(unit, "unit is null");
-        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
+        Objects.requireNonNull(unit, "unit is null");
+        Objects.requireNonNull(scheduler, "scheduler is null");
         return onAssembly(new NonoDelay(this, delay, unit, scheduler));
     }
 
@@ -622,7 +623,7 @@ public abstract class Nono implements Publisher<Void> {
      * @return the new Nono instance
      */
     public final Nono delaySubscription(Publisher<?> other) {
-        ObjectHelper.requireNonNull(other, "other is null");
+        Objects.requireNonNull(other, "other is null");
         return onAssembly(new NonoDelaySubscription(this, other));
     }
 
@@ -694,9 +695,9 @@ public abstract class Nono implements Publisher<Void> {
      * @return the new Nono instance
      */
     public final Nono timeout(long timeout, TimeUnit unit, Scheduler scheduler, Nono fallback) {
-        ObjectHelper.requireNonNull(unit, "unit is null");
-        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
-        ObjectHelper.requireNonNull(fallback, "fallback is null");
+        Objects.requireNonNull(unit, "unit is null");
+        Objects.requireNonNull(scheduler, "scheduler is null");
+        Objects.requireNonNull(fallback, "fallback is null");
         return timeout(timer(timeout, unit, scheduler), fallback);
     }
 
@@ -707,7 +708,7 @@ public abstract class Nono implements Publisher<Void> {
      * @return the new Nono instance
      */
     public final Nono timeout(Publisher<?> other) {
-        ObjectHelper.requireNonNull(other, "other is null");
+        Objects.requireNonNull(other, "other is null");
         return onAssembly(new NonoTimeout(this, other, null));
     }
 
@@ -719,8 +720,8 @@ public abstract class Nono implements Publisher<Void> {
      * @return the new Nono instance
      */
     public final Nono timeout(Publisher<?> other, Nono fallback) {
-        ObjectHelper.requireNonNull(other, "other is null");
-        ObjectHelper.requireNonNull(fallback, "fallback is null");
+        Objects.requireNonNull(other, "other is null");
+        Objects.requireNonNull(fallback, "fallback is null");
         return onAssembly(new NonoTimeout(this, other, fallback));
     }
 
@@ -740,7 +741,7 @@ public abstract class Nono implements Publisher<Void> {
      * @return the new Nono instance
      */
     public final Nono onErrorResumeNext(Function<? super Throwable, ? extends Nono> errorHandler) {
-        ObjectHelper.requireNonNull(errorHandler, "errorHandler is null");
+        Objects.requireNonNull(errorHandler, "errorHandler is null");
         return onAssembly(new NonoOnErrorResume(this, errorHandler));
     }
 
@@ -751,7 +752,7 @@ public abstract class Nono implements Publisher<Void> {
      * @return the new Nono instance
      */
     public final Nono mapError(Function<? super Throwable, ? extends Throwable> mapper) {
-        ObjectHelper.requireNonNull(mapper, "mapper is null");
+        Objects.requireNonNull(mapper, "mapper is null");
         return onAssembly(new NonoMapError(this, mapper));
     }
 
@@ -767,9 +768,9 @@ public abstract class Nono implements Publisher<Void> {
      */
     public final <T> Flowable<T> flatMap(Function<? super Throwable, ? extends Publisher<? extends T>> onErrorMapper,
             Supplier<? extends Publisher<? extends T>> onCompleteMapper) {
-        ObjectHelper.requireNonNull(onErrorMapper, "onErrorMapper is null");
-        ObjectHelper.requireNonNull(onCompleteMapper, "onCompleteMapper is null");
-        return RxJavaPlugins.onAssembly(new NonoFlatMapSignal<T>(this, onErrorMapper, onCompleteMapper));
+        Objects.requireNonNull(onErrorMapper, "onErrorMapper is null");
+        Objects.requireNonNull(onCompleteMapper, "onCompleteMapper is null");
+        return RxJavaPlugins.onAssembly(new NonoFlatMapSignal<>(this, onErrorMapper, onCompleteMapper));
     }
 
     /**
@@ -804,7 +805,7 @@ public abstract class Nono implements Publisher<Void> {
      * @return the new Nono instance
      */
     public final Nono lift(Function<Subscriber<? super Void>, Subscriber<? super Void>> lifter) {
-        ObjectHelper.requireNonNull(lifter, "lifter is null");
+        Objects.requireNonNull(lifter, "lifter is null");
         return onAssembly(new NonoLift(this, lifter));
     }
 
@@ -860,7 +861,7 @@ public abstract class Nono implements Publisher<Void> {
      * @return the new Nono instance
      */
     public final Nono subscribeOn(Scheduler scheduler) {
-        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
+        Objects.requireNonNull(scheduler, "scheduler is null");
         return onAssembly(new NonoSubscribeOn(this, scheduler));
     }
 
@@ -871,7 +872,7 @@ public abstract class Nono implements Publisher<Void> {
      * @return the new Nono instance
      */
     public final Nono observeOn(Scheduler scheduler) {
-        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
+        Objects.requireNonNull(scheduler, "scheduler is null");
         return onAssembly(new NonoObserveOn(this, scheduler));
     }
 
@@ -882,7 +883,7 @@ public abstract class Nono implements Publisher<Void> {
      * @return the new Nono instance
      */
     public final Nono unsubscribeOn(Scheduler scheduler) {
-        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
+        Objects.requireNonNull(scheduler, "scheduler is null");
         return onAssembly(new NonoUnsubscribeOn(this, scheduler));
     }
 
@@ -893,7 +894,7 @@ public abstract class Nono implements Publisher<Void> {
      * @return the new Nolo instance
      */
     public final Nono doOnComplete(Action onComplete) {
-        ObjectHelper.requireNonNull(onComplete, "onComplete is null");
+        Objects.requireNonNull(onComplete, "onComplete is null");
         return onAssembly(new NonoDoOnLifecycle(this,
                 Functions.emptyConsumer(),
                 onComplete,
@@ -911,7 +912,7 @@ public abstract class Nono implements Publisher<Void> {
      * @return the new Nolo instance
      */
     public final Nono doOnError(Consumer<? super Throwable> onError) {
-        ObjectHelper.requireNonNull(onError, "onError is null");
+        Objects.requireNonNull(onError, "onError is null");
         return onAssembly(new NonoDoOnLifecycle(this,
                 onError,
                 Functions.EMPTY_ACTION,
@@ -928,7 +929,7 @@ public abstract class Nono implements Publisher<Void> {
      * @return the new Nolo instance
      */
     public final Nono doOnSubscribe(Consumer<? super Subscription> onSubscribe) {
-        ObjectHelper.requireNonNull(onSubscribe, "onSubscribe is null");
+        Objects.requireNonNull(onSubscribe, "onSubscribe is null");
         return onAssembly(new NonoDoOnLifecycle(this,
                 Functions.emptyConsumer(),
                 Functions.EMPTY_ACTION,
@@ -945,7 +946,7 @@ public abstract class Nono implements Publisher<Void> {
      * @return the new Nolo instance
      */
     public final Nono doOnRequest(LongConsumer onRequest) {
-        ObjectHelper.requireNonNull(onRequest, "onRequest is null");
+        Objects.requireNonNull(onRequest, "onRequest is null");
         return onAssembly(new NonoDoOnLifecycle(this,
                 Functions.emptyConsumer(),
                 Functions.EMPTY_ACTION,
@@ -963,7 +964,7 @@ public abstract class Nono implements Publisher<Void> {
      * @return the new Nono instance
      */
     public final Nono doAfterTerminate(Action onAfterTerminate) {
-        ObjectHelper.requireNonNull(onAfterTerminate, "onAfterTerminate is null");
+        Objects.requireNonNull(onAfterTerminate, "onAfterTerminate is null");
         return onAssembly(new NonoDoOnLifecycle(this,
                 Functions.emptyConsumer(),
                 Functions.EMPTY_ACTION,
@@ -981,7 +982,7 @@ public abstract class Nono implements Publisher<Void> {
      * @return the new Nono instance
      */
     public final Nono doFinally(Action onFinally) {
-        ObjectHelper.requireNonNull(onFinally, "action is null");
+        Objects.requireNonNull(onFinally, "action is null");
         return onAssembly(new NonoDoFinally(this, onFinally));
     }
 
@@ -991,7 +992,7 @@ public abstract class Nono implements Publisher<Void> {
      * @return the new Nono instance
      */
     public final Nono doOnCancel(Action onCancel) {
-        ObjectHelper.requireNonNull(onCancel, "action is null");
+        Objects.requireNonNull(onCancel, "action is null");
         return onAssembly(new NonoDoOnLifecycle(this,
                     Functions.emptyConsumer(),
                     Functions.EMPTY_ACTION,
@@ -1025,7 +1026,7 @@ public abstract class Nono implements Publisher<Void> {
      * @return the new Nono instance
      */
     public final Nono repeat(BooleanSupplier stop) {
-        ObjectHelper.requireNonNull(stop, "stop is null");
+        Objects.requireNonNull(stop, "stop is null");
         return onAssembly(new NonoRepeatUntil(this, stop));
     }
 
@@ -1038,7 +1039,7 @@ public abstract class Nono implements Publisher<Void> {
      * @return the new Nono instance
      */
     public final Nono repeatWhen(Function<? super Flowable<Object>, ? extends Publisher<?>> handler) {
-        ObjectHelper.requireNonNull(handler, "handler is null");
+        Objects.requireNonNull(handler, "handler is null");
         return onAssembly(new NonoRepeatWhen(this, handler));
     }
 
@@ -1066,7 +1067,7 @@ public abstract class Nono implements Publisher<Void> {
      * @return the new Nono instance
      */
     public final Nono retry(Predicate<? super Throwable> predicate) {
-        ObjectHelper.requireNonNull(predicate, "predicate is null");
+        Objects.requireNonNull(predicate, "predicate is null");
         return onAssembly(new NonoRetryWhile(this, predicate));
     }
 
@@ -1079,7 +1080,7 @@ public abstract class Nono implements Publisher<Void> {
      * @return the new Nono instance
      */
     public final Nono retryWhen(Function<? super Flowable<Throwable>, ? extends Publisher<?>> handler) {
-        ObjectHelper.requireNonNull(handler, "handler is null");
+        Objects.requireNonNull(handler, "handler is null");
         return onAssembly(new NonoRetryWhen(this, handler));
     }
 
@@ -1101,7 +1102,7 @@ public abstract class Nono implements Publisher<Void> {
      * @return the new Nono instance
      */
     public final Nono takeUntil(Publisher<?> other) {
-        ObjectHelper.requireNonNull(other, "other is null");
+        Objects.requireNonNull(other, "other is null");
         return onAssembly(new NonoTakeUntil(this, other));
     }
 
@@ -1122,7 +1123,7 @@ public abstract class Nono implements Publisher<Void> {
 
     @Override
     public final void subscribe(Subscriber<? super Void> s) {
-        ObjectHelper.requireNonNull(s, "s is null");
+        Objects.requireNonNull(s, "s is null");
 
         try {
             subscribeActual(s);
@@ -1164,7 +1165,7 @@ public abstract class Nono implements Publisher<Void> {
      */
     @SchedulerSupport(SchedulerSupport.NONE)
     public final TestSubscriber<Void> test() {
-        TestSubscriber<Void> ts = new TestSubscriber<Void>();
+        TestSubscriber<Void> ts = new TestSubscriber<>();
         subscribe(ts);
         return ts;
     }
@@ -1177,7 +1178,7 @@ public abstract class Nono implements Publisher<Void> {
      */
     @SchedulerSupport(SchedulerSupport.NONE)
     public final TestSubscriber<Void> test(boolean cancelled) {
-        TestSubscriber<Void> ts = new TestSubscriber<Void>();
+        TestSubscriber<Void> ts = new TestSubscriber<>();
         if (cancelled) {
             ts.cancel();
         }
@@ -1226,7 +1227,7 @@ public abstract class Nono implements Publisher<Void> {
                 return ex;
             }
         }
-        ObjectHelper.requireNonNull(unit, "unit is null");
+        Objects.requireNonNull(unit, "unit is null");
         NonoBlockingAwaitSubscriber s = new NonoBlockingAwaitSubscriber();
         subscribe(s);
         return s.blockingAwait(timeout, unit);
@@ -1264,8 +1265,8 @@ public abstract class Nono implements Publisher<Void> {
      */
     @SchedulerSupport(SchedulerSupport.NONE)
     public final Disposable subscribe(Action onComplete, Consumer<? super Throwable> onError) {
-        ObjectHelper.requireNonNull(onComplete, "onComplete is null");
-        ObjectHelper.requireNonNull(onError, "onError is null");
+        Objects.requireNonNull(onComplete, "onComplete is null");
+        Objects.requireNonNull(onError, "onError is null");
         NonoLambdaSubscriber s = new NonoLambdaSubscriber(onComplete, onError);
         subscribe(s);
         return s;
@@ -1296,8 +1297,8 @@ public abstract class Nono implements Publisher<Void> {
      * @param onError the Consumer to call when this Nono terminates with an error
      */
     public final void blockingSubscribe(Action onComplete, Consumer<? super Throwable> onError) {
-        ObjectHelper.requireNonNull(onComplete, "onComplete is null");
-        ObjectHelper.requireNonNull(onError, "onError is null");
+        Objects.requireNonNull(onComplete, "onComplete is null");
+        Objects.requireNonNull(onError, "onError is null");
         Throwable ex = blockingAwait();
         if (ex != null) {
             try {
@@ -1322,7 +1323,7 @@ public abstract class Nono implements Publisher<Void> {
      * @return the new Future instance
      */
     public final Future<Void> toFuture() {
-        FuturePerhapsSubscriber<Void> fs = new FuturePerhapsSubscriber<Void>();
+        FuturePerhapsSubscriber<Void> fs = new FuturePerhapsSubscriber<>();
         subscribe(fs);
         return fs;
     }

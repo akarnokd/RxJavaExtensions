@@ -34,7 +34,7 @@ final class ActivePlanN extends ActivePlan0 {
             Action onCompleted) {
         this.onNext = onNext;
         this.onCompleted = onCompleted;
-        this.observers = new ArrayList<JoinObserver1<? extends Object>>(observers);
+        this.observers = new ArrayList<>(observers);
         for (JoinObserver1<? extends Object> jo : this.observers) {
             addJoinObserver(jo);
         }

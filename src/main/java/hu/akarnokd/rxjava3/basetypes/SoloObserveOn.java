@@ -106,7 +106,7 @@ final class SoloObserveOn<T> extends Solo<T> {
                     }
                 }
 
-                queue = new SpscOneQueue<T>();
+                queue = new SpscOneQueue<>();
 
                 downstream.onSubscribe(this);
 

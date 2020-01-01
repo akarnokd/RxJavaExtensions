@@ -36,7 +36,7 @@ final class SoloJust<T> extends Solo<T> implements ScalarSupplier<T> {
 
     @Override
     protected void subscribeActual(Subscriber<? super T> s) {
-        s.onSubscribe(new ScalarSubscription<T>(s, value));
+        s.onSubscribe(new ScalarSubscription<>(s, value));
     }
 
     @Override

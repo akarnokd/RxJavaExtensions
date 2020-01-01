@@ -80,12 +80,10 @@ public class StatementSingleTest {
         };
     }
 
-    @SuppressWarnings("unchecked")
     <T> void observe(Single<T> source, T value) {
         source.test().assertResult(value);
     }
 
-    @SuppressWarnings("unchecked")
     <T> void observeError(Single<T> source, Class<? extends Throwable> error) {
         source.test().assertFailure(error);
     }
@@ -96,7 +94,7 @@ public class StatementSingleTest {
         Single<Integer> source2 = Single.just(2);
         Single<Integer> defaultSource = Single.just(Integer.MAX_VALUE);
 
-        Map<Integer, Single<Integer>> map = new HashMap<Integer, Single<Integer>>();
+        Map<Integer, Single<Integer>> map = new HashMap<>();
         map.put(1, source1);
         map.put(2, source2);
 
@@ -111,7 +109,7 @@ public class StatementSingleTest {
         Single<Integer> source1 = Single.just(1);
         Single<Integer> source2 = Single.just(2);
 
-        Map<Integer, Single<Integer>> map = new HashMap<Integer, Single<Integer>>();
+        Map<Integer, Single<Integer>> map = new HashMap<>();
         map.put(1, source1);
 
         Single<Integer> result = StatementSingle.switchCase(func, map, source2);
@@ -126,7 +124,7 @@ public class StatementSingleTest {
         Single<Integer> source1 = Single.just(1);
         Single<Integer> defaultSource = Single.just(Integer.MAX_VALUE);
 
-        Map<Integer, Single<Integer>> map = new HashMap<Integer, Single<Integer>>();
+        Map<Integer, Single<Integer>> map = new HashMap<>();
         map.put(1, source1);
 
         Single<Integer> result = StatementSingle.switchCase(funcError, map, defaultSource);
@@ -193,7 +191,7 @@ public class StatementSingleTest {
         Single<Integer> source2 = Single.error(new RuntimeException("Forced failure"));
         Single<Integer> defaultSource = Single.just(Integer.MAX_VALUE);
 
-        Map<Integer, Single<Integer>> map = new HashMap<Integer, Single<Integer>>();
+        Map<Integer, Single<Integer>> map = new HashMap<>();
         map.put(1, source1);
         map.put(2, source2);
 

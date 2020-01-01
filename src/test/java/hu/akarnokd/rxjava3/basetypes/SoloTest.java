@@ -364,7 +364,6 @@ public class SoloTest implements Consumer<Object>, Action, LongConsumer, Cancell
         .assertResult(1);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void ambIterable1() {
         SoloProcessor<Integer> sp1 = SoloProcessor.create();
@@ -386,7 +385,6 @@ public class SoloTest implements Consumer<Object>, Action, LongConsumer, Cancell
         assertFalse(sp2.hasSubscribers());
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void ambIterable2() {
         SoloProcessor<Integer> sp1 = SoloProcessor.create();
@@ -408,7 +406,6 @@ public class SoloTest implements Consumer<Object>, Action, LongConsumer, Cancell
         assertFalse(sp2.hasSubscribers());
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void ambIterable1Error() {
         SoloProcessor<Integer> sp1 = SoloProcessor.create();
@@ -430,7 +427,6 @@ public class SoloTest implements Consumer<Object>, Action, LongConsumer, Cancell
         assertFalse(sp2.hasSubscribers());
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void ambIterable2Error() {
         SoloProcessor<Integer> sp1 = SoloProcessor.create();
@@ -452,7 +448,6 @@ public class SoloTest implements Consumer<Object>, Action, LongConsumer, Cancell
         assertFalse(sp2.hasSubscribers());
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void ambArray1() {
         SoloProcessor<Integer> sp1 = SoloProcessor.create();
@@ -474,7 +469,6 @@ public class SoloTest implements Consumer<Object>, Action, LongConsumer, Cancell
         assertFalse(sp2.hasSubscribers());
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void ambArray2() {
         SoloProcessor<Integer> sp1 = SoloProcessor.create();
@@ -496,7 +490,6 @@ public class SoloTest implements Consumer<Object>, Action, LongConsumer, Cancell
         assertFalse(sp2.hasSubscribers());
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void ambArray1Error() {
         SoloProcessor<Integer> sp1 = SoloProcessor.create();
@@ -518,7 +511,6 @@ public class SoloTest implements Consumer<Object>, Action, LongConsumer, Cancell
         assertFalse(sp2.hasSubscribers());
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void ambArray2Error() {
         SoloProcessor<Integer> sp1 = SoloProcessor.create();
@@ -540,7 +532,6 @@ public class SoloTest implements Consumer<Object>, Action, LongConsumer, Cancell
         assertFalse(sp2.hasSubscribers());
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void concatIterable() {
         Solo.concat(Arrays.asList(Solo.just(1), Solo.just(2)))
@@ -548,7 +539,6 @@ public class SoloTest implements Consumer<Object>, Action, LongConsumer, Cancell
         .assertResult(1, 2);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void concatIterableError() {
         Solo.concat(Arrays.asList(Solo.just(1), Solo.error(new IOException())))
@@ -556,7 +546,6 @@ public class SoloTest implements Consumer<Object>, Action, LongConsumer, Cancell
         .assertFailure(IOException.class, 1);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void concatIterableError2() {
         Solo.concat(Arrays.asList(Solo.error(new IOException()), Solo.just(2)))
@@ -602,7 +591,6 @@ public class SoloTest implements Consumer<Object>, Action, LongConsumer, Cancell
         .assertFailure(IOException.class, 1);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void concatArray() {
         Solo.concatArray(Solo.just(1), Solo.just(2))
@@ -610,7 +598,6 @@ public class SoloTest implements Consumer<Object>, Action, LongConsumer, Cancell
         .assertResult(1, 2);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void concatArrayError() {
         Solo.concatArray(Solo.just(1), Solo.error(new IOException()))
@@ -618,7 +605,6 @@ public class SoloTest implements Consumer<Object>, Action, LongConsumer, Cancell
         .assertFailure(IOException.class, 1);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void concatArrayError2() {
         Solo.concatArray(Solo.error(new IOException()), Solo.just(2))
@@ -626,7 +612,6 @@ public class SoloTest implements Consumer<Object>, Action, LongConsumer, Cancell
         .assertFailure(IOException.class);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void concatIterableDelayError() {
         Solo.concatDelayError(Arrays.asList(Solo.just(1), Solo.just(2)))
@@ -634,7 +619,6 @@ public class SoloTest implements Consumer<Object>, Action, LongConsumer, Cancell
         .assertResult(1, 2);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void concatIterableDelayErrorError() {
         Solo.concatDelayError(Arrays.asList(Solo.just(1), Solo.error(new IOException())))
@@ -642,7 +626,6 @@ public class SoloTest implements Consumer<Object>, Action, LongConsumer, Cancell
         .assertFailure(IOException.class, 1);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void concatIterableDelayErrorError2() {
         Solo.concatDelayError(Arrays.asList(Solo.error(new IOException()), Solo.just(2)))
@@ -688,7 +671,6 @@ public class SoloTest implements Consumer<Object>, Action, LongConsumer, Cancell
         .assertFailure(IOException.class, 1);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void concatArrayDelayError() {
         Solo.concatArrayDelayError(Solo.just(1), Solo.just(2))
@@ -696,7 +678,6 @@ public class SoloTest implements Consumer<Object>, Action, LongConsumer, Cancell
         .assertResult(1, 2);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void concatArrayDelayErrorError() {
         Solo.concatArrayDelayError(Solo.just(1), Solo.error(new IOException()))
@@ -704,7 +685,6 @@ public class SoloTest implements Consumer<Object>, Action, LongConsumer, Cancell
         .assertFailure(IOException.class, 1);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void concatArrayDelayErrorError2() {
         Solo.concatArrayDelayError(Solo.error(new IOException()), Solo.just(2))
@@ -712,7 +692,6 @@ public class SoloTest implements Consumer<Object>, Action, LongConsumer, Cancell
         .assertFailure(IOException.class, 2);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void mergeIterable() {
         Solo.merge(Arrays.asList(Solo.just(1), Solo.just(2)))
@@ -720,7 +699,6 @@ public class SoloTest implements Consumer<Object>, Action, LongConsumer, Cancell
         .assertResult(1, 2);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void mergeIterableError() {
         Solo.merge(Arrays.asList(Solo.just(1), Solo.error(new IOException())))
@@ -728,7 +706,6 @@ public class SoloTest implements Consumer<Object>, Action, LongConsumer, Cancell
         .assertFailure(IOException.class, 1);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void mergeIterableError2() {
         Solo.merge(Arrays.asList(Solo.error(new IOException()), Solo.just(2)))
@@ -774,7 +751,6 @@ public class SoloTest implements Consumer<Object>, Action, LongConsumer, Cancell
         .assertFailure(IOException.class, 1);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void mergeArray() {
         Solo.mergeArray(Solo.just(1), Solo.just(2))
@@ -782,7 +758,6 @@ public class SoloTest implements Consumer<Object>, Action, LongConsumer, Cancell
         .assertResult(1, 2);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void mergeArrayError() {
         Solo.mergeArray(Solo.just(1), Solo.error(new IOException()))
@@ -790,7 +765,6 @@ public class SoloTest implements Consumer<Object>, Action, LongConsumer, Cancell
         .assertFailure(IOException.class, 1);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void mergeArrayError2() {
         Solo.mergeArray(Solo.error(new IOException()), Solo.just(2))
@@ -798,7 +772,6 @@ public class SoloTest implements Consumer<Object>, Action, LongConsumer, Cancell
         .assertFailure(IOException.class);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void mergeIterableDelayError() {
         Solo.mergeDelayError(Arrays.asList(Solo.just(1), Solo.just(2)))
@@ -806,7 +779,6 @@ public class SoloTest implements Consumer<Object>, Action, LongConsumer, Cancell
         .assertResult(1, 2);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void mergeIterableDelayErrorError() {
         Solo.mergeDelayError(Arrays.asList(Solo.just(1), Solo.error(new IOException())))
@@ -814,7 +786,6 @@ public class SoloTest implements Consumer<Object>, Action, LongConsumer, Cancell
         .assertFailure(IOException.class, 1);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void mergeIterableDelayErrorError2() {
         Solo.mergeDelayError(Arrays.asList(Solo.error(new IOException()), Solo.just(2)))
@@ -860,7 +831,6 @@ public class SoloTest implements Consumer<Object>, Action, LongConsumer, Cancell
         .assertFailure(IOException.class, 1);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void mergeArrayDelayError() {
         Solo.mergeArrayDelayError(Solo.just(1), Solo.just(2))
@@ -868,7 +838,6 @@ public class SoloTest implements Consumer<Object>, Action, LongConsumer, Cancell
         .assertResult(1, 2);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void mergeArrayDelayErrorError() {
         Solo.mergeArrayDelayError(Solo.just(1), Solo.error(new IOException()))
@@ -876,7 +845,6 @@ public class SoloTest implements Consumer<Object>, Action, LongConsumer, Cancell
         .assertFailure(IOException.class, 1);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void mergeArrayDelayErrorError2() {
         Solo.mergeArrayDelayError(Solo.error(new IOException()), Solo.just(2))
@@ -931,7 +899,6 @@ public class SoloTest implements Consumer<Object>, Action, LongConsumer, Cancell
         assertEquals(1, count);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void zip() {
         Solo.zip(Arrays.asList(Solo.just(1), Solo.just(2)), new Function<Object[], Object>() {
@@ -944,7 +911,6 @@ public class SoloTest implements Consumer<Object>, Action, LongConsumer, Cancell
         .assertResult("12");
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void zipError1() {
         Solo.zip(Arrays.asList(Solo.error(new IOException()), Solo.just(2)), new Function<Object[], Object>() {
@@ -957,7 +923,6 @@ public class SoloTest implements Consumer<Object>, Action, LongConsumer, Cancell
         .assertFailure(IOException.class);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void zipError2() {
         Solo.zip(Arrays.asList(Solo.just(1), Solo.error(new IOException())), new Function<Object[], Object>() {
@@ -970,7 +935,6 @@ public class SoloTest implements Consumer<Object>, Action, LongConsumer, Cancell
         .assertFailure(IOException.class);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void zipArray() {
         Solo.zipArray(new Function<Object[], Object>() {
@@ -983,7 +947,6 @@ public class SoloTest implements Consumer<Object>, Action, LongConsumer, Cancell
         .assertResult("12");
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void zipArrayError1() {
         Solo.zipArray(new Function<Object[], Object>() {
@@ -996,7 +959,6 @@ public class SoloTest implements Consumer<Object>, Action, LongConsumer, Cancell
         .assertFailure(IOException.class);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void zipArrayError2() {
         Solo.zipArray(new Function<Object[], Object>() {
@@ -2479,7 +2441,7 @@ public class SoloTest implements Consumer<Object>, Action, LongConsumer, Cancell
 
     @Test
     public void fromFuture() {
-        FutureTask<Integer> ft = new FutureTask<Integer>(Functions.EMPTY_RUNNABLE, 1);
+        FutureTask<Integer> ft = new FutureTask<>(Functions.EMPTY_RUNNABLE, 1);
         ft.run();
 
         Solo.fromFuture(ft)
@@ -2489,7 +2451,7 @@ public class SoloTest implements Consumer<Object>, Action, LongConsumer, Cancell
 
     @Test
     public void fromFutureNull() {
-        FutureTask<Integer> ft = new FutureTask<Integer>(Functions.EMPTY_RUNNABLE, null);
+        FutureTask<Integer> ft = new FutureTask<>(Functions.EMPTY_RUNNABLE, null);
         ft.run();
 
         Solo.fromFuture(ft)
@@ -2499,7 +2461,7 @@ public class SoloTest implements Consumer<Object>, Action, LongConsumer, Cancell
 
     @Test
     public void fromFutureTimeout() {
-        FutureTask<Integer> ft = new FutureTask<Integer>(Functions.EMPTY_RUNNABLE, 1);
+        FutureTask<Integer> ft = new FutureTask<>(Functions.EMPTY_RUNNABLE, 1);
 
         Solo.fromFuture(ft, 1, TimeUnit.MILLISECONDS)
         .test()
@@ -2508,7 +2470,7 @@ public class SoloTest implements Consumer<Object>, Action, LongConsumer, Cancell
 
     @Test
     public void fromFutureCrash() {
-        FutureTask<Integer> ft = new FutureTask<Integer>(new Callable<Integer>() {
+        FutureTask<Integer> ft = new FutureTask<>(new Callable<Integer>() {
             @Override
             public Integer call() throws Exception {
                 throw new IOException();

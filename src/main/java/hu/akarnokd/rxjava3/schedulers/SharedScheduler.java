@@ -21,7 +21,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import io.reactivex.rxjava3.core.Scheduler;
 import io.reactivex.rxjava3.disposables.*;
-import io.reactivex.rxjava3.internal.disposables.*;
+import io.reactivex.rxjava3.internal.disposables.DisposableHelper;
 
 /**
  * A Scheduler implementation that uses one of the Workers from another Scheduler
@@ -109,7 +109,7 @@ public final class SharedScheduler extends Scheduler {
         @Override
         public Disposable schedule(Runnable run, long delay, TimeUnit unit) {
             if (isDisposed() || worker.isDisposed()) {
-                return Disposables.disposed();
+                return Disposable.disposed();
             }
             SharedAction sa = new SharedAction(run, tasks);
             tasks.add(sa);
@@ -142,7 +142,7 @@ public final class SharedScheduler extends Scheduler {
             SharedAction(Runnable actual, DisposableContainer parent) {
                 this.actual = actual;
                 this.lazySet(parent);
-                this.future = new AtomicReference<Disposable>();
+                this.future = new AtomicReference<>();
             }
 
             @Override

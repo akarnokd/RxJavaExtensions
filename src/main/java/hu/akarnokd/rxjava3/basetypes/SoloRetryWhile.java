@@ -42,7 +42,7 @@ final class SoloRetryWhile<T> extends Solo<T> {
 
     @Override
     protected void subscribeActual(Subscriber<? super T> s) {
-        RetrySubscriber<T> parent = new RetrySubscriber<T>(s, predicate, source);
+        RetrySubscriber<T> parent = new RetrySubscriber<>(s, predicate, source);
         s.onSubscribe(parent);
         parent.subscribeNext();
     }
@@ -67,7 +67,7 @@ final class SoloRetryWhile<T> extends Solo<T> {
             this.predicate = predicate;
             this.source = source;
             this.wip = new AtomicInteger();
-            this.upstream = new AtomicReference<Subscription>();
+            this.upstream = new AtomicReference<>();
         }
 
         @Override

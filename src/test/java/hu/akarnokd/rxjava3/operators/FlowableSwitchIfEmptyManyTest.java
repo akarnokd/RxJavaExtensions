@@ -28,7 +28,6 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class FlowableSwitchIfEmptyManyTest {
 
-    @SuppressWarnings("unchecked")
     @Test
     public void normalNonEmpty() {
         Flowable.range(1, 5)
@@ -37,7 +36,6 @@ public class FlowableSwitchIfEmptyManyTest {
         .assertResult(1, 2, 3, 4, 5);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void error() {
         Flowable.<Integer>error(new IOException())
@@ -46,7 +44,6 @@ public class FlowableSwitchIfEmptyManyTest {
         .assertFailure(IOException.class);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void nullAlternative() {
         Flowable.<Integer>empty()
@@ -55,7 +52,6 @@ public class FlowableSwitchIfEmptyManyTest {
         .assertFailure(NullPointerException.class);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void normalNonEmptyBackpressured() {
         Flowable.range(1, 5)
@@ -65,7 +61,6 @@ public class FlowableSwitchIfEmptyManyTest {
         .assertResult(1, 2, 3, 4, 5);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void normalNonEmptyBackpressured2() {
         Flowable.range(1, 5)
@@ -165,7 +160,6 @@ public class FlowableSwitchIfEmptyManyTest {
         }
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void take() {
         Flowable.range(1, 5)
@@ -175,7 +169,6 @@ public class FlowableSwitchIfEmptyManyTest {
         .assertResult(1, 2, 3);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void take2() {
         Flowable.<Integer>empty()
@@ -185,7 +178,6 @@ public class FlowableSwitchIfEmptyManyTest {
         .assertResult(10, 11, 12);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void cancel() {
         Flowable.range(1, 5)

@@ -46,7 +46,7 @@ public class SharedSchedulerTest implements Runnable {
     public void normal() {
         SharedScheduler scheduler = new SharedScheduler(Schedulers.io());
         try {
-            final Set<String> threads = new HashSet<String>();
+            final Set<String> threads = new HashSet<>();
 
             for (int i = 0; i < 100; i++) {
                 Flowable.just(1).subscribeOn(scheduler)
@@ -69,7 +69,7 @@ public class SharedSchedulerTest implements Runnable {
     public void delay() {
         SharedScheduler scheduler = new SharedScheduler(Schedulers.io());
         try {
-            final Set<String> threads = new HashSet<String>();
+            final Set<String> threads = new HashSet<>();
 
             for (int i = 0; i < 100; i++) {
                 Flowable.just(1).delay(1, TimeUnit.MILLISECONDS, scheduler)
@@ -185,9 +185,9 @@ public class SharedSchedulerTest implements Runnable {
         Worker worker = scheduler.createWorker();
         worker.dispose();
 
-        assertSame(Disposables.disposed(), worker.schedule(this));
+        assertSame(Disposable.disposed(), worker.schedule(this));
 
-        assertSame(Disposables.disposed(), worker.schedule(this, 1, TimeUnit.MILLISECONDS));
+        assertSame(Disposable.disposed(), worker.schedule(this, 1, TimeUnit.MILLISECONDS));
     }
 
     @Test
@@ -236,7 +236,7 @@ public class SharedSchedulerTest implements Runnable {
         for (int i = 0; i < 1000; i++) {
             final SharedAction sa = new SharedAction(this, new CompositeDisposable());
 
-            final Disposable d = Disposables.empty();
+            final Disposable d = Disposable.empty();
 
             Runnable r1 = new Runnable() {
                 @Override
@@ -263,7 +263,7 @@ public class SharedSchedulerTest implements Runnable {
         for (int i = 0; i < 1000; i++) {
             final SharedAction sa = new SharedAction(this, new CompositeDisposable());
 
-            final Disposable d = Disposables.empty();
+            final Disposable d = Disposable.empty();
 
             Runnable r1 = new Runnable() {
                 @Override

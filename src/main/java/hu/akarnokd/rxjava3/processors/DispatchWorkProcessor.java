@@ -16,6 +16,7 @@
 
 package hu.akarnokd.rxjava3.processors;
 
+import java.util.Objects;
 import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
@@ -24,7 +25,6 @@ import hu.akarnokd.rxjava3.util.SpmcLinkedArrayQueue;
 import io.reactivex.rxjava3.core.*;
 import io.reactivex.rxjava3.core.Scheduler.Worker;
 import io.reactivex.rxjava3.disposables.Disposable;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 import io.reactivex.rxjava3.internal.fuseable.SimplePlainQueue;
 import io.reactivex.rxjava3.internal.subscriptions.SubscriptionHelper;
 import io.reactivex.rxjava3.internal.util.*;
@@ -102,7 +102,7 @@ public final class DispatchWorkProcessor<T> extends FlowableProcessor<T> impleme
      * @return the new DispatchWorkSubject instance
      */
     public static <T> DispatchWorkProcessor<T> create(Scheduler scheduler, int capacityHint, boolean delayErrors) {
-        return new DispatchWorkProcessor<T>(capacityHint, delayErrors, scheduler, false);
+        return new DispatchWorkProcessor<>(capacityHint, delayErrors, scheduler, false);
     }
 
     /**
@@ -116,7 +116,7 @@ public final class DispatchWorkProcessor<T> extends FlowableProcessor<T> impleme
      * @return the new DispatchWorkSubject instance
      */
     public static <T> DispatchWorkProcessor<T> createUnbounded(Scheduler scheduler, int capacityHint, boolean delayErrors) {
-        return new DispatchWorkProcessor<T>(capacityHint, delayErrors, scheduler, true);
+        return new DispatchWorkProcessor<>(capacityHint, delayErrors, scheduler, true);
     }
 
     final SimplePlainQueue<T> queue;
@@ -146,12 +146,12 @@ public final class DispatchWorkProcessor<T> extends FlowableProcessor<T> impleme
 
     @SuppressWarnings("unchecked")
     DispatchWorkProcessor(int capacityHint, boolean delayErrors, Scheduler scheduler, boolean unbounded) {
-        this.queue = new SpmcLinkedArrayQueue<T>(capacityHint);
+        this.queue = new SpmcLinkedArrayQueue<>(capacityHint);
         this.delayErrors = delayErrors;
         this.wip = new AtomicInteger();
-        this.upstream = new AtomicReference<Subscription>();
-        this.error = new AtomicReference<Throwable>();
-        this.observers = new AtomicReference<WorkDisposable<T>[]>(EMPTY);
+        this.upstream = new AtomicReference<>();
+        this.error = new AtomicReference<>();
+        this.observers = new AtomicReference<>(EMPTY);
         this.scheduler = scheduler;
         this.prefetch = unbounded ? Long.MAX_VALUE : capacityHint;
         this.requestedUpstream = new AtomicLong();
@@ -178,7 +178,7 @@ public final class DispatchWorkProcessor<T> extends FlowableProcessor<T> impleme
     @SuppressWarnings("unchecked")
     @Override
     public void onError(Throwable e) {
-        ObjectHelper.requireNonNull(e, "e is null");
+        Objects.requireNonNull(e, "e is null");
         if (error.compareAndSet(null, e)) {
             for (WorkDisposable<T> wd : observers.getAndSet(TERMINATED)) {
                 wd.drain();
@@ -200,7 +200,7 @@ public final class DispatchWorkProcessor<T> extends FlowableProcessor<T> impleme
 
     @Override
     protected void subscribeActual(Subscriber<? super T> subscriber) {
-        WorkDisposable<T> wd = new WorkDisposable<T>(subscriber, this, scheduler.createWorker(), delayErrors);
+        WorkDisposable<T> wd = new WorkDisposable<>(subscriber, this, scheduler.createWorker(), delayErrors);
         subscriber.onSubscribe(wd);
         if (add(wd)) {
             if (wd.isCancelled()) {

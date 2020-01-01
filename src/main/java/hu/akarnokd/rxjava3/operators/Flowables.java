@@ -16,7 +16,7 @@
 
 package hu.akarnokd.rxjava3.operators;
 
-import java.util.Comparator;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import org.reactivestreams.Publisher;
@@ -49,6 +49,7 @@ public final class Flowables {
      */
     @BackpressureSupport(BackpressureKind.FULL)
     @SchedulerSupport(SchedulerSupport.NONE)
+    @SafeVarargs
     public static <T extends Comparable<? super T>> Flowable<T> orderedMerge(Publisher<T>... sources) {
         return orderedMerge(Functions.naturalOrder(), false, Flowable.bufferSize(), sources);
     }
@@ -65,6 +66,7 @@ public final class Flowables {
      */
     @BackpressureSupport(BackpressureKind.FULL)
     @SchedulerSupport(SchedulerSupport.NONE)
+    @SafeVarargs
     public static <T extends Comparable<? super T>> Flowable<T> orderedMerge(boolean delayErrors, Publisher<T>... sources) {
         return orderedMerge(Functions.naturalOrder(), delayErrors, Flowable.bufferSize(), sources);
     }
@@ -83,6 +85,7 @@ public final class Flowables {
      */
     @BackpressureSupport(BackpressureKind.FULL)
     @SchedulerSupport(SchedulerSupport.NONE)
+    @SafeVarargs
     public static <T extends Comparable<? super T>> Flowable<T> orderedMerge(boolean delayErrors, int prefetch, Publisher<T>... sources) {
         return orderedMerge(Functions.naturalOrder(), delayErrors, prefetch, sources);
     }
@@ -100,6 +103,7 @@ public final class Flowables {
      */
     @BackpressureSupport(BackpressureKind.FULL)
     @SchedulerSupport(SchedulerSupport.NONE)
+    @SafeVarargs
     public static <T> Flowable<T> orderedMerge(Comparator<? super T> comparator, Publisher<T>... sources) {
         return orderedMerge(comparator, false, Flowable.bufferSize(), sources);
     }
@@ -118,6 +122,7 @@ public final class Flowables {
      */
     @BackpressureSupport(BackpressureKind.FULL)
     @SchedulerSupport(SchedulerSupport.NONE)
+    @SafeVarargs
     public static <T> Flowable<T> orderedMerge(Comparator<? super T> comparator, boolean delayErrors, Publisher<T>... sources) {
         return orderedMerge(comparator, delayErrors, Flowable.bufferSize(), sources);
     }
@@ -138,11 +143,12 @@ public final class Flowables {
      */
     @BackpressureSupport(BackpressureKind.FULL)
     @SchedulerSupport(SchedulerSupport.NONE)
+    @SafeVarargs
     public static <T> Flowable<T> orderedMerge(Comparator<? super T> comparator, boolean delayErrors, int prefetch, Publisher<T>... sources) {
-        ObjectHelper.requireNonNull(comparator, "comparator is null");
-        ObjectHelper.requireNonNull(sources, "sources is null");
+        Objects.requireNonNull(comparator, "comparator is null");
+        Objects.requireNonNull(sources, "sources is null");
         ObjectHelper.verifyPositive(prefetch, "prefetch");
-        return RxJavaPlugins.onAssembly(new FlowableOrderedMerge<T>(sources, null, comparator, delayErrors, prefetch));
+        return RxJavaPlugins.onAssembly(new FlowableOrderedMerge<>(sources, null, comparator, delayErrors, prefetch));
     }
 
     /**
@@ -197,10 +203,10 @@ public final class Flowables {
     @BackpressureSupport(BackpressureKind.FULL)
     @SchedulerSupport(SchedulerSupport.NONE)
     public static <T> Flowable<T> orderedMerge(Iterable<? extends Publisher<T>> sources, Comparator<? super T> comparator, boolean delayErrors, int prefetch) {
-        ObjectHelper.requireNonNull(comparator, "comparator is null");
-        ObjectHelper.requireNonNull(sources, "sources is null");
+        Objects.requireNonNull(comparator, "comparator is null");
+        Objects.requireNonNull(sources, "sources is null");
         ObjectHelper.verifyPositive(prefetch, "prefetch");
-        return RxJavaPlugins.onAssembly(new FlowableOrderedMerge<T>(null, sources, comparator, delayErrors, prefetch));
+        return RxJavaPlugins.onAssembly(new FlowableOrderedMerge<>(null, sources, comparator, delayErrors, prefetch));
     }
 
     /**
@@ -263,8 +269,8 @@ public final class Flowables {
     @BackpressureSupport(BackpressureKind.FULL)
     @SchedulerSupport(SchedulerSupport.NONE)
     public static <T> Flowable<T> repeat(T item) {
-        ObjectHelper.requireNonNull(item, "item is null");
-        return RxJavaPlugins.onAssembly(new FlowableRepeatScalar<T>(item));
+        Objects.requireNonNull(item, "item is null");
+        return RxJavaPlugins.onAssembly(new FlowableRepeatScalar<>(item));
     }
 
     /**
@@ -278,8 +284,8 @@ public final class Flowables {
     @BackpressureSupport(BackpressureKind.FULL)
     @SchedulerSupport(SchedulerSupport.NONE)
     public static <T> Flowable<T> repeatSupplier(Supplier<T> supplier) {
-        ObjectHelper.requireNonNull(supplier, "supplier is null");
-        return RxJavaPlugins.onAssembly(new FlowableRepeatSupplier<T>(supplier));
+        Objects.requireNonNull(supplier, "supplier is null");
+        return RxJavaPlugins.onAssembly(new FlowableRepeatSupplier<>(supplier));
     }
 
     /**
@@ -418,6 +424,7 @@ public final class Flowables {
      */
     @BackpressureSupport(BackpressureKind.UNBOUNDED_IN)
     @SchedulerSupport(SchedulerSupport.NONE)
+    @SafeVarargs
     public static <T, R> Flowable<R> zipLatest(Function<? super Object[], ? extends R> combiner, Publisher<? extends T>... sources) {
         return zipLatest(combiner, ImmediateThinScheduler.INSTANCE, sources);
     }
@@ -454,10 +461,11 @@ public final class Flowables {
      */
     @BackpressureSupport(BackpressureKind.UNBOUNDED_IN)
     @SchedulerSupport(SchedulerSupport.CUSTOM)
+    @SafeVarargs
     public static <T, R> Flowable<R> zipLatest(Function<? super Object[], ? extends R> combiner, Scheduler scheduler, Publisher<? extends T>... sources) {
-        ObjectHelper.requireNonNull(combiner, "combiner is null");
-        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
-        ObjectHelper.requireNonNull(sources, "sources is null");
+        Objects.requireNonNull(combiner, "combiner is null");
+        Objects.requireNonNull(scheduler, "scheduler is null");
+        Objects.requireNonNull(sources, "sources is null");
         return RxJavaPlugins.onAssembly(new FlowableZipLatest<T, R>(sources, null, combiner, scheduler));
     }
 
@@ -530,9 +538,9 @@ public final class Flowables {
     @BackpressureSupport(BackpressureKind.UNBOUNDED_IN)
     @SchedulerSupport(SchedulerSupport.CUSTOM)
     public static <T, R> Flowable<R> zipLatest(Iterable<? extends Publisher<? extends T>> sources, Function<? super Object[], ? extends R> combiner, Scheduler scheduler) {
-        ObjectHelper.requireNonNull(sources, "sources is null");
-        ObjectHelper.requireNonNull(combiner, "combiner is null");
-        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
+        Objects.requireNonNull(sources, "sources is null");
+        Objects.requireNonNull(combiner, "combiner is null");
+        Objects.requireNonNull(scheduler, "scheduler is null");
         return RxJavaPlugins.onAssembly(new FlowableZipLatest<T, R>(null, sources, combiner, scheduler));
     }
 
@@ -610,10 +618,10 @@ public final class Flowables {
     @SchedulerSupport(SchedulerSupport.CUSTOM)
     @SuppressWarnings("unchecked")
     public static <T1, T2, R> Flowable<R> zipLatest(Publisher<T1> source1, Publisher<T2> source2, BiFunction<? super T1, ? super T2, ? extends R> combiner, Scheduler scheduler) {
-        ObjectHelper.requireNonNull(source1, "source1 is null");
-        ObjectHelper.requireNonNull(source2, "source2 is null");
-        ObjectHelper.requireNonNull(combiner, "combiner is null");
-        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
+        Objects.requireNonNull(source1, "source1 is null");
+        Objects.requireNonNull(source2, "source2 is null");
+        Objects.requireNonNull(combiner, "combiner is null");
+        Objects.requireNonNull(scheduler, "scheduler is null");
         return RxJavaPlugins.onAssembly(new FlowableZipLatest<Object, R>(
                 new Publisher[] { source1, source2 }, null,
                 Functions.toFunction(combiner), scheduler));
@@ -700,11 +708,11 @@ public final class Flowables {
     public static <T1, T2, T3, R> Flowable<R> zipLatest(Publisher<T1> source1, Publisher<T2> source2,
             Publisher<T3> source3, Function3<? super T1, ? super T2, ? super T3, ? extends R> combiner,
             Scheduler scheduler) {
-        ObjectHelper.requireNonNull(source1, "source1 is null");
-        ObjectHelper.requireNonNull(source2, "source2 is null");
-        ObjectHelper.requireNonNull(source3, "source3 is null");
-        ObjectHelper.requireNonNull(combiner, "combiner is null");
-        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
+        Objects.requireNonNull(source1, "source1 is null");
+        Objects.requireNonNull(source2, "source2 is null");
+        Objects.requireNonNull(source3, "source3 is null");
+        Objects.requireNonNull(combiner, "combiner is null");
+        Objects.requireNonNull(scheduler, "scheduler is null");
         return RxJavaPlugins.onAssembly(new FlowableZipLatest<Object, R>(
                 new Publisher[] { source1, source2, source3 }, null,
                 Functions.toFunction(combiner), scheduler));
@@ -797,12 +805,12 @@ public final class Flowables {
             Publisher<T3> source3, Publisher<T4> source4,
             Function4<? super T1, ? super T2, ? super T3, ? super T4, ? extends R> combiner,
             Scheduler scheduler) {
-        ObjectHelper.requireNonNull(source1, "source1 is null");
-        ObjectHelper.requireNonNull(source2, "source2 is null");
-        ObjectHelper.requireNonNull(source3, "source3 is null");
-        ObjectHelper.requireNonNull(source4, "source4 is null");
-        ObjectHelper.requireNonNull(combiner, "combiner is null");
-        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
+        Objects.requireNonNull(source1, "source1 is null");
+        Objects.requireNonNull(source2, "source2 is null");
+        Objects.requireNonNull(source3, "source3 is null");
+        Objects.requireNonNull(source4, "source4 is null");
+        Objects.requireNonNull(combiner, "combiner is null");
+        Objects.requireNonNull(scheduler, "scheduler is null");
         return RxJavaPlugins.onAssembly(new FlowableZipLatest<Object, R>(
                 new Publisher[] { source1, source2, source3, source4 }, null,
                 Functions.toFunction(combiner), scheduler));
@@ -934,9 +942,9 @@ public final class Flowables {
     @BackpressureSupport(BackpressureKind.FULL)
     @SchedulerSupport(SchedulerSupport.NONE)
     public static <T, S> Flowable<T> generateAsync(Supplier<S> initialState, BiFunction<S, FlowableAsyncEmitter<T>, S> asyncGenerator, Consumer<? super S> stateCleanup) {
-        ObjectHelper.requireNonNull(initialState, "initialState is null");
-        ObjectHelper.requireNonNull(asyncGenerator, "asyncGenerator is null");
-        ObjectHelper.requireNonNull(stateCleanup, "stateCleanup is null");
-        return RxJavaPlugins.onAssembly(new FlowableGenerateAsync<T, S>(initialState, asyncGenerator, stateCleanup));
+        Objects.requireNonNull(initialState, "initialState is null");
+        Objects.requireNonNull(asyncGenerator, "asyncGenerator is null");
+        Objects.requireNonNull(stateCleanup, "stateCleanup is null");
+        return RxJavaPlugins.onAssembly(new FlowableGenerateAsync<>(initialState, asyncGenerator, stateCleanup));
     }
 }

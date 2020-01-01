@@ -189,7 +189,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
     public void fromFuture() {
         final int[] counter = { 0 };
 
-        FutureTask<Void> ft = new FutureTask<Void>(new Callable<Void>() {
+        FutureTask<Void> ft = new FutureTask<>(new Callable<Void>() {
             @Override
             public Void call() throws Exception {
                 counter[0]++;
@@ -210,7 +210,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
     public void fromFutureThrows() {
         final int[] counter = { 0 };
 
-        FutureTask<Void> ft = new FutureTask<Void>(new Callable<Void>() {
+        FutureTask<Void> ft = new FutureTask<>(new Callable<Void>() {
             @Override
             public Void call() throws Exception {
                 counter[0]++;
@@ -231,7 +231,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
     public void fromFutureWithTimeout() {
         final int[] counter = { 0 };
 
-        FutureTask<Void> ft = new FutureTask<Void>(new Callable<Void>() {
+        FutureTask<Void> ft = new FutureTask<>(new Callable<Void>() {
             @Override
             public Void call() throws Exception {
                 counter[0]++;
@@ -252,7 +252,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
     public void fromFutureWithTimeoutError() {
         final int[] counter = { 0 };
 
-        FutureTask<Void> ft = new FutureTask<Void>(new Callable<Void>() {
+        FutureTask<Void> ft = new FutureTask<>(new Callable<Void>() {
             @Override
             public Void call() throws Exception {
                 counter[0]++;
@@ -273,7 +273,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
     public void fromFutureWithTimeoutDoTimeout() {
         final int[] counter = { 0 };
 
-        FutureTask<Void> ft = new FutureTask<Void>(new Callable<Void>() {
+        FutureTask<Void> ft = new FutureTask<>(new Callable<Void>() {
             @Override
             public Void call() throws Exception {
                 counter[0]++;
@@ -2239,7 +2239,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
 
     @Test
     public void subscribeWith() {
-        TestSubscriber<Void> ts = new TestSubscriber<Void>();
+        TestSubscriber<Void> ts = new TestSubscriber<>();
 
         Assert.assertSame(ts, Nono.complete().subscribeWith(ts));
     }

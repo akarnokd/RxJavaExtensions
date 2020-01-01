@@ -16,11 +16,12 @@
 
 package hu.akarnokd.rxjava3.basetypes;
 
+import java.util.Objects;
+
 import org.reactivestreams.Subscriber;
 
 import io.reactivex.rxjava3.exceptions.Exceptions;
 import io.reactivex.rxjava3.functions.Function;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 import io.reactivex.rxjava3.internal.subscriptions.EmptySubscription;
 
 /**
@@ -45,7 +46,7 @@ final class SoloLift<T, R> extends Solo<R> {
         Subscriber<? super T> parent;
 
         try {
-            parent = ObjectHelper.requireNonNull(onLift.apply(s), "The onLift returned a null Subscriber");
+            parent = Objects.requireNonNull(onLift.apply(s), "The onLift returned a null Subscriber");
         } catch (Throwable ex) {
             Exceptions.throwIfFatal(ex);
             EmptySubscription.error(ex, s);

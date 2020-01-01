@@ -38,7 +38,7 @@ public class SingleConsumersTest implements Consumer<Object> {
 
     final SingleSubject<Integer> processor = SingleSubject.create();
 
-    final List<Object> events = new ArrayList<Object>();
+    final List<Object> events = new ArrayList<>();
 
     @Override
     public void accept(Object t) throws Exception {
@@ -158,10 +158,10 @@ public class SingleConsumersTest implements Consumer<Object> {
                         @Override
                         protected void subscribeActual(
                                 SingleObserver<? super Integer> observer) {
-                            observer.onSubscribe(Disposables.empty());
+                            observer.onSubscribe(Disposable.empty());
                             observer.onSuccess(1);
 
-                            observer.onSubscribe(Disposables.empty());
+                            observer.onSubscribe(Disposable.empty());
                             observer.onSuccess(2);
                             observer.onError(new IOException());
                         }

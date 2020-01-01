@@ -43,7 +43,7 @@ implements FlowableTransformer<T, Long> {
 
     @Override
     public Publisher<Long> apply(Flowable<T> upstream) {
-        return new FlowableIndexOf<T>(upstream, predicate);
+        return new FlowableIndexOf<>(upstream, predicate);
     }
 
     @Override

@@ -46,7 +46,7 @@ final class PerhapsTimeout<T> extends Perhaps<T> {
 
     @Override
     protected void subscribeActual(Subscriber<? super T> s) {
-        TimeoutSubscriber<T> parent = new TimeoutSubscriber<T>(s, fallback);
+        TimeoutSubscriber<T> parent = new TimeoutSubscriber<>(s, fallback);
         s.onSubscribe(parent);
 
         other.subscribe(parent.other);
@@ -70,7 +70,7 @@ final class PerhapsTimeout<T> extends Perhaps<T> {
 
         TimeoutSubscriber(Subscriber<? super T> downstream, Perhaps<? extends T> fallback) {
             super(downstream);
-            this.upstream = new AtomicReference<Subscription>();
+            this.upstream = new AtomicReference<>();
             this.fallback = fallback;
             this.once = new AtomicBoolean();
             this.other = new OtherSubscriber();

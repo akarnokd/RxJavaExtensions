@@ -16,11 +16,12 @@
 
 package hu.akarnokd.rxjava3.basetypes;
 
+import java.util.Objects;
+
 import org.reactivestreams.Subscriber;
 
 import io.reactivex.rxjava3.exceptions.Exceptions;
 import io.reactivex.rxjava3.functions.Function;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 import io.reactivex.rxjava3.internal.subscriptions.EmptySubscription;
 
 /**
@@ -42,7 +43,7 @@ final class NonoLift extends Nono {
         Subscriber<? super Void> z;
 
         try {
-            z = ObjectHelper.requireNonNull(lifter.apply(s), "The lifter returned a null Subscriber");
+            z = Objects.requireNonNull(lifter.apply(s), "The lifter returned a null Subscriber");
         } catch (Throwable ex) {
             Exceptions.throwIfFatal(ex);
             EmptySubscription.error(ex, s);

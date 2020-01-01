@@ -16,10 +16,12 @@
 
 package hu.akarnokd.rxjava3.consumers;
 
+import java.util.Objects;
+
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.*;
 import io.reactivex.rxjava3.functions.*;
-import io.reactivex.rxjava3.internal.functions.*;
+import io.reactivex.rxjava3.internal.functions.Functions;
 
 /**
  * Utility methods for creating and using consumers {@link io.reactivex.rxjava3.core.Observable}s.
@@ -49,11 +51,11 @@ public final class ObservableConsumers {
             Observable<T> source,
             CompositeDisposable composite,
             Consumer<? super T> onNext) {
-        ObjectHelper.requireNonNull(source, "source is null");
-        ObjectHelper.requireNonNull(composite, "composite is null");
-        ObjectHelper.requireNonNull(onNext, "onNext is null");
+        Objects.requireNonNull(source, "source is null");
+        Objects.requireNonNull(composite, "composite is null");
+        Objects.requireNonNull(onNext, "onNext is null");
 
-        DisposableAutoReleaseObserver<T> observer = new DisposableAutoReleaseObserver<T>(
+        DisposableAutoReleaseObserver<T> observer = new DisposableAutoReleaseObserver<>(
                 composite, onNext, null, Functions.EMPTY_ACTION);
         composite.add(observer);
         source.subscribe(observer);
@@ -79,12 +81,12 @@ public final class ObservableConsumers {
             CompositeDisposable composite,
             Consumer<? super T> onNext,
             Consumer<? super Throwable> onError) {
-        ObjectHelper.requireNonNull(source, "source is null");
-        ObjectHelper.requireNonNull(composite, "composite is null");
-        ObjectHelper.requireNonNull(onNext, "onNext is null");
-        ObjectHelper.requireNonNull(onError, "onError is null");
+        Objects.requireNonNull(source, "source is null");
+        Objects.requireNonNull(composite, "composite is null");
+        Objects.requireNonNull(onNext, "onNext is null");
+        Objects.requireNonNull(onError, "onError is null");
 
-        DisposableAutoReleaseObserver<T> observer = new DisposableAutoReleaseObserver<T>(
+        DisposableAutoReleaseObserver<T> observer = new DisposableAutoReleaseObserver<>(
                 composite, onNext, onError, Functions.EMPTY_ACTION);
         composite.add(observer);
         source.subscribe(observer);
@@ -112,13 +114,13 @@ public final class ObservableConsumers {
             Consumer<? super T> onNext,
             Consumer<? super Throwable> onError,
             Action onComplete) {
-        ObjectHelper.requireNonNull(source, "source is null");
-        ObjectHelper.requireNonNull(composite, "composite is null");
-        ObjectHelper.requireNonNull(onNext, "onNext is null");
-        ObjectHelper.requireNonNull(onError, "onError is null");
-        ObjectHelper.requireNonNull(onComplete, "onComplete is null");
+        Objects.requireNonNull(source, "source is null");
+        Objects.requireNonNull(composite, "composite is null");
+        Objects.requireNonNull(onNext, "onNext is null");
+        Objects.requireNonNull(onError, "onError is null");
+        Objects.requireNonNull(onComplete, "onComplete is null");
 
-        DisposableAutoReleaseObserver<T> observer = new DisposableAutoReleaseObserver<T>(
+        DisposableAutoReleaseObserver<T> observer = new DisposableAutoReleaseObserver<>(
                 composite, onNext, onError, onComplete);
         composite.add(observer);
         source.subscribe(observer);

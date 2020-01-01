@@ -16,9 +16,10 @@
 
 package hu.akarnokd.rxjava3.operators;
 
+import java.util.Objects;
+
 import io.reactivex.rxjava3.core.*;
 import io.reactivex.rxjava3.functions.Function;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 
 /**
  * Additional operators in the form of {@link SingleTransformer},
@@ -50,8 +51,8 @@ public final class SingleTransformers {
     public static <T, R> SingleTransformer<T, R> flatMap(
             Function<? super T, ? extends SingleSource<? extends R>> onSuccessHandler,
             Function<? super Throwable, ? extends SingleSource<? extends R>> onErrorHandler) {
-        ObjectHelper.requireNonNull(onSuccessHandler, "onSuccessHandler is null");
-        ObjectHelper.requireNonNull(onErrorHandler, "onErrorHandler is null");
-        return new SingleFlatMapSignalSingle<T, R>(null, onSuccessHandler, onErrorHandler);
+        Objects.requireNonNull(onSuccessHandler, "onSuccessHandler is null");
+        Objects.requireNonNull(onErrorHandler, "onErrorHandler is null");
+        return new SingleFlatMapSignalSingle<>(null, onSuccessHandler, onErrorHandler);
     }
 }

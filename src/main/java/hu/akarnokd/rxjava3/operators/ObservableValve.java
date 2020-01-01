@@ -52,7 +52,7 @@ final class ObservableValve<T> extends Observable<T> implements ObservableTransf
 
     @Override
     protected void subscribeActual(Observer<? super T> observer) {
-        ValveMainObserver<T> parent = new ValveMainObserver<T>(observer, bufferSize, defaultOpen);
+        ValveMainObserver<T> parent = new ValveMainObserver<>(observer, bufferSize, defaultOpen);
         observer.onSubscribe(parent);
         other.subscribe(parent.other);
         source.subscribe(parent);
@@ -60,7 +60,7 @@ final class ObservableValve<T> extends Observable<T> implements ObservableTransf
 
     @Override
     public Observable<T> apply(Observable<T> upstream) {
-        return new ObservableValve<T>(upstream, other, defaultOpen, bufferSize);
+        return new ObservableValve<>(upstream, other, defaultOpen, bufferSize);
     }
 
     static final class ValveMainObserver<T>
@@ -87,11 +87,11 @@ final class ObservableValve<T> extends Observable<T> implements ObservableTransf
 
         ValveMainObserver(Observer<? super T> downstream, int bufferSize, boolean defaultOpen) {
             this.downstream = downstream;
-            this.queue = new SpscLinkedArrayQueue<T>(bufferSize);
+            this.queue = new SpscLinkedArrayQueue<>(bufferSize);
             this.gate = defaultOpen;
             this.other = new OtherSubscriber();
             this.error = new AtomicThrowable();
-            this.upstream = new AtomicReference<Disposable>();
+            this.upstream = new AtomicReference<>();
         }
 
         @Override

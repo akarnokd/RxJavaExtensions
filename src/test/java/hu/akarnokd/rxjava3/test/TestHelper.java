@@ -35,10 +35,9 @@ import org.reactivestreams.*;
 import io.reactivex.rxjava3.core.*;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Observer;
-import io.reactivex.rxjava3.disposables.*;
+import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.exceptions.*;
 import io.reactivex.rxjava3.functions.*;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 import io.reactivex.rxjava3.internal.fuseable.*;
 import io.reactivex.rxjava3.internal.operators.completable.CompletableToFlowable;
 import io.reactivex.rxjava3.internal.operators.maybe.MaybeToFlowable;
@@ -198,7 +197,7 @@ public enum TestHelper {
             err.initCause(ex);
             throw err;
         }
-        if (!ObjectHelper.equals(message, ex.getMessage())) {
+        if (!Objects.equals(message, ex.getMessage())) {
             AssertionError err = new AssertionError("Message " + message + " expected but got " + ex.getMessage());
             err.initCause(ex);
             throw err;
@@ -218,7 +217,7 @@ public enum TestHelper {
             err.initCause(list.get(index));
             throw err;
         }
-        if (!ObjectHelper.equals(message, ex.getMessage())) {
+        if (!Objects.equals(message, ex.getMessage())) {
             AssertionError err = new AssertionError("Message " + message + " expected but got " + ex.getMessage());
             err.initCause(ex);
             throw err;
@@ -567,11 +566,11 @@ public enum TestHelper {
     public static void doubleOnSubscribe(Observer<?> observer) {
         List<Throwable> errors = trackPluginErrors();
         try {
-            Disposable d1 = Disposables.empty();
+            Disposable d1 = Disposable.empty();
 
             observer.onSubscribe(d1);
 
-            Disposable d2 = Disposables.empty();
+            Disposable d2 = Disposable.empty();
 
             observer.onSubscribe(d2);
 
@@ -593,11 +592,11 @@ public enum TestHelper {
     public static void doubleOnSubscribe(SingleObserver<?> o) {
         List<Throwable> errors = trackPluginErrors();
         try {
-            Disposable d1 = Disposables.empty();
+            Disposable d1 = Disposable.empty();
 
             o.onSubscribe(d1);
 
-            Disposable d2 = Disposables.empty();
+            Disposable d2 = Disposable.empty();
 
             o.onSubscribe(d2);
 
@@ -619,11 +618,11 @@ public enum TestHelper {
     public static void doubleOnSubscribe(CompletableObserver observer) {
         List<Throwable> errors = trackPluginErrors();
         try {
-            Disposable d1 = Disposables.empty();
+            Disposable d1 = Disposable.empty();
 
             observer.onSubscribe(d1);
 
-            Disposable d2 = Disposables.empty();
+            Disposable d2 = Disposable.empty();
 
             observer.onSubscribe(d2);
 
@@ -645,11 +644,11 @@ public enum TestHelper {
     public static void doubleOnSubscribe(MaybeObserver<?> o) {
         List<Throwable> errors = trackPluginErrors();
         try {
-            Disposable d1 = Disposables.empty();
+            Disposable d1 = Disposable.empty();
 
             o.onSubscribe(d1);
 
-            Disposable d2 = Disposables.empty();
+            Disposable d2 = Disposable.empty();
 
             o.onSubscribe(d2);
 
@@ -670,7 +669,7 @@ public enum TestHelper {
      * @param source the source to test
      */
     public static <T> void checkDisposed(Flowable<T> source) {
-        final TestSubscriber<Object> ts = new TestSubscriber<Object>(0L);
+        final TestSubscriber<Object> ts = new TestSubscriber<>(0L);
         source.subscribe(new FlowableSubscriber<Object>() {
             @Override
             public void onSubscribe(Subscription s) {
@@ -946,11 +945,11 @@ public enum TestHelper {
                 @Override
                 protected void subscribeActual(MaybeObserver<? super T> observer) {
                     try {
-                        Disposable d1 = Disposables.empty();
+                        Disposable d1 = Disposable.empty();
 
                         observer.onSubscribe(d1);
 
-                        Disposable d2 = Disposables.empty();
+                        Disposable d2 = Disposable.empty();
 
                         observer.onSubscribe(d2);
 
@@ -1000,11 +999,11 @@ public enum TestHelper {
                 @Override
                 protected void subscribeActual(MaybeObserver<? super T> observer) {
                     try {
-                        Disposable d1 = Disposables.empty();
+                        Disposable d1 = Disposable.empty();
 
                         observer.onSubscribe(d1);
 
-                        Disposable d2 = Disposables.empty();
+                        Disposable d2 = Disposable.empty();
 
                         observer.onSubscribe(d2);
 
@@ -1054,11 +1053,11 @@ public enum TestHelper {
                 @Override
                 protected void subscribeActual(MaybeObserver<? super T> observer) {
                     try {
-                        Disposable d1 = Disposables.empty();
+                        Disposable d1 = Disposable.empty();
 
                         observer.onSubscribe(d1);
 
-                        Disposable d2 = Disposables.empty();
+                        Disposable d2 = Disposable.empty();
 
                         observer.onSubscribe(d2);
 
@@ -1108,11 +1107,11 @@ public enum TestHelper {
                 @Override
                 protected void subscribeActual(MaybeObserver<? super T> observer) {
                     try {
-                        Disposable d1 = Disposables.empty();
+                        Disposable d1 = Disposable.empty();
 
                         observer.onSubscribe(d1);
 
-                        Disposable d2 = Disposables.empty();
+                        Disposable d2 = Disposable.empty();
 
                         observer.onSubscribe(d2);
 
@@ -1162,11 +1161,11 @@ public enum TestHelper {
                 @Override
                 protected void subscribeActual(SingleObserver<? super T> observer) {
                     try {
-                        Disposable d1 = Disposables.empty();
+                        Disposable d1 = Disposable.empty();
 
                         observer.onSubscribe(d1);
 
-                        Disposable d2 = Disposables.empty();
+                        Disposable d2 = Disposable.empty();
 
                         observer.onSubscribe(d2);
 
@@ -1215,11 +1214,11 @@ public enum TestHelper {
                 @Override
                 protected void subscribeActual(SingleObserver<? super T> observer) {
                     try {
-                        Disposable d1 = Disposables.empty();
+                        Disposable d1 = Disposable.empty();
 
                         observer.onSubscribe(d1);
 
-                        Disposable d2 = Disposables.empty();
+                        Disposable d2 = Disposable.empty();
 
                         observer.onSubscribe(d2);
 
@@ -1269,11 +1268,11 @@ public enum TestHelper {
                 @Override
                 protected void subscribeActual(SingleObserver<? super T> observer) {
                     try {
-                        Disposable d1 = Disposables.empty();
+                        Disposable d1 = Disposable.empty();
 
                         observer.onSubscribe(d1);
 
-                        Disposable d2 = Disposables.empty();
+                        Disposable d2 = Disposable.empty();
 
                         observer.onSubscribe(d2);
 
@@ -1323,11 +1322,11 @@ public enum TestHelper {
                 @Override
                 protected void subscribeActual(SingleObserver<? super T> observer) {
                     try {
-                        Disposable d1 = Disposables.empty();
+                        Disposable d1 = Disposable.empty();
 
                         observer.onSubscribe(d1);
 
-                        Disposable d2 = Disposables.empty();
+                        Disposable d2 = Disposable.empty();
 
                         observer.onSubscribe(d2);
 
@@ -1376,11 +1375,11 @@ public enum TestHelper {
                 @Override
                 protected void subscribeActual(MaybeObserver<? super T> observer) {
                     try {
-                        Disposable d1 = Disposables.empty();
+                        Disposable d1 = Disposable.empty();
 
                         observer.onSubscribe(d1);
 
-                        Disposable d2 = Disposables.empty();
+                        Disposable d2 = Disposable.empty();
 
                         observer.onSubscribe(d2);
 
@@ -1430,11 +1429,11 @@ public enum TestHelper {
                 @Override
                 protected void subscribeActual(SingleObserver<? super T> observer) {
                     try {
-                        Disposable d1 = Disposables.empty();
+                        Disposable d1 = Disposable.empty();
 
                         observer.onSubscribe(d1);
 
-                        Disposable d2 = Disposables.empty();
+                        Disposable d2 = Disposable.empty();
 
                         observer.onSubscribe(d2);
 
@@ -1538,11 +1537,11 @@ public enum TestHelper {
                 @Override
                 protected void subscribeActual(Observer<? super T> observer) {
                     try {
-                        Disposable d1 = Disposables.empty();
+                        Disposable d1 = Disposable.empty();
 
                         observer.onSubscribe(d1);
 
-                        Disposable d2 = Disposables.empty();
+                        Disposable d2 = Disposable.empty();
 
                         observer.onSubscribe(d2);
 
@@ -1592,11 +1591,11 @@ public enum TestHelper {
                 @Override
                 protected void subscribeActual(Observer<? super T> observer) {
                     try {
-                        Disposable d1 = Disposables.empty();
+                        Disposable d1 = Disposable.empty();
 
                         observer.onSubscribe(d1);
 
-                        Disposable d2 = Disposables.empty();
+                        Disposable d2 = Disposable.empty();
 
                         observer.onSubscribe(d2);
 
@@ -1646,11 +1645,11 @@ public enum TestHelper {
                 @Override
                 protected void subscribeActual(Observer<? super T> observer) {
                     try {
-                        Disposable d1 = Disposables.empty();
+                        Disposable d1 = Disposable.empty();
 
                         observer.onSubscribe(d1);
 
-                        Disposable d2 = Disposables.empty();
+                        Disposable d2 = Disposable.empty();
 
                         observer.onSubscribe(d2);
 
@@ -1699,11 +1698,11 @@ public enum TestHelper {
                 @Override
                 protected void subscribeActual(Observer<? super T> observer) {
                     try {
-                        Disposable d1 = Disposables.empty();
+                        Disposable d1 = Disposable.empty();
 
                         observer.onSubscribe(d1);
 
-                        Disposable d2 = Disposables.empty();
+                        Disposable d2 = Disposable.empty();
 
                         observer.onSubscribe(d2);
 
@@ -1966,11 +1965,11 @@ public enum TestHelper {
                 @Override
                 protected void subscribeActual(CompletableObserver observer) {
                     try {
-                        Disposable d1 = Disposables.empty();
+                        Disposable d1 = Disposable.empty();
 
                         observer.onSubscribe(d1);
 
-                        Disposable d2 = Disposables.empty();
+                        Disposable d2 = Disposable.empty();
 
                         observer.onSubscribe(d2);
 
@@ -2019,11 +2018,11 @@ public enum TestHelper {
                 @Override
                 protected void subscribeActual(CompletableObserver observer) {
                     try {
-                        Disposable d1 = Disposables.empty();
+                        Disposable d1 = Disposable.empty();
 
                         observer.onSubscribe(d1);
 
-                        Disposable d2 = Disposables.empty();
+                        Disposable d2 = Disposable.empty();
 
                         observer.onSubscribe(d2);
 
@@ -2072,11 +2071,11 @@ public enum TestHelper {
                 @Override
                 protected void subscribeActual(CompletableObserver observer) {
                     try {
-                        Disposable d1 = Disposables.empty();
+                        Disposable d1 = Disposable.empty();
 
                         observer.onSubscribe(d1);
 
-                        Disposable d2 = Disposables.empty();
+                        Disposable d2 = Disposable.empty();
 
                         observer.onSubscribe(d2);
 
@@ -2124,11 +2123,11 @@ public enum TestHelper {
                 @Override
                 protected void subscribeActual(CompletableObserver observer) {
                     try {
-                        Disposable d1 = Disposables.empty();
+                        Disposable d1 = Disposable.empty();
 
                         observer.onSubscribe(d1);
 
-                        Disposable d2 = Disposables.empty();
+                        Disposable d2 = Disposable.empty();
 
                         observer.onSubscribe(d2);
 
@@ -2176,11 +2175,11 @@ public enum TestHelper {
                 @Override
                 protected void subscribeActual(CompletableObserver observer) {
                     try {
-                        Disposable d1 = Disposables.empty();
+                        Disposable d1 = Disposable.empty();
 
                         observer.onSubscribe(d1);
 
-                        Disposable d2 = Disposables.empty();
+                        Disposable d2 = Disposable.empty();
 
                         observer.onSubscribe(d2);
 
@@ -2222,10 +2221,10 @@ public enum TestHelper {
     public static <T, U> void checkDisposedMaybe(Function<Maybe<T>, ? extends MaybeSource<U>> composer) {
         PublishProcessor<T> pp = PublishProcessor.create();
 
-        TestSubscriber<U> ts = new TestSubscriber<U>();
+        TestSubscriber<U> ts = new TestSubscriber<>();
 
         try {
-            new MaybeToFlowable<U>(composer.apply(pp.singleElement())).subscribe(ts);
+            new MaybeToFlowable<>(composer.apply(pp.singleElement())).subscribe(ts);
         } catch (Throwable ex) {
             throw ExceptionHelper.wrapOrThrow(ex);
         }
@@ -2244,7 +2243,7 @@ public enum TestHelper {
     public static void checkDisposedCompletable(Function<Completable, ? extends CompletableSource> composer) {
         PublishProcessor<Integer> pp = PublishProcessor.create();
 
-        TestSubscriber<Integer> ts = new TestSubscriber<Integer>();
+        TestSubscriber<Integer> ts = new TestSubscriber<>();
 
         try {
             new CompletableToFlowable<Integer>(composer.apply(pp.ignoreElements())).subscribe(ts);
@@ -2268,10 +2267,10 @@ public enum TestHelper {
     public static <T, U> void checkDisposedMaybeToSingle(Function<Maybe<T>, ? extends SingleSource<U>> composer) {
         PublishProcessor<T> pp = PublishProcessor.create();
 
-        TestSubscriber<U> ts = new TestSubscriber<U>();
+        TestSubscriber<U> ts = new TestSubscriber<>();
 
         try {
-            new SingleToFlowable<U>(composer.apply(pp.singleElement())).subscribe(ts);
+            new SingleToFlowable<>(composer.apply(pp.singleElement())).subscribe(ts);
         } catch (Throwable ex) {
             throw ExceptionHelper.wrapOrThrow(ex);
         }
@@ -2289,6 +2288,7 @@ public enum TestHelper {
      * @param ts the TestSubscriber instance
      * @param classes the array of expected Throwables inside the Composite
      */
+    @SafeVarargs
     public static void assertCompositeExceptions(TestSubscriber<?> ts, final Class<? extends Throwable>... classes) {
         ts
         .assertError(CompositeException.class)
@@ -2336,6 +2336,7 @@ public enum TestHelper {
      * @param to the TestSubscriber instance
      * @param classes the array of expected Throwables inside the Composite
      */
+    @SafeVarargs
     public static void assertCompositeExceptions(TestObserver<?> to, Class<? extends Throwable>... classes) {
         to
         .assertError(CompositeException.class)
@@ -2378,6 +2379,7 @@ public enum TestHelper {
      * @param p the target processor
      * @param values the values to emit
      */
+    @SafeVarargs
     public static <T> void emit(Processor<T, ?> p, T... values) {
         for (T v : values) {
             p.onNext(v);
@@ -2391,6 +2393,7 @@ public enum TestHelper {
      * @param p the target subject
      * @param values the values to emit
      */
+    @SafeVarargs
     public static <T> void emit(Subject<T> p, T... values) {
         for (T v : values) {
             p.onNext(v);
@@ -2566,7 +2569,7 @@ public enum TestHelper {
                 boolean once;
                 @Override
                 protected void subscribeActual(Observer<? super T> observer) {
-                    observer.onSubscribe(Disposables.empty());
+                    observer.onSubscribe(Disposable.empty());
 
                     if (once) {
                         return;
@@ -2595,7 +2598,7 @@ public enum TestHelper {
 
             if (o instanceof ObservableSource) {
                 ObservableSource<?> os = (ObservableSource<?>) o;
-                TestObserver<Object> to = new TestObserver<Object>();
+                TestObserver<Object> to = new TestObserver<>();
 
                 os.subscribe(to);
 
@@ -2620,7 +2623,7 @@ public enum TestHelper {
 
             if (o instanceof Publisher) {
                 Publisher<?> os = (Publisher<?>) o;
-                TestSubscriber<Object> ts = new TestSubscriber<Object>();
+                TestSubscriber<Object> ts = new TestSubscriber<>();
 
                 os.subscribe(ts);
 
@@ -2645,7 +2648,7 @@ public enum TestHelper {
 
             if (o instanceof SingleSource) {
                 SingleSource<?> os = (SingleSource<?>) o;
-                TestObserver<Object> to = new TestObserver<Object>();
+                TestObserver<Object> to = new TestObserver<>();
 
                 os.subscribe(to);
 
@@ -2670,7 +2673,7 @@ public enum TestHelper {
 
             if (o instanceof MaybeSource) {
                 MaybeSource<?> os = (MaybeSource<?>) o;
-                TestObserver<Object> to = new TestObserver<Object>();
+                TestObserver<Object> to = new TestObserver<>();
 
                 os.subscribe(to);
 
@@ -2695,7 +2698,7 @@ public enum TestHelper {
 
             if (o instanceof CompletableSource) {
                 CompletableSource os = (CompletableSource) o;
-                TestObserver<Object> to = new TestObserver<Object>();
+                TestObserver<Object> to = new TestObserver<>();
 
                 os.subscribe(to);
 
@@ -2769,7 +2772,7 @@ public enum TestHelper {
 
             if (o instanceof ObservableSource) {
                 ObservableSource<?> os = (ObservableSource<?>) o;
-                TestObserver<Object> to = new TestObserver<Object>();
+                TestObserver<Object> to = new TestObserver<>();
 
                 os.subscribe(to);
 
@@ -2794,7 +2797,7 @@ public enum TestHelper {
 
             if (o instanceof Publisher) {
                 Publisher<?> os = (Publisher<?>) o;
-                TestSubscriber<Object> ts = new TestSubscriber<Object>();
+                TestSubscriber<Object> ts = new TestSubscriber<>();
 
                 os.subscribe(ts);
 
@@ -2819,7 +2822,7 @@ public enum TestHelper {
 
             if (o instanceof SingleSource) {
                 SingleSource<?> os = (SingleSource<?>) o;
-                TestObserver<Object> to = new TestObserver<Object>();
+                TestObserver<Object> to = new TestObserver<>();
 
                 os.subscribe(to);
 
@@ -2844,7 +2847,7 @@ public enum TestHelper {
 
             if (o instanceof MaybeSource) {
                 MaybeSource<?> os = (MaybeSource<?>) o;
-                TestObserver<Object> to = new TestObserver<Object>();
+                TestObserver<Object> to = new TestObserver<>();
 
                 os.subscribe(to);
 
@@ -2869,7 +2872,7 @@ public enum TestHelper {
 
             if (o instanceof CompletableSource) {
                 CompletableSource os = (CompletableSource) o;
-                TestObserver<Object> to = new TestObserver<Object>();
+                TestObserver<Object> to = new TestObserver<>();
 
                 os.subscribe(to);
 
@@ -2908,7 +2911,7 @@ public enum TestHelper {
         @SuppressWarnings("unchecked")
         TestSubscriber<Object>[] tss = new TestSubscriber[n + 1];
         for (int i = 0; i <= n; i++) {
-            tss[i] = new TestSubscriber<Object>().withTag("" + i);
+            tss[i] = new TestSubscriber<>().withTag("" + i);
         }
 
         source.subscribe(tss);
@@ -2919,7 +2922,7 @@ public enum TestHelper {
     }
 
     public static <T> TestSubscriberEx<T> fusedSubscriber(int mode) {
-        TestSubscriberEx<T> ts = new TestSubscriberEx<T>();
+        TestSubscriberEx<T> ts = new TestSubscriberEx<>();
         ts.setInitialFusionMode(mode);
         return ts;
     }

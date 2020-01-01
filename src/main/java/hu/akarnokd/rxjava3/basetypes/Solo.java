@@ -16,6 +16,7 @@
 
 package hu.akarnokd.rxjava3.basetypes;
 
+import java.util.Objects;
 import java.util.concurrent.*;
 
 import org.reactivestreams.*;
@@ -24,7 +25,7 @@ import io.reactivex.rxjava3.core.*;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.exceptions.Exceptions;
 import io.reactivex.rxjava3.functions.*;
-import io.reactivex.rxjava3.internal.functions.*;
+import io.reactivex.rxjava3.internal.functions.Functions;
 import io.reactivex.rxjava3.internal.subscribers.LambdaSubscriber;
 import io.reactivex.rxjava3.internal.util.ExceptionHelper;
 import io.reactivex.rxjava3.plugins.RxJavaPlugins;
@@ -94,8 +95,8 @@ public abstract class Solo<T> implements Publisher<T> {
      * @return th new Solo instance
      */
     public static <T> Solo<T> create(SingleOnSubscribe<T> onCreate) {
-        ObjectHelper.requireNonNull(onCreate, "onCreate is null");
-        return onAssembly(new SoloCreate<T>(onCreate));
+        Objects.requireNonNull(onCreate, "onCreate is null");
+        return onAssembly(new SoloCreate<>(onCreate));
     }
 
     /**
@@ -105,8 +106,8 @@ public abstract class Solo<T> implements Publisher<T> {
      * @return the new Solo instance
      */
     public static <T> Solo<T> just(T item) {
-        ObjectHelper.requireNonNull(item, "item is null");
-        return onAssembly(new SoloJust<T>(item));
+        Objects.requireNonNull(item, "item is null");
+        return onAssembly(new SoloJust<>(item));
     }
 
     /**
@@ -116,7 +117,7 @@ public abstract class Solo<T> implements Publisher<T> {
      * @return the new Solo instance
      */
     public static <T> Solo<T> error(Throwable error) {
-        ObjectHelper.requireNonNull(error, "error is null");
+        Objects.requireNonNull(error, "error is null");
         return onAssembly(new SoloError<T>(error));
     }
 
@@ -129,7 +130,7 @@ public abstract class Solo<T> implements Publisher<T> {
      * @return the new Solo instance
      */
     public static <T> Solo<T> error(Supplier<? extends Throwable> errorSupplier) {
-        ObjectHelper.requireNonNull(errorSupplier, "errorSupplier is null");
+        Objects.requireNonNull(errorSupplier, "errorSupplier is null");
         return onAssembly(new SoloErrorSupplier<T>(errorSupplier));
     }
 
@@ -140,8 +141,8 @@ public abstract class Solo<T> implements Publisher<T> {
      * @return the new Solo instance
      */
     public static <T> Solo<T> fromCallable(Callable<T> callable) {
-        ObjectHelper.requireNonNull(callable, "callable is null");
-        return onAssembly(new SoloFromCallable<T>(callable));
+        Objects.requireNonNull(callable, "callable is null");
+        return onAssembly(new SoloFromCallable<>(callable));
     }
 
     /**
@@ -161,8 +162,8 @@ public abstract class Solo<T> implements Publisher<T> {
      * @return the new Solo instance
      */
     public static <T> Solo<T> defer(Supplier<? extends Solo<T>> supplier) {
-        ObjectHelper.requireNonNull(supplier, "supplier is null");
-        return onAssembly(new SoloDefer<T>(supplier));
+        Objects.requireNonNull(supplier, "supplier is null");
+        return onAssembly(new SoloDefer<>(supplier));
     }
 
     /**
@@ -177,8 +178,8 @@ public abstract class Solo<T> implements Publisher<T> {
         if (source instanceof Solo) {
             return (Solo<T>)source;
         }
-        ObjectHelper.requireNonNull(source, "source is null");
-        return onAssembly(new SoloFromPublisher<T>(source));
+        Objects.requireNonNull(source, "source is null");
+        return onAssembly(new SoloFromPublisher<>(source));
     }
 
     /**
@@ -188,8 +189,8 @@ public abstract class Solo<T> implements Publisher<T> {
      * @return the new Solo instance
      */
     public static <T> Solo<T> fromSingle(SingleSource<T> source) {
-        ObjectHelper.requireNonNull(source, "source is null");
-        return onAssembly(new SoloFromSingle<T>(source));
+        Objects.requireNonNull(source, "source is null");
+        return onAssembly(new SoloFromSingle<>(source));
     }
 
     /**
@@ -203,7 +204,7 @@ public abstract class Solo<T> implements Publisher<T> {
      * @since 0.14.0
      */
     public static <T> Solo<T> fromFuture(Future<? extends T> future) {
-        ObjectHelper.requireNonNull(future, "future is null");
+        Objects.requireNonNull(future, "future is null");
         return onAssembly(new SoloFromFuture<T>(future, 0, null));
     }
 
@@ -221,8 +222,8 @@ public abstract class Solo<T> implements Publisher<T> {
      * @since 0.14.0
      */
     public static <T> Solo<T> fromFuture(Future<? extends T> future, long timeout, TimeUnit unit) {
-        ObjectHelper.requireNonNull(future, "future is null");
-        ObjectHelper.requireNonNull(unit, "unit is null");
+        Objects.requireNonNull(future, "future is null");
+        Objects.requireNonNull(unit, "unit is null");
         return onAssembly(new SoloFromFuture<T>(future, timeout, unit));
     }
 
@@ -233,8 +234,8 @@ public abstract class Solo<T> implements Publisher<T> {
      * @return the new Solo instance
      */
     public static <T> Solo<T> amb(Iterable<? extends Solo<? extends T>> sources) {
-        ObjectHelper.requireNonNull(sources, "sources is null");
-        return onAssembly(new SoloAmbIterable<T>(sources));
+        Objects.requireNonNull(sources, "sources is null");
+        return onAssembly(new SoloAmbIterable<>(sources));
     }
 
     /**
@@ -243,9 +244,10 @@ public abstract class Solo<T> implements Publisher<T> {
      * @param sources the array of Solo sources
      * @return the new Solo instance
      */
+    @SafeVarargs
     public static <T> Solo<T> ambArray(Solo<? extends T>... sources) {
-        ObjectHelper.requireNonNull(sources, "sources is null");
-        return onAssembly(new SoloAmbArray<T>(sources));
+        Objects.requireNonNull(sources, "sources is null");
+        return onAssembly(new SoloAmbArray<>(sources));
     }
 
     /**
@@ -285,6 +287,7 @@ public abstract class Solo<T> implements Publisher<T> {
      * @param sources the sequence of sources
      * @return the new Flowable instance
      */
+    @SafeVarargs
     public static <T> Flowable<T> concatArray(Solo<? extends T>... sources) {
         return Flowable.concatArray(sources);
     }
@@ -344,6 +347,7 @@ public abstract class Solo<T> implements Publisher<T> {
      * @param sources the sequence of sources
      * @return the new Flowable instance
      */
+    @SafeVarargs
     public static <T> Flowable<T> concatArrayDelayError(Solo<? extends T>... sources) {
         return Flowable.concatArrayDelayError(sources);
     }
@@ -396,6 +400,7 @@ public abstract class Solo<T> implements Publisher<T> {
      * @param sources the sequence of sources
      * @return the new Flowable instance
      */
+    @SafeVarargs
     public static <T> Flowable<T> mergeArray(Solo<? extends T>... sources) {
         return mergeArray(Integer.MAX_VALUE, sources);
     }
@@ -407,6 +412,7 @@ public abstract class Solo<T> implements Publisher<T> {
      * @param maxConcurrency the maximum number of active subscriptions
      * @return the new Flowable instance
      */
+    @SafeVarargs
     public static <T> Flowable<T> mergeArray(int maxConcurrency, Solo<? extends T>... sources) {
         return Flowable.mergeArray(maxConcurrency, 1, sources);
     }
@@ -464,6 +470,7 @@ public abstract class Solo<T> implements Publisher<T> {
      * @param sources the sequence of sources
      * @return the new Flowable instance
      */
+    @SafeVarargs
     public static <T> Flowable<T> mergeArrayDelayError(Solo<? extends T>... sources) {
         return mergeArrayDelayError(Integer.MAX_VALUE, sources);
     }
@@ -476,6 +483,7 @@ public abstract class Solo<T> implements Publisher<T> {
      * @param maxConcurrency the maximum number of active subscriptions
      * @return the new Flowable instance
      */
+    @SafeVarargs
     public static <T> Flowable<T> mergeArrayDelayError(int maxConcurrency, Solo<? extends T>... sources) {
         return Flowable.mergeArrayDelayError(maxConcurrency, 1, sources);
     }
@@ -500,8 +508,8 @@ public abstract class Solo<T> implements Publisher<T> {
      * @return the new Solo instance
      */
     public static Solo<Long> timer(long delay, TimeUnit unit, Scheduler scheduler) {
-        ObjectHelper.requireNonNull(unit, "unit is null");
-        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
+        Objects.requireNonNull(unit, "unit is null");
+        Objects.requireNonNull(scheduler, "scheduler is null");
         return onAssembly(new SoloTimer(delay, unit, scheduler));
     }
 
@@ -545,10 +553,10 @@ public abstract class Solo<T> implements Publisher<T> {
             Consumer<? super R> disposer,
             boolean eager
     ) {
-        ObjectHelper.requireNonNull(resourceSupplier, "resourceSupplier is null");
-        ObjectHelper.requireNonNull(sourceSupplier, "sourceSupplier is null");
-        ObjectHelper.requireNonNull(disposer, "disposer is null");
-        return onAssembly(new SoloUsing<T, R>(resourceSupplier, sourceSupplier, disposer, eager));
+        Objects.requireNonNull(resourceSupplier, "resourceSupplier is null");
+        Objects.requireNonNull(sourceSupplier, "sourceSupplier is null");
+        Objects.requireNonNull(disposer, "disposer is null");
+        return onAssembly(new SoloUsing<>(resourceSupplier, sourceSupplier, disposer, eager));
     }
 
     /**
@@ -564,8 +572,8 @@ public abstract class Solo<T> implements Publisher<T> {
             Iterable<? extends Solo<? extends T>> sources,
             Function<? super Object[], ? extends R> zipper
     ) {
-        ObjectHelper.requireNonNull(sources, "sources is null");
-        ObjectHelper.requireNonNull(zipper, "zipper is null");
+        Objects.requireNonNull(sources, "sources is null");
+        Objects.requireNonNull(zipper, "zipper is null");
         return onAssembly(new SoloZipIterable<T, R>(sources, zipper));
     }
 
@@ -578,12 +586,13 @@ public abstract class Solo<T> implements Publisher<T> {
      * @param zipper the function takin in an array of values and returns a solo value
      * @return the new Solo instance
      */
+    @SafeVarargs
     public static <T, R> Solo<R> zipArray(
             Function<? super Object[], ? extends R> zipper,
             Solo<? extends T>... sources
     ) {
-        ObjectHelper.requireNonNull(sources, "sources is null");
-        ObjectHelper.requireNonNull(zipper, "zipper is null");
+        Objects.requireNonNull(sources, "sources is null");
+        Objects.requireNonNull(zipper, "zipper is null");
         return onAssembly(new SoloZipArray<T, R>(sources, zipper));
     }
 
@@ -597,7 +606,6 @@ public abstract class Solo<T> implements Publisher<T> {
      * @param other the other Solo
      * @return the new Solo instance
      */
-    @SuppressWarnings("unchecked")
     public final Solo<T> ambWith(Solo<? extends T> other) {
         return ambArray(this, other);
     }
@@ -609,8 +617,8 @@ public abstract class Solo<T> implements Publisher<T> {
      * @return the new Solo instance
      */
     public final Solo<T> andThen(Nono other) {
-        ObjectHelper.requireNonNull(other, "other is null");
-        return onAssembly(new SoloAndThen<T>(this, other));
+        Objects.requireNonNull(other, "other is null");
+        return onAssembly(new SoloAndThen<>(this, other));
     }
 
     /**
@@ -652,7 +660,6 @@ public abstract class Solo<T> implements Publisher<T> {
      * the other Solo and returns a solo value to be emitted.
      * @return the new Solo instance
      */
-    @SuppressWarnings("unchecked")
     public final <U, R> Solo<R> zipWith(Solo<U> other, BiFunction<? super T, ? super U, ? extends R> zipper) {
         return Solo.zipArray(Functions.toFunction(zipper), this, other);
     }
@@ -665,7 +672,7 @@ public abstract class Solo<T> implements Publisher<T> {
      * @return the new Solo instance
      */
     public final <R> Solo<R> map(Function<? super T, ? extends R> mapper) {
-        ObjectHelper.requireNonNull(mapper, "mapper is null");
+        Objects.requireNonNull(mapper, "mapper is null");
         return onAssembly(new SoloMap<T, R>(this, mapper));
     }
 
@@ -676,8 +683,8 @@ public abstract class Solo<T> implements Publisher<T> {
      * @return the new Solo instance
      */
     public final Solo<T> mapError(Function<? super Throwable, ? extends Throwable> errorMapper) {
-        ObjectHelper.requireNonNull(errorMapper, "errorMapper is null");
-        return onAssembly(new SoloMapError<T>(this, errorMapper));
+        Objects.requireNonNull(errorMapper, "errorMapper is null");
+        return onAssembly(new SoloMapError<>(this, errorMapper));
     }
 
     /**
@@ -687,8 +694,8 @@ public abstract class Solo<T> implements Publisher<T> {
      * @return the new Perhaps instance
      */
     public final Perhaps<T> filter(Predicate<? super T> predicate) {
-        ObjectHelper.requireNonNull(predicate, "predicate is null");
-        return Perhaps.onAssembly(new SoloFilter<T>(this, predicate));
+        Objects.requireNonNull(predicate, "predicate is null");
+        return Perhaps.onAssembly(new SoloFilter<>(this, predicate));
     }
 
     /**
@@ -747,8 +754,8 @@ public abstract class Solo<T> implements Publisher<T> {
      * @return the new Solo instance
      */
     public final Solo<T> timeout(Publisher<?> other) {
-        ObjectHelper.requireNonNull(other, "other is null");
-        return onAssembly(new SoloTimeout<T>(this, other, null));
+        Objects.requireNonNull(other, "other is null");
+        return onAssembly(new SoloTimeout<>(this, other, null));
     }
 
     /**
@@ -760,9 +767,9 @@ public abstract class Solo<T> implements Publisher<T> {
      * @return the new Solo instance
      */
     public final Solo<T> timeout(Publisher<?> other, Solo<T> fallback) {
-        ObjectHelper.requireNonNull(other, "other is null");
-        ObjectHelper.requireNonNull(fallback, "fallback is null");
-        return onAssembly(new SoloTimeout<T>(this, other, fallback));
+        Objects.requireNonNull(other, "other is null");
+        Objects.requireNonNull(fallback, "fallback is null");
+        return onAssembly(new SoloTimeout<>(this, other, fallback));
     }
 
     /**
@@ -771,8 +778,8 @@ public abstract class Solo<T> implements Publisher<T> {
      * @return the new Solo instance
      */
     public final Solo<T> onErrorReturnItem(T item) {
-        ObjectHelper.requireNonNull(item, "item is null");
-        return onAssembly(new SoloOnErrorReturnItem<T>(this, item));
+        Objects.requireNonNull(item, "item is null");
+        return onAssembly(new SoloOnErrorReturnItem<>(this, item));
     }
 
     /**
@@ -782,8 +789,8 @@ public abstract class Solo<T> implements Publisher<T> {
      * @return the new Solo instance
      */
     public final Solo<T> onErrorResumeWith(Solo<T> next) {
-        ObjectHelper.requireNonNull(next, "next is null");
-        return onAssembly(new SoloOnErrorResumeWith<T>(this, next));
+        Objects.requireNonNull(next, "next is null");
+        return onAssembly(new SoloOnErrorResumeWith<>(this, next));
     }
 
     /**
@@ -794,8 +801,8 @@ public abstract class Solo<T> implements Publisher<T> {
      * @return the new Solo instance
      */
     public final Solo<T> onErrorResumeNext(Function<? super Throwable, ? extends Solo<T>> errorHandler) {
-        ObjectHelper.requireNonNull(errorHandler, "errorHandler is null");
-        return onAssembly(new SoloOnErrorResumeNext<T>(this, errorHandler));
+        Objects.requireNonNull(errorHandler, "errorHandler is null");
+        return onAssembly(new SoloOnErrorResumeNext<>(this, errorHandler));
     }
 
     /**
@@ -808,8 +815,8 @@ public abstract class Solo<T> implements Publisher<T> {
      */
     public final <R> Solo<R> flatMap(
             Function<? super T, ? extends Solo<? extends R>> mapper) {
-        ObjectHelper.requireNonNull(mapper, "mapper is null");
-        return onAssembly(new SoloFlatMap<T, R>(this, mapper));
+        Objects.requireNonNull(mapper, "mapper is null");
+        return onAssembly(new SoloFlatMap<>(this, mapper));
     }
 
     /**
@@ -826,9 +833,9 @@ public abstract class Solo<T> implements Publisher<T> {
             Function<? super T, ? extends Solo<? extends R>> onSuccessMapper,
             Function<? super Throwable, ? extends Solo<? extends R>> onErrorMapper
     ) {
-        ObjectHelper.requireNonNull(onSuccessMapper, "onSuccessMapper is null");
-        ObjectHelper.requireNonNull(onErrorMapper, "onErrorMapper is null");
-        return onAssembly(new SoloFlatMapSignal<T, R>(this, onSuccessMapper, onErrorMapper));
+        Objects.requireNonNull(onSuccessMapper, "onSuccessMapper is null");
+        Objects.requireNonNull(onErrorMapper, "onErrorMapper is null");
+        return onAssembly(new SoloFlatMapSignal<>(this, onSuccessMapper, onErrorMapper));
     }
 
     /**
@@ -842,8 +849,8 @@ public abstract class Solo<T> implements Publisher<T> {
     public final <R> Flowable<R> flatMapPublisher(
             Function<? super T, ? extends Publisher<? extends R>> mapper
     ) {
-        ObjectHelper.requireNonNull(mapper, "mapper is null");
-        return RxJavaPlugins.onAssembly(new SoloFlatMapPublisher<T, R>(this, mapper));
+        Objects.requireNonNull(mapper, "mapper is null");
+        return RxJavaPlugins.onAssembly(new SoloFlatMapPublisher<>(this, mapper));
     }
 
     /**
@@ -853,8 +860,8 @@ public abstract class Solo<T> implements Publisher<T> {
      * @return the new Solo instance
      */
     public final Solo<T> takeUntil(Publisher<?> other) {
-        ObjectHelper.requireNonNull(other, "other is null");
-        return onAssembly(new SoloTakeUntil<T>(this, other));
+        Objects.requireNonNull(other, "other is null");
+        return onAssembly(new SoloTakeUntil<>(this, other));
     }
 
     /**
@@ -877,8 +884,8 @@ public abstract class Solo<T> implements Publisher<T> {
      * @return the new Solo instance
      */
     public final Solo<T> delay(long delay, TimeUnit unit, Scheduler scheduler) {
-        ObjectHelper.requireNonNull(unit, "unit is null");
-        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
+        Objects.requireNonNull(unit, "unit is null");
+        Objects.requireNonNull(scheduler, "scheduler is null");
         return delay(timer(delay, unit, scheduler));
     }
 
@@ -890,8 +897,8 @@ public abstract class Solo<T> implements Publisher<T> {
      * @return the new Solo instance
      */
     public final Solo<T> delay(Publisher<?> other) {
-        ObjectHelper.requireNonNull(other, "other is null");
-        return onAssembly(new SoloDelayPublisher<T>(this, other));
+        Objects.requireNonNull(other, "other is null");
+        return onAssembly(new SoloDelayPublisher<>(this, other));
     }
 
     /**
@@ -901,8 +908,8 @@ public abstract class Solo<T> implements Publisher<T> {
      * @return the new Solo type
      */
     public final Solo<T> delaySubscription(Publisher<?> other) {
-        ObjectHelper.requireNonNull(other, "other is null");
-        return onAssembly(new SoloDelaySubscription<T>(this, other));
+        Objects.requireNonNull(other, "other is null");
+        return onAssembly(new SoloDelaySubscription<>(this, other));
     }
 
     /**
@@ -931,7 +938,7 @@ public abstract class Solo<T> implements Publisher<T> {
      * @return the new Flowable instance
      */
     public final Flowable<T> toFlowable() {
-        return RxJavaPlugins.onAssembly(new SoloToFlowable<T>(this));
+        return RxJavaPlugins.onAssembly(new SoloToFlowable<>(this));
     }
 
     /**
@@ -939,7 +946,7 @@ public abstract class Solo<T> implements Publisher<T> {
      * @return the new Observable instance
      */
     public final Observable<T> toObservable() {
-        return RxJavaPlugins.onAssembly(new SoloToObservable<T>(this));
+        return RxJavaPlugins.onAssembly(new SoloToObservable<>(this));
     }
 
     /**
@@ -947,7 +954,7 @@ public abstract class Solo<T> implements Publisher<T> {
      * @return the new Single instance
      */
     public final Single<T> toSingle() {
-        return RxJavaPlugins.onAssembly(new SoloToSingle<T>(this));
+        return RxJavaPlugins.onAssembly(new SoloToSingle<>(this));
     }
 
     /**
@@ -956,8 +963,8 @@ public abstract class Solo<T> implements Publisher<T> {
      * @return the new Solo instance
      */
     public final Solo<T> doOnSubscribe(Consumer<? super Subscription> onSubscribe) {
-        ObjectHelper.requireNonNull(onSubscribe, "onSubscribe is null");
-        return onAssembly(new SoloDoOnLifecycle<T>(this,
+        Objects.requireNonNull(onSubscribe, "onSubscribe is null");
+        return onAssembly(new SoloDoOnLifecycle<>(this,
                 Functions.emptyConsumer(),
                 Functions.emptyConsumer(),
                 Functions.emptyConsumer(),
@@ -975,8 +982,8 @@ public abstract class Solo<T> implements Publisher<T> {
      * @return the new Solo instance
      */
     public final Solo<T> doOnRequest(LongConsumer onRequest) {
-        ObjectHelper.requireNonNull(onRequest, "onRequest is null");
-        return onAssembly(new SoloDoOnLifecycle<T>(this,
+        Objects.requireNonNull(onRequest, "onRequest is null");
+        return onAssembly(new SoloDoOnLifecycle<>(this,
                 Functions.emptyConsumer(),
                 Functions.emptyConsumer(),
                 Functions.emptyConsumer(),
@@ -994,8 +1001,8 @@ public abstract class Solo<T> implements Publisher<T> {
      * @return the new Solo instance
      */
     public final Solo<T> doOnCancel(Action onCancel) {
-        ObjectHelper.requireNonNull(onCancel, "onCancel is null");
-        return onAssembly(new SoloDoOnLifecycle<T>(this,
+        Objects.requireNonNull(onCancel, "onCancel is null");
+        return onAssembly(new SoloDoOnLifecycle<>(this,
                 Functions.emptyConsumer(),
                 Functions.emptyConsumer(),
                 Functions.emptyConsumer(),
@@ -1014,8 +1021,8 @@ public abstract class Solo<T> implements Publisher<T> {
      * @return the new Solo instance
      */
     public final Solo<T> doOnNext(Consumer<? super T> onNext) {
-        ObjectHelper.requireNonNull(onNext, "onNext is null");
-        return onAssembly(new SoloDoOnLifecycle<T>(this,
+        Objects.requireNonNull(onNext, "onNext is null");
+        return onAssembly(new SoloDoOnLifecycle<>(this,
                 onNext,
                 Functions.emptyConsumer(),
                 Functions.emptyConsumer(),
@@ -1034,8 +1041,8 @@ public abstract class Solo<T> implements Publisher<T> {
      * @return the new Solo instance
      */
     public final Solo<T> doAfterNext(Consumer<? super T> onAfterNext) {
-        ObjectHelper.requireNonNull(onAfterNext, "onAfterNext is null");
-        return onAssembly(new SoloDoOnLifecycle<T>(this,
+        Objects.requireNonNull(onAfterNext, "onAfterNext is null");
+        return onAssembly(new SoloDoOnLifecycle<>(this,
                 Functions.emptyConsumer(),
                 onAfterNext,
                 Functions.emptyConsumer(),
@@ -1054,8 +1061,8 @@ public abstract class Solo<T> implements Publisher<T> {
      * @return the new Solo instance
      */
     public final Solo<T> doOnError(Consumer<? super Throwable> onError) {
-        ObjectHelper.requireNonNull(onError, "onError is null");
-        return onAssembly(new SoloDoOnLifecycle<T>(this,
+        Objects.requireNonNull(onError, "onError is null");
+        return onAssembly(new SoloDoOnLifecycle<>(this,
                 Functions.emptyConsumer(),
                 Functions.emptyConsumer(),
                 onError,
@@ -1074,8 +1081,8 @@ public abstract class Solo<T> implements Publisher<T> {
      * @return the new Solo instance
      */
     public final Solo<T> doOnComplete(Action onComplete) {
-        ObjectHelper.requireNonNull(onComplete, "onComplete is null");
-        return onAssembly(new SoloDoOnLifecycle<T>(this,
+        Objects.requireNonNull(onComplete, "onComplete is null");
+        return onAssembly(new SoloDoOnLifecycle<>(this,
                 Functions.emptyConsumer(),
                 Functions.emptyConsumer(),
                 Functions.emptyConsumer(),
@@ -1094,8 +1101,8 @@ public abstract class Solo<T> implements Publisher<T> {
      * @return the new Solo instance
      */
     public final Solo<T> doAfterTerminate(Action onAfterTerminate) {
-        ObjectHelper.requireNonNull(onAfterTerminate, "onAfterTerminate is null");
-        return onAssembly(new SoloDoOnLifecycle<T>(this,
+        Objects.requireNonNull(onAfterTerminate, "onAfterTerminate is null");
+        return onAssembly(new SoloDoOnLifecycle<>(this,
                 Functions.emptyConsumer(),
                 Functions.emptyConsumer(),
                 Functions.emptyConsumer(),
@@ -1114,8 +1121,8 @@ public abstract class Solo<T> implements Publisher<T> {
      * @return the new Solo instance
      */
     public final Solo<T> doFinally(Action onFinally) {
-        ObjectHelper.requireNonNull(onFinally, "onFinally is null");
-        return onAssembly(new SoloDoFinally<T>(this, onFinally));
+        Objects.requireNonNull(onFinally, "onFinally is null");
+        return onAssembly(new SoloDoFinally<>(this, onFinally));
     }
 
     /**
@@ -1133,7 +1140,7 @@ public abstract class Solo<T> implements Publisher<T> {
      * @return the new Solo instance
      */
     public final Solo<T> hide() {
-        return onAssembly(new SoloHide<T>(this));
+        return onAssembly(new SoloHide<>(this));
     }
 
     /**
@@ -1168,8 +1175,8 @@ public abstract class Solo<T> implements Publisher<T> {
      * @return the new Solo type
      */
     public final <R> Solo<R> lift(Function<Subscriber<? super R>, Subscriber<? super T>> onLift) {
-        ObjectHelper.requireNonNull(onLift, "onLift is null");
-        return onAssembly(new SoloLift<T, R>(this, onLift));
+        Objects.requireNonNull(onLift, "onLift is null");
+        return onAssembly(new SoloLift<>(this, onLift));
     }
 
     /**
@@ -1217,7 +1224,7 @@ public abstract class Solo<T> implements Publisher<T> {
      * @return the new Solo instance
      */
     public final Solo<T> retry() {
-        return onAssembly(new SoloRetry<T>(this, Long.MAX_VALUE));
+        return onAssembly(new SoloRetry<>(this, Long.MAX_VALUE));
     }
 
     /**
@@ -1229,7 +1236,7 @@ public abstract class Solo<T> implements Publisher<T> {
         if (times < 0L) {
             throw new IllegalArgumentException("times >= 0 required but it was " + times);
         }
-        return onAssembly(new SoloRetry<T>(this, times));
+        return onAssembly(new SoloRetry<>(this, times));
     }
 
     /**
@@ -1240,8 +1247,8 @@ public abstract class Solo<T> implements Publisher<T> {
      * @return the new Solo instance
      */
     public final Solo<T> retry(Predicate<? super Throwable> predicate) {
-        ObjectHelper.requireNonNull(predicate, "predicate is null");
-        return onAssembly(new SoloRetryWhile<T>(this, predicate));
+        Objects.requireNonNull(predicate, "predicate is null");
+        return onAssembly(new SoloRetryWhile<>(this, predicate));
     }
 
     /**
@@ -1253,8 +1260,8 @@ public abstract class Solo<T> implements Publisher<T> {
      * @return the new Solo instance
      */
     public final Solo<T> retryWhen(Function<? super Flowable<Throwable>, ? extends Publisher<?>> handler) {
-        ObjectHelper.requireNonNull(handler, "handler is null");
-        return onAssembly(new SoloRetryWhen<T>(this, handler));
+        Objects.requireNonNull(handler, "handler is null");
+        return onAssembly(new SoloRetryWhen<>(this, handler));
     }
 
     /**
@@ -1264,8 +1271,8 @@ public abstract class Solo<T> implements Publisher<T> {
      * @return the new Solo instance
      */
     public final Solo<T> subscribeOn(Scheduler scheduler) {
-        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
-        return onAssembly(new SoloSubscribeOn<T>(this, scheduler));
+        Objects.requireNonNull(scheduler, "scheduler is null");
+        return onAssembly(new SoloSubscribeOn<>(this, scheduler));
     }
 
     /**
@@ -1275,8 +1282,8 @@ public abstract class Solo<T> implements Publisher<T> {
      * @return the new Solo instance
      */
     public final Solo<T> observeOn(Scheduler scheduler) {
-        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
-        return onAssembly(new SoloObserveOn<T>(this, scheduler));
+        Objects.requireNonNull(scheduler, "scheduler is null");
+        return onAssembly(new SoloObserveOn<>(this, scheduler));
     }
 
     /**
@@ -1286,8 +1293,8 @@ public abstract class Solo<T> implements Publisher<T> {
      * @return the new Solo instance
      */
     public final Solo<T> unsubscribeOn(Scheduler scheduler) {
-        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
-        return onAssembly(new SoloUnsubscribeOn<T>(this, scheduler));
+        Objects.requireNonNull(scheduler, "scheduler is null");
+        return onAssembly(new SoloUnsubscribeOn<>(this, scheduler));
     }
 
     /**
@@ -1298,7 +1305,7 @@ public abstract class Solo<T> implements Publisher<T> {
      * @since 0.14.1
      */
     public final Solo<T> cache() {
-        return onAssembly(new SoloCache<T>(this));
+        return onAssembly(new SoloCache<>(this));
     }
 
     // ----------------------------------------------------
@@ -1307,7 +1314,7 @@ public abstract class Solo<T> implements Publisher<T> {
 
     @Override
     public final void subscribe(Subscriber<? super T> s) {
-        ObjectHelper.requireNonNull(s, "s is null");
+        Objects.requireNonNull(s, "s is null");
         try {
             subscribeActual(s);
         } catch (NullPointerException ex) {
@@ -1372,7 +1379,7 @@ public abstract class Solo<T> implements Publisher<T> {
      * @return the Disposable that allows cancelling the subscription
      */
     public final Disposable subscribe(Consumer<? super T> onNext, Consumer<? super Throwable> onError, Action onComplete) {
-        LambdaSubscriber<T> s = new LambdaSubscriber<T>(onNext, onError, onComplete, Functions.REQUEST_MAX);
+        LambdaSubscriber<T> s = new LambdaSubscriber<>(onNext, onError, onComplete, Functions.REQUEST_MAX);
         subscribe(s);
         return s;
     }
@@ -1410,10 +1417,10 @@ public abstract class Solo<T> implements Publisher<T> {
      * @param onComplete called when the Solo succeeds after the call to onNext.
      */
     public final void blockingSubscribe(Consumer<? super T> onNext, Consumer<? super Throwable> onError, Action onComplete) {
-        ObjectHelper.requireNonNull(onNext, "onNext is null");
-        ObjectHelper.requireNonNull(onError, "onError is null");
-        ObjectHelper.requireNonNull(onComplete, "onComplete is null");
-        BlockingGetSubscriber<T> s = new BlockingGetSubscriber<T>();
+        Objects.requireNonNull(onNext, "onNext is null");
+        Objects.requireNonNull(onError, "onError is null");
+        Objects.requireNonNull(onComplete, "onComplete is null");
+        BlockingGetSubscriber<T> s = new BlockingGetSubscriber<>();
         subscribe(s);
         s.blockingCall(onNext, onError, onComplete);
     }
@@ -1424,7 +1431,7 @@ public abstract class Solo<T> implements Publisher<T> {
      * @return the success value of this Solo
      */
     public final T blockingGet() {
-        BlockingGetSubscriber<T> s = new BlockingGetSubscriber<T>();
+        BlockingGetSubscriber<T> s = new BlockingGetSubscriber<>();
         subscribe(s);
         return s.blockingGet();
     }
@@ -1438,7 +1445,7 @@ public abstract class Solo<T> implements Publisher<T> {
      * @return the success value of this Solo
      */
     public final T blockingGet(long timeout, TimeUnit unit) {
-        BlockingGetSubscriber<T> s = new BlockingGetSubscriber<T>();
+        BlockingGetSubscriber<T> s = new BlockingGetSubscriber<>();
         subscribe(s);
         return s.blockingGet(timeout, unit);
     }
@@ -1481,7 +1488,7 @@ public abstract class Solo<T> implements Publisher<T> {
      * @return the new TestSubscriber
      */
     public final TestSubscriber<T> test(long initialRequest, boolean cancel) {
-        TestSubscriber<T> ts = new TestSubscriber<T>(initialRequest);
+        TestSubscriber<T> ts = new TestSubscriber<>(initialRequest);
         if (cancel) {
             ts.cancel();
         }
@@ -1495,7 +1502,7 @@ public abstract class Solo<T> implements Publisher<T> {
      * @return the new Future instance
      */
     public final Future<T> toFuture() {
-        FuturePerhapsSubscriber<T> fs = new FuturePerhapsSubscriber<T>();
+        FuturePerhapsSubscriber<T> fs = new FuturePerhapsSubscriber<>();
         subscribe(fs);
         return fs;
     }

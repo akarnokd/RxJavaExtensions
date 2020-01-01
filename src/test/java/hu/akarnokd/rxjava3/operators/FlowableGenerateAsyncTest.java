@@ -263,7 +263,7 @@ public class FlowableGenerateAsyncTest {
     @Test
     public void take() {
         final AtomicBoolean cancelled1 = new AtomicBoolean();
-        final AtomicReference<FlowableAsyncEmitter<Integer>> emitterRef = new AtomicReference<FlowableAsyncEmitter<Integer>>();
+        final AtomicReference<FlowableAsyncEmitter<Integer>> emitterRef = new AtomicReference<>();
 
         final AtomicInteger cleanup = new AtomicInteger();
         Flowables.generateAsync(

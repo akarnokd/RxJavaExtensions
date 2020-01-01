@@ -16,11 +16,12 @@
 
 package hu.akarnokd.rxjava3.operators;
 
+import java.util.Objects;
+
 import org.reactivestreams.Publisher;
 
 import io.reactivex.rxjava3.core.*;
 import io.reactivex.rxjava3.functions.*;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 
 /**
  * Additional operators in the form of {@link CompletableConverter}s,
@@ -51,9 +52,9 @@ public final class Completables {
     public static <R> CompletableConverter<Maybe<R>> flatMapMaybe(
             Supplier<? extends MaybeSource<? extends R>> onCompleteHandler,
             Function<? super Throwable, ? extends MaybeSource<? extends R>> onErrorHandler) {
-        ObjectHelper.requireNonNull(onCompleteHandler, "onCompleteHandler is null");
-        ObjectHelper.requireNonNull(onErrorHandler, "onErrorHandler is null");
-        return new CompletableFlatMapSignalMaybe<R>(null, onCompleteHandler, onErrorHandler);
+        Objects.requireNonNull(onCompleteHandler, "onCompleteHandler is null");
+        Objects.requireNonNull(onErrorHandler, "onErrorHandler is null");
+        return new CompletableFlatMapSignalMaybe<>(null, onCompleteHandler, onErrorHandler);
     }
 
     /**
@@ -70,9 +71,9 @@ public final class Completables {
     public static <R> CompletableConverter<Single<R>> flatMapSingle(
             Supplier<? extends SingleSource<? extends R>> onCompleteHandler,
             Function<? super Throwable, ? extends SingleSource<? extends R>> onErrorHandler) {
-        ObjectHelper.requireNonNull(onCompleteHandler, "onCompleteHandler is null");
-        ObjectHelper.requireNonNull(onErrorHandler, "onErrorHandler is null");
-        return new CompletableFlatMapSignalSingle<R>(null, onCompleteHandler, onErrorHandler);
+        Objects.requireNonNull(onCompleteHandler, "onCompleteHandler is null");
+        Objects.requireNonNull(onErrorHandler, "onErrorHandler is null");
+        return new CompletableFlatMapSignalSingle<>(null, onCompleteHandler, onErrorHandler);
     }
 
     /**
@@ -89,9 +90,9 @@ public final class Completables {
     public static <R> CompletableConverter<Observable<R>> flatMapObservable(
             Supplier<? extends ObservableSource<? extends R>> onCompleteHandler,
             Function<? super Throwable, ? extends ObservableSource<? extends R>> onErrorHandler) {
-        ObjectHelper.requireNonNull(onCompleteHandler, "onCompleteHandler is null");
-        ObjectHelper.requireNonNull(onErrorHandler, "onErrorHandler is null");
-        return new CompletableFlatMapSignalObservable<R>(null, onCompleteHandler, onErrorHandler);
+        Objects.requireNonNull(onCompleteHandler, "onCompleteHandler is null");
+        Objects.requireNonNull(onErrorHandler, "onErrorHandler is null");
+        return new CompletableFlatMapSignalObservable<>(null, onCompleteHandler, onErrorHandler);
     }
 
     /**
@@ -108,8 +109,8 @@ public final class Completables {
     public static <R> CompletableConverter<Flowable<R>> flatMapFlowable(
             Supplier<? extends Publisher<? extends R>> onCompleteHandler,
             Function<? super Throwable, ? extends Publisher<? extends R>> onErrorHandler) {
-        ObjectHelper.requireNonNull(onCompleteHandler, "onCompleteHandler is null");
-        ObjectHelper.requireNonNull(onErrorHandler, "onErrorHandler is null");
-        return new CompletableFlatMapSignalFlowable<R>(null, onCompleteHandler, onErrorHandler);
+        Objects.requireNonNull(onCompleteHandler, "onCompleteHandler is null");
+        Objects.requireNonNull(onErrorHandler, "onErrorHandler is null");
+        return new CompletableFlatMapSignalFlowable<>(null, onCompleteHandler, onErrorHandler);
     }
 }

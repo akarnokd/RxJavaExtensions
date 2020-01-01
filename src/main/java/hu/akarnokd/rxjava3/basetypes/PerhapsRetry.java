@@ -40,7 +40,7 @@ final class PerhapsRetry<T> extends Perhaps<T> {
 
     @Override
     protected void subscribeActual(Subscriber<? super T> s) {
-        RetrySubscriber<T> parent = new RetrySubscriber<T>(s, times, source);
+        RetrySubscriber<T> parent = new RetrySubscriber<>(s, times, source);
         s.onSubscribe(parent);
         parent.subscribeNext();
     }
@@ -65,7 +65,7 @@ final class PerhapsRetry<T> extends Perhaps<T> {
             this.times = times;
             this.source = source;
             this.wip = new AtomicInteger();
-            this.upstream = new AtomicReference<Subscription>();
+            this.upstream = new AtomicReference<>();
         }
 
         @Override

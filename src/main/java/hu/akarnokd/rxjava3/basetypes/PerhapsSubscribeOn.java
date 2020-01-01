@@ -43,7 +43,7 @@ final class PerhapsSubscribeOn<T> extends Perhaps<T> {
     protected void subscribeActual(Subscriber<? super T> s) {
         Worker worker = scheduler.createWorker();
 
-        SubscribeOnSubscriber<T> parent = new SubscribeOnSubscriber<T>(s, worker, source);
+        SubscribeOnSubscriber<T> parent = new SubscribeOnSubscriber<>(s, worker, source);
         s.onSubscribe(parent);
 
         DisposableHelper.replace(parent.task, worker.schedule(parent));

@@ -16,11 +16,12 @@
 
 package hu.akarnokd.rxjava3.basetypes;
 
+import java.util.Objects;
+
 import org.reactivestreams.Subscriber;
 
 import io.reactivex.rxjava3.exceptions.Exceptions;
 import io.reactivex.rxjava3.functions.Supplier;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 import io.reactivex.rxjava3.internal.subscriptions.EmptySubscription;
 
 /**
@@ -41,7 +42,7 @@ final class SoloErrorSupplier<T> extends Solo<T> implements Supplier<T> {
         Throwable ex;
 
         try {
-            ex = ObjectHelper.requireNonNull(errorSupplier.get(), "The errorSupplier returned a null Throwable");
+            ex = Objects.requireNonNull(errorSupplier.get(), "The errorSupplier returned a null Throwable");
         } catch (Throwable exc) {
             Exceptions.throwIfFatal(exc);
             ex = exc;
@@ -52,6 +53,6 @@ final class SoloErrorSupplier<T> extends Solo<T> implements Supplier<T> {
 
     @Override
     public T get() throws Throwable {
-        throw ObjectHelper.requireNonNull(errorSupplier.get(), "The errorSupplier returned a null Throwable");
+        throw Objects.requireNonNull(errorSupplier.get(), "The errorSupplier returned a null Throwable");
     }
 }

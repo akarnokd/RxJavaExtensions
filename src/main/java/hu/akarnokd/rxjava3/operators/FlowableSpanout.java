@@ -64,7 +64,7 @@ final class FlowableSpanout<T> extends Flowable<T> implements FlowableTransforme
 
     @Override
     public Publisher<T> apply(Flowable<T> upstream) {
-        return new FlowableSpanout<T>(upstream, initialSpan, betweenSpan, TimeUnit.NANOSECONDS, scheduler, delayError, bufferSize);
+        return new FlowableSpanout<>(upstream, initialSpan, betweenSpan, TimeUnit.NANOSECONDS, scheduler, delayError, bufferSize);
     }
 
     @Override
@@ -101,7 +101,7 @@ final class FlowableSpanout<T> extends Flowable<T> implements FlowableTransforme
             this.worker = worker;
             this.delayError = delayError;
             this.lastEvent = -1L;
-            this.queue = new SpscLinkedArrayQueue<T>(bufferSize);
+            this.queue = new SpscLinkedArrayQueue<>(bufferSize);
         }
 
         @Override

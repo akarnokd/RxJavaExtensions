@@ -16,7 +16,7 @@
 
 package hu.akarnokd.rxjava3.operators;
 
-import java.util.ArrayDeque;
+import java.util.*;
 import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
@@ -24,7 +24,6 @@ import org.reactivestreams.*;
 import io.reactivex.rxjava3.core.*;
 import io.reactivex.rxjava3.exceptions.Exceptions;
 import io.reactivex.rxjava3.functions.Function;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 import io.reactivex.rxjava3.internal.fuseable.SimplePlainQueue;
 import io.reactivex.rxjava3.internal.queue.SpscLinkedArrayQueue;
 import io.reactivex.rxjava3.internal.subscriptions.*;
@@ -59,12 +58,12 @@ final class FlowableExpand<T> extends Flowable<T> implements FlowableTransformer
     @Override
     protected void subscribeActual(Subscriber<? super T> s) {
         if (strategy != ExpandStrategy.DEPTH_FIRST) {
-            ExpandBreadthSubscriber<T> parent = new ExpandBreadthSubscriber<T>(s, expander, capacityHint, delayErrors);
+            ExpandBreadthSubscriber<T> parent = new ExpandBreadthSubscriber<>(s, expander, capacityHint, delayErrors);
             parent.queue.offer(source);
             s.onSubscribe(parent);
             parent.drainQueue();
         } else {
-            ExpandDepthSubscription<T> parent = new ExpandDepthSubscription<T>(s, expander, capacityHint, delayErrors);
+            ExpandDepthSubscription<T> parent = new ExpandDepthSubscription<>(s, expander, capacityHint, delayErrors);
             parent.source = source;
             s.onSubscribe(parent);
         }
@@ -72,7 +71,7 @@ final class FlowableExpand<T> extends Flowable<T> implements FlowableTransformer
 
     @Override
     public Publisher<T> apply(Flowable<T> upstream) {
-        return new FlowableExpand<T>(upstream, expander, strategy, capacityHint, delayErrors);
+        return new FlowableExpand<>(upstream, expander, strategy, capacityHint, delayErrors);
     }
 
     static final class ExpandBreadthSubscriber<T> extends SubscriptionArbiter implements FlowableSubscriber<T> {
@@ -101,7 +100,7 @@ final class FlowableExpand<T> extends Flowable<T> implements FlowableTransformer
             this.downstream = downstream;
             this.expander = expander;
             this.wip = new AtomicInteger();
-            this.queue = new SpscLinkedArrayQueue<Publisher<? extends T>>(capacityHint);
+            this.queue = new SpscLinkedArrayQueue<>(capacityHint);
             this.errors = new AtomicThrowable();
             this.delayErrors = delayErrors;
         }
@@ -118,7 +117,7 @@ final class FlowableExpand<T> extends Flowable<T> implements FlowableTransformer
 
             Publisher<? extends T> p;
             try {
-                p = ObjectHelper.requireNonNull(expander.apply(t), "The expander returned a null Publisher");
+                p = Objects.requireNonNull(expander.apply(t), "The expander returned a null Publisher");
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
                 super.cancel();
@@ -218,11 +217,11 @@ final class FlowableExpand<T> extends Flowable<T> implements FlowableTransformer
                         int capacityHint, boolean delayErrors) {
             this.downstream = downstream;
             this.expander = expander;
-            this.subscriptionStack = new ArrayDeque<ExpandDepthSubscriber>();
+            this.subscriptionStack = new ArrayDeque<>();
             this.error = new AtomicThrowable();
             this.active = new AtomicInteger();
             this.requested = new AtomicLong();
-            this.current = new AtomicReference<Object>();
+            this.current = new AtomicReference<>();
             this.delayErrors = delayErrors;
         }
 
@@ -342,7 +341,7 @@ final class FlowableExpand<T> extends Flowable<T> implements FlowableTransformer
                         e++;
 
                         try {
-                            p = ObjectHelper.requireNonNull(expander.apply(v), "The expander returned a null Publisher");
+                            p = Objects.requireNonNull(expander.apply(v), "The expander returned a null Publisher");
                         } catch (Throwable ex) {
                             Exceptions.throwIfFatal(ex);
                             p = null;

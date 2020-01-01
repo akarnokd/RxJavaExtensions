@@ -49,7 +49,7 @@ final class PerhapsZipArray<T, R> extends Perhaps<R> {
     protected void subscribeActual(Subscriber<? super R> s) {
         Perhaps<? extends T>[] srcs = sources;
         int n = srcs.length;
-        ZipCoordinator<T, R> parent = new ZipCoordinator<T, R>(s, zipper, n);
+        ZipCoordinator<T, R> parent = new ZipCoordinator<>(s, zipper, n);
         s.onSubscribe(parent);
 
         parent.subscribe(srcs, n);
@@ -74,7 +74,7 @@ final class PerhapsZipArray<T, R> extends Perhaps<R> {
             this.wip = new AtomicInteger(n);
             this.subscribers = new ZipInnerSubscriber[n];
             for (int i = 0; i < n; i++) {
-                subscribers[i] = new ZipInnerSubscriber<T, R>(i, this);
+                subscribers[i] = new ZipInnerSubscriber<>(i, this);
             }
             this.values = new Object[n];
         }

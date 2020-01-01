@@ -44,7 +44,7 @@ final class ParallelFlowableValidator<T> extends ParallelFlowable<T> {
         @SuppressWarnings("unchecked")
         Subscriber<? super T>[] actual = new Subscriber[n];
         for (int i = 0; i < n; i++) {
-            actual[i] = new FlowableValidator.ValidatorConsumer<T>(s[i], onViolation);
+            actual[i] = new FlowableValidator.ValidatorConsumer<>(s[i], onViolation);
         }
         source.subscribe(actual);
     }

@@ -32,7 +32,7 @@ public final class PatternN {
     }
 
     public PatternN(List<Observable<? extends Object>> observables, Observable<? extends Object> other) {
-        this.observables = new ArrayList<Observable<? extends Object>>(observables);
+        this.observables = new ArrayList<>(observables);
         this.observables.add(other);
     }
 
@@ -81,6 +81,6 @@ public final class PatternN {
         if (selector == null) {
             throw new NullPointerException();
         }
-        return new PlanN<R>(this, selector);
+        return new PlanN<>(this, selector);
     }
 }

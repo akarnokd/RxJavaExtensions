@@ -16,8 +16,9 @@
 
 package hu.akarnokd.rxjava3.subjects;
 
+import java.util.Objects;
+
 import io.reactivex.rxjava3.annotations.*;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 import io.reactivex.rxjava3.subjects.Subject;
 
 /**
@@ -48,6 +49,6 @@ public final class Subjects {
         if (subject instanceof RefCountSubject) {
             return subject;
         }
-        return new RefCountSubject<T>(ObjectHelper.requireNonNull(subject, "subject is null"));
+        return new RefCountSubject<>(Objects.requireNonNull(subject, "subject is null"));
     }
 }

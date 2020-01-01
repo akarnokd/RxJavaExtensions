@@ -16,11 +16,12 @@
 
 package hu.akarnokd.rxjava3.basetypes;
 
+import java.util.Objects;
+
 import org.reactivestreams.Subscriber;
 
 import hu.akarnokd.rxjava3.basetypes.SoloAmbArray.AmbSubscriber;
 import io.reactivex.rxjava3.exceptions.Exceptions;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 
 /**
  * Signal the events of the first source that signals.
@@ -37,12 +38,12 @@ final class SoloAmbIterable<T> extends Solo<T> {
 
     @Override
     protected void subscribeActual(Subscriber<? super T> s) {
-        AmbSubscriber<T> parent = new AmbSubscriber<T>(s);
+        AmbSubscriber<T> parent = new AmbSubscriber<>(s);
         s.onSubscribe(parent);
 
         try {
             for (Solo<? extends T> source : sources) {
-                ObjectHelper.requireNonNull(source, "One of the sources is null")
+                Objects.requireNonNull(source, "One of the sources is null")
                 .subscribe(parent);
             }
         } catch (Throwable ex) {

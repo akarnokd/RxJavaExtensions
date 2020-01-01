@@ -28,7 +28,7 @@ public class SpmcLinkedArrayQueueTest {
 
     @Test(timeout = 5000)
     public void simple() {
-        SpmcLinkedArrayQueue<Integer> q = new SpmcLinkedArrayQueue<Integer>(32);
+        SpmcLinkedArrayQueue<Integer> q = new SpmcLinkedArrayQueue<>(32);
 
         for (int i = 0; i < 128; i++) {
             assertTrue(q.isEmpty());
@@ -60,7 +60,7 @@ public class SpmcLinkedArrayQueueTest {
 
     @Test(timeout = 5000)
     public void simple2() {
-        SpmcLinkedArrayQueue<Integer> q = new SpmcLinkedArrayQueue<Integer>(32);
+        SpmcLinkedArrayQueue<Integer> q = new SpmcLinkedArrayQueue<>(32);
 
         for (int i = 0; i < 128; i++) {
             assertTrue(q.isEmpty());
@@ -95,13 +95,13 @@ public class SpmcLinkedArrayQueueTest {
     @Test
     public void consumerRace() {
         for (int i = 0; i < TestHelper.RACE_LONG_LOOPS; i++) {
-            final SpmcLinkedArrayQueue<Integer> q = new SpmcLinkedArrayQueue<Integer>(32);
+            final SpmcLinkedArrayQueue<Integer> q = new SpmcLinkedArrayQueue<>(32);
 
             for (int j = 0; j < 1000; j++) {
                 q.offer(j);
             }
 
-            final Set<Integer> set1 = new HashSet<Integer>();
+            final Set<Integer> set1 = new HashSet<>();
             Runnable r1 = new Runnable() {
                 @Override
                 public void run() {
@@ -115,7 +115,7 @@ public class SpmcLinkedArrayQueueTest {
                 }
             };
 
-            final Set<Integer> set2 = new HashSet<Integer>();
+            final Set<Integer> set2 = new HashSet<>();
             Runnable r2 = new Runnable() {
                 @Override
                 public void run() {
@@ -146,7 +146,7 @@ public class SpmcLinkedArrayQueueTest {
     @Test
     public void consumerRaceLong() {
         for (int i = 0; i < TestHelper.RACE_LONG_LOOPS / 25; i++) {
-            final SpmcLinkedArrayQueue<Integer> q = new SpmcLinkedArrayQueue<Integer>(32);
+            final SpmcLinkedArrayQueue<Integer> q = new SpmcLinkedArrayQueue<>(32);
 
             int n = 50000;
 
@@ -154,7 +154,7 @@ public class SpmcLinkedArrayQueueTest {
                 q.offer(j);
             }
 
-            final Set<Integer> set1 = new HashSet<Integer>();
+            final Set<Integer> set1 = new HashSet<>();
             Runnable r1 = new Runnable() {
                 @Override
                 public void run() {
@@ -168,7 +168,7 @@ public class SpmcLinkedArrayQueueTest {
                 }
             };
 
-            final Set<Integer> set2 = new HashSet<Integer>();
+            final Set<Integer> set2 = new HashSet<>();
             Runnable r2 = new Runnable() {
                 @Override
                 public void run() {
@@ -199,13 +199,13 @@ public class SpmcLinkedArrayQueueTest {
     @Test
     public void consumerRace2() {
         for (int i = 0; i < TestHelper.RACE_LONG_LOOPS; i++) {
-            final SpmcLinkedArrayQueue<Integer> q = new SpmcLinkedArrayQueue<Integer>(32);
+            final SpmcLinkedArrayQueue<Integer> q = new SpmcLinkedArrayQueue<>(32);
 
             for (int j = 0; j < 1000; j++) {
                 q.offer(j);
             }
 
-            final Set<Integer> set1 = new HashSet<Integer>();
+            final Set<Integer> set1 = new HashSet<>();
             Runnable r1 = new Runnable() {
                 @Override
                 public void run() {
@@ -219,7 +219,7 @@ public class SpmcLinkedArrayQueueTest {
                 }
             };
 
-            final Set<Integer> set2 = new HashSet<Integer>();
+            final Set<Integer> set2 = new HashSet<>();
             Runnable r2 = new Runnable() {
                 @Override
                 public void run() {
@@ -250,7 +250,7 @@ public class SpmcLinkedArrayQueueTest {
     @Test
     public void produceConsumeRace() {
         for (int i = 0; i < TestHelper.RACE_LONG_LOOPS; i++) {
-            final SpmcLinkedArrayQueue<Integer> q = new SpmcLinkedArrayQueue<Integer>(32);
+            final SpmcLinkedArrayQueue<Integer> q = new SpmcLinkedArrayQueue<>(32);
 
             Runnable r1 = new Runnable() {
                 @Override
@@ -261,7 +261,7 @@ public class SpmcLinkedArrayQueueTest {
                 }
             };
 
-            final List<Integer> list = new ArrayList<Integer>();
+            final List<Integer> list = new ArrayList<>();
             Runnable r2 = new Runnable() {
                 @Override
                 public void run() {

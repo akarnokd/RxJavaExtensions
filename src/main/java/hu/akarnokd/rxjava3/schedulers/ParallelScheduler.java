@@ -94,7 +94,7 @@ public final class ParallelScheduler extends Scheduler {
         this.parallelism = parallelism;
         this.factory = factory;
         this.tracking = tracking;
-        this.pool = new AtomicReference<ScheduledExecutorService[]>(SHUTDOWN);
+        this.pool = new AtomicReference<>(SHUTDOWN);
         start();
     }
 
@@ -164,12 +164,12 @@ public final class ParallelScheduler extends Scheduler {
     public Disposable scheduleDirect(Runnable run) {
         ScheduledExecutorService exec = pick();
         if (exec == REJECTING) {
-            return Disposables.disposed();
+            return Disposable.disposed();
         }
         try {
-            return Disposables.fromFuture(exec.submit(RxJavaPlugins.onSchedule(run)));
+            return Disposable.fromFuture(exec.submit(RxJavaPlugins.onSchedule(run)));
         } catch (RejectedExecutionException ex) {
-            return Disposables.disposed();
+            return Disposable.disposed();
         }
     }
 
@@ -177,12 +177,12 @@ public final class ParallelScheduler extends Scheduler {
     public Disposable scheduleDirect(Runnable run, long delay, TimeUnit unit) {
         ScheduledExecutorService exec = pick();
         if (exec == REJECTING) {
-            return Disposables.disposed();
+            return Disposable.disposed();
         }
         try {
-            return Disposables.fromFuture(exec.schedule(RxJavaPlugins.onSchedule(run), delay, unit));
+            return Disposable.fromFuture(exec.schedule(RxJavaPlugins.onSchedule(run), delay, unit));
         } catch (RejectedExecutionException ex) {
-            return Disposables.disposed();
+            return Disposable.disposed();
         }
     }
 
@@ -190,12 +190,12 @@ public final class ParallelScheduler extends Scheduler {
     public Disposable schedulePeriodicallyDirect(Runnable run, long initialDelay, long period, TimeUnit unit) {
         ScheduledExecutorService exec = pick();
         if (exec == REJECTING) {
-            return Disposables.disposed();
+            return Disposable.disposed();
         }
         try {
-            return Disposables.fromFuture(exec.scheduleAtFixedRate(RxJavaPlugins.onSchedule(run), initialDelay, period, unit));
+            return Disposable.fromFuture(exec.scheduleAtFixedRate(RxJavaPlugins.onSchedule(run), initialDelay, period, unit));
         } catch (RejectedExecutionException ex) {
-            return Disposables.disposed();
+            return Disposable.disposed();
         }
     }
 
@@ -230,7 +230,7 @@ public final class ParallelScheduler extends Scheduler {
                     // just let it fall through
                 }
             }
-            return Disposables.disposed();
+            return Disposable.disposed();
         }
 
         @Override
@@ -244,7 +244,7 @@ public final class ParallelScheduler extends Scheduler {
                     // just let it fall through
                 }
             }
-            return Disposables.disposed();
+            return Disposable.disposed();
         }
 
         // Not implementing a custom schedulePeriodically as it would require tracking the Future.
@@ -319,7 +319,7 @@ public final class ParallelScheduler extends Scheduler {
                     }
                 }
             }
-            return Disposables.disposed();
+            return Disposable.disposed();
         }
 
         @Override
@@ -336,7 +336,7 @@ public final class ParallelScheduler extends Scheduler {
                     }
                 }
             }
-            return Disposables.disposed();
+            return Disposable.disposed();
         }
 
         static final class TrackedAction
@@ -348,9 +348,9 @@ public final class ParallelScheduler extends Scheduler {
             static final Future<?> DISPOSED;
 
             static {
-                FINISHED = new FutureTask<Object>(Functions.EMPTY_RUNNABLE, null);
+                FINISHED = new FutureTask<>(Functions.EMPTY_RUNNABLE, null);
                 FINISHED.cancel(false);
-                DISPOSED = new FutureTask<Object>(Functions.EMPTY_RUNNABLE, null);
+                DISPOSED = new FutureTask<>(Functions.EMPTY_RUNNABLE, null);
                 DISPOSED.cancel(false);
             }
 
@@ -363,7 +363,7 @@ public final class ParallelScheduler extends Scheduler {
             TrackedAction(Runnable actual, DisposableContainer parent) {
                 this.actual = actual;
                 this.lazySet(parent);
-                this.future = new AtomicReference<Future<?>>();
+                this.future = new AtomicReference<>();
             }
 
             @Override

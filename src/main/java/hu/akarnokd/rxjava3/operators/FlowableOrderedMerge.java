@@ -22,7 +22,6 @@ import org.reactivestreams.*;
 
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.exceptions.Exceptions;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 import io.reactivex.rxjava3.internal.subscriptions.EmptySubscription;
 
 /**
@@ -69,7 +68,7 @@ final class FlowableOrderedMerge<T> extends Flowable<T> {
                     if (n == array.length) {
                         array = Arrays.copyOf(array, n << 1);
                     }
-                    array[n++] = ObjectHelper.requireNonNull(p, "a source is null");
+                    array[n++] = Objects.requireNonNull(p, "a source is null");
                 }
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
@@ -90,7 +89,7 @@ final class FlowableOrderedMerge<T> extends Flowable<T> {
             return;
         }
 
-        BasicMergeSubscription<T> parent = new BasicMergeSubscription<T>(s, comparator, n, prefetch, delayErrors);
+        BasicMergeSubscription<T> parent = new BasicMergeSubscription<>(s, comparator, n, prefetch, delayErrors);
         s.onSubscribe(parent);
         parent.subscribe(array, n);
     }

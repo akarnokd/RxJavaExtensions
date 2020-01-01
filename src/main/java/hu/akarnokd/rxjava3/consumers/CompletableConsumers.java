@@ -16,10 +16,12 @@
 
 package hu.akarnokd.rxjava3.consumers;
 
+import java.util.Objects;
+
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.disposables.*;
 import io.reactivex.rxjava3.functions.*;
-import io.reactivex.rxjava3.internal.functions.*;
+import io.reactivex.rxjava3.internal.functions.Functions;
 
 /**
  * Utility methods for creating and using consumers {@link io.reactivex.rxjava3.core.Completable}s.
@@ -48,11 +50,11 @@ public final class CompletableConsumers {
             Completable source,
             CompositeDisposable composite,
             Action onComplete) {
-        ObjectHelper.requireNonNull(source, "source is null");
-        ObjectHelper.requireNonNull(composite, "composite is null");
-        ObjectHelper.requireNonNull(onComplete, "onComplete is null");
+        Objects.requireNonNull(source, "source is null");
+        Objects.requireNonNull(composite, "composite is null");
+        Objects.requireNonNull(onComplete, "onComplete is null");
 
-        DisposableAutoReleaseMultiObserver<Void> observer = new DisposableAutoReleaseMultiObserver<Void>(
+        DisposableAutoReleaseMultiObserver<Void> observer = new DisposableAutoReleaseMultiObserver<>(
                 composite, Functions.emptyConsumer(), null, onComplete);
         composite.add(observer);
         source.subscribe(observer);
@@ -77,12 +79,12 @@ public final class CompletableConsumers {
             CompositeDisposable composite,
             Action onComplete,
             Consumer<? super Throwable> onError) {
-        ObjectHelper.requireNonNull(source, "source is null");
-        ObjectHelper.requireNonNull(composite, "composite is null");
-        ObjectHelper.requireNonNull(onComplete, "onSuccess is null");
-        ObjectHelper.requireNonNull(onError, "onError is null");
+        Objects.requireNonNull(source, "source is null");
+        Objects.requireNonNull(composite, "composite is null");
+        Objects.requireNonNull(onComplete, "onSuccess is null");
+        Objects.requireNonNull(onError, "onError is null");
 
-        DisposableAutoReleaseMultiObserver<Void> observer = new DisposableAutoReleaseMultiObserver<Void>(
+        DisposableAutoReleaseMultiObserver<Void> observer = new DisposableAutoReleaseMultiObserver<>(
                 composite, Functions.emptyConsumer(), onError, onComplete);
         composite.add(observer);
         source.subscribe(observer);

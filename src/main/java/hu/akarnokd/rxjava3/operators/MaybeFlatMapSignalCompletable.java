@@ -16,6 +16,7 @@
 
 package hu.akarnokd.rxjava3.operators;
 
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
 import io.reactivex.rxjava3.core.*;
@@ -23,7 +24,6 @@ import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.exceptions.Exceptions;
 import io.reactivex.rxjava3.functions.*;
 import io.reactivex.rxjava3.internal.disposables.DisposableHelper;
-import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 
 /**
  * Maps the signals of the upstream into CompletableSources and consumes them.
@@ -52,7 +52,7 @@ implements MaybeConverter<T, Completable> {
 
     @Override
     public Completable apply(Maybe<T> t) {
-        return new MaybeFlatMapSignalCompletable<T>(t, onSuccessHandler, onErrorHandler, onCompleteHandler);
+        return new MaybeFlatMapSignalCompletable<>(t, onSuccessHandler, onErrorHandler, onCompleteHandler);
     }
 
     @Override
@@ -105,7 +105,7 @@ implements MaybeConverter<T, Completable> {
             CompletableSource next;
 
             try {
-                next = ObjectHelper.requireNonNull(onSuccessHandler.apply(t), "The onSuccessHandler returned a null CompletableSource");
+                next = Objects.requireNonNull(onSuccessHandler.apply(t), "The onSuccessHandler returned a null CompletableSource");
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
                 consumer.onError(ex);
@@ -120,7 +120,7 @@ implements MaybeConverter<T, Completable> {
             CompletableSource next;
 
             try {
-                next = ObjectHelper.requireNonNull(onCompleteHandler.get(), "The onCompleteHandler returned a null CompletableSource");
+                next = Objects.requireNonNull(onCompleteHandler.get(), "The onCompleteHandler returned a null CompletableSource");
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
                 consumer.onError(ex);
@@ -135,7 +135,7 @@ implements MaybeConverter<T, Completable> {
             CompletableSource next;
 
             try {
-                next = ObjectHelper.requireNonNull(onErrorHandler.apply(e), "The onErrorHandler returned a null CompletableSource");
+                next = Objects.requireNonNull(onErrorHandler.apply(e), "The onErrorHandler returned a null CompletableSource");
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
                 consumer.onError(ex);

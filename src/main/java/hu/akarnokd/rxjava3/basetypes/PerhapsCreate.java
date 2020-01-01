@@ -44,7 +44,7 @@ final class PerhapsCreate<T> extends Perhaps<T> {
 
     @Override
     protected void subscribeActual(Subscriber<? super T> s) {
-        PerhapsEmitter<T> parent = new PerhapsEmitter<T>(s);
+        PerhapsEmitter<T> parent = new PerhapsEmitter<>(s);
         s.onSubscribe(parent);
 
         try {
@@ -63,7 +63,7 @@ final class PerhapsCreate<T> extends Perhaps<T> {
 
         PerhapsEmitter(Subscriber<? super T> downstream) {
             super(downstream);
-            this.resource = new AtomicReference<Disposable>();
+            this.resource = new AtomicReference<>();
         }
 
         @Override

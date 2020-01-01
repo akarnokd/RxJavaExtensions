@@ -81,7 +81,8 @@ public class StatementObservableTest {
         };
     }
 
-    <T> void observe(Observable<T> source, T... values) {
+    @SafeVarargs
+    static <T> void observe(Observable<T> source, T... values) {
         source.test().assertResult(values);
     }
 
@@ -89,7 +90,8 @@ public class StatementObservableTest {
         source.test().assertValueSequence(values).assertNoErrors().assertComplete();
     }
 
-    <T> void observeError(Observable<T> source, Class<? extends Throwable> error, T... valuesBeforeError) {
+    @SafeVarargs
+    static <T> void observeError(Observable<T> source, Class<? extends Throwable> error, T... valuesBeforeError) {
         source.test().assertFailure(error, valuesBeforeError);
     }
 
@@ -102,7 +104,7 @@ public class StatementObservableTest {
         Observable<Integer> source1 = Observable.just(1, 2, 3);
         Observable<Integer> source2 = Observable.just(4, 5, 6);
 
-        Map<Integer, Observable<Integer>> map = new HashMap<Integer, Observable<Integer>>();
+        Map<Integer, Observable<Integer>> map = new HashMap<>();
         map.put(1, source1);
         map.put(2, source2);
 
@@ -118,7 +120,7 @@ public class StatementObservableTest {
         Observable<Integer> source1 = Observable.just(1, 2, 3);
         Observable<Integer> source2 = Observable.just(4, 5, 6);
 
-        Map<Integer, Observable<Integer>> map = new HashMap<Integer, Observable<Integer>>();
+        Map<Integer, Observable<Integer>> map = new HashMap<>();
         map.put(1, source1);
 
         Observable<Integer> result = StatementObservable.switchCase(func, map, source2);
@@ -132,7 +134,7 @@ public class StatementObservableTest {
     public void testCaseSelectorThrows() {
         Observable<Integer> source1 = Observable.just(1, 2, 3);
 
-        Map<Integer, Observable<Integer>> map = new HashMap<Integer, Observable<Integer>>();
+        Map<Integer, Observable<Integer>> map = new HashMap<>();
         map.put(1, source1);
 
         Observable<Integer> result = StatementObservable.switchCase(funcError, map);
@@ -196,7 +198,7 @@ public class StatementObservableTest {
         Observable<Integer> source1 = Observable.just(1, 2, 3);
         Observable<Integer> source2 = Observable.error(new RuntimeException("Forced failure"));
 
-        Map<Integer, Observable<Integer>> map = new HashMap<Integer, Observable<Integer>>();
+        Map<Integer, Observable<Integer>> map = new HashMap<>();
         map.put(1, source1);
         map.put(2, source2);
 
@@ -322,7 +324,7 @@ public class StatementObservableTest {
     public void testDoWhileManyTimes() {
         Observable<Integer> source1 = Observable.just(1, 2, 3).subscribeOn(Schedulers.trampoline());
 
-        List<Integer> expected = new ArrayList<Integer>(numRecursion * 3);
+        List<Integer> expected = new ArrayList<>(numRecursion * 3);
         for (int i = 0; i < numRecursion; i++) {
             expected.add(1);
             expected.add(2);
@@ -362,7 +364,7 @@ public class StatementObservableTest {
     public void testWhileDoManyTimes() {
         Observable<Integer> source1 = Observable.just(1, 2, 3).subscribeOn(Schedulers.trampoline());
 
-        List<Integer> expected = new ArrayList<Integer>(numRecursion * 3);
+        List<Integer> expected = new ArrayList<>(numRecursion * 3);
         for (int i = 0; i < numRecursion; i++) {
             expected.add(1);
             expected.add(2);
