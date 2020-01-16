@@ -829,7 +829,6 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     public void usingDisposerThrows2() {
         TestSubscriber<Void> ts = Nono.using(Functions.justSupplier(0),
                 Functions.justFunction(ioError),
@@ -869,7 +868,6 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         }
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void usingDisposerThrows4() {
         TestSubscriber<Void> ts = Nono.using(Functions.justSupplier(0),

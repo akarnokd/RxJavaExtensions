@@ -113,7 +113,6 @@ public final class JoinObservable<T> {
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Combining-Observables#wiki-and-then-and-when">RxJava Wiki: when()</a>
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh229889.aspx">MSDN: Observable.When</a>
      */
-    @SuppressWarnings("unchecked")
     public static <R> JoinObservable<R> when(Plan<R> p1) {
         return from(JoinPatterns.when(p1));
     }
@@ -132,7 +131,6 @@ public final class JoinObservable<T> {
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Combining-Observables#wiki-and-then-and-when">RxJava Wiki: when()</a>
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh229889.aspx">MSDN: Observable.When</a>
      */
-    @SuppressWarnings("unchecked")
     public static <R> JoinObservable<R> when(Plan<R> p1, Plan<R> p2) {
         return from(JoinPatterns.when(p1, p2));
     }
@@ -153,7 +151,6 @@ public final class JoinObservable<T> {
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Combining-Observables#wiki-and-then-and-when">RxJava Wiki: when()</a>
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh229889.aspx">MSDN: Observable.When</a>
      */
-    @SuppressWarnings("unchecked")
     public static <R> JoinObservable<R> when(Plan<R> p1, Plan<R> p2, Plan<R> p3) {
         return from(JoinPatterns.when(p1, p2, p3));
     }
@@ -176,7 +173,6 @@ public final class JoinObservable<T> {
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Combining-Observables#wiki-and-then-and-when">RxJava Wiki: when()</a>
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh229889.aspx">MSDN: Observable.When</a>
      */
-    @SuppressWarnings("unchecked")
     public static <R> JoinObservable<R> when(Plan<R> p1, Plan<R> p2, Plan<R> p3, Plan<R> p4) {
         return from(JoinPatterns.when(p1, p2, p3, p4));
     }
@@ -201,7 +197,6 @@ public final class JoinObservable<T> {
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Combining-Observables#wiki-and-then-and-when">RxJava Wiki: when()</a>
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh229889.aspx">MSDN: Observable.When</a>
      */
-    @SuppressWarnings("unchecked")
     public static <R> JoinObservable<R> when(Plan<R> p1, Plan<R> p2, Plan<R> p3, Plan<R> p4, Plan<R> p5) {
         return from(JoinPatterns.when(p1, p2, p3, p4, p5));
     }
@@ -228,7 +223,6 @@ public final class JoinObservable<T> {
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Combining-Observables#wiki-and-then-and-when">RxJava Wiki: when()</a>
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh229889.aspx">MSDN: Observable.When</a>
      */
-    @SuppressWarnings("unchecked")
     public static <R> JoinObservable<R> when(Plan<R> p1, Plan<R> p2, Plan<R> p3, Plan<R> p4, Plan<R> p5, Plan<R> p6) {
         return from(JoinPatterns.when(p1, p2, p3, p4, p5, p6));
     }
@@ -257,7 +251,6 @@ public final class JoinObservable<T> {
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Combining-Observables#wiki-and-then-and-when">RxJava Wiki: when()</a>
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh229889.aspx">MSDN: Observable.When</a>
      */
-    @SuppressWarnings("unchecked")
     public static <R> JoinObservable<R> when(Plan<R> p1, Plan<R> p2, Plan<R> p3, Plan<R> p4, Plan<R> p5, Plan<R> p6, Plan<R> p7) {
         return from(JoinPatterns.when(p1, p2, p3, p4, p5, p6, p7));
     }
@@ -288,7 +281,6 @@ public final class JoinObservable<T> {
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Combining-Observables#wiki-and-then-and-when">RxJava Wiki: when()</a>
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh229889.aspx">MSDN: Observable.When</a>
      */
-    @SuppressWarnings("unchecked")
     public static <R> JoinObservable<R> when(Plan<R> p1, Plan<R> p2, Plan<R> p3, Plan<R> p4, Plan<R> p5, Plan<R> p6, Plan<R> p7, Plan<R> p8) {
         return from(JoinPatterns.when(p1, p2, p3, p4, p5, p6, p7, p8));
     }
@@ -321,7 +313,6 @@ public final class JoinObservable<T> {
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Combining-Observables#wiki-and-then-and-when">RxJava Wiki: when()</a>
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh229889.aspx">MSDN: Observable.When</a>
      */
-    @SuppressWarnings("unchecked")
     public static <R> JoinObservable<R> when(Plan<R> p1, Plan<R> p2, Plan<R> p3, Plan<R> p4, Plan<R> p5, Plan<R> p6, Plan<R> p7, Plan<R> p8, Plan<R> p9) {
         return from(JoinPatterns.when(p1, p2, p3, p4, p5, p6, p7, p8, p9));
     }

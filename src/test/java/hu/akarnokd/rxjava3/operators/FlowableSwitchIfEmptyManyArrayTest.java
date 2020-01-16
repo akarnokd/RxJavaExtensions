@@ -167,7 +167,6 @@ public class FlowableSwitchIfEmptyManyArrayTest {
         }
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void take() {
         Flowable.range(1, 5)
@@ -177,7 +176,6 @@ public class FlowableSwitchIfEmptyManyArrayTest {
         .assertResult(1, 2, 3);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void take2() {
         Flowable.<Integer>empty()
@@ -187,7 +185,6 @@ public class FlowableSwitchIfEmptyManyArrayTest {
         .assertResult(10, 11, 12);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void cancel() {
         Flowable.range(1, 5)
@@ -196,7 +193,6 @@ public class FlowableSwitchIfEmptyManyArrayTest {
         .assertEmpty();
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void emptyEmpty() {
         Flowable.<Integer>empty()
