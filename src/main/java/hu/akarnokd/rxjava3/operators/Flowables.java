@@ -51,7 +51,7 @@ public final class Flowables {
     @SchedulerSupport(SchedulerSupport.NONE)
     @SafeVarargs
     public static <T extends Comparable<? super T>> Flowable<T> orderedMerge(Publisher<T>... sources) {
-        return orderedMerge(Functions.naturalOrder(), false, Flowable.bufferSize(), sources);
+        return orderedMerge(Comparator.naturalOrder(), false, Flowable.bufferSize(), sources);
     }
 
     /**
@@ -68,7 +68,7 @@ public final class Flowables {
     @SchedulerSupport(SchedulerSupport.NONE)
     @SafeVarargs
     public static <T extends Comparable<? super T>> Flowable<T> orderedMerge(boolean delayErrors, Publisher<T>... sources) {
-        return orderedMerge(Functions.naturalOrder(), delayErrors, Flowable.bufferSize(), sources);
+        return orderedMerge(Comparator.naturalOrder(), delayErrors, Flowable.bufferSize(), sources);
     }
 
     /**
@@ -87,7 +87,7 @@ public final class Flowables {
     @SchedulerSupport(SchedulerSupport.NONE)
     @SafeVarargs
     public static <T extends Comparable<? super T>> Flowable<T> orderedMerge(boolean delayErrors, int prefetch, Publisher<T>... sources) {
-        return orderedMerge(Functions.naturalOrder(), delayErrors, prefetch, sources);
+        return orderedMerge(Comparator.naturalOrder(), delayErrors, prefetch, sources);
     }
 
     /**
@@ -221,7 +221,7 @@ public final class Flowables {
     @BackpressureSupport(BackpressureKind.FULL)
     @SchedulerSupport(SchedulerSupport.NONE)
     public static <T extends Comparable<? super T>> Flowable<T> orderedMerge(Iterable<? extends Publisher<T>> sources) {
-        return orderedMerge(sources, Functions.naturalOrder(), false, Flowable.bufferSize());
+        return orderedMerge(sources, Comparator.naturalOrder(), false, Flowable.bufferSize());
     }
 
     /**
@@ -237,7 +237,7 @@ public final class Flowables {
     @BackpressureSupport(BackpressureKind.FULL)
     @SchedulerSupport(SchedulerSupport.NONE)
     public static <T extends Comparable<? super T>> Flowable<T> orderedMerge(Iterable<? extends Publisher<T>> sources, boolean delayErrors) {
-        return orderedMerge(sources, Functions.naturalOrder(), delayErrors, Flowable.bufferSize());
+        return orderedMerge(sources, Comparator.naturalOrder(), delayErrors, Flowable.bufferSize());
     }
 
     /**
@@ -255,7 +255,7 @@ public final class Flowables {
     @BackpressureSupport(BackpressureKind.FULL)
     @SchedulerSupport(SchedulerSupport.NONE)
     public static <T extends Comparable<? super T>> Flowable<T> orderedMerge(Iterable<? extends Publisher<T>> sources, boolean delayErrors, int prefetch) {
-        return orderedMerge(sources, Functions.naturalOrder(), delayErrors, prefetch);
+        return orderedMerge(sources, Comparator.naturalOrder(), delayErrors, prefetch);
     }
 
     /**

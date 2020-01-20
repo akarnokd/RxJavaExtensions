@@ -42,7 +42,7 @@ public final class ParallelTransformers {
      * @since 0.17.9
      */
     public static <T extends Comparable<? super T>> Flowable<T> orderedMerge(ParallelFlowable<T> source) {
-        return orderedMerge(source, Functions.naturalOrder(), false, Flowable.bufferSize());
+        return orderedMerge(source, Comparator.naturalOrder(), false, Flowable.bufferSize());
     }
 
     /**
@@ -55,7 +55,7 @@ public final class ParallelTransformers {
      * @since 0.17.9
      */
     public static <T extends Comparable<? super T>> Flowable<T> orderedMerge(ParallelFlowable<T> source, boolean delayErrors) {
-        return orderedMerge(source, Functions.naturalOrder(), delayErrors, Flowable.bufferSize());
+        return orderedMerge(source, Comparator.naturalOrder(), delayErrors, Flowable.bufferSize());
     }
 
     /**
@@ -70,7 +70,7 @@ public final class ParallelTransformers {
      * @since 0.17.9
      */
     public static <T extends Comparable<? super T>> Flowable<T> orderedMerge(ParallelFlowable<T> source, boolean delayErrors, int prefetch) {
-        return orderedMerge(source, Functions.naturalOrder(), delayErrors, prefetch);
+        return orderedMerge(source, Comparator.naturalOrder(), delayErrors, prefetch);
     }
 
     /**
