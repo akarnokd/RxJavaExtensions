@@ -31,7 +31,7 @@ public final class FunctionsEx {
     /** Implements many consumer interfaces to no-op. */
     @SuppressWarnings("rawtypes")
     enum EmptyConsumer implements
-    Consumer, BiConsumer, Consumer3, Consumer4, Consumer5, Consumer6, Consumer7, Consumer8, Consumer9 {
+    Consumer, BiConsumer, Consumer3, Consumer4, Consumer5, Consumer6, Consumer7, Consumer8, Consumer9, Action {
         INSTANCE;
 
         @Override
@@ -72,6 +72,11 @@ public final class FunctionsEx {
         @Override
         public void accept(Object t) throws Exception {
         }
+
+        @Override
+        public void run() throws Throwable {
+
+        }
     }
 
     /**
@@ -89,7 +94,8 @@ public final class FunctionsEx {
     & Consumer6<Object, Object, Object, Object, Object, Object>
     & Consumer7<Object, Object, Object, Object, Object, Object, Object>
     & Consumer8<Object, Object, Object, Object, Object, Object, Object, Object>
-    & Consumer9<Object, Object, Object, Object, Object, Object, Object, Object, Object>>
+    & Consumer9<Object, Object, Object, Object, Object, Object, Object, Object, Object>
+    & Action>
     T emptyConsumer() {
         return (T)EmptyConsumer.INSTANCE;
     }
