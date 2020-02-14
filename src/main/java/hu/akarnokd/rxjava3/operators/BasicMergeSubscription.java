@@ -265,7 +265,7 @@ implements Subscription, InnerQueuedSubscriberSupport<T> {
                 if (hasValue == n && pick >= 0) {
                     a.onNext(smallest);
                     latest[pick] = null;
-                    subs[pick].requestOne();
+                    subs[pick].request(1);
 
                     e++;
                 } else {
