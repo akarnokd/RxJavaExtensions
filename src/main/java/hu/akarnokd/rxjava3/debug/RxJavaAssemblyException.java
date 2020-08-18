@@ -36,11 +36,13 @@ public final class RxJavaAssemblyException extends RuntimeException {
 
         StackTraceElement[] es = Thread.currentThread().getStackTrace();
 
-        b.append("RxJavaAssemblyException: assembled\r\n");
+        b.append("RxJavaAssemblyException: assembled");
 
         for (StackTraceElement e : es) {
             if (filter(e)) {
-                b.append("at ").append(e).append("\r\n");
+                b.append(System.lineSeparator())
+                 .append("\tat ")
+                 .append(e);
             }
         }
 
@@ -154,5 +156,10 @@ public final class RxJavaAssemblyException extends RuntimeException {
             }
         }
         return null;
+    }
+
+    @Override
+    public String getMessage() {
+        return stacktrace;
     }
 }
