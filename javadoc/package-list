@@ -1,0 +1,17 @@
+hu.akarnokd.rxjava3.async
+hu.akarnokd.rxjava3.basetypes
+hu.akarnokd.rxjava3.consumers
+hu.akarnokd.rxjava3.debug
+hu.akarnokd.rxjava3.debug.multihook
+hu.akarnokd.rxjava3.debug.validator
+hu.akarnokd.rxjava3.expr
+hu.akarnokd.rxjava3.functions
+hu.akarnokd.rxjava3.joins
+hu.akarnokd.rxjava3.math
+hu.akarnokd.rxjava3.operators
+hu.akarnokd.rxjava3.parallel
+hu.akarnokd.rxjava3.processors
+hu.akarnokd.rxjava3.schedulers
+hu.akarnokd.rxjava3.string
+hu.akarnokd.rxjava3.subjects
+hu.akarnokd.rxjava3.util
