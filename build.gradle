@@ -51,7 +51,7 @@ dependencies {
 
     testCompile group: 'junit', name: 'junit', version: '4.13.1'
 
-    testCompile 'org.mockito:mockito-core:3.5.15'
+    testCompile 'org.mockito:mockito-core:3.6.0'
 }
 
 apply plugin: 'maven'
