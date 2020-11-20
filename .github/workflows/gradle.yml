@@ -16,7 +16,7 @@ jobs:
     env:
       CI_PULL_REQUEST: ${{ github.event.number }}
       JAVADOCS_TOKEN: ${{ secrets.JAVADOCS_TOKEN }} 
-      CI_BUILD_NUMBER: $GITHUB_RUN_NUMBER
+      CI_BUILD_NUMBER: ${{ github.run_number }}
     steps:
     - uses: actions/checkout@v2
     - name: Set up JDK 1.8
