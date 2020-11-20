@@ -16,7 +16,7 @@ if [ "$TRAVIS_PULL_REQUEST" == "true" ]; then
 fi
 
 # check if the token is actually there
-if [ "$GITHUB_TOKEN" == "" ]; then
+if [ "$JAVADOCS_TOKEN" == "" ]; then
 	echo -e "No access to GitHub, skipping JavaDocs pushback."
 	exit 0
 fi
@@ -26,7 +26,7 @@ git config --global user.email "travis@travis-ci.org"
 git config --global user.name "Travis CI"
 
 # setup the remote
-git remote add origin-pages https://${GITHUB_TOKEN}@${targetRepo} > /dev/null 2>&1
+git remote add origin-pages https://${JAVADOCS_TOKEN}@${targetRepo} > /dev/null 2>&1
 
 # stash changes due to chmod
 git stash
