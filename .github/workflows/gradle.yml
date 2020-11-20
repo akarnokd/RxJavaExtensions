@@ -13,7 +13,9 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-
+    env:
+      TRAVIS_PULL_REQUEST: ${{ github.event.number }}
+      JAVADOCS_TOKEN: ${{ secrets.JAVADOCS_TOKEN }} 
     steps:
     - uses: actions/checkout@v2
     - name: Set up JDK 1.8
