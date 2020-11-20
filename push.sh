@@ -9,8 +9,7 @@ targetRepo=github.com/akarnokd/RxJavaExtensions.git
 # =======================================================================
 
 # only for main pushes, for now
-# if [ "$TRAVIS_PULL_REQUEST" == "true" ] || [ "$TRAVIS_TAG" == "" ]; then
-if [ "$TRAVIS_PULL_REQUEST" == "true" ]; then
+if [ "$CI_PULL_REQUEST" == "true" ]; then
 	echo -e "Pull request detected, skipping JavaDocs pushback."
 	exit 0
 fi
@@ -22,8 +21,8 @@ if [ "$JAVADOCS_TOKEN" == "" ]; then
 fi
 
 # prepare the git information
-git config --global user.email "travis@travis-ci.org"
-git config --global user.name "Travis CI"
+git config --global user.email "akarnokd@gmail.com"
+git config --global user.name "akarnokd"
 
 # setup the remote
 git remote add origin-pages https://${JAVADOCS_TOKEN}@${targetRepo} > /dev/null 2>&1
@@ -49,7 +48,7 @@ git add *.js
 git add javadoc/package-list
 
 # commit all
-git commit --message "Travis build: $TRAVIS_BUILD_NUMBER"
+git commit --message "CI build: $CI_BUILD_NUMBER"
 
 
 # push it
