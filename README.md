@@ -162,7 +162,7 @@ Flowable.just("ab", ":cde:" "fg")
 ## Asynchronous jumpstarting a sequence
 
 Wrap functions and consumers into Flowables and Observables or into another layer of Functions.
-Most of these can now be achieved via `fromCallable` and some function composition in plain RxJava (1.x and 2.x alike).
+Most of these can now be achieved via `fromCallable` and some function composition in plain RxJava.
 
 ### start 
 
@@ -378,7 +378,7 @@ TBD: examples
 
 ## Debug support
 
-By default, RxJava 2's RxJavaPlugins only offers the ability to hook into the assembly process (i.e., when you apply an operator on a sequence or create one) unlike 1.x where there is an `RxJavaHooks.enableAssemblyTracking()` method. Since the standard format is of discussion there, 2.x doesn't have such feature built in but only
+By default, RxJava 3's RxJavaPlugins only offers the ability to hook into the assembly process (i.e., when you apply an operator on a sequence or create one) unlike 1.x where there is an `RxJavaHooks.enableAssemblyTracking()` method. Since the standard format is of discussion there, 3.x doesn't have such feature built in but only
 in this extension library.
 
 ### Usage
@@ -566,7 +566,7 @@ Note that calling `onComplete` after `onNext` is optional with `SoloProcessor` b
 
 ### MulticastProcessor
 
-*Moved to RxJava as standard processor: [`io.reactivex.processors.MulticastProcessor`](http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/processors/MulticastProcessor.html)*.
+*Moved to RxJava as standard processor: [`io.reactivex.rxjava3.processors.MulticastProcessor`](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/processors/MulticastProcessor.html)*.
 
 ### UnicastWorkSubject
 
@@ -1176,8 +1176,8 @@ Flowable.range(1, 10)
 ### FlowableTransformers.refCount()
 
 *Moved to RxJava as standard operators: 
-[ConnectableObservable.refCount](http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/observables/ConnectableObservable.html#refCount-int-long-java.util.concurrent.TimeUnit-io.reactivex.Scheduler-), 
-[ConnectableFlowable.refCount](http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/flowables/ConnectableFlowable.html#refCount-int-long-java.util.concurrent.TimeUnit-io.reactivex.Scheduler-).
+[ConnectableObservable.refCount](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/observables/ConnectableObservable.html#refCount-int-long-java.util.concurrent.TimeUnit-io.reactivex.rxjava3.core.Scheduler-), 
+[ConnectableFlowable.refCount](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/flowables/ConnectableFlowable.html#refCount-int-long-java.util.concurrent.TimeUnit-io.reactivex.rxjava3.core.Scheduler-).
 
 ### Flowables.zipLatest()
 
