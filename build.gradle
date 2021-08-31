@@ -52,6 +52,14 @@ jar {
             'Bundle-DocURL': 'https://github.com/akarnokd/RxJavaExtensions')
 }
 
+checkstyle {
+    configFile = project.file("config/checkstyle/checkstyle.xml")
+    configProperties = [
+            "checkstyle.suppressions.file": project.file("config/checkstyle/suppressions.xml"),
+            "checkstyle.header.file"      : project.file("config/license/HEADER_JAVA")
+    ]
+}
+
 apply plugin: "com.vanniktech.maven.publish"
 
 jmh {
@@ -90,7 +98,7 @@ test {
 }
 
 license {
-    header rootProject.file('HEADER')
+    header rootProject.file('config/license/HEADER')
     ext.year = Calendar.getInstance().get(Calendar.YEAR)
     skipExistingHeaders true
     ignoreFailures true

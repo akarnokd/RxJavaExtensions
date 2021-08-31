@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2019 David Karnok
+ * Copyright 2016-present David Karnok
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,6 +36,9 @@ public class ExamplePerf {
     @Param({"1", "10", "100", "1000", "10000", "100000", "1000000"})
     public int count;
 
+    /**
+     * Insert setup code here.
+     */
     @Setup
     public void setup() {
 
