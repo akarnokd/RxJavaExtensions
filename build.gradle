@@ -1,27 +1,16 @@
-buildscript {
-    repositories {
-        mavenCentral()
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
-    }
-
-    dependencies {
-        classpath "me.champeau.gradle:jmh-gradle-plugin:0.5.3"
-        classpath 'ru.vyarus:gradle-animalsniffer-plugin:1.5.3'
-        classpath "biz.aQute.bnd:biz.aQute.bnd.gradle:5.3.0"
-        classpath 'com.vanniktech:gradle-maven-publish-plugin:0.17.0'
-        classpath "gradle.plugin.com.hierynomus.gradle.plugins:license-gradle-plugin:0.16.1"
-    }
+plugins {
+    id("java-library")
+    id("checkstyle")
+    id("eclipse")
+    id("jacoco")
+    id("maven-publish")
+    id("pmd")
+    id("ru.vyarus.animalsniffer") version "1.5.3"
+    id("me.champeau.gradle.jmh") version "0.5.3"
+    id("com.github.hierynomus.license") version "0.16.1"
+    id("biz.aQute.bnd.builder") version "5.3.0"
+    id("com.vanniktech.maven.publish") version "0.17.0"
 }
-
-apply plugin: 'java-library'
-apply plugin: 'eclipse'
-apply plugin: "me.champeau.gradle.jmh"
-apply plugin: 'pmd'
-apply plugin: 'jacoco'
-apply plugin: 'ru.vyarus.animalsniffer'
-apply plugin: "com.github.hierynomus.license"
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
@@ -124,7 +113,7 @@ build.dependsOn jacocoTestReport
 check.dependsOn jacocoTestReport
 
 pmd {
-    toolVersion = '5.4.2'
+    toolVersion = '6.21.0'
     ignoreFailures = true
     sourceSets = [sourceSets.main]
     ruleSets = []
