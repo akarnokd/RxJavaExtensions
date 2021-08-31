@@ -21,7 +21,7 @@ import org.reactivestreams.*;
 import io.reactivex.rxjava3.core.*;
 import io.reactivex.rxjava3.exceptions.*;
 import io.reactivex.rxjava3.functions.BiConsumer;
-import io.reactivex.rxjava3.internal.fuseable.ConditionalSubscriber;
+import io.reactivex.rxjava3.operators.ConditionalSubscriber;
 import io.reactivex.rxjava3.internal.subscribers.*;
 import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 

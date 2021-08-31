@@ -3,7 +3,7 @@ package hu.akarnokd.rxjava3.test;
 import java.util.*;
 
 import io.reactivex.rxjava3.functions.Predicate;
-import io.reactivex.rxjava3.internal.fuseable.QueueFuseable;
+import io.reactivex.rxjava3.operators.QueueFuseable;
 import io.reactivex.rxjava3.internal.util.ExceptionHelper;
 import io.reactivex.rxjava3.observers.BaseTestConsumer;
 

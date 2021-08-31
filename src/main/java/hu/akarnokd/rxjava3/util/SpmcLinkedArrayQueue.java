@@ -19,7 +19,7 @@ package hu.akarnokd.rxjava3.util;
 import java.util.Objects;
 import java.util.concurrent.atomic.*;
 
-import io.reactivex.rxjava3.internal.fuseable.SimplePlainQueue;
+import io.reactivex.rxjava3.operators.SimplePlainQueue;
 
 /**
  * A single-producer multiple-conumer queue implementation with array islands.

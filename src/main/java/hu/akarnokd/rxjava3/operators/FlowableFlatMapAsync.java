@@ -21,7 +21,7 @@ import org.reactivestreams.*;
 import hu.akarnokd.rxjava3.operators.FlowableFlatMapSync.*;
 import io.reactivex.rxjava3.core.*;
 import io.reactivex.rxjava3.functions.Function;
-import io.reactivex.rxjava3.internal.fuseable.SimpleQueue;
+import io.reactivex.rxjava3.operators.SimpleQueue;
 
 /**
  * FlatMap a bounded number of inner, non-trivial flows (unbound not supported).

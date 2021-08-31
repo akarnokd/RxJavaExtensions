@@ -19,7 +19,7 @@ package hu.akarnokd.rxjava3.debug;
 import org.reactivestreams.Subscriber;
 
 import hu.akarnokd.rxjava3.debug.FlowableOnAssembly.*;
-import io.reactivex.rxjava3.internal.fuseable.ConditionalSubscriber;
+import io.reactivex.rxjava3.operators.ConditionalSubscriber;
 import io.reactivex.rxjava3.parallel.ParallelFlowable;
 
 /**

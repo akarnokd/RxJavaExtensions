@@ -19,7 +19,7 @@ package hu.akarnokd.rxjava3.debug;
 import org.reactivestreams.*;
 
 import io.reactivex.rxjava3.core.Flowable;
-import io.reactivex.rxjava3.internal.fuseable.*;
+import io.reactivex.rxjava3.operators.*;
 import io.reactivex.rxjava3.internal.subscribers.*;
 
 /**

@@ -18,7 +18,7 @@ package hu.akarnokd.rxjava3.basetypes;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import io.reactivex.rxjava3.internal.fuseable.QueueSubscription;
+import io.reactivex.rxjava3.operators.QueueSubscription;
 
 /**
  * Base class for atomic integer, async-fuseable intermediate operators.

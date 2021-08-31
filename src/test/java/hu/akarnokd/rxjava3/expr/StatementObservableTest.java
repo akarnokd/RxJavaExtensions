@@ -35,7 +35,7 @@ public class StatementObservableTest {
 
     @Before
     public void before() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         scheduler = new TestScheduler();
         func = new Supplier<Integer>() {
             int count = 1;

@@ -5,7 +5,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import io.reactivex.rxjava3.core.*;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.internal.disposables.DisposableHelper;
-import io.reactivex.rxjava3.internal.fuseable.*;
+import io.reactivex.rxjava3.operators.*;
 
 /**
  * An  extended test Observer that records events and allows making assertions about them.

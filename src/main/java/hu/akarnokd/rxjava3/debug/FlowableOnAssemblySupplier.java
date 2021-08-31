@@ -22,7 +22,7 @@ import hu.akarnokd.rxjava3.debug.FlowableOnAssembly.*;
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.exceptions.Exceptions;
 import io.reactivex.rxjava3.functions.Supplier;
-import io.reactivex.rxjava3.internal.fuseable.ConditionalSubscriber;
+import io.reactivex.rxjava3.operators.ConditionalSubscriber;
 
 /**
  * Wraps a Publisher and inject the assembly info.

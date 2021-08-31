@@ -25,7 +25,7 @@ import hu.akarnokd.rxjava3.test.*;
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.functions.BiConsumer;
 import io.reactivex.rxjava3.internal.functions.Functions;
-import io.reactivex.rxjava3.internal.fuseable.QueueFuseable;
+import io.reactivex.rxjava3.operators.QueueFuseable;
 import io.reactivex.rxjava3.processors.*;
 
 public class FlowableMapFilterConditionalTest {

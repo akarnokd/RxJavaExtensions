@@ -16,7 +16,7 @@
 
 /**
  * Utility methods for uncommon, custom, special and exotic operators for RxJava flows
- * in the form of transformers and converters:
+ * in the form of transformers and converters.
  * <ul>
  * <li>{@link hu.akarnokd.rxjava3.operators.FlowableTransformers FlowableTransformers},
  * {@link hu.akarnokd.rxjava3.operators.Flowables Flowables},</li>

@@ -22,7 +22,7 @@ import hu.akarnokd.rxjava3.util.SpscOneQueue;
 import io.reactivex.rxjava3.core.Scheduler;
 import io.reactivex.rxjava3.core.Scheduler.Worker;
 import io.reactivex.rxjava3.exceptions.Exceptions;
-import io.reactivex.rxjava3.internal.fuseable.*;
+import io.reactivex.rxjava3.operators.*;
 import io.reactivex.rxjava3.internal.subscriptions.*;
 
 /**

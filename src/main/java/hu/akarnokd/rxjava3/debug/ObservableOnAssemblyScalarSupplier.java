@@ -18,7 +18,7 @@ package hu.akarnokd.rxjava3.debug;
 
 import hu.akarnokd.rxjava3.debug.ObservableOnAssembly.OnAssemblyObserver;
 import io.reactivex.rxjava3.core.*;
-import io.reactivex.rxjava3.internal.fuseable.ScalarSupplier;
+import io.reactivex.rxjava3.operators.ScalarSupplier;
 
 /**
  * Wraps a ObservableSource and inject the assembly info.

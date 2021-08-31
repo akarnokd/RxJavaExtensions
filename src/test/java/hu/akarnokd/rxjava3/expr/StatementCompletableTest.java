@@ -35,7 +35,7 @@ public class StatementCompletableTest {
 
     @Before
     public void before() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         scheduler = new TestScheduler();
         func = new Supplier() {
             int count = 1;

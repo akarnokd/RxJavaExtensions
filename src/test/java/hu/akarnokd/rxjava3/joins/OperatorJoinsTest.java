@@ -192,7 +192,7 @@ public class OperatorJoinsTest {
 
     @Before
     public void before() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test(expected = NullPointerException.class)

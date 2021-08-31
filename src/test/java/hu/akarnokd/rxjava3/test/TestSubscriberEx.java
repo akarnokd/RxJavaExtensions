@@ -5,7 +5,7 @@ import java.util.concurrent.atomic.*;
 import org.reactivestreams.*;
 
 import io.reactivex.rxjava3.core.FlowableSubscriber;
-import io.reactivex.rxjava3.internal.fuseable.*;
+import io.reactivex.rxjava3.operators.*;
 import io.reactivex.rxjava3.internal.subscriptions.SubscriptionHelper;
 
 /**
