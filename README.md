@@ -13,7 +13,7 @@ RxJava 3.x implementation of extra sources, operators and components and ports o
 
 ```
 dependencies {
-    implementation "com.github.akarnokd:rxjava3-extensions:3.0.1"
+    implementation "com.github.akarnokd:rxjava3-extensions:3.1.1"
 }
 ```
 
