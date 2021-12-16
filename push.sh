@@ -38,6 +38,7 @@ git checkout -b gh-pages origin-pages/gh-pages
 # remove old dir
 rm -rf javadoc
 
+ls ./build/docs
 # copy and overwrite new doc
 yes | cp -rfv ./build/docs/javadoc/ javadoc/
 
