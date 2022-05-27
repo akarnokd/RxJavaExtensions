@@ -34,7 +34,7 @@ repositories {
 dependencies {
     signature 'org.codehaus.mojo.signature:java18:1.0@signature'
 
-    api "org.reactivestreams:reactive-streams:1.0.3"
+    api "org.reactivestreams:reactive-streams:1.0.4"
     api "io.reactivex.rxjava3:rxjava:3.1.4"
 
     testImplementation group: 'junit', name: 'junit', version: '4.13.2'
