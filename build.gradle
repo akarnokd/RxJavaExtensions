@@ -5,7 +5,7 @@ plugins {
     id("jacoco")
     id("maven-publish")
     id("pmd")
-    id("ru.vyarus.animalsniffer") version "1.5.4"
+    id("ru.vyarus.animalsniffer") version "1.6.0"
     id("me.champeau.gradle.jmh") version "0.5.3"
     id("com.github.hierynomus.license") version "0.16.1"
     id("biz.aQute.bnd.builder") version "6.3.1"
