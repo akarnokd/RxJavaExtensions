@@ -17,15 +17,13 @@
 package hu.akarnokd.rxjava4.operators;
 
 import java.util.*;
+import java.util.concurrent.Flow.*;
 import java.util.concurrent.TimeUnit;
 
-import org.reactivestreams.Publisher;
-
+import hu.akarnokd.rxjava4.internal.*;
 import io.reactivex.rxjava4.annotations.*;
 import io.reactivex.rxjava4.core.*;
 import io.reactivex.rxjava4.functions.*;
-import io.reactivex.rxjava4.internal.functions.*;
-import io.reactivex.rxjava4.internal.schedulers.ImmediateThinScheduler;
 import io.reactivex.rxjava4.plugins.RxJavaPlugins;
 import io.reactivex.rxjava4.schedulers.Schedulers;
 
@@ -616,7 +614,6 @@ public final class Flowables {
      */
     @BackpressureSupport(BackpressureKind.UNBOUNDED_IN)
     @SchedulerSupport(SchedulerSupport.CUSTOM)
-    @SuppressWarnings("unchecked")
     public static <T1, T2, R> Flowable<R> zipLatest(Publisher<T1> source1, Publisher<T2> source2, BiFunction<? super T1, ? super T2, ? extends R> combiner, Scheduler scheduler) {
         Objects.requireNonNull(source1, "source1 is null");
         Objects.requireNonNull(source2, "source2 is null");
@@ -704,7 +701,6 @@ public final class Flowables {
      */
     @BackpressureSupport(BackpressureKind.UNBOUNDED_IN)
     @SchedulerSupport(SchedulerSupport.CUSTOM)
-    @SuppressWarnings("unchecked")
     public static <T1, T2, T3, R> Flowable<R> zipLatest(Publisher<T1> source1, Publisher<T2> source2,
             Publisher<T3> source3, Function3<? super T1, ? super T2, ? super T3, ? extends R> combiner,
             Scheduler scheduler) {
@@ -800,7 +796,6 @@ public final class Flowables {
      */
     @BackpressureSupport(BackpressureKind.UNBOUNDED_IN)
     @SchedulerSupport(SchedulerSupport.CUSTOM)
-    @SuppressWarnings("unchecked")
     public static <T1, T2, T3, T4, R> Flowable<R> zipLatest(Publisher<T1> source1, Publisher<T2> source2,
             Publisher<T3> source3, Publisher<T4> source4,
             Function4<? super T1, ? super T2, ? super T3, ? super T4, ? extends R> combiner,
@@ -922,7 +917,7 @@ public final class Flowables {
      * @param <T> the generated item type
      * @param <S> the state associated with an individual subscription.
      * @param initialState the {@link Supplier} that returns a state object for each individual
-     *                     {@link org.reactivestreams.Subscriber Subscriber} to the returned {@code Flowable}.
+     *                     {@link Subscriber Subscriber} to the returned {@code Flowable}.
      * @param asyncGenerator the {@link BiFunction} called with the current state value and the
      *                       {@link FlowableAsyncEmitter} object and should return a new state value
      *                       as well as prepare and issue the async API call in a way that

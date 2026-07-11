@@ -16,10 +16,10 @@
 
 package hu.akarnokd.rxjava4.operators;
 
+import hu.akarnokd.rxjava4.internal.DeferredScalarObserver;
 import io.reactivex.rxjava4.core.*;
 import io.reactivex.rxjava4.exceptions.Exceptions;
 import io.reactivex.rxjava4.functions.Predicate;
-import io.reactivex.rxjava4.internal.observers.DeferredScalarObserver;
 
 /**
  * Returns the first index of an element that matches a predicate or -1L if no elements match.

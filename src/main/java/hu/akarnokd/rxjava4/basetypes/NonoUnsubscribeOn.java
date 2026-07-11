@@ -16,7 +16,7 @@
 
 package hu.akarnokd.rxjava4.basetypes;
 
-import org.reactivestreams.Subscriber;
+import java.util.concurrent.Flow.Subscriber;
 
 import io.reactivex.rxjava4.core.Scheduler;
 

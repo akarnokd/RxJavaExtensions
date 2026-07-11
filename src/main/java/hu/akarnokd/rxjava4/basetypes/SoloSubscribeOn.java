@@ -16,15 +16,13 @@
 
 package hu.akarnokd.rxjava4.basetypes;
 
+import java.util.concurrent.Flow.*;
 import java.util.concurrent.atomic.*;
 
-import org.reactivestreams.*;
-
+import hu.akarnokd.rxjava4.internal.*;
 import io.reactivex.rxjava4.core.Scheduler;
 import io.reactivex.rxjava4.core.Scheduler.Worker;
 import io.reactivex.rxjava4.disposables.Disposable;
-import io.reactivex.rxjava4.internal.disposables.DisposableHelper;
-import io.reactivex.rxjava4.internal.subscriptions.SubscriptionHelper;
 
 /**
  * Subscribe to the upstream on the specified scheduler.

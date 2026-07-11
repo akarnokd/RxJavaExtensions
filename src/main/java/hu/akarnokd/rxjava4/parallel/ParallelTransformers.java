@@ -18,8 +18,8 @@ package hu.akarnokd.rxjava4.parallel;
 
 import java.util.*;
 
+import hu.akarnokd.rxjava4.internal.ObjectHelper;
 import io.reactivex.rxjava4.core.Flowable;
-import io.reactivex.rxjava4.internal.functions.*;
 import io.reactivex.rxjava4.parallel.*;
 import io.reactivex.rxjava4.plugins.RxJavaPlugins;
 

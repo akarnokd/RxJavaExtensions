@@ -16,7 +16,7 @@
 
 package hu.akarnokd.rxjava4.debug.validator;
 
-import org.reactivestreams.*;
+import java.util.concurrent.Flow.*;
 
 import hu.akarnokd.rxjava4.functions.PlainConsumer;
 import io.reactivex.rxjava4.core.*;

@@ -16,10 +16,10 @@
 
 package hu.akarnokd.rxjava4.basetypes;
 
-import org.reactivestreams.Subscriber;
+import java.util.concurrent.Flow.Subscriber;
 
+import hu.akarnokd.rxjava4.internal.ScalarSubscription;
 import io.reactivex.rxjava4.operators.ScalarSupplier;
-import io.reactivex.rxjava4.internal.subscriptions.ScalarSubscription;
 
 /**
  * Signals exactly one value.

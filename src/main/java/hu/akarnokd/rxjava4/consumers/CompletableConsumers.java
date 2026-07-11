@@ -18,10 +18,10 @@ package hu.akarnokd.rxjava4.consumers;
 
 import java.util.Objects;
 
+import hu.akarnokd.rxjava4.internal.Functions;
 import io.reactivex.rxjava4.core.Completable;
 import io.reactivex.rxjava4.disposables.*;
 import io.reactivex.rxjava4.functions.*;
-import io.reactivex.rxjava4.internal.functions.Functions;
 
 /**
  * Utility methods for creating and using consumers {@link io.reactivex.rxjava4.core.Completable}s.

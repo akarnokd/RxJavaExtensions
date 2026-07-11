@@ -17,15 +17,13 @@
 package hu.akarnokd.rxjava4.operators;
 
 import java.util.Objects;
+import java.util.concurrent.Flow.Subscriber;
 
-import org.reactivestreams.Subscriber;
-
+import hu.akarnokd.rxjava4.internal.*;
 import io.reactivex.rxjava4.core.Flowable;
 import io.reactivex.rxjava4.exceptions.Exceptions;
 import io.reactivex.rxjava4.functions.Supplier;
 import io.reactivex.rxjava4.operators.ConditionalSubscriber;
-import io.reactivex.rxjava4.internal.subscriptions.*;
-import io.reactivex.rxjava4.internal.util.BackpressureHelper;
 
 /**
  * Repeatedly calls a Supplier indefinitely.

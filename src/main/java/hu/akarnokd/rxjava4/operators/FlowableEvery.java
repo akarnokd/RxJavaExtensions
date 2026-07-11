@@ -16,11 +16,10 @@
 
 package hu.akarnokd.rxjava4.operators;
 
-import org.reactivestreams.*;
+import java.util.concurrent.Flow.*;
 
+import hu.akarnokd.rxjava4.internal.*;
 import io.reactivex.rxjava4.core.*;
-import io.reactivex.rxjava4.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.rxjava4.internal.util.BackpressureHelper;
 
 /**
  * Emits only every Nth item.

@@ -32,4 +32,8 @@ module hu.akarnokd.rxjava4 {
 
     requires java.management;
     requires transitive io.reactivex.rxjava4;
+
+ // === Add these for JUnit 6 / Jupiter in tests (Eclipse + modular) ===
+    requires static org.junit.jupiter.api;
+    requires static org.junit.platform.commons;
 }

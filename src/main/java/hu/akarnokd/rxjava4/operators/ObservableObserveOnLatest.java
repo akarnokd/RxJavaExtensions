@@ -18,10 +18,10 @@ package hu.akarnokd.rxjava4.operators;
 
 import java.util.concurrent.atomic.*;
 
+import hu.akarnokd.rxjava4.internal.DisposableHelper;
 import io.reactivex.rxjava4.core.*;
 import io.reactivex.rxjava4.core.Scheduler.Worker;
 import io.reactivex.rxjava4.disposables.Disposable;
-import io.reactivex.rxjava4.internal.disposables.DisposableHelper;
 
 /**
  * Schedules the event emission on a Scheduler and keeps the latest upstream item

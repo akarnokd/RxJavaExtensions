@@ -17,8 +17,7 @@
 package hu.akarnokd.rxjava4.basetypes;
 
 import java.util.Objects;
-
-import org.reactivestreams.Subscriber;
+import java.util.concurrent.Flow.Subscriber;
 
 import io.reactivex.rxjava4.exceptions.*;
 import io.reactivex.rxjava4.functions.Function;

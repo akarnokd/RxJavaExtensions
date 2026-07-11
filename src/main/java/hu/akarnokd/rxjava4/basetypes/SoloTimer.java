@@ -16,15 +16,13 @@
 
 package hu.akarnokd.rxjava4.basetypes;
 
+import java.util.concurrent.Flow.Subscriber;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.reactivestreams.Subscriber;
-
+import hu.akarnokd.rxjava4.internal.*;
 import io.reactivex.rxjava4.core.Scheduler;
 import io.reactivex.rxjava4.disposables.Disposable;
-import io.reactivex.rxjava4.internal.disposables.DisposableHelper;
-import io.reactivex.rxjava4.internal.subscriptions.DeferredScalarSubscription;
 
 /**
  * Signal a 0L after the specified time delay.

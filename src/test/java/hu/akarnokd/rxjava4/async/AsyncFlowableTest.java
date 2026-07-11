@@ -16,21 +16,21 @@
 
 package hu.akarnokd.rxjava4.async;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.concurrent.Flow.Subscriber;
 import java.util.concurrent.atomic.*;
 
-import org.junit.Test;
-import org.reactivestreams.Subscriber;
+import org.junit.jupiter.api.Test;
 
 import hu.akarnokd.rxjava4.functions.*;
+import hu.akarnokd.rxjava4.internal.Functions;
 import io.reactivex.rxjava4.core.Flowable;
 import io.reactivex.rxjava4.disposables.Disposable;
 import io.reactivex.rxjava4.functions.*;
-import io.reactivex.rxjava4.internal.functions.Functions;
 import io.reactivex.rxjava4.processors.UnicastProcessor;
 import io.reactivex.rxjava4.schedulers.Schedulers;
 

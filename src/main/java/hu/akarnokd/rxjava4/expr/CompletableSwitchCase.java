@@ -18,10 +18,10 @@ package hu.akarnokd.rxjava4.expr;
 
 import java.util.Map;
 
+import hu.akarnokd.rxjava4.internal.EmptyDisposable;
 import io.reactivex.rxjava4.core.*;
 import io.reactivex.rxjava4.exceptions.Exceptions;
 import io.reactivex.rxjava4.functions.Supplier;
-import io.reactivex.rxjava4.internal.disposables.EmptyDisposable;
 
 /**
  * For each Observer, it calls a keySelector for a key to lookup in the given Map for a CompletableSource

@@ -17,13 +17,12 @@
 package hu.akarnokd.rxjava4.basetypes;
 
 import java.util.Objects;
+import java.util.concurrent.Flow.*;
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.reactivestreams.*;
-
+import hu.akarnokd.rxjava4.internal.*;
 import io.reactivex.rxjava4.exceptions.*;
 import io.reactivex.rxjava4.functions.Function;
-import io.reactivex.rxjava4.internal.subscriptions.*;
 
 /**
  * If the upstream signals an error, switch over to the next Solo

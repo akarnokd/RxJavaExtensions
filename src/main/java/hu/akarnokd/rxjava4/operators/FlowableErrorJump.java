@@ -17,13 +17,12 @@
 package hu.akarnokd.rxjava4.operators;
 
 import java.util.Objects;
+import java.util.concurrent.Flow.*;
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.reactivestreams.*;
-
+import hu.akarnokd.rxjava4.internal.EmptySubscription;
 import io.reactivex.rxjava4.core.*;
 import io.reactivex.rxjava4.exceptions.*;
-import io.reactivex.rxjava4.internal.subscriptions.EmptySubscription;
 
 /**
  * Makes sure an upstream error skips the flow created with a

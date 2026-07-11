@@ -16,12 +16,12 @@
 
 package hu.akarnokd.rxjava4.expr;
 
-import org.reactivestreams.*;
+import java.util.concurrent.Flow.*;
 
+import hu.akarnokd.rxjava4.internal.EmptySubscription;
 import io.reactivex.rxjava4.core.Flowable;
 import io.reactivex.rxjava4.exceptions.Exceptions;
 import io.reactivex.rxjava4.functions.BooleanSupplier;
-import io.reactivex.rxjava4.internal.subscriptions.EmptySubscription;
 
 /**
  * When an Subscriber subscribes, the condition is evaluated and the appropriate

@@ -25,6 +25,7 @@ import org.openjdk.jmh.infra.Blackhole;
 
 import hu.akarnokd.rxjava4.operators.FlowableTransformers;
 import io.reactivex.rxjava4.core.Flowable;
+import io.reactivex.rxjava4.core.config.StandardConcurrentBufferedConfig;
 import io.reactivex.rxjava4.functions.Function;
 import io.reactivex.rxjava4.schedulers.Schedulers;
 
@@ -98,13 +99,13 @@ public class FlatMapExPerf {
             }
         };
 
-        standardSync = source.flatMap(f1, 32);
+        standardSync = source.flatMap(f1, new StandardConcurrentBufferedConfig(32));
 
-        standardAsync = source.flatMap(f2, 32);
+        standardAsync = source.flatMap(f2, new StandardConcurrentBufferedConfig(32));
 
-        observeOnSync = source.flatMap(f1, 32).observeOn(Schedulers.single());
+        observeOnSync = source.flatMap(f1, new StandardConcurrentBufferedConfig(32)).observeOn(Schedulers.single());
 
-        observeOnAsync = source.flatMap(f2, 32).observeOn(Schedulers.single());
+        observeOnAsync = source.flatMap(f2, new StandardConcurrentBufferedConfig(32)).observeOn(Schedulers.single());
 
         syncSync = source.compose(FlowableTransformers.flatMapSync(f1));
 

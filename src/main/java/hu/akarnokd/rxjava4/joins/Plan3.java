@@ -19,7 +19,6 @@ package hu.akarnokd.rxjava4.joins;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
-import hu.akarnokd.rxjava4.functions.Consumer3;
 import io.reactivex.rxjava4.core.Observer;
 import io.reactivex.rxjava4.functions.*;
 

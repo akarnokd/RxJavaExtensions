@@ -17,8 +17,7 @@
 package hu.akarnokd.rxjava4.expr;
 
 import java.util.*;
-
-import org.reactivestreams.Publisher;
+import java.util.concurrent.Flow.Publisher;
 
 import hu.akarnokd.rxjava4.util.AlwaysTrueBooleanSupplier;
 import io.reactivex.rxjava4.core.*;

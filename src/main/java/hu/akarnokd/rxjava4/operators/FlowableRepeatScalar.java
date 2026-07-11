@@ -16,12 +16,11 @@
 
 package hu.akarnokd.rxjava4.operators;
 
-import org.reactivestreams.Subscriber;
+import java.util.concurrent.Flow.Subscriber;
 
+import hu.akarnokd.rxjava4.internal.*;
 import io.reactivex.rxjava4.core.Flowable;
 import io.reactivex.rxjava4.operators.ConditionalSubscriber;
-import io.reactivex.rxjava4.internal.subscriptions.*;
-import io.reactivex.rxjava4.internal.util.BackpressureHelper;
 
 /**
  * Repeats a scalar value indefinitely.

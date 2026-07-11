@@ -16,9 +16,8 @@
 
 package hu.akarnokd.rxjava4.basetypes;
 
+import java.util.concurrent.Flow.*;
 import java.util.concurrent.atomic.*;
-
-import org.reactivestreams.*;
 
 /**
  * Cache the terminal event of the upstream source.

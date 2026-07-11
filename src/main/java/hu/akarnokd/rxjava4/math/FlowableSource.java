@@ -16,7 +16,7 @@
 
 package hu.akarnokd.rxjava4.math;
 
-import org.reactivestreams.Publisher;
+import java.util.concurrent.Flow.Publisher;
 
 import io.reactivex.rxjava4.core.Flowable;
 

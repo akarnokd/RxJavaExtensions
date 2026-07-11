@@ -16,15 +16,14 @@
 
 package hu.akarnokd.rxjava4.consumers;
 
+import java.util.concurrent.Flow.Subscription;
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.reactivestreams.Subscription;
-
+import hu.akarnokd.rxjava4.internal.SubscriptionHelper;
 import io.reactivex.rxjava4.core.FlowableSubscriber;
 import io.reactivex.rxjava4.disposables.*;
 import io.reactivex.rxjava4.exceptions.*;
 import io.reactivex.rxjava4.functions.*;
-import io.reactivex.rxjava4.internal.subscriptions.SubscriptionHelper;
 import io.reactivex.rxjava4.observers.LambdaConsumerIntrospection;
 import io.reactivex.rxjava4.plugins.RxJavaPlugins;
 

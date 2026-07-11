@@ -16,12 +16,11 @@
 
 package hu.akarnokd.rxjava4.processors;
 
+import java.util.concurrent.Flow.*;
 import java.util.concurrent.atomic.*;
 
-import org.reactivestreams.*;
-
+import hu.akarnokd.rxjava4.internal.*;
 import io.reactivex.rxjava4.core.FlowableSubscriber;
-import io.reactivex.rxjava4.internal.subscriptions.*;
 import io.reactivex.rxjava4.processors.FlowableProcessor;
 
 /**

@@ -18,11 +18,11 @@ package hu.akarnokd.rxjava4.operators;
 
 import java.util.Objects;
 
+import hu.akarnokd.rxjava4.internal.ObjectHelper;
 import hu.akarnokd.rxjava4.util.BiFunctionSecondIdentity;
 import io.reactivex.rxjava4.annotations.*;
 import io.reactivex.rxjava4.core.*;
 import io.reactivex.rxjava4.functions.*;
-import io.reactivex.rxjava4.internal.functions.ObjectHelper;
 
 /**
  * Additional operators in the form of {@link ObservableTransformer},

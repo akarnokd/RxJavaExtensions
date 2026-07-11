@@ -16,10 +16,10 @@
 
 package hu.akarnokd.rxjava4.basetypes;
 
-import org.reactivestreams.Subscriber;
+import java.util.concurrent.Flow.Subscriber;
 
+import hu.akarnokd.rxjava4.internal.EmptySubscription;
 import io.reactivex.rxjava4.functions.Supplier;
-import io.reactivex.rxjava4.internal.subscriptions.EmptySubscription;
 
 /**
  * Signals a constant Throwable to the subscriber.

@@ -17,14 +17,13 @@
 package hu.akarnokd.rxjava4.basetypes;
 
 import java.util.*;
-
-import org.reactivestreams.Subscriber;
+import java.util.concurrent.Flow.Subscriber;
 
 import hu.akarnokd.rxjava4.basetypes.SoloMap.MapSubscriber;
 import hu.akarnokd.rxjava4.basetypes.SoloZipArray.ZipCoordinator;
+import hu.akarnokd.rxjava4.internal.EmptySubscription;
 import io.reactivex.rxjava4.exceptions.Exceptions;
 import io.reactivex.rxjava4.functions.Function;
-import io.reactivex.rxjava4.internal.subscriptions.EmptySubscription;
 
 /**
  * Combines the solo values of all the sources via a zipper function into a

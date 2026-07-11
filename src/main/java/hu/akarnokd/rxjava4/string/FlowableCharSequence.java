@@ -16,12 +16,11 @@
 
 package hu.akarnokd.rxjava4.string;
 
-import org.reactivestreams.Subscriber;
+import java.util.concurrent.Flow.Subscriber;
 
+import hu.akarnokd.rxjava4.internal.*;
 import io.reactivex.rxjava4.core.Flowable;
 import io.reactivex.rxjava4.operators.QueueFuseable;
-import io.reactivex.rxjava4.internal.subscriptions.*;
-import io.reactivex.rxjava4.internal.util.BackpressureHelper;
 
 /**
  * Streams the characters of a string.

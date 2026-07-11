@@ -16,9 +16,9 @@
 
 package hu.akarnokd.rxjava4.basetypes;
 
-import org.reactivestreams.*;
+import java.util.concurrent.Flow.*;
 
-import io.reactivex.rxjava4.internal.subscriptions.*;
+import hu.akarnokd.rxjava4.internal.*;
 
 /**
  * Return an item if the upstream fails.

@@ -16,11 +16,11 @@
 
 package hu.akarnokd.rxjava4.debug.validator;
 
-import org.reactivestreams.Subscriber;
+import java.util.concurrent.Flow.Subscriber;
 
 import hu.akarnokd.rxjava4.functions.PlainConsumer;
+import io.reactivex.rxjava4.core.ConnectableFlowable;
 import io.reactivex.rxjava4.disposables.Disposable;
-import io.reactivex.rxjava4.flowables.ConnectableFlowable;
 import io.reactivex.rxjava4.functions.Consumer;
 
 /**

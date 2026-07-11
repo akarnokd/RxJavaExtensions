@@ -16,11 +16,11 @@
 
 package hu.akarnokd.rxjava4.basetypes;
 
-import org.reactivestreams.*;
+import java.util.concurrent.Flow.*;
 
+import hu.akarnokd.rxjava4.internal.SubscriptionHelper;
 import io.reactivex.rxjava4.exceptions.*;
 import io.reactivex.rxjava4.functions.Function;
-import io.reactivex.rxjava4.internal.subscriptions.SubscriptionHelper;
 
 /**
  * If the main source fails, resume with another Nono returned from

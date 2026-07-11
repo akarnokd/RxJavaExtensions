@@ -17,13 +17,12 @@
 package hu.akarnokd.rxjava4.basetypes;
 
 import java.util.Objects;
+import java.util.concurrent.Flow.Subscriber;
 
-import org.reactivestreams.Subscriber;
-
+import hu.akarnokd.rxjava4.internal.BasicFuseableSubscriber;
 import io.reactivex.rxjava4.exceptions.*;
 import io.reactivex.rxjava4.functions.Function;
 import io.reactivex.rxjava4.operators.QueueSubscription;
-import io.reactivex.rxjava4.internal.subscribers.BasicFuseableSubscriber;
 
 /**
  * Maps the error from upstream into another Throwable.

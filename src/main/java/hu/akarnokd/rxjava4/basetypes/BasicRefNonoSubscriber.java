@@ -16,9 +16,9 @@
 
 package hu.akarnokd.rxjava4.basetypes;
 
-import org.reactivestreams.*;
+import java.util.concurrent.Flow.*;
 
-import io.reactivex.rxjava4.internal.subscriptions.SubscriptionHelper;
+import hu.akarnokd.rxjava4.internal.SubscriptionHelper;
 
 /**
  * Basic subscriber that supports queue fusion, has an atomic reference and defaults onSubscribe, onNext and cancel.

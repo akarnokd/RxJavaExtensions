@@ -16,10 +16,10 @@
 
 package hu.akarnokd.rxjava4.parallel;
 
-import org.reactivestreams.*;
+import java.util.concurrent.Flow.*;
 
+import hu.akarnokd.rxjava4.internal.*;
 import io.reactivex.rxjava4.core.FlowableSubscriber;
-import io.reactivex.rxjava4.internal.subscriptions.*;
 import io.reactivex.rxjava4.parallel.*;
 
 /**

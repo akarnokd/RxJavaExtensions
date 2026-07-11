@@ -16,11 +16,10 @@
 
 package hu.akarnokd.rxjava4.basetypes;
 
+import java.util.concurrent.Flow.*;
 import java.util.concurrent.atomic.*;
 
-import org.reactivestreams.*;
-
-import io.reactivex.rxjava4.internal.subscriptions.SubscriptionHelper;
+import hu.akarnokd.rxjava4.internal.SubscriptionHelper;
 import io.reactivex.rxjava4.plugins.RxJavaPlugins;
 
 /**

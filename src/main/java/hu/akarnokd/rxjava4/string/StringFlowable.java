@@ -19,8 +19,8 @@ package hu.akarnokd.rxjava4.string;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
+import hu.akarnokd.rxjava4.internal.ObjectHelper;
 import io.reactivex.rxjava4.core.*;
-import io.reactivex.rxjava4.internal.functions.ObjectHelper;
 import io.reactivex.rxjava4.plugins.RxJavaPlugins;
 
 /**

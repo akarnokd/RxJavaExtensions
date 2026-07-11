@@ -16,12 +16,11 @@
 
 package hu.akarnokd.rxjava4.basetypes;
 
-import org.reactivestreams.*;
+import java.util.concurrent.Flow.*;
 
+import hu.akarnokd.rxjava4.internal.*;
 import io.reactivex.rxjava4.core.Scheduler;
 import io.reactivex.rxjava4.disposables.Disposable;
-import io.reactivex.rxjava4.internal.disposables.SequentialDisposable;
-import io.reactivex.rxjava4.internal.subscriptions.SubscriptionHelper;
 
 /**
  * Subscribe to the source Nono on a specified scheduler.

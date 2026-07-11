@@ -19,12 +19,10 @@ package hu.akarnokd.rxjava4.subjects;
 import java.util.Objects;
 import java.util.concurrent.atomic.*;
 
+import hu.akarnokd.rxjava4.internal.*;
 import io.reactivex.rxjava4.core.*;
 import io.reactivex.rxjava4.disposables.Disposable;
-import io.reactivex.rxjava4.internal.disposables.DisposableHelper;
-import io.reactivex.rxjava4.operators.SimplePlainQueue;
-import io.reactivex.rxjava4.operators.SpscLinkedArrayQueue;
-import io.reactivex.rxjava4.internal.util.ExceptionHelper;
+import io.reactivex.rxjava4.operators.*;
 import io.reactivex.rxjava4.plugins.RxJavaPlugins;
 import io.reactivex.rxjava4.subjects.Subject;
 

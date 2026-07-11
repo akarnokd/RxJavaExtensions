@@ -16,11 +16,11 @@
 
 package hu.akarnokd.rxjava4.basetypes;
 
-import org.reactivestreams.Subscriber;
+import java.util.concurrent.Flow.Subscriber;
 
+import hu.akarnokd.rxjava4.internal.EmptySubscription;
 import io.reactivex.rxjava4.exceptions.Exceptions;
 import io.reactivex.rxjava4.functions.*;
-import io.reactivex.rxjava4.internal.subscriptions.EmptySubscription;
 
 /**
  * Execute an action and complete the sequence or relay it error.

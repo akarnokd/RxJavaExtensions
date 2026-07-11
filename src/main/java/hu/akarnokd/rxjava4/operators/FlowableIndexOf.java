@@ -16,12 +16,12 @@
 
 package hu.akarnokd.rxjava4.operators;
 
-import org.reactivestreams.*;
+import java.util.concurrent.Flow.*;
 
+import hu.akarnokd.rxjava4.internal.DeferredScalarSubscriber;
 import io.reactivex.rxjava4.core.*;
 import io.reactivex.rxjava4.exceptions.Exceptions;
 import io.reactivex.rxjava4.functions.Predicate;
-import io.reactivex.rxjava4.internal.subscribers.DeferredScalarSubscriber;
 
 /**
  * Returns the first index of an element that matches a predicate or -1L if no elements match.

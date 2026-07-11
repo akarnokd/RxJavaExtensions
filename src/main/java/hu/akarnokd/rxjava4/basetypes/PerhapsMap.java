@@ -16,7 +16,7 @@
 
 package hu.akarnokd.rxjava4.basetypes;
 
-import org.reactivestreams.Subscriber;
+import java.util.concurrent.Flow.Subscriber;
 
 import hu.akarnokd.rxjava4.basetypes.SoloMap.MapSubscriber;
 import io.reactivex.rxjava4.functions.Function;

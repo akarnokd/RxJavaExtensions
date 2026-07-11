@@ -16,11 +16,11 @@
 
 package hu.akarnokd.rxjava4.debug;
 
-import org.reactivestreams.*;
+import java.util.concurrent.Flow.*;
 
+import hu.akarnokd.rxjava4.internal.*;
 import io.reactivex.rxjava4.core.Flowable;
 import io.reactivex.rxjava4.operators.*;
-import io.reactivex.rxjava4.internal.subscribers.*;
 
 /**
  * Wraps a Publisher and inject the assembly info.

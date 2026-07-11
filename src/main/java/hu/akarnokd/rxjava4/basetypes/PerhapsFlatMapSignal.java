@@ -17,13 +17,12 @@
 package hu.akarnokd.rxjava4.basetypes;
 
 import java.util.Objects;
+import java.util.concurrent.Flow.*;
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.reactivestreams.*;
-
+import hu.akarnokd.rxjava4.internal.*;
 import io.reactivex.rxjava4.exceptions.Exceptions;
 import io.reactivex.rxjava4.functions.*;
-import io.reactivex.rxjava4.internal.subscriptions.*;
 
 /**
  * Map the signals of the upstream into a Perhaps and emit

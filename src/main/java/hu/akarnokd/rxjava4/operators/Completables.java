@@ -17,8 +17,7 @@
 package hu.akarnokd.rxjava4.operators;
 
 import java.util.Objects;
-
-import org.reactivestreams.Publisher;
+import java.util.concurrent.Flow.Publisher;
 
 import io.reactivex.rxjava4.core.*;
 import io.reactivex.rxjava4.functions.*;

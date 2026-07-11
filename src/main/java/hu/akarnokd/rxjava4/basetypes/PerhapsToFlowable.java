@@ -16,10 +16,10 @@
 
 package hu.akarnokd.rxjava4.basetypes;
 
-import org.reactivestreams.*;
+import java.util.concurrent.Flow.*;
 
+import hu.akarnokd.rxjava4.internal.*;
 import io.reactivex.rxjava4.core.Flowable;
-import io.reactivex.rxjava4.internal.subscriptions.*;
 
 /**
  * Convert the Perhaps into a Flowable.

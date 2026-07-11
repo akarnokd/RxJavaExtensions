@@ -16,9 +16,9 @@
 
 package hu.akarnokd.rxjava4.debug;
 
+import hu.akarnokd.rxjava4.internal.DisposableHelper;
 import io.reactivex.rxjava4.core.*;
 import io.reactivex.rxjava4.disposables.Disposable;
-import io.reactivex.rxjava4.internal.disposables.DisposableHelper;
 
 /**
  * Wraps a Publisher and inject the assembly info.

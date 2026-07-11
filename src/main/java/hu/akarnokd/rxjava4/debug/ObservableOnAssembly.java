@@ -16,9 +16,9 @@
 
 package hu.akarnokd.rxjava4.debug;
 
+import hu.akarnokd.rxjava4.internal.BasicFuseableObserver;
 import io.reactivex.rxjava4.core.*;
 import io.reactivex.rxjava4.operators.QueueDisposable;
-import io.reactivex.rxjava4.internal.observers.BasicFuseableObserver;
 
 /**
  * Wraps a ObservableSource and inject the assembly info.

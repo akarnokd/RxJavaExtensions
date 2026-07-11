@@ -16,13 +16,13 @@
 
 package hu.akarnokd.rxjava4.operators;
 
-import org.reactivestreams.*;
+import java.util.concurrent.Flow.*;
 
+import hu.akarnokd.rxjava4.internal.*;
 import io.reactivex.rxjava4.core.*;
 import io.reactivex.rxjava4.exceptions.*;
 import io.reactivex.rxjava4.functions.BiConsumer;
 import io.reactivex.rxjava4.operators.ConditionalSubscriber;
-import io.reactivex.rxjava4.internal.subscribers.*;
 import io.reactivex.rxjava4.plugins.RxJavaPlugins;
 
 /**

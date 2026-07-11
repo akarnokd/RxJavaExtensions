@@ -16,16 +16,15 @@
 
 package hu.akarnokd.rxjava4.basetypes;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.Flow.*;
 
-import org.junit.Test;
-import org.reactivestreams.*;
+import org.junit.jupiter.api.Test;
 
 import hu.akarnokd.rxjava4.test.TestHelper;
-import io.reactivex.rxjava4.internal.subscriptions.BooleanSubscription;
 import io.reactivex.rxjava4.plugins.RxJavaPlugins;
 import io.reactivex.rxjava4.schedulers.Schedulers;
 import io.reactivex.rxjava4.subscribers.TestSubscriber;

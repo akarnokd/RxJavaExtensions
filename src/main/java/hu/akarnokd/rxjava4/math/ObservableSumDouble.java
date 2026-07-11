@@ -16,8 +16,8 @@
 
 package hu.akarnokd.rxjava4.math;
 
+import hu.akarnokd.rxjava4.internal.DeferredScalarObserver;
 import io.reactivex.rxjava4.core.*;
-import io.reactivex.rxjava4.internal.observers.DeferredScalarObserver;
 
 public class ObservableSumDouble extends ObservableWithSource<Double, Double> {
 

@@ -18,10 +18,10 @@ package hu.akarnokd.rxjava4.consumers;
 
 import java.util.concurrent.atomic.AtomicReference;
 
+import hu.akarnokd.rxjava4.internal.DisposableHelper;
 import io.reactivex.rxjava4.disposables.*;
 import io.reactivex.rxjava4.exceptions.*;
 import io.reactivex.rxjava4.functions.*;
-import io.reactivex.rxjava4.internal.disposables.DisposableHelper;
 import io.reactivex.rxjava4.observers.LambdaConsumerIntrospection;
 import io.reactivex.rxjava4.plugins.RxJavaPlugins;
 

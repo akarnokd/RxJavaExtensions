@@ -16,13 +16,12 @@
 
 package hu.akarnokd.rxjava4.basetypes;
 
+import java.util.concurrent.Flow.Subscriber;
 import java.util.concurrent.TimeUnit;
 
-import org.reactivestreams.Subscriber;
-
+import hu.akarnokd.rxjava4.internal.DisposableHelper;
 import io.reactivex.rxjava4.core.Scheduler;
 import io.reactivex.rxjava4.disposables.Disposable;
-import io.reactivex.rxjava4.internal.disposables.DisposableHelper;
 
 /**
  * Signal onComplete after the specified delay on the given scheduler.

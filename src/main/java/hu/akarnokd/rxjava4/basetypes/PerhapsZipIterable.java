@@ -17,13 +17,12 @@
 package hu.akarnokd.rxjava4.basetypes;
 
 import java.util.Arrays;
-
-import org.reactivestreams.Subscriber;
+import java.util.concurrent.Flow.Subscriber;
 
 import hu.akarnokd.rxjava4.basetypes.PerhapsZipArray.ZipCoordinator;
+import hu.akarnokd.rxjava4.internal.EmptySubscription;
 import io.reactivex.rxjava4.exceptions.Exceptions;
 import io.reactivex.rxjava4.functions.Function;
-import io.reactivex.rxjava4.internal.subscriptions.EmptySubscription;
 
 /**
  * Waits till all sources produce a value and calls a function

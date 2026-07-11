@@ -16,7 +16,7 @@
 
 package hu.akarnokd.rxjava4.basetypes;
 
-import org.reactivestreams.Subscriber;
+import java.util.concurrent.Flow.Subscriber;
 
 /**
  * If the upstream signals an error, turn it into an onComplete.

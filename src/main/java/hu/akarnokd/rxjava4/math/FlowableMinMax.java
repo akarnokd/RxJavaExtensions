@@ -17,11 +17,10 @@
 package hu.akarnokd.rxjava4.math;
 
 import java.util.Comparator;
+import java.util.concurrent.Flow.*;
 
-import org.reactivestreams.*;
-
+import hu.akarnokd.rxjava4.internal.DeferredScalarSubscriber;
 import io.reactivex.rxjava4.exceptions.Exceptions;
-import io.reactivex.rxjava4.internal.subscribers.DeferredScalarSubscriber;
 
 final class FlowableMinMax<T> extends FlowableSource<T, T> {
 

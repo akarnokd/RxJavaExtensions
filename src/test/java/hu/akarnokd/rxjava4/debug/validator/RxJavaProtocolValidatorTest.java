@@ -16,11 +16,13 @@
 
 package hu.akarnokd.rxjava4.debug.validator;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.Flow.Subscriber;
 
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import hu.akarnokd.rxjava4.debug.*;
 import hu.akarnokd.rxjava4.functions.PlainConsumer;
@@ -28,12 +30,10 @@ import hu.akarnokd.rxjava4.test.TestHelper;
 import io.reactivex.rxjava4.core.*;
 import io.reactivex.rxjava4.disposables.Disposable;
 import io.reactivex.rxjava4.functions.Consumer;
-import io.reactivex.rxjava4.internal.subscriptions.BooleanSubscription;
 import io.reactivex.rxjava4.parallel.ParallelFlowable;
 import io.reactivex.rxjava4.plugins.RxJavaPlugins;
 import io.reactivex.rxjava4.subjects.*;
 import io.reactivex.rxjava4.subscribers.TestSubscriber;
-import sun.jvm.hotspot.utilities.Assert;
 
 public class RxJavaProtocolValidatorTest implements PlainConsumer<ProtocolNonConformanceException> {
 
@@ -44,12 +44,12 @@ public class RxJavaProtocolValidatorTest implements PlainConsumer<ProtocolNonCon
 
     List<Throwable> errors;
 
-    @Before
+    @BeforeEach
     public void before() {
         errors = TestHelper.trackPluginErrors();
     }
 
-    @After
+    @AfterEach
     public void after() {
         RxJavaPlugins.setErrorHandler(null);
     }
@@ -76,7 +76,7 @@ public class RxJavaProtocolValidatorTest implements PlainConsumer<ProtocolNonCon
         };
 
         RxJavaProtocolValidator.enable();
-        Assert.assertTrue(RxJavaProtocolValidator.isEnabled());
+       assertTrue(RxJavaProtocolValidator.isEnabled());
 
         try {
             Completable.complete().test().assertResult();
@@ -87,13 +87,13 @@ public class RxJavaProtocolValidatorTest implements PlainConsumer<ProtocolNonCon
 
             c.test();
 
-            Assert.assertEquals(9, errors.size());
+           assertEquals(9, errors.size());
             TestHelper.assertError(errors, 0, OnSubscribeNotCalledException.class);
             TestHelper.assertError(errors, 1, NullOnErrorParameterException.class);
             TestHelper.assertError(errors, 2, OnSubscribeNotCalledException.class);
             TestHelper.assertError(errors, 3, MultipleTerminationsException.class);
             TestHelper.assertError(errors, 4, OnSubscribeNotCalledException.class);
-            Assert.assertTrue("" + errors.get(4).getCause(), errors.get(4).getCause() instanceof IOException);
+            assertTrue("" + errors.get(4).getCause(), errors.get(4).getCause() instanceof IOException);
             TestHelper.assertError(errors, 5, MultipleTerminationsException.class);
             TestHelper.assertError(errors, 6, NullOnSubscribeParameterException.class);
             TestHelper.assertError(errors, 7, MultipleOnSubscribeCallsException.class);
@@ -123,10 +123,10 @@ public class RxJavaProtocolValidatorTest implements PlainConsumer<ProtocolNonCon
         };
 
         RxJavaProtocolValidator.setOnViolationHandler(this);
-        Assert.assertSame(this, RxJavaProtocolValidator.getOnViolationHandler());
+        assertSame(this, RxJavaProtocolValidator.getOnViolationHandler());
 
         SavedHooks h = RxJavaProtocolValidator.enableAndChain();
-        Assert.assertTrue(RxJavaProtocolValidator.isEnabled());
+        assertTrue(RxJavaProtocolValidator.isEnabled());
 
         try {
             Maybe.just(1).test().assertResult(1);
@@ -138,13 +138,13 @@ public class RxJavaProtocolValidatorTest implements PlainConsumer<ProtocolNonCon
 
             c.test();
 
-            Assert.assertEquals(15, errors.size());
+            assertEquals(15, errors.size());
             TestHelper.assertError(errors, 0, OnSubscribeNotCalledException.class);
             TestHelper.assertError(errors, 1, NullOnErrorParameterException.class);
             TestHelper.assertError(errors, 2, OnSubscribeNotCalledException.class);
             TestHelper.assertError(errors, 3, MultipleTerminationsException.class);
             TestHelper.assertError(errors, 4, OnSubscribeNotCalledException.class);
-            Assert.assertTrue("" + errors.get(4).getCause(), errors.get(4).getCause() instanceof IOException);
+            assertTrue("" + errors.get(4).getCause(), errors.get(4).getCause() instanceof IOException);
             TestHelper.assertError(errors, 5, MultipleTerminationsException.class);
             TestHelper.assertError(errors, 6, NullOnSuccessParameterException.class);
             TestHelper.assertError(errors, 7, OnSubscribeNotCalledException.class);
@@ -179,10 +179,10 @@ public class RxJavaProtocolValidatorTest implements PlainConsumer<ProtocolNonCon
         };
 
         RxJavaProtocolValidator.setOnViolationHandler(this);
-        Assert.assertSame(this, RxJavaProtocolValidator.getOnViolationHandler());
+        assertSame(this, RxJavaProtocolValidator.getOnViolationHandler());
 
         SavedHooks h = RxJavaProtocolValidator.enableAndChain();
-        Assert.assertTrue(RxJavaProtocolValidator.isEnabled());
+        assertTrue(RxJavaProtocolValidator.isEnabled());
 
         try {
             Single.just(1).test().assertResult(1);
@@ -193,12 +193,12 @@ public class RxJavaProtocolValidatorTest implements PlainConsumer<ProtocolNonCon
 
             c.test();
 
-            Assert.assertEquals(12, errors.size());
+            assertEquals(12, errors.size());
             TestHelper.assertError(errors, 0, NullOnErrorParameterException.class);
             TestHelper.assertError(errors, 1, OnSubscribeNotCalledException.class);
             TestHelper.assertError(errors, 2, OnSubscribeNotCalledException.class);
             TestHelper.assertError(errors, 3, MultipleTerminationsException.class);
-            Assert.assertTrue("" + errors.get(3).getCause(), errors.get(3).getCause() instanceof IOException);
+            assertTrue("" + errors.get(3).getCause(), errors.get(3).getCause() instanceof IOException);
             TestHelper.assertError(errors, 4, NullOnSuccessParameterException.class);
             TestHelper.assertError(errors, 5, OnSubscribeNotCalledException.class);
             TestHelper.assertError(errors, 6, OnSuccessAfterTerminationException.class);
@@ -233,10 +233,10 @@ public class RxJavaProtocolValidatorTest implements PlainConsumer<ProtocolNonCon
         };
 
         RxJavaProtocolValidator.setOnViolationHandler(this);
-        Assert.assertSame(this, RxJavaProtocolValidator.getOnViolationHandler());
+        assertSame(this, RxJavaProtocolValidator.getOnViolationHandler());
 
         SavedHooks h = RxJavaProtocolValidator.enableAndChain();
-        Assert.assertTrue(RxJavaProtocolValidator.isEnabled());
+        assertTrue(RxJavaProtocolValidator.isEnabled());
 
         try {
             Observable.just(1).test().assertResult(1);
@@ -248,13 +248,13 @@ public class RxJavaProtocolValidatorTest implements PlainConsumer<ProtocolNonCon
 
             o.test();
 
-            Assert.assertEquals(15, errors.size());
+            assertEquals(15, errors.size());
             TestHelper.assertError(errors, 0, OnSubscribeNotCalledException.class);
             TestHelper.assertError(errors, 1, NullOnErrorParameterException.class);
             TestHelper.assertError(errors, 2, OnSubscribeNotCalledException.class);
             TestHelper.assertError(errors, 3, MultipleTerminationsException.class);
             TestHelper.assertError(errors, 4, OnSubscribeNotCalledException.class);
-            Assert.assertTrue("" + errors.get(4).getCause(), errors.get(4).getCause() instanceof IOException);
+            assertTrue("" + errors.get(4).getCause(), errors.get(4).getCause() instanceof IOException);
             TestHelper.assertError(errors, 5, MultipleTerminationsException.class);
             TestHelper.assertError(errors, 6, NullOnNextParameterException.class);
             TestHelper.assertError(errors, 7, OnSubscribeNotCalledException.class);
@@ -291,10 +291,10 @@ public class RxJavaProtocolValidatorTest implements PlainConsumer<ProtocolNonCon
         };
 
         RxJavaProtocolValidator.setOnViolationHandler(this);
-        Assert.assertSame(this, RxJavaProtocolValidator.getOnViolationHandler());
+        assertSame(this, RxJavaProtocolValidator.getOnViolationHandler());
 
         SavedHooks h = RxJavaProtocolValidator.enableAndChain();
-        Assert.assertTrue(RxJavaProtocolValidator.isEnabled());
+        assertTrue(RxJavaProtocolValidator.isEnabled());
 
         try {
             Flowable.just(1).test().assertResult(1);
@@ -305,13 +305,13 @@ public class RxJavaProtocolValidatorTest implements PlainConsumer<ProtocolNonCon
 
             c.test(0);
 
-            Assert.assertEquals(15, errors.size());
+            assertEquals(15, errors.size());
             TestHelper.assertError(errors, 0, OnSubscribeNotCalledException.class);
             TestHelper.assertError(errors, 1, NullOnErrorParameterException.class);
             TestHelper.assertError(errors, 2, OnSubscribeNotCalledException.class);
             TestHelper.assertError(errors, 3, MultipleTerminationsException.class);
             TestHelper.assertError(errors, 4, OnSubscribeNotCalledException.class);
-            Assert.assertTrue("" + errors.get(4).getCause(), errors.get(4).getCause() instanceof IOException);
+            assertTrue("" + errors.get(4).getCause(), errors.get(4).getCause() instanceof IOException);
             TestHelper.assertError(errors, 5, MultipleTerminationsException.class);
             TestHelper.assertError(errors, 6, NullOnNextParameterException.class);
             TestHelper.assertError(errors, 7, OnSubscribeNotCalledException.class);
@@ -356,10 +356,10 @@ public class RxJavaProtocolValidatorTest implements PlainConsumer<ProtocolNonCon
         };
 
         RxJavaProtocolValidator.setOnViolationHandler(this);
-        Assert.assertSame(this, RxJavaProtocolValidator.getOnViolationHandler());
+        assertSame(this, RxJavaProtocolValidator.getOnViolationHandler());
 
         SavedHooks h = RxJavaProtocolValidator.enableAndChain();
-        Assert.assertTrue(RxJavaProtocolValidator.isEnabled());
+        assertTrue(RxJavaProtocolValidator.isEnabled());
 
         try {
             Flowable.just(1).publish().autoConnect().test().assertResult(1);
@@ -372,13 +372,13 @@ public class RxJavaProtocolValidatorTest implements PlainConsumer<ProtocolNonCon
 
             c.connect();
 
-            Assert.assertEquals(15, errors.size());
+            assertEquals(15, errors.size());
             TestHelper.assertError(errors, 0, OnSubscribeNotCalledException.class);
             TestHelper.assertError(errors, 1, NullOnErrorParameterException.class);
             TestHelper.assertError(errors, 2, OnSubscribeNotCalledException.class);
             TestHelper.assertError(errors, 3, MultipleTerminationsException.class);
             TestHelper.assertError(errors, 4, OnSubscribeNotCalledException.class);
-            Assert.assertTrue("" + errors.get(4).getCause(), errors.get(4).getCause() instanceof IOException);
+            assertTrue("" + errors.get(4).getCause(), errors.get(4).getCause() instanceof IOException);
             TestHelper.assertError(errors, 5, MultipleTerminationsException.class);
             TestHelper.assertError(errors, 6, NullOnNextParameterException.class);
             TestHelper.assertError(errors, 7, OnSubscribeNotCalledException.class);
@@ -423,10 +423,10 @@ public class RxJavaProtocolValidatorTest implements PlainConsumer<ProtocolNonCon
         };
 
         RxJavaProtocolValidator.setOnViolationHandler(this);
-        Assert.assertSame(this, RxJavaProtocolValidator.getOnViolationHandler());
+        assertSame(this, RxJavaProtocolValidator.getOnViolationHandler());
 
         SavedHooks h = RxJavaProtocolValidator.enableAndChain();
-        Assert.assertTrue(RxJavaProtocolValidator.isEnabled());
+        assertTrue(RxJavaProtocolValidator.isEnabled());
 
         try {
             Observable.just(1).test().assertResult(1);
@@ -440,13 +440,13 @@ public class RxJavaProtocolValidatorTest implements PlainConsumer<ProtocolNonCon
 
             co.connect();
 
-            Assert.assertEquals(15, errors.size());
+            assertEquals(15, errors.size());
             TestHelper.assertError(errors, 0, OnSubscribeNotCalledException.class);
             TestHelper.assertError(errors, 1, NullOnErrorParameterException.class);
             TestHelper.assertError(errors, 2, OnSubscribeNotCalledException.class);
             TestHelper.assertError(errors, 3, MultipleTerminationsException.class);
             TestHelper.assertError(errors, 4, OnSubscribeNotCalledException.class);
-            Assert.assertTrue("" + errors.get(4).getCause(), errors.get(4).getCause() instanceof IOException);
+            assertTrue("" + errors.get(4).getCause(), errors.get(4).getCause() instanceof IOException);
             TestHelper.assertError(errors, 5, MultipleTerminationsException.class);
             TestHelper.assertError(errors, 6, NullOnNextParameterException.class);
             TestHelper.assertError(errors, 7, OnSubscribeNotCalledException.class);
@@ -490,10 +490,10 @@ public class RxJavaProtocolValidatorTest implements PlainConsumer<ProtocolNonCon
         };
 
         RxJavaProtocolValidator.setOnViolationHandler(this);
-        Assert.assertSame(this, RxJavaProtocolValidator.getOnViolationHandler());
+        assertSame(this, RxJavaProtocolValidator.getOnViolationHandler());
 
         SavedHooks h = RxJavaProtocolValidator.enableAndChain();
-        Assert.assertTrue(RxJavaProtocolValidator.isEnabled());
+        assertTrue(RxJavaProtocolValidator.isEnabled());
 
         try {
             Flowable.just(1).publish().autoConnect().test().assertResult(1);
@@ -504,13 +504,13 @@ public class RxJavaProtocolValidatorTest implements PlainConsumer<ProtocolNonCon
 
             c.subscribe(new Subscriber[] { new TestSubscriber<Integer>(0) });
 
-            Assert.assertEquals(15, errors.size());
+            assertEquals(15, errors.size());
             TestHelper.assertError(errors, 0, OnSubscribeNotCalledException.class);
             TestHelper.assertError(errors, 1, NullOnErrorParameterException.class);
             TestHelper.assertError(errors, 2, OnSubscribeNotCalledException.class);
             TestHelper.assertError(errors, 3, MultipleTerminationsException.class);
             TestHelper.assertError(errors, 4, OnSubscribeNotCalledException.class);
-            Assert.assertTrue("" + errors.get(4).getCause(), errors.get(4).getCause() instanceof IOException);
+            assertTrue("" + errors.get(4).getCause(), errors.get(4).getCause() instanceof IOException);
             TestHelper.assertError(errors, 5, MultipleTerminationsException.class);
             TestHelper.assertError(errors, 6, NullOnNextParameterException.class);
             TestHelper.assertError(errors, 7, OnSubscribeNotCalledException.class);
@@ -544,14 +544,14 @@ public class RxJavaProtocolValidatorTest implements PlainConsumer<ProtocolNonCon
 
             h.restore();
 
-            Assert.assertSame(o1, RxJavaPlugins.getOnCompletableAssembly());
-            Assert.assertSame(o2, RxJavaPlugins.getOnSingleAssembly());
-            Assert.assertSame(o3, RxJavaPlugins.getOnMaybeAssembly());
-            Assert.assertSame(o4, RxJavaPlugins.getOnObservableAssembly());
-            Assert.assertSame(o5, RxJavaPlugins.getOnFlowableAssembly());
-            Assert.assertSame(o6, RxJavaPlugins.getOnConnectableFlowableAssembly());
-            Assert.assertSame(o7, RxJavaPlugins.getOnConnectableObservableAssembly());
-            Assert.assertSame(o8, RxJavaPlugins.getOnParallelAssembly());
+            assertSame(o1, RxJavaPlugins.getOnCompletableAssembly());
+            assertSame(o2, RxJavaPlugins.getOnSingleAssembly());
+            assertSame(o3, RxJavaPlugins.getOnMaybeAssembly());
+            assertSame(o4, RxJavaPlugins.getOnObservableAssembly());
+            assertSame(o5, RxJavaPlugins.getOnFlowableAssembly());
+            assertSame(o6, RxJavaPlugins.getOnConnectableFlowableAssembly());
+            assertSame(o7, RxJavaPlugins.getOnConnectableObservableAssembly());
+            assertSame(o8, RxJavaPlugins.getOnParallelAssembly());
         } finally {
             RxJavaAssemblyTracking.disable();
         }
@@ -565,14 +565,14 @@ public class RxJavaProtocolValidatorTest implements PlainConsumer<ProtocolNonCon
 
             RxJavaProtocolValidator.disable();
 
-            Assert.assertNull(RxJavaPlugins.getOnCompletableAssembly());
-            Assert.assertNull(RxJavaPlugins.getOnSingleAssembly());
-            Assert.assertNull(RxJavaPlugins.getOnMaybeAssembly());
-            Assert.assertNull(RxJavaPlugins.getOnObservableAssembly());
-            Assert.assertNull(RxJavaPlugins.getOnFlowableAssembly());
-            Assert.assertNull(RxJavaPlugins.getOnConnectableFlowableAssembly());
-            Assert.assertNull(RxJavaPlugins.getOnConnectableObservableAssembly());
-            Assert.assertNull(RxJavaPlugins.getOnParallelAssembly());
+            assertNull(RxJavaPlugins.getOnCompletableAssembly());
+            assertNull(RxJavaPlugins.getOnSingleAssembly());
+            assertNull(RxJavaPlugins.getOnMaybeAssembly());
+            assertNull(RxJavaPlugins.getOnObservableAssembly());
+            assertNull(RxJavaPlugins.getOnFlowableAssembly());
+            assertNull(RxJavaPlugins.getOnConnectableFlowableAssembly());
+            assertNull(RxJavaPlugins.getOnConnectableObservableAssembly());
+            assertNull(RxJavaPlugins.getOnParallelAssembly());
         } finally {
             RxJavaAssemblyTracking.disable();
         }
@@ -580,19 +580,19 @@ public class RxJavaProtocolValidatorTest implements PlainConsumer<ProtocolNonCon
 
     @Test
     public void protocolNonConformanceException() {
-        Assert.assertNotNull(new ProtocolNonConformanceException() {
+        assertNotNull(new ProtocolNonConformanceException() {
             private static final long serialVersionUID = -1400755866355428747L;
         });
 
-        Assert.assertNotNull(new ProtocolNonConformanceException("Message") {
+        assertNotNull(new ProtocolNonConformanceException("Message") {
             private static final long serialVersionUID = -1400755866355428747L;
         });
 
-        Assert.assertNotNull(new ProtocolNonConformanceException(new IOException()) {
+        assertNotNull(new ProtocolNonConformanceException(new IOException()) {
             private static final long serialVersionUID = -1400755866355428747L;
         });
 
-        Assert.assertNotNull(new ProtocolNonConformanceException("Message", new IOException()) {
+        assertNotNull(new ProtocolNonConformanceException("Message", new IOException()) {
             private static final long serialVersionUID = -1400755866355428747L;
         });
     }

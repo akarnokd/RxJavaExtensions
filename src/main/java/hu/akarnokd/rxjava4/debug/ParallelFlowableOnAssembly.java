@@ -16,7 +16,7 @@
 
 package hu.akarnokd.rxjava4.debug;
 
-import org.reactivestreams.Subscriber;
+import java.util.concurrent.Flow.Subscriber;
 
 import hu.akarnokd.rxjava4.debug.FlowableOnAssembly.*;
 import io.reactivex.rxjava4.operators.ConditionalSubscriber;

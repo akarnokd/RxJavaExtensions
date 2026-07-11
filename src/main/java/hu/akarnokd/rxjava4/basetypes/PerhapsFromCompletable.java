@@ -16,12 +16,11 @@
 
 package hu.akarnokd.rxjava4.basetypes;
 
-import org.reactivestreams.Subscriber;
+import java.util.concurrent.Flow.Subscriber;
 
+import hu.akarnokd.rxjava4.internal.*;
 import io.reactivex.rxjava4.core.*;
 import io.reactivex.rxjava4.disposables.Disposable;
-import io.reactivex.rxjava4.internal.disposables.DisposableHelper;
-import io.reactivex.rxjava4.internal.subscriptions.DeferredScalarSubscription;
 
 /**
  * Wrap a Completable into a Perhaps.

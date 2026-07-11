@@ -16,9 +16,9 @@
 
 package hu.akarnokd.rxjava4.basetypes;
 
-import org.reactivestreams.Subscriber;
+import java.util.concurrent.Flow.Subscriber;
 
-import hu.akarnokd.rxjava4.basetypes.SoloHide.HideSubscriber;
+import hu.akarnokd.rxjava4.internal.HideSubscriber;
 
 /**
  * Hides the identity of the upstream and downstream including

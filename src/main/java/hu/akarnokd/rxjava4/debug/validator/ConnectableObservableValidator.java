@@ -17,10 +17,9 @@
 package hu.akarnokd.rxjava4.debug.validator;
 
 import hu.akarnokd.rxjava4.functions.PlainConsumer;
-import io.reactivex.rxjava4.core.Observer;
+import io.reactivex.rxjava4.core.*;
 import io.reactivex.rxjava4.disposables.Disposable;
 import io.reactivex.rxjava4.functions.Consumer;
-import io.reactivex.rxjava4.observables.ConnectableObservable;
 
 /**
  * Validates a ConnectableObservable.

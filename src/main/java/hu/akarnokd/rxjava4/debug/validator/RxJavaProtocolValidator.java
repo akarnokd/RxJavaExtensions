@@ -18,12 +18,10 @@ package hu.akarnokd.rxjava4.debug.validator;
 
 import hu.akarnokd.rxjava4.debug.SavedHooks;
 import hu.akarnokd.rxjava4.functions.PlainConsumer;
+import hu.akarnokd.rxjava4.internal.Functions;
 import io.reactivex.rxjava4.annotations.Nullable;
 import io.reactivex.rxjava4.core.*;
-import io.reactivex.rxjava4.flowables.ConnectableFlowable;
 import io.reactivex.rxjava4.functions.Function;
-import io.reactivex.rxjava4.internal.functions.Functions;
-import io.reactivex.rxjava4.observables.ConnectableObservable;
 import io.reactivex.rxjava4.parallel.ParallelFlowable;
 import io.reactivex.rxjava4.plugins.RxJavaPlugins;
 

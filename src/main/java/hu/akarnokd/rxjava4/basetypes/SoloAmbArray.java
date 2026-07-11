@@ -16,12 +16,11 @@
 
 package hu.akarnokd.rxjava4.basetypes;
 
+import java.util.concurrent.Flow.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.reactivestreams.*;
-
+import hu.akarnokd.rxjava4.internal.DeferredScalarSubscription;
 import hu.akarnokd.rxjava4.util.CompositeSubscription;
-import io.reactivex.rxjava4.internal.subscriptions.DeferredScalarSubscription;
 import io.reactivex.rxjava4.plugins.RxJavaPlugins;
 
 /**

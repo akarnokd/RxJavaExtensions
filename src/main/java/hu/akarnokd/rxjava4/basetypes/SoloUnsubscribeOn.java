@@ -16,11 +16,11 @@
 
 package hu.akarnokd.rxjava4.basetypes;
 
-import org.reactivestreams.Subscriber;
+import java.util.concurrent.Flow.Subscriber;
 
+import hu.akarnokd.rxjava4.internal.BasicFuseableSubscriber;
 import io.reactivex.rxjava4.core.Scheduler;
 import io.reactivex.rxjava4.operators.QueueSubscription;
-import io.reactivex.rxjava4.internal.subscribers.BasicFuseableSubscriber;
 
 /**
  * Call cancel from downstream on the specified Scheduler.

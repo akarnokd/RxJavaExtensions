@@ -16,10 +16,16 @@
 
 package hu.akarnokd.rxjava4.basetypes;
 
-import org.reactivestreams.Subscriber;
+import java.io.Serial;
+import java.util.concurrent.Flow.*;
 
-import hu.akarnokd.rxjava4.basetypes.SoloDoFinally.DoFinallySubscriber;
+import hu.akarnokd.rxjava4.internal.*;
+import io.reactivex.rxjava4.annotations.Nullable;
+import io.reactivex.rxjava4.core.FlowableSubscriber;
+import io.reactivex.rxjava4.exceptions.Exceptions;
 import io.reactivex.rxjava4.functions.Action;
+import io.reactivex.rxjava4.operators.QueueSubscription;
+import io.reactivex.rxjava4.plugins.RxJavaPlugins;
 
 /**
  * Execute an action exactly once after the upstream terminates or the
@@ -40,5 +46,111 @@ final class PerhapsDoFinally<T> extends Perhaps<T> {
     @Override
     protected void subscribeActual(Subscriber<? super T> s) {
         source.subscribe(new DoFinallySubscriber<T>(s, onFinally));
+    }
+    
+    static final class DoFinallySubscriber<T> extends BasicIntQueueSubscription<T> implements FlowableSubscriber<T> {
+
+        @Serial
+        private static final long serialVersionUID = 4109457741734051389L;
+
+        final Subscriber<? super T> downstream;
+
+        final Action onFinally;
+
+        Subscription upstream;
+
+        QueueSubscription<T> qs;
+
+        boolean syncFused;
+
+        DoFinallySubscriber(Subscriber<? super T> actual, Action onFinally) {
+            this.downstream = actual;
+            this.onFinally = onFinally;
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public void onSubscribe(Subscription s) {
+            if (SubscriptionHelper.validate(this.upstream, s)) {
+                this.upstream = s;
+                if (s instanceof QueueSubscription) {
+                    this.qs = (QueueSubscription<T>)s;
+                }
+
+                downstream.onSubscribe(this);
+            }
+        }
+
+        @Override
+        public void onNext(T t) {
+            downstream.onNext(t);
+        }
+
+        @Override
+        public void onError(Throwable t) {
+            downstream.onError(t);
+            runFinally();
+        }
+
+        @Override
+        public void onComplete() {
+            downstream.onComplete();
+            runFinally();
+        }
+
+        @Override
+        public void cancel() {
+            upstream.cancel();
+            runFinally();
+        }
+
+        @Override
+        public void request(long n) {
+            upstream.request(n);
+        }
+
+        @Override
+        public int requestFusion(int mode) {
+            QueueSubscription<T> qs = this.qs;
+            if (qs != null && (mode & BOUNDARY) == 0) {
+                int m = qs.requestFusion(mode);
+                if (m != NONE) {
+                    syncFused = m == SYNC;
+                }
+                return m;
+            }
+            return NONE;
+        }
+
+        @Override
+        public void clear() {
+            qs.clear();
+        }
+
+        @Override
+        public boolean isEmpty() {
+            return qs.isEmpty();
+        }
+
+        @Nullable
+        @Override
+        public T poll() throws Throwable {
+            T v = qs.poll();
+            if (v == null && syncFused) {
+                runFinally();
+            }
+            return v;
+        }
+
+        void runFinally() {
+            if (compareAndSet(0, 1)) {
+                try {
+                    onFinally.run();
+                } catch (Throwable ex) {
+                    Exceptions.throwIfFatal(ex);
+                    RxJavaPlugins.onError(ex);
+                }
+            }
+        }
     }
 }

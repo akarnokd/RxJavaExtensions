@@ -17,8 +17,7 @@
 package hu.akarnokd.rxjava4.processors;
 
 import java.util.Objects;
-
-import org.reactivestreams.Processor;
+import java.util.concurrent.Flow.Processor;
 
 import io.reactivex.rxjava4.annotations.*;
 import io.reactivex.rxjava4.processors.FlowableProcessor;
@@ -52,7 +51,7 @@ public final class FlowableProcessors {
      * Wraps a FlowableProcessor and makes sure if all subscribers cancel
      * their subscriptions, the upstream's Subscription gets cancelled as well.
      * <p>
-     * This operator is similar to {@link io.reactivex.rxjava4.flowables.ConnectableFlowable#refCount()}
+     * This operator is similar to {@link io.reactivex.rxjava4.core.ConnectableFlowable#refCount()}
      * except the first Subscriber doesn't trigger any sort of connection; that happens
      * when the resulting FlowableProcessor is subscribed to a Publisher manually.
      * @param <T> the input and output value type

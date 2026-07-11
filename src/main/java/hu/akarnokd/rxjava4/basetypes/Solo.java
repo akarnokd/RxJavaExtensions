@@ -18,16 +18,14 @@ package hu.akarnokd.rxjava4.basetypes;
 
 import java.util.Objects;
 import java.util.concurrent.*;
+import java.util.concurrent.Flow.*;
 
-import org.reactivestreams.*;
-
+import hu.akarnokd.rxjava4.internal.*;
 import io.reactivex.rxjava4.core.*;
+import io.reactivex.rxjava4.core.config.*;
 import io.reactivex.rxjava4.disposables.Disposable;
 import io.reactivex.rxjava4.exceptions.Exceptions;
 import io.reactivex.rxjava4.functions.*;
-import io.reactivex.rxjava4.internal.functions.Functions;
-import io.reactivex.rxjava4.internal.subscribers.LambdaSubscriber;
-import io.reactivex.rxjava4.internal.util.ExceptionHelper;
 import io.reactivex.rxjava4.plugins.RxJavaPlugins;
 import io.reactivex.rxjava4.schedulers.Schedulers;
 import io.reactivex.rxjava4.subscribers.TestSubscriber;
@@ -278,7 +276,7 @@ public abstract class Solo<T> implements Publisher<T> {
      * @return the new Flowable instance
      */
     public static <T> Flowable<T> concat(Publisher<? extends Solo<? extends T>> sources, int prefetch) {
-        return Flowable.concat(sources, prefetch);
+        return Flowable.concat(sources, new StandardBufferedConfig(prefetch));
     }
 
     /**
@@ -300,7 +298,7 @@ public abstract class Solo<T> implements Publisher<T> {
      * @return the new Flowable instance
      */
     public static <T> Flowable<T> concatDelayError(Iterable<? extends Solo<? extends T>> sources) {
-        return Flowable.concatDelayError(sources);
+        return Flowable.concat(sources, StandardBufferedConfig.DELAY_ERRORS);
     }
 
     /**
@@ -337,7 +335,7 @@ public abstract class Solo<T> implements Publisher<T> {
      * @return the new Flowable instance
      */
     public static <T> Flowable<T> concatDelayError(Publisher<? extends Solo<? extends T>> sources, int prefetch, boolean tillTheEnd) {
-        return Flowable.concatDelayError(sources, prefetch, tillTheEnd);
+        return Flowable.concat(sources, new StandardBufferedConfig(tillTheEnd ? ErrorMode.END : ErrorMode.BOUNDARY, prefetch));
     }
 
     /**
@@ -349,7 +347,7 @@ public abstract class Solo<T> implements Publisher<T> {
      */
     @SafeVarargs
     public static <T> Flowable<T> concatArrayDelayError(Solo<? extends T>... sources) {
-        return Flowable.concatArrayDelayError(sources);
+        return Flowable.concatArray(StandardBufferedConfig.DELAY_ERRORS, sources);
     }
 
     /**
@@ -370,7 +368,7 @@ public abstract class Solo<T> implements Publisher<T> {
      * @return the new Flowable instance
      */
     public static <T> Flowable<T> merge(Iterable<? extends Solo<? extends T>> sources, int maxConcurrency) {
-        return Flowable.merge(sources, maxConcurrency);
+        return Flowable.merge(sources, new StandardConcurrentBufferedConfig(maxConcurrency));
     }
 
     /**
@@ -391,7 +389,7 @@ public abstract class Solo<T> implements Publisher<T> {
      * @return the new Flowable instance
      */
     public static <T> Flowable<T> merge(Publisher<? extends Solo<? extends T>> sources, int maxConcurrency) {
-        return Flowable.merge(sources, maxConcurrency);
+        return Flowable.merge(sources, new StandardConcurrentBufferedConfig(maxConcurrency));
     }
 
     /**
@@ -414,7 +412,7 @@ public abstract class Solo<T> implements Publisher<T> {
      */
     @SafeVarargs
     public static <T> Flowable<T> mergeArray(int maxConcurrency, Solo<? extends T>... sources) {
-        return Flowable.mergeArray(maxConcurrency, 1, sources);
+        return Flowable.mergeArray(new StandardConcurrentBufferedConfig(ErrorMode.IMMEDIATE, maxConcurrency, 1), sources);
     }
 
     /**
@@ -437,7 +435,7 @@ public abstract class Solo<T> implements Publisher<T> {
      * @return the new Flowable instance
      */
     public static <T> Flowable<T> mergeDelayError(Iterable<? extends Solo<? extends T>> sources, int maxConcurrency) {
-        return Flowable.mergeDelayError(sources, maxConcurrency);
+        return Flowable.merge(sources, new StandardConcurrentBufferedConfig(ErrorMode.END, maxConcurrency));
     }
 
     /**
@@ -460,7 +458,7 @@ public abstract class Solo<T> implements Publisher<T> {
      * @return the new Flowable instance
      */
     public static <T> Flowable<T> mergeDelayError(Publisher<? extends Solo<? extends T>> sources, int maxConcurrency) {
-        return Flowable.mergeDelayError(sources, maxConcurrency);
+        return Flowable.merge(sources, new StandardConcurrentBufferedConfig(ErrorMode.END, maxConcurrency));
     }
 
     /**
@@ -485,7 +483,7 @@ public abstract class Solo<T> implements Publisher<T> {
      */
     @SafeVarargs
     public static <T> Flowable<T> mergeArrayDelayError(int maxConcurrency, Solo<? extends T>... sources) {
-        return Flowable.mergeArrayDelayError(maxConcurrency, 1, sources);
+        return Flowable.mergeArray(new StandardConcurrentBufferedConfig(ErrorMode.END, maxConcurrency, 1), sources);
     }
 
     /**
@@ -628,7 +626,7 @@ public abstract class Solo<T> implements Publisher<T> {
      * @return the new Flowable instance
      */
     public final Flowable<T> andThen(Publisher<? extends T> other) {
-        return Flowable.concat(this, other);
+        return Flowable.concatArray(this, other);
     }
 
     /**
@@ -638,7 +636,7 @@ public abstract class Solo<T> implements Publisher<T> {
      * @return the new Flowable instance
      */
     public final Flowable<T> concatWith(Solo<T> other) {
-        return Flowable.concat(this, other);
+        return Flowable.concatArray(this, other);
     }
 
     /**
@@ -648,7 +646,7 @@ public abstract class Solo<T> implements Publisher<T> {
      * @return the new Flowable instance
      */
     public final Flowable<T> mergeWith(Solo<T> other) {
-        return Flowable.merge(this, other);
+        return Flowable.mergeArray(this, other);
     }
 
     /**

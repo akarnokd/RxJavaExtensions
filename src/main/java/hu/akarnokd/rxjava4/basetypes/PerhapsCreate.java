@@ -16,16 +16,14 @@
 
 package hu.akarnokd.rxjava4.basetypes;
 
+import java.util.concurrent.Flow.Subscriber;
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.reactivestreams.Subscriber;
-
+import hu.akarnokd.rxjava4.internal.*;
 import io.reactivex.rxjava4.core.*;
 import io.reactivex.rxjava4.disposables.Disposable;
 import io.reactivex.rxjava4.exceptions.Exceptions;
 import io.reactivex.rxjava4.functions.Cancellable;
-import io.reactivex.rxjava4.internal.disposables.*;
-import io.reactivex.rxjava4.internal.subscriptions.DeferredScalarSubscription;
 import io.reactivex.rxjava4.plugins.RxJavaPlugins;
 
 /**

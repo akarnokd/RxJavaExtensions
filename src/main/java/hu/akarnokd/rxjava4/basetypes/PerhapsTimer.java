@@ -16,14 +16,15 @@
 
 package hu.akarnokd.rxjava4.basetypes;
 
+import java.io.Serial;
+import java.util.concurrent.Flow.*;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 
-import org.reactivestreams.Subscriber;
-
-import hu.akarnokd.rxjava4.basetypes.SoloTimer.TimerSubscriber;
+import hu.akarnokd.rxjava4.internal.*;
 import io.reactivex.rxjava4.core.Scheduler;
 import io.reactivex.rxjava4.disposables.Disposable;
-import io.reactivex.rxjava4.internal.disposables.DisposableHelper;
+import io.reactivex.rxjava4.exceptions.MissingBackpressureException;
 
 /**
  * Signal a 0L after the specified time delay.
@@ -48,6 +49,51 @@ final class PerhapsTimer extends Perhaps<Long> {
         s.onSubscribe(parent);
 
         Disposable d = scheduler.scheduleDirect(parent, delay, unit);
-        DisposableHelper.replace(parent.task, d);
+        DisposableHelper.replace(parent, d);
+    }
+
+    static final class TimerSubscriber extends AtomicReference<Disposable>
+    implements Subscription, Runnable {
+
+        @Serial
+        private static final long serialVersionUID = -2809475196591179431L;
+
+        final Subscriber<? super Long> downstream;
+
+        volatile boolean requested;
+
+        TimerSubscriber(Subscriber<? super Long> downstream) {
+            this.downstream = downstream;
+        }
+
+        @Override
+        public void request(long n) {
+            if (SubscriptionHelper.validate(n)) {
+                requested = true;
+            }
+        }
+
+        @Override
+        public void cancel() {
+            DisposableHelper.dispose(this);
+        }
+
+        @Override
+        public void run() {
+            if (get() != DisposableHelper.DISPOSED) {
+                if (requested) {
+                    downstream.onNext(0L);
+                    lazySet(EmptyDisposable.INSTANCE);
+                    downstream.onComplete();
+                } else {
+                    lazySet(EmptyDisposable.INSTANCE);
+                    downstream.onError(MissingBackpressureException.createDefault());
+                }
+            }
+        }
+
+        public void setResource(Disposable d) {
+            DisposableHelper.trySet(this, d);
+        }
     }
 }

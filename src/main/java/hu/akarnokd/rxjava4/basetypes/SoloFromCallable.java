@@ -18,11 +18,10 @@ package hu.akarnokd.rxjava4.basetypes;
 
 import java.util.*;
 import java.util.concurrent.Callable;
+import java.util.concurrent.Flow.Subscriber;
 
-import org.reactivestreams.Subscriber;
-
+import hu.akarnokd.rxjava4.internal.DeferredScalarSubscription;
 import io.reactivex.rxjava4.exceptions.Exceptions;
-import io.reactivex.rxjava4.internal.subscriptions.DeferredScalarSubscription;
 
 /**
  * Executes a callable and signals its resulting value.

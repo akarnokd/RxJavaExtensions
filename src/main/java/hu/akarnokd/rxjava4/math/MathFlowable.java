@@ -17,8 +17,7 @@
 package hu.akarnokd.rxjava4.math;
 
 import java.util.Comparator;
-
-import org.reactivestreams.Publisher;
+import java.util.concurrent.Flow.Publisher;
 
 import hu.akarnokd.rxjava4.util.SelfComparator;
 import io.reactivex.rxjava4.core.Flowable;

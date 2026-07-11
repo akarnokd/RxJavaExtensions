@@ -17,8 +17,7 @@
 package hu.akarnokd.rxjava4.basetypes;
 
 import java.util.Objects;
-
-import org.reactivestreams.Subscriber;
+import java.util.concurrent.Flow.Subscriber;
 
 import hu.akarnokd.rxjava4.basetypes.SoloAmbArray.AmbSubscriber;
 import io.reactivex.rxjava4.exceptions.Exceptions;

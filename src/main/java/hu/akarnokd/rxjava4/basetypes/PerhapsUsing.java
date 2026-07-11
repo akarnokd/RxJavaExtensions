@@ -16,14 +16,15 @@
 
 package hu.akarnokd.rxjava4.basetypes;
 
+import java.io.Serial;
 import java.util.Objects;
+import java.util.concurrent.Flow.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.reactivestreams.Subscriber;
-
-import hu.akarnokd.rxjava4.basetypes.SoloUsing.UsingSubscriber;
+import hu.akarnokd.rxjava4.internal.*;
+import io.reactivex.rxjava4.core.FlowableSubscriber;
 import io.reactivex.rxjava4.exceptions.*;
 import io.reactivex.rxjava4.functions.*;
-import io.reactivex.rxjava4.internal.subscriptions.EmptySubscription;
 import io.reactivex.rxjava4.plugins.RxJavaPlugins;
 
 /**
@@ -90,5 +91,112 @@ final class PerhapsUsing<T, R> extends Perhaps<T> {
         }
 
         np.subscribe(new UsingSubscriber<T, R>(s, resource, disposer, eager));
+    }
+    
+    static final class UsingSubscriber<T, D> extends AtomicBoolean implements FlowableSubscriber<T>, Subscription {
+
+        @Serial
+        private static final long serialVersionUID = 5904473792286235046L;
+
+        final Subscriber<? super T> downstream;
+        final D resource;
+        final Consumer<? super D> disposer;
+        final boolean eager;
+
+        Subscription upstream;
+
+        UsingSubscriber(Subscriber<? super T> actual, D resource, Consumer<? super D> disposer, boolean eager) {
+            this.downstream = actual;
+            this.resource = resource;
+            this.disposer = disposer;
+            this.eager = eager;
+        }
+
+        @Override
+        public void onSubscribe(Subscription s) {
+            if (SubscriptionHelper.validate(this.upstream, s)) {
+                this.upstream = s;
+                downstream.onSubscribe(this);
+            }
+        }
+
+        @Override
+        public void onNext(T t) {
+            downstream.onNext(t);
+        }
+
+        @Override
+        public void onError(Throwable t) {
+            if (eager) {
+                Throwable innerError = null;
+                if (compareAndSet(false, true)) {
+                    try {
+                        disposer.accept(resource);
+                    } catch (Throwable e) {
+                        Exceptions.throwIfFatal(e);
+                        innerError = e;
+                    }
+                }
+
+                if (innerError != null) {
+                    downstream.onError(new CompositeException(t, innerError));
+                } else {
+                    downstream.onError(t);
+                }
+            } else {
+                downstream.onError(t);
+                disposeResource();
+            }
+        }
+
+        @Override
+        public void onComplete() {
+            if (eager) {
+                if (compareAndSet(false, true)) {
+                    try {
+                        disposer.accept(resource);
+                    } catch (Throwable e) {
+                        Exceptions.throwIfFatal(e);
+                        downstream.onError(e);
+                        return;
+                    }
+                }
+
+                downstream.onComplete();
+            } else {
+                downstream.onComplete();
+                disposeResource();
+            }
+        }
+
+        @Override
+        public void request(long n) {
+            upstream.request(n);
+        }
+
+        @Override
+        public void cancel() {
+            if (eager) {
+                disposeResource();
+                upstream.cancel();
+                upstream = SubscriptionHelper.CANCELLED;
+            } else {
+                upstream.cancel();
+                upstream = SubscriptionHelper.CANCELLED;
+                disposeResource();
+            }
+        }
+
+        void disposeResource() {
+            if (compareAndSet(false, true)) {
+                try {
+                    disposer.accept(resource);
+                } catch (Throwable e) {
+                    Exceptions.throwIfFatal(e);
+                    // can't call actual.onError unless it is serialized, which is expensive
+                    RxJavaPlugins.onError(e);
+                }
+            }
+        }
     }
 }

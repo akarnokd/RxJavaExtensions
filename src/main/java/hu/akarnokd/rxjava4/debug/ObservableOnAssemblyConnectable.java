@@ -17,10 +17,9 @@
 package hu.akarnokd.rxjava4.debug;
 
 import hu.akarnokd.rxjava4.debug.ObservableOnAssembly.OnAssemblyObserver;
-import io.reactivex.rxjava4.core.Observer;
+import io.reactivex.rxjava4.core.*;
 import io.reactivex.rxjava4.disposables.Disposable;
 import io.reactivex.rxjava4.functions.Consumer;
-import io.reactivex.rxjava4.observables.ConnectableObservable;
 
 /**
  * Wraps a ObservableSource and inject the assembly info.

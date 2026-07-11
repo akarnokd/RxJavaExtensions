@@ -17,8 +17,7 @@
 package hu.akarnokd.rxjava4.parallel;
 
 import java.util.Comparator;
-
-import org.reactivestreams.Subscriber;
+import java.util.concurrent.Flow.Subscriber;
 
 import hu.akarnokd.rxjava4.operators.BasicMergeSubscription;
 import io.reactivex.rxjava4.core.Flowable;

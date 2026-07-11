@@ -19,10 +19,8 @@ package hu.akarnokd.rxjava4.debug;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import io.reactivex.rxjava4.core.*;
-import io.reactivex.rxjava4.flowables.ConnectableFlowable;
 import io.reactivex.rxjava4.functions.*;
 import io.reactivex.rxjava4.operators.ScalarSupplier;
-import io.reactivex.rxjava4.observables.ConnectableObservable;
 import io.reactivex.rxjava4.parallel.ParallelFlowable;
 import io.reactivex.rxjava4.plugins.RxJavaPlugins;
 

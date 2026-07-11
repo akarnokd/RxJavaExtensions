@@ -16,9 +16,9 @@
 
 package hu.akarnokd.rxjava4.basetypes;
 
-import org.reactivestreams.*;
+import java.util.concurrent.Flow.*;
 
-import io.reactivex.rxjava4.internal.subscribers.DeferredScalarSubscriber;
+import hu.akarnokd.rxjava4.internal.DeferredScalarSubscriber;
 import io.reactivex.rxjava4.plugins.RxJavaPlugins;
 
 /**

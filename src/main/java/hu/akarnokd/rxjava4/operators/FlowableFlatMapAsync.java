@@ -16,7 +16,7 @@
 
 package hu.akarnokd.rxjava4.operators;
 
-import org.reactivestreams.*;
+import java.util.concurrent.Flow.*;
 
 import hu.akarnokd.rxjava4.operators.FlowableFlatMapSync.*;
 import io.reactivex.rxjava4.core.*;

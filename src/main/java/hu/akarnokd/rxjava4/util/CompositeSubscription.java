@@ -16,9 +16,9 @@
 
 package hu.akarnokd.rxjava4.util;
 
-import org.reactivestreams.Subscription;
+import java.util.concurrent.Flow.Subscription;
 
-import io.reactivex.rxjava4.internal.util.OpenHashSet;
+import hu.akarnokd.rxjava4.internal.OpenHashSet;
 
 /**
  * Container for Subscriptions and atomic operations on them.

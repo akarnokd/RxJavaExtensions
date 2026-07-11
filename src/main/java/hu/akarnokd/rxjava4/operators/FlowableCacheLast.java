@@ -16,9 +16,8 @@
 
 package hu.akarnokd.rxjava4.operators;
 
+import java.util.concurrent.Flow.*;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import org.reactivestreams.*;
 
 import io.reactivex.rxjava4.core.*;
 import io.reactivex.rxjava4.processors.AsyncProcessor;

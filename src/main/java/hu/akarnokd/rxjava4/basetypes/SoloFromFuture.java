@@ -18,10 +18,9 @@ package hu.akarnokd.rxjava4.basetypes;
 
 import java.util.NoSuchElementException;
 import java.util.concurrent.*;
+import java.util.concurrent.Flow.Subscriber;
 
-import org.reactivestreams.Subscriber;
-
-import io.reactivex.rxjava4.internal.subscriptions.DeferredScalarSubscription;
+import hu.akarnokd.rxjava4.internal.DeferredScalarSubscription;
 
 /**
  * Await a Future's result.

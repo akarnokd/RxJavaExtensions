@@ -16,13 +16,12 @@
 
 package hu.akarnokd.rxjava4.basetypes;
 
+import java.util.concurrent.Flow.*;
 import java.util.concurrent.atomic.*;
 
-import org.reactivestreams.*;
-
+import hu.akarnokd.rxjava4.internal.*;
 import io.reactivex.rxjava4.exceptions.*;
 import io.reactivex.rxjava4.functions.Predicate;
-import io.reactivex.rxjava4.internal.subscriptions.*;
 
 /**
  * Retries the source Solo at most the given number of times.

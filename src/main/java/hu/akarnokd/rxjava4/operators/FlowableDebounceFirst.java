@@ -16,13 +16,12 @@
 
 package hu.akarnokd.rxjava4.operators;
 
+import java.util.concurrent.Flow.*;
 import java.util.concurrent.TimeUnit;
 
-import org.reactivestreams.*;
-
+import hu.akarnokd.rxjava4.internal.SubscriptionHelper;
 import io.reactivex.rxjava4.core.*;
 import io.reactivex.rxjava4.operators.ConditionalSubscriber;
-import io.reactivex.rxjava4.internal.subscriptions.SubscriptionHelper;
 
 /**
  * Debounce the upstream by taking an item and then blocking out subsequent
