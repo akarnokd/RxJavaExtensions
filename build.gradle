@@ -7,7 +7,6 @@ plugins {
     id("com.github.hierynomus.license") version "0.16.1"
     id("biz.aQute.bnd.builder") version "7.3.0"
     id("com.vanniktech.maven.publish") version "0.37.0"
-    id("org.beryx.jar") version "2.0.0"
     id("signing")
 }
 
@@ -38,7 +37,6 @@ repositories {
 }
 
 dependencies {
-
     implementation "io.reactivex.rxjava4:rxjava:$rxJavaVersion"
 
     testImplementation "org.mockito:mockito-core:$mockitoVersion"
@@ -46,13 +44,18 @@ dependencies {
 
     testImplementation "org.junit.jupiter:junit-jupiter:$jupiterVersion"
 
-    // Explicitly add these for IDE compatibility (especially Eclipse)
+    // For Eclipse + JUnit Platform launcher (keep these)
     testImplementation "org.junit.platform:junit-platform-commons:$jupiterLauncherVersion"
     testImplementation "org.junit.platform:junit-platform-launcher:$jupiterLauncherVersion"
+    testRuntimeOnly   "org.junit.platform:junit-platform-launcher:$jupiterLauncherVersion"
 
-    testRuntimeOnly "org.junit.platform:junit-platform-launcher:$jupiterLauncherVersion"  // already have this
+    // === NEW: Make requires static work for module-info.java compilation ===
+    // These go on compileClasspath (so module-info.java can resolve them) but are NOT packaged
+    compileOnly "org.junit.jupiter:junit-jupiter-api:$jupiterVersion"
+    compileOnly "org.junit.platform:junit-platform-commons:$jupiterLauncherVersion"
+    // Optional: if you also want the mockito requires static
+    // compileOnly "org.mockito:mockito-core:$mockitoVersion"
 }
-
 // === Experimental JDK handling for Outreach Program ===
 def experimental = System.getenv("JDK_EXPERIMENTAL")
 def toolchainJdk = "26"   // default / baseline
@@ -73,6 +76,7 @@ tasks.withType(JavaCompile) {
     options.compilerArgs << "-parameters"
     options.compilerArgs += '-Xlint:-module'
     options.compilerArgs += '-Xlint:unchecked'
+    modularity.inferModulePath = true
 }
 
 checkstyle {
@@ -125,12 +129,6 @@ javadoc {
     )
 
     // modularity.inferModulePath = true  // let Gradle handle deps on --module-path
-}
-
-moduleConfig {
-    moduleInfoPath = 'src/main/module/module-info.java'
-    multiReleaseVersion = 9
-    version = project.version
 }
 
 import aQute.bnd.gradle.Bundle   // ← important import

@@ -32,9 +32,7 @@ module hu.akarnokd.rxjava4 {
     requires java.management;
     requires transitive io.reactivex.rxjava4;
 
-    /*
     requires static org.junit.jupiter.api;
     requires static org.mockito;
     requires static org.junit.platform.commons;
-    */
 }

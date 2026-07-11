@@ -2226,7 +2226,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
                     throw new NullPointerException();
                 }
             }.test();
-        })
+        });
     }
 
     @Test
