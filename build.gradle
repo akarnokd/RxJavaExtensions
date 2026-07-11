@@ -7,6 +7,7 @@ plugins {
     id("com.github.hierynomus.license") version "0.16.1"
     id("biz.aQute.bnd.builder") version "7.3.0"
     id("com.vanniktech.maven.publish") version "0.37.0"
+    id("org.beryx.jar") version "2.0.0"
     id("signing")
 }
 
@@ -37,24 +38,20 @@ repositories {
 }
 
 dependencies {
-    implementation "io.reactivex.rxjava4:rxjava:$rxJavaVersion"
+    api "io.reactivex.rxjava4:rxjava:$rxJavaVersion"
 
     testImplementation "org.mockito:mockito-core:$mockitoVersion"
+    compileOnly        "org.mockito:mockito-core:$mockitoVersion"
     testImplementation "org.mockito:mockito-junit-jupiter:$mockitoJUnitVersion"
 
     testImplementation "org.junit.jupiter:junit-jupiter:$jupiterVersion"
+    compileOnly        "org.junit.jupiter:junit-jupiter-api:$jupiterVersion"
 
-    // For Eclipse + JUnit Platform launcher (keep these)
     testImplementation "org.junit.platform:junit-platform-commons:$jupiterLauncherVersion"
+    compileOnly        "org.junit.platform:junit-platform-commons:$jupiterLauncherVersion"
     testImplementation "org.junit.platform:junit-platform-launcher:$jupiterLauncherVersion"
-    testRuntimeOnly   "org.junit.platform:junit-platform-launcher:$jupiterLauncherVersion"
+    testRuntimeOnly    "org.junit.platform:junit-platform-launcher:$jupiterLauncherVersion"
 
-    // === NEW: Make requires static work for module-info.java compilation ===
-    // These go on compileClasspath (so module-info.java can resolve them) but are NOT packaged
-    compileOnly "org.junit.jupiter:junit-jupiter-api:$jupiterVersion"
-    compileOnly "org.junit.platform:junit-platform-commons:$jupiterLauncherVersion"
-    // Optional: if you also want the mockito requires static
-    // compileOnly "org.mockito:mockito-core:$mockitoVersion"
 }
 // === Experimental JDK handling for Outreach Program ===
 def experimental = System.getenv("JDK_EXPERIMENTAL")
@@ -77,6 +74,12 @@ tasks.withType(JavaCompile) {
     options.compilerArgs += '-Xlint:-module'
     options.compilerArgs += '-Xlint:unchecked'
     modularity.inferModulePath = true
+}
+
+moduleConfig {
+    moduleInfoPath = 'src/main/module/module-info.java'
+    multiReleaseVersion = 9
+    version = project.version
 }
 
 checkstyle {
