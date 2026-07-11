@@ -1,6 +1,6 @@
 # RxJavaExtensions
 
-[![Maven Central](https://maven-badges.sml.io/sonatype-central/com.github.akarnokd/rxjava-extensions/badge.svg)](https://maven-badges.sml.io/sonatype-central/com.github.akarnokd/rxjava-extensions)
+[![Maven Central](https://maven-badges.sml.io/sonatype-central/com.github.akarnokd/rxjava4-extensions/badge.svg)](https://maven-badges.sml.io/sonatype-central/com.github.akarnokd/rxjava4-extensions)
 [![codecov.io](http://codecov.io/github/akarnokd/RxJavaExtensions/coverage.svg?branch=4.x)](https://codecov.io/gh/akarnokd/RxJavaExtensions/branch/4.x)
 [![Java CI with Gradle](https://github.com/akarnokd/RxJavaExtensions/actions/workflows/gradle.yml/badge.svg)](https://github.com/akarnokd/RxJavaExtensions/actions/workflows/gradle.yml)
 
