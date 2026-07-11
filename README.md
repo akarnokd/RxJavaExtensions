@@ -5,7 +5,6 @@
 [![Java CI with Gradle](https://github.com/akarnokd/RxJavaExtensions/actions/workflows/gradle.yml/badge.svg)](https://github.com/akarnokd/RxJavaExtensions/actions/workflows/gradle.yml)
 
 [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/akarnokd/RxJavaExtensions/badge)](https://securityscorecards.dev/viewer/?uri=github.com/akarnokd/RxJavaExtensions)
-[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/12264/badge)](https://www.bestpractices.dev/projects/12264)
 
 RxJava 4.x implementation of extra sources, operators and components and ports of many 1.x companion libraries.
 
