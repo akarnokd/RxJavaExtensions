@@ -1,11 +1,11 @@
 # RxJavaExtensions
 
 <a href='https://github.com/akarnokd/RxJavaExtensions/actions?query=workflow%3A%22Java+CI+with+Gradle%22'><img src='https://github.com/akarnokd/RxJavaExtensions/workflows/Java%20CI%20with%20Gradle/badge.svg'></a>
-[![codecov.io](http://codecov.io/github/akarnokd/RxJavaExtensions/coverage.svg?branch=3.x)](http://codecov.io/github/akarnokd/RxJavaExtensions?branch=3.x)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.akarnokd/rxjava3-extensions/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.akarnokd/rxjava3-extensions)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.reactivex.rxjava3/rxjava/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.reactivex.rxjava3/rxjava)
+[![codecov.io](http://codecov.io/github/akarnokd/RxJavaExtensions/coverage.svg?branch=4.x)](http://codecov.io/github/akarnokd/RxJavaExtensions?branch=4.x)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.akarnokd/rxjava4-extensions/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.akarnokd/rxjava4-extensions)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.reactivex.rxjava4/rxjava/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.reactivex.rxjava4/rxjava)
 
-RxJava 3.x implementation of extra sources, operators and components and ports of many 1.x companion libraries.
+RxJava 4.x implementation of extra sources, operators and components and ports of many 1.x companion libraries.
 
 # Releases
 
@@ -13,7 +13,7 @@ RxJava 3.x implementation of extra sources, operators and components and ports o
 
 ```
 dependencies {
-    implementation "com.github.akarnokd:rxjava3-extensions:3.1.1"
+    implementation "com.github.akarnokd:rxjava4-extensions:4.0.0"
 }
 ```
 

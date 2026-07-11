@@ -2,19 +2,26 @@ plugins {
     id("java-library")
     id("checkstyle")
     id("eclipse")
-    id("jacoco")
     id("maven-publish")
-    id("pmd")
-    id("ru.vyarus.animalsniffer") version "1.6.0"
-    id("me.champeau.gradle.jmh") version "0.5.3"
+    id("me.champeau.jmh") version "0.7.3"
     id("com.github.hierynomus.license") version "0.16.1"
-    id("biz.aQute.bnd.builder") version "6.4.0"
-    id("com.vanniktech.maven.publish") version "0.19.0"
+    id("biz.aQute.bnd.builder") version "7.3.0"
+    id("com.vanniktech.maven.publish") version "0.37.0"
+    id("org.beryx.jar") version "2.0.0"
+    id("signing")
 }
 
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
-
+ext {
+    reactiveStreamsVersion = "1.0.4"
+    junitVersion = "4.13.2"
+    testNgVersion = "7.12.0"
+    mockitoVersion = "5.23.0"
+    mockitoJUnitVersion = "5.23.0"
+    jmhLibVersion = "1.37"
+    guavaVersion = "33.6.0-jre"
+    jupiterVersion = "6.1.1"
+    jupiterLauncherVersion = "6.1.1"
+}
 group = "com.github.akarnokd" 
 ext.githubProjectName = 'RxJavaExtensions'
 
@@ -26,30 +33,45 @@ if (!hasProperty('mainClass')) {
 
 repositories {
     mavenCentral()
-    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
-    maven { url 'https://oss.sonatype.org/content/groups/public' }
-    maven { url 'https://repo.spring.io/libs-snapshot' }
+    maven { url 'https://central.sonatype.com/repository/maven-snapshots' }
 }
 
 dependencies {
-    signature 'org.codehaus.mojo.signature:java18:1.0@signature'
 
-    api "org.reactivestreams:reactive-streams:1.0.4"
-    api "io.reactivex.rxjava3:rxjava:3.1.6"
+    implementation "io.reactivex.rxjava4:rxjava:4.0.0+"
 
-    testImplementation group: 'junit', name: 'junit', version: '4.13.2'
+    testImplementation "org.mockito:mockito-core:$mockitoVersion"
+    testImplementation "org.mockito:mockito-junit-jupiter:$mockitoJUnitVersion"
 
-    testImplementation 'org.mockito:mockito-core:4.9.0'
+    testImplementation "org.junit.jupiter:junit-jupiter:$jupiterVersion"
+
+    // Explicitly add these for IDE compatibility (especially Eclipse)
+    testImplementation "org.junit.platform:junit-platform-commons:$jupiterLauncherVersion"
+    testImplementation "org.junit.platform:junit-platform-launcher:$jupiterLauncherVersion"
+
+    testRuntimeOnly "org.junit.platform:junit-platform-launcher:$jupiterLauncherVersion"  // already have this
 }
 
-apply plugin: 'biz.aQute.bnd.builder'
+// === Experimental JDK handling for Outreach Program ===
+def experimental = System.getenv("JDK_EXPERIMENTAL")
+def toolchainJdk = "26"   // default / baseline
 
-jar {
-    bnd ('Bundle-Name': 'rxjava3-extensions',
-            'Bundle-Vendor': 'akarnokd',
-            'Bundle-Description': 'RxJava 3.x extra sources, operators and components and ports of many 1.x companion libraries.',
-            'Import-Package': '!org.junit,!junit.framework,!org.mockito.*,*',
-            'Bundle-DocURL': 'https://github.com/akarnokd/RxJavaExtensions')
+if (experimental != null && !experimental.trim().isEmpty()) {
+    toolchainJdk = experimental  // e.g. "27"
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(toolchainJdk)
+    }
+    sourceCompatibility = JavaVersion.VERSION_26
+    targetCompatibility = JavaVersion.VERSION_26
+}
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs << "-parameters"
+    options.compilerArgs += '-Xlint:-module'
+    options.compilerArgs += '-Xlint:unchecked'
 }
 
 checkstyle {
@@ -63,29 +85,82 @@ checkstyle {
 apply plugin: "com.vanniktech.maven.publish"
 
 jmh {
-    jmhVersion = '1.21'
+    jmhVersion = '1.37'
     humanOutputFile = null
-    if (project.hasProperty('jmh')) {
-        include = ".*" + project.jmh + ".*"
-    } else {
-        include = ".*"
-    }
-}
-
-plugins.withType(EclipsePlugin) {
-    project.eclipse.classpath.plusConfigurations += [ configurations.jmh ]
 }
 
 javadoc {
+    source = sourceSets.main.allJava.matching {
+        include 'io/reactivex/rxjava4/**'
+        exclude '**/internal/**'
+        exclude '**/test/**'
+        exclude '**/perf/**'
+        exclude '**/jmh/**'
+        exclude 'module-info.java'
+    }
+
+    // Explicitly disable modularity inference (prevents Gradle adding module flags)
+    modularity.inferModulePath = false
+
+    classpath = sourceSets.main.runtimeClasspath + sourceSets.main.output
+
+    options {
+        windowTitle = "RxJava Javadoc ${project.version}"
+    }
+    // Clear the following options to make the docs consistent with the old format
+    options.addStringOption("top").value = ""
+    options.addStringOption("doctitle").value = ""
+    options.addStringOption("header").value = ""
+    options.addBooleanOption('Xdoclint:none', true)   // disables all doclint checks (modern JDKs)
+
     failOnError = false
-    options.stylesheetFile = new File(projectDir, "gradle/stylesheet.css");
-    
+
     options.links(
-        "https://docs.oracle.com/javase/7/docs/api/",
-        "http://www.reactive-streams.org/reactive-streams-1.0.3-javadoc/",
-        "http://reactivex.io/RxJava/3.x/javadoc/"
+            "https://docs.oracle.com/en/java/javase/26/docs/api/",
+            "https://reactivex.io/RxJava/4.x/javadoc/",
+            "https://reactivex.io/RxJava/org.reactivestreams.javadoc/${reactiveStreamsVersion}/"
     )
-    
+
+    // modularity.inferModulePath = true  // let Gradle handle deps on --module-path
+}
+
+moduleConfig {
+    moduleInfoPath = 'src/main/module/module-info.java'
+    multiReleaseVersion = 9
+    version = project.version
+}
+
+import aQute.bnd.gradle.Bundle   // ← important import
+
+tasks.register('bundle', Bundle) {
+    archiveBaseName.set('rxjava')           // or archiveFileName = "rxjava-${version}.jar"
+    archiveVersion.set(project.version)
+    archiveClassifier.set('')               // empty → no classifier
+
+    from sourceSets.main.output             // your classes
+    from('.') {
+        include 'LICENSE'
+        include 'COPYRIGHT'
+        into 'META-INF/'
+    }
+
+    // Exclude module-info.class from root (you already had this)
+    exclude 'module-info.class'
+
+    // All your Bnd instructions go here
+    bundle {
+        bnd('-fixupmessages': '^Classes found in the wrong directory: \\{META-INF/versions/9/module-info\\.class=module-info\\}$')
+
+        bnd('Bundle-Name': 'rxjava-extensions')
+        bnd('Bundle-Vendor': 'David Karnok')
+        bnd('Bundle-Description': 'RxJava 4.x extra sources, operators and components and ports of many older companion libraries.')
+        bnd('Import-Package': '!org.junit,!junit.framework,!org.mockito.*,!org.testng.*,*')
+        bnd('Bundle-DocURL': 'https://github.com/akarnokd/RxJavaExtensions')
+        bnd('Eclipse-ExtensibleAPI': 'true')
+        bnd('Export-Package': '!hu.akarnokd.rxjava4.internal.*,hu.akarnokd.rxjava4.*')
+        bnd('Bundle-SymbolicName': 'hu.akarnokd.rxjava4')
+        bnd('Multi-Release': 'true')
+    }
 }
 
 test {
@@ -105,56 +180,26 @@ license {
     excludes(["**/*.md", "**/*.txt"])
 }
 
-jacoco {
-    toolVersion = '0.8.5' // See http://www.eclemma.org/jacoco/.
-}
+apply plugin: "jacoco"
 
 jacocoTestReport {
+    dependsOn test
+
     reports {
-        xml.enabled = true
-        html.enabled = true
+        xml.required.set(true)
+        csv.required.set(false)
+        html.required.set(true)
     }
 }
-
-build.dependsOn jacocoTestReport
 
 check.dependsOn jacocoTestReport
 
-pmd {
-    toolVersion = '6.21.0'
-    ignoreFailures = true
-    sourceSets = [sourceSets.main]
-    ruleSets = []
-    ruleSetFiles = files('pmd.xml')
-}
-
-pmdMain {
-    reports {
-        html.enabled = true
-        xml.enabled = true
-    }
-}
-
-task pmdPrint(dependsOn: 'pmdMain') doLast {
-    File file = rootProject.file('build/reports/pmd/main.xml')
-    if (file.exists()) {
-
-        println("Listing first 100 PMD violations")
-
-        file.eachLine { line, count ->
-            if (count <= 100) {
-               println(line)
-            }
-        }
-
-    } else {
-        println("PMD file not found.")
-    }
-}
-
-build.dependsOn pmdPrint
-check.dependsOn pmdPrint
-
-animalsniffer {
-    annotation = 'io.reactivex.rxjava3.internal.util.SuppressAnimalSniffer'
+checkstyle {
+    configFile = project.file("config/checkstyle/checkstyle.xml")
+    configProperties = [
+            "checkstyle.suppressions.file": project.file("config/checkstyle/suppressions.xml"),
+            "checkstyle.header.file"      : project.file("config/license/HEADER_JAVA"),
+            "project_loc"                 : project.projectDir.absolutePath
+    ]
+    checkstyleMain.exclude '**/module-info.java'
 }
