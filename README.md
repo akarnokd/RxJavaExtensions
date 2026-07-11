@@ -1,9 +1,11 @@
 # RxJavaExtensions
 
-<a href='https://github.com/akarnokd/RxJavaExtensions/actions?query=workflow%3A%22Java+CI+with+Gradle%22'><img src='https://github.com/akarnokd/RxJavaExtensions/workflows/Java%20CI%20with%20Gradle/badge.svg'></a>
-[![codecov.io](http://codecov.io/github/akarnokd/RxJavaExtensions/coverage.svg?branch=4.x)](http://codecov.io/github/akarnokd/RxJavaExtensions?branch=4.x)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.akarnokd/rxjava4-extensions/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.akarnokd/rxjava4-extensions)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.reactivex.rxjava4/rxjava/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.reactivex.rxjava4/rxjava)
+[![Maven Central](https://maven-badges.sml.io/sonatype-central/com.github.akarnokd/rxjava-extensions/badge.svg)](https://maven-badges.sml.io/sonatype-central/com.github.akarnokd/rxjava-extensions)
+[![codecov.io](http://codecov.io/github/akarnokd/RxJavaExtensions/coverage.svg?branch=4.x)](https://codecov.io/gh/akarnokd/RxJavaExtensions/branch/4.x)
+<a href='https://github.com/akarnokd/RxJavaExtensions/actions?query=workflow%3ASnapshot'><img src='https://github.com/akarnokd/RxJavaExtensions/workflows/Snapshot/badge.svg'></a>
+
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/akarnokd/RxJavaExtensions/badge)](https://securityscorecards.dev/viewer/?uri=github.com/akarnokd/RxJavaExtensions)
+[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/12264/badge)](https://www.bestpractices.dev/projects/12264)
 
 RxJava 4.x implementation of extra sources, operators and components and ports of many 1.x companion libraries.
 
