@@ -231,3 +231,9 @@ checkstyle {
     ]
     checkstyleMain.exclude '**/module-info.java'
 }
+
+mavenPublishing {
+  publishToMavenCentral(true, com.vanniktech.maven.publish.DeploymentValidation.PUBLISHED)
+
+  signAllPublications()
+}
