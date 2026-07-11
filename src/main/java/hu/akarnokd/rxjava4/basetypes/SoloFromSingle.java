@@ -18,7 +18,7 @@ package hu.akarnokd.rxjava4.basetypes;
 
 import java.util.concurrent.Flow.Subscriber;
 
-import hu.akarnokd.rxjava4.internal.*;
+import hu.akarnokd.rxjava4.internal.rxcopy.*;
 import io.reactivex.rxjava4.core.*;
 import io.reactivex.rxjava4.disposables.Disposable;
 

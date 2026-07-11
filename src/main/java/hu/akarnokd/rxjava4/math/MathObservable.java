@@ -18,7 +18,6 @@ package hu.akarnokd.rxjava4.math;
 
 import java.util.Comparator;
 
-import hu.akarnokd.rxjava4.util.SelfComparator;
 import io.reactivex.rxjava4.core.*;
 import io.reactivex.rxjava4.plugins.RxJavaPlugins;
 
@@ -31,45 +30,101 @@ public final class MathObservable {
         throw new IllegalStateException("No instances!");
     }
 
+    /**
+     * Returns a {@code Observable} that will emit the sum of integers of the upstream.
+     * @param source the source sequence
+     * @return the new {@code Observable} instance
+     */
     public static Observable<Integer> sumInt(ObservableSource<Integer> source) {
         return RxJavaPlugins.onAssembly(new ObservableSumInt(source));
     }
 
+    /**
+     * Returns a {@code Observable} that will emit the sum of longs of the upstream.
+     * @param source the source sequence
+     * @return the new {@code Observable} instance
+     */
     public static Observable<Long> sumLong(ObservableSource<Long> source) {
         return RxJavaPlugins.onAssembly(new ObservableSumLong(source));
     }
 
+    /**
+     * Returns a {@code Observable} that will emit the sum of floats of the upstream.
+     * @param source the source sequence
+     * @return the new {@code Observable} instance
+     */
     public static Observable<Float> sumFloat(ObservableSource<Float> source) {
         return RxJavaPlugins.onAssembly(new ObservableSumFloat(source));
     }
 
+    /**
+     * Returns a {@code Observable} that will emit the sum of doubles of the upstream.
+     * @param source the source sequence
+     * @return the new {@code Observable} instance
+     */
     public static Observable<Double> sumDouble(ObservableSource<Double> source) {
         return RxJavaPlugins.onAssembly(new ObservableSumDouble(source));
     }
 
+    /**
+     * Returns a {@code Observable} that will find the largest comparable value in the upstream.
+     * @param <T> the element type
+     * @param source the source sequence
+     * @return the new {@code Observable} instance
+     */
     public static <T extends Comparable<? super T>> Observable<T> max(ObservableSource<T> source) {
-        Comparator<T> comp = SelfComparator.instance();
-        return max(source, comp);
+        return max(source, Comparator.naturalOrder());
     }
 
+    /**
+     * Returns a {@code Observable} that will find the largest value via a comparator in the upstream.
+     * @param <T> the element type
+     * @param source the source sequence
+     * @param comparator the comparator to compare items with
+     * @return the new {@code Observable} instance
+     */
     public static <T> Observable<T> max(ObservableSource<T> source, Comparator<? super T> comparator) {
         return RxJavaPlugins.onAssembly(new ObservableMinMax<>(source, comparator, -1));
     }
 
+    /**
+     * Returns a {@code Observable} that will find the smallest comparable value in the upstream.
+     * @param <T> the element type
+     * @param source the source sequence
+     * @return the new {@code Observable} instance
+     */
     public static <T extends Comparable<? super T>> Observable<T> min(ObservableSource<T> source) {
-        Comparator<T> comp = SelfComparator.instance();
-        return min(source, comp);
+        return min(source, Comparator.naturalOrder());
     }
 
+    /**
+     * Returns a {@code Observable} that will find the smallest value via a comparator in the upstream.
+     * @param <T> the element type
+     * @param source the source sequence
+     * @param comparator the comparator to compare items with
+     * @return the new {@code Observable} instance
+     */
     public static <T> Observable<T> min(ObservableSource<T> source, Comparator<? super T> comparator) {
         return RxJavaPlugins.onAssembly(new ObservableMinMax<>(source, comparator, 1));
     }
 
+    /**
+     * Returns a {@code Observable} that calculates the average of the numeric values in the upstream
+     * as a float.
+     * @param source the source sequence
+     * @return the new {@code Observable} instance
+     */
     @SuppressWarnings("unchecked")
     public static Observable<Float> averageFloat(ObservableSource<? extends Number> source) {
         return RxJavaPlugins.onAssembly(new ObservableAverageFloat((ObservableSource<Number>)source));
     }
 
+    /**
+     * Returns a {@code Observable} that calculates the average of the numeric values in the upstream
+     * as a double.
+     * @param source the source sequence
+     * @return the new {@code Observable} instance
+     */
     @SuppressWarnings("unchecked")
     public static Observable<Double> averageDouble(ObservableSource<? extends Number> source) {
         return RxJavaPlugins.onAssembly(new ObservableAverageDouble((ObservableSource<Number>)source));

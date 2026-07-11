@@ -68,6 +68,14 @@ public final class FunctionTagging {
         return enabled;
     }
 
+    /**
+     * Applies a tag to a functional interface instance.
+     * @param <T> the input type
+     * @param <R> the output type
+     * @param func the functional interface
+     * @param tag the tag
+     * @return the new functional interface instance
+     */
     public static <T, R> Function<T, R> tagFunction(Function<T, R> func, String tag) {
         if (enabled) {
             Objects.requireNonNull(func, "func is null");
@@ -77,6 +85,15 @@ public final class FunctionTagging {
         return func;
     }
 
+    /**
+     * Applies a tag to a functional interface instance.
+     * @param <T1> an input type
+     * @param <T2> an input type
+     * @param <R> the output type
+     * @param func the functional interface
+     * @param tag the tag
+     * @return the new functional interface instance
+     */
     public static <T1, T2, R> BiFunction<T1, T2, R> tagBiFunction(BiFunction<T1, T2, R> func, String tag) {
         if (enabled) {
             Objects.requireNonNull(func, "func is null");
@@ -86,6 +103,16 @@ public final class FunctionTagging {
         return func;
     }
 
+    /**
+     * Applies a tag to a functional interface instance.
+     * @param <T1> an input type
+     * @param <T2> an input type
+     * @param <T3> an input type
+     * @param <R> the output type
+     * @param func the functional interface
+     * @param tag the tag
+     * @return the new functional interface instance
+     */
     public static <T1, T2, T3, R> Function3<T1, T2, T3, R> tagFunction3(Function3<T1, T2, T3, R> func, String tag) {
         if (enabled) {
             Objects.requireNonNull(func, "func is null");
@@ -95,6 +122,17 @@ public final class FunctionTagging {
         return func;
     }
 
+    /**
+     * Applies a tag to a functional interface instance.
+     * @param <T1> an input type
+     * @param <T2> an input type
+     * @param <T3> an input type
+     * @param <T4> the input type
+     * @param <R> the output type
+     * @param func the functional interface
+     * @param tag the tag
+     * @return the new functional interface instance
+     */
     public static <T1, T2, T3, T4, R> Function4<T1, T2, T3, T4, R> tagFunction4(Function4<T1, T2, T3, T4, R> func, String tag) {
         if (enabled) {
             Objects.requireNonNull(func, "func is null");
@@ -104,6 +142,18 @@ public final class FunctionTagging {
         return func;
     }
 
+    /**
+     * Applies a tag to a functional interface instance.
+     * @param <T1> an input type
+     * @param <T2> an input type
+     * @param <T3> an input type
+     * @param <T4> the input type
+     * @param <T5> the input type
+     * @param <R> the output type
+     * @param func the functional interface
+     * @param tag the tag
+     * @return the new functional interface instance
+     */
     public static <T1, T2, T3, T4, T5, R> Function5<T1, T2, T3, T4, T5, R> tagFunction5(Function5<T1, T2, T3, T4, T5, R> func, String tag) {
         if (enabled) {
             Objects.requireNonNull(func, "func is null");
@@ -113,6 +163,19 @@ public final class FunctionTagging {
         return func;
     }
 
+    /**
+     * Applies a tag to a functional interface instance.
+     * @param <T1> an input type
+     * @param <T2> an input type
+     * @param <T3> an input type
+     * @param <T4> the input type
+     * @param <T5> the input type
+     * @param <T6> the input type
+     * @param <R> the output type
+     * @param func the functional interface
+     * @param tag the tag
+     * @return the new functional interface instance
+     */
     public static <T1, T2, T3, T4, T5, T6, R> Function6<T1, T2, T3, T4, T5, T6, R> tagFunction6(Function6<T1, T2, T3, T4, T5, T6, R> func, String tag) {
         if (enabled) {
             Objects.requireNonNull(func, "func is null");
@@ -122,6 +185,20 @@ public final class FunctionTagging {
         return func;
     }
 
+    /**
+     * Applies a tag to a functional interface instance.
+     * @param <T1> an input type
+     * @param <T2> an input type
+     * @param <T3> an input type
+     * @param <T4> the input type
+     * @param <T5> the input type
+     * @param <T6> the input type
+     * @param <T7> the input type
+     * @param <R> the output type
+     * @param func the functional interface
+     * @param tag the tag
+     * @return the new functional interface instance
+     */
     public static <T1, T2, T3, T4, T5, T6, T7, R> Function7<T1, T2, T3, T4, T5, T6, T7, R> tagFunction7(Function7<T1, T2, T3, T4, T5, T6, T7, R> func, String tag) {
         if (enabled) {
             Objects.requireNonNull(func, "func is null");
@@ -131,7 +208,23 @@ public final class FunctionTagging {
         return func;
     }
 
-    public static <T1, T2, T3, T4, T5, T6, T7, T8, R> Function8<T1, T2, T3, T4, T5, T6, T7, T8, R> tagFunction8(Function8<T1, T2, T3, T4, T5, T6, T7, T8, R> func, String tag) {
+    /**
+     * Applies a tag to a functional interface instance.
+     * @param <T1> an input type
+     * @param <T2> an input type
+     * @param <T3> an input type
+     * @param <T4> the input type
+     * @param <T5> the input type
+     * @param <T6> the input type
+     * @param <T7> the input type
+     * @param <T8> the input type
+     * @param <R> the output type
+     * @param func the functional interface
+     * @param tag the tag
+     * @return the new functional interface instance
+     */
+    public static <T1, T2, T3, T4, T5, T6, T7, T8, R> Function8<T1, T2, T3, T4, T5, T6, T7, T8, R> tagFunction8(
+            Function8<T1, T2, T3, T4, T5, T6, T7, T8, R> func, String tag) {
         if (enabled) {
             Objects.requireNonNull(func, "func is null");
             Objects.requireNonNull(tag, "tag is null");
@@ -140,7 +233,24 @@ public final class FunctionTagging {
         return func;
     }
 
-    public static <T1, T2, T3, T4, T5, T6, T7, T8, T9, R> Function9<T1, T2, T3, T4, T5, T6, T7, T8, T9, R> tagFunction9(Function9<T1, T2, T3, T4, T5, T6, T7, T8, T9, R> func, String tag) {
+    /**
+     * Applies a tag to a functional interface instance.
+     * @param <T1> an input type
+     * @param <T2> an input type
+     * @param <T3> an input type
+     * @param <T4> the input type
+     * @param <T5> the input type
+     * @param <T6> the input type
+     * @param <T7> the input type
+     * @param <T8> the input type
+     * @param <T9> the input type
+     * @param <R> the output type
+     * @param func the functional interface
+     * @param tag the tag
+     * @return the new functional interface instance
+     */
+    public static <T1, T2, T3, T4, T5, T6, T7, T8, T9, R> Function9<T1, T2, T3, T4, T5, T6, T7, T8, T9, R> tagFunction9(
+            Function9<T1, T2, T3, T4, T5, T6, T7, T8, T9, R> func, String tag) {
         if (enabled) {
             Objects.requireNonNull(func, "func is null");
             Objects.requireNonNull(tag, "tag is null");

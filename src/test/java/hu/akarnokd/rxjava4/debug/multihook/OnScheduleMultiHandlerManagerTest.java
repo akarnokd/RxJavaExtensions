@@ -23,7 +23,7 @@ import java.lang.Thread.UncaughtExceptionHandler;
 
 import org.junit.jupiter.api.Test;
 
-import hu.akarnokd.rxjava4.internal.Functions;
+import hu.akarnokd.rxjava4.internal.rxcopy.Functions;
 import hu.akarnokd.rxjava4.test.TestHelper;
 import io.reactivex.rxjava4.disposables.Disposable;
 import io.reactivex.rxjava4.functions.*;

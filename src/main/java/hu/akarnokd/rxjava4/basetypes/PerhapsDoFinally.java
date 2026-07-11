@@ -19,7 +19,7 @@ package hu.akarnokd.rxjava4.basetypes;
 import java.io.Serial;
 import java.util.concurrent.Flow.*;
 
-import hu.akarnokd.rxjava4.internal.*;
+import hu.akarnokd.rxjava4.internal.rxcopy.*;
 import io.reactivex.rxjava4.annotations.Nullable;
 import io.reactivex.rxjava4.core.FlowableSubscriber;
 import io.reactivex.rxjava4.exceptions.Exceptions;
@@ -47,7 +47,7 @@ final class PerhapsDoFinally<T> extends Perhaps<T> {
     protected void subscribeActual(Subscriber<? super T> s) {
         source.subscribe(new DoFinallySubscriber<T>(s, onFinally));
     }
-    
+
     static final class DoFinallySubscriber<T> extends BasicIntQueueSubscription<T> implements FlowableSubscriber<T> {
 
         @Serial
@@ -63,8 +63,8 @@ final class PerhapsDoFinally<T> extends Perhaps<T> {
 
         boolean syncFused;
 
-        DoFinallySubscriber(Subscriber<? super T> actual, Action onFinally) {
-            this.downstream = actual;
+        DoFinallySubscriber(Subscriber<? super T> downstream, Action onFinally) {
+            this.downstream = downstream;
             this.onFinally = onFinally;
         }
 

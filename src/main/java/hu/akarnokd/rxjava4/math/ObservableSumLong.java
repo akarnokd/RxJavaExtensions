@@ -16,12 +16,12 @@
 
 package hu.akarnokd.rxjava4.math;
 
-import hu.akarnokd.rxjava4.internal.DeferredScalarObserver;
+import hu.akarnokd.rxjava4.internal.rxcopy.DeferredScalarObserver;
 import io.reactivex.rxjava4.core.*;
 
-public class ObservableSumLong extends ObservableWithSource<Long, Long> {
+final class ObservableSumLong extends ObservableWithSource<Long, Long> {
 
-    public ObservableSumLong(ObservableSource<Long> source) {
+    ObservableSumLong(ObservableSource<Long> source) {
         super(source);
     }
 

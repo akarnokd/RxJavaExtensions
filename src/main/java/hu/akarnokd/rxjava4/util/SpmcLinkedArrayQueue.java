@@ -35,6 +35,10 @@ public final class SpmcLinkedArrayQueue<T> implements SimplePlainQueue<T> {
 
     final AtomicReference<ARA> consumerArray;
 
+    /**
+     * Constructs an instance with the specified capacity.
+     * @param capacity the capacity to use
+     */
     public SpmcLinkedArrayQueue(int capacity) {
         ARA a = new ARA(Math.max(2, capacity) + 1);
         this.producerArray = a;

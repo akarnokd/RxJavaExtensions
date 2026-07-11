@@ -18,7 +18,7 @@ package hu.akarnokd.rxjava4.basetypes;
 
 import java.util.concurrent.Flow.Subscriber;
 
-import hu.akarnokd.rxjava4.internal.BasicFuseableSubscriber;
+import hu.akarnokd.rxjava4.internal.rxcopy.BasicFuseableSubscriber;
 import io.reactivex.rxjava4.core.Scheduler;
 import io.reactivex.rxjava4.operators.QueueSubscription;
 

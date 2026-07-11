@@ -20,7 +20,7 @@ import java.util.*;
 import java.util.concurrent.Flow.Publisher;
 import java.util.concurrent.TimeUnit;
 
-import hu.akarnokd.rxjava4.internal.*;
+import hu.akarnokd.rxjava4.internal.rxcopy.*;
 import hu.akarnokd.rxjava4.util.BiFunctionSecondIdentity;
 import io.reactivex.rxjava4.annotations.*;
 import io.reactivex.rxjava4.core.*;
@@ -759,7 +759,8 @@ public final class FlowableTransformers {
      *
      * @since 0.16.0
      */
-    public static <T, R> FlowableTransformer<T, R> flatMapSync(Function<? super T, ? extends Publisher<? extends R>> mapper, int maxConcurrency, int bufferSize, boolean depthFirst) {
+    public static <T, R> FlowableTransformer<T, R> flatMapSync(Function<? super T, ? extends Publisher<? extends R>> mapper,
+            int maxConcurrency, int bufferSize, boolean depthFirst) {
         return new FlowableFlatMapSync<>(null, mapper, maxConcurrency, bufferSize, depthFirst);
     }
 
@@ -816,7 +817,8 @@ public final class FlowableTransformers {
      *
      * @since 0.16.0
      */
-    public static <T, R> FlowableTransformer<T, R> flatMapAsync(Function<? super T, ? extends Publisher<? extends R>> mapper, Scheduler scheduler, int maxConcurrency, int bufferSize, boolean depthFirst) {
+    public static <T, R> FlowableTransformer<T, R> flatMapAsync(Function<? super T, ? extends Publisher<? extends R>> mapper,
+            Scheduler scheduler, int maxConcurrency, int bufferSize, boolean depthFirst) {
         return new FlowableFlatMapAsync<>(null, mapper, maxConcurrency, bufferSize, depthFirst, scheduler);
     }
 
@@ -1006,7 +1008,8 @@ public final class FlowableTransformers {
      * @return the new FlowableTransformer instance
      * @since 0.16.2
      */
-    public static <T, U, R> FlowableTransformer<T, R> mapAsync(Function<? super T, ? extends Publisher<? extends U>> mapper, BiFunction<? super T, ? super U, ? extends R> combiner) {
+    public static <T, U, R> FlowableTransformer<T, R> mapAsync(Function<? super T, ? extends Publisher<? extends U>> mapper,
+            BiFunction<? super T, ? super U, ? extends R> combiner) {
         return mapAsync(mapper, combiner, Flowable.bufferSize());
     }
 
@@ -1030,7 +1033,8 @@ public final class FlowableTransformers {
      * @return the new FlowableTransformer instance
      * @since 0.16.2
      */
-    public static <T, U, R> FlowableTransformer<T, R> mapAsync(Function<? super T, ? extends Publisher<? extends U>> mapper, BiFunction<? super T, ? super U, ? extends R> combiner, int bufferSize) {
+    public static <T, U, R> FlowableTransformer<T, R> mapAsync(Function<? super T, ? extends Publisher<? extends U>> mapper,
+            BiFunction<? super T, ? super U, ? extends R> combiner, int bufferSize) {
         Objects.requireNonNull("mapper", "mapper is null");
         Objects.requireNonNull("combiner", "combiner is null");
         ObjectHelper.verifyPositive(bufferSize, "bufferSize");

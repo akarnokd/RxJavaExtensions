@@ -27,7 +27,7 @@ import java.util.concurrent.atomic.*;
 import org.junit.jupiter.api.Test;
 
 import hu.akarnokd.rxjava4.functions.*;
-import hu.akarnokd.rxjava4.internal.Functions;
+import hu.akarnokd.rxjava4.internal.rxcopy.Functions;
 import io.reactivex.rxjava4.core.Flowable;
 import io.reactivex.rxjava4.disposables.Disposable;
 import io.reactivex.rxjava4.functions.*;

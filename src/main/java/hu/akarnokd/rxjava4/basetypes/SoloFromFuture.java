@@ -20,7 +20,7 @@ import java.util.NoSuchElementException;
 import java.util.concurrent.*;
 import java.util.concurrent.Flow.Subscriber;
 
-import hu.akarnokd.rxjava4.internal.DeferredScalarSubscription;
+import hu.akarnokd.rxjava4.internal.rxcopy.DeferredScalarSubscription;
 
 /**
  * Await a Future's result.

@@ -19,7 +19,7 @@ package hu.akarnokd.rxjava4.basetypes;
 import java.util.concurrent.Flow.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import hu.akarnokd.rxjava4.internal.*;
+import hu.akarnokd.rxjava4.internal.rxcopy.*;
 
 /**
  * Subscribe to the Nono sources one at a time and complete if all of them complete.

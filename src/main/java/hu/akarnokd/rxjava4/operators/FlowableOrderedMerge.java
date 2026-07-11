@@ -19,7 +19,8 @@ package hu.akarnokd.rxjava4.operators;
 import java.util.*;
 import java.util.concurrent.Flow.*;
 
-import hu.akarnokd.rxjava4.internal.EmptySubscription;
+import hu.akarnokd.rxjava4.internal.operators.BasicMergeSubscription;
+import hu.akarnokd.rxjava4.internal.rxcopy.EmptySubscription;
 import io.reactivex.rxjava4.core.Flowable;
 import io.reactivex.rxjava4.exceptions.Exceptions;
 

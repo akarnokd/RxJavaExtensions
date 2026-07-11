@@ -19,7 +19,7 @@ package hu.akarnokd.rxjava4.operators;
 import java.util.concurrent.Flow.*;
 import java.util.concurrent.atomic.AtomicLong;
 
-import hu.akarnokd.rxjava4.internal.BackpressureHelper;
+import hu.akarnokd.rxjava4.internal.rxcopy.BackpressureHelper;
 import io.reactivex.rxjava4.core.*;
 import io.reactivex.rxjava4.core.Scheduler.Worker;
 

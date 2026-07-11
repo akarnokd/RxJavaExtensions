@@ -26,7 +26,7 @@ import org.junit.jupiter.api.*;
 
 import hu.akarnokd.rxjava4.debug.*;
 import hu.akarnokd.rxjava4.functions.PlainConsumer;
-import hu.akarnokd.rxjava4.internal.BooleanSubscription;
+import hu.akarnokd.rxjava4.internal.rxcopy.BooleanSubscription;
 import hu.akarnokd.rxjava4.test.TestHelper;
 import io.reactivex.rxjava4.core.*;
 import io.reactivex.rxjava4.disposables.Disposable;
@@ -77,7 +77,7 @@ public class RxJavaProtocolValidatorTest implements PlainConsumer<ProtocolNonCon
         };
 
         RxJavaProtocolValidator.enable();
-       assertTrue(RxJavaProtocolValidator.isEnabled());
+        assertTrue(RxJavaProtocolValidator.isEnabled());
 
         try {
             Completable.complete().test().assertResult();
@@ -88,7 +88,7 @@ public class RxJavaProtocolValidatorTest implements PlainConsumer<ProtocolNonCon
 
             c.test();
 
-           assertEquals(9, errors.size());
+            assertEquals(9, errors.size());
             TestHelper.assertError(errors, 0, OnSubscribeNotCalledException.class);
             TestHelper.assertError(errors, 1, NullOnErrorParameterException.class);
             TestHelper.assertError(errors, 2, OnSubscribeNotCalledException.class);

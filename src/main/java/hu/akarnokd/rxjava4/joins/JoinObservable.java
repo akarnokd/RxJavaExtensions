@@ -336,6 +336,10 @@ public final class JoinObservable<T> {
         return JoinPatterns.then(o, selector);
     }
 
+    /**
+     * Returns the internal {@code Observable}.
+     * @return the internal {@code Observable}.
+     */
     public Observable<T> toObservable() {
         return o;
     }

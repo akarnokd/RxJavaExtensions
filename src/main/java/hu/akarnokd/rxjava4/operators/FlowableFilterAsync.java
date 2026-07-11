@@ -20,7 +20,7 @@ import java.util.Objects;
 import java.util.concurrent.Flow.*;
 import java.util.concurrent.atomic.*;
 
-import hu.akarnokd.rxjava4.internal.*;
+import hu.akarnokd.rxjava4.internal.rxcopy.*;
 import hu.akarnokd.rxjava4.operators.FlowableMapAsync.AsyncSupport;
 import hu.akarnokd.rxjava4.operators.FlowableMapAsync.MapAsyncSubscriber.InnerSubscriber;
 import io.reactivex.rxjava4.core.*;

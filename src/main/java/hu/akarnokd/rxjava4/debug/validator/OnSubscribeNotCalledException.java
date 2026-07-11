@@ -24,10 +24,17 @@ public final class OnSubscribeNotCalledException extends ProtocolNonConformanceE
 
     private static final long serialVersionUID = -6096755460680899745L;
 
+    /**
+     * Constructs the exception without message or cause.
+     */
     public OnSubscribeNotCalledException() {
         super();
     }
 
+    /**
+     * Constructs the exception with a cause.
+     * @param cause the cause
+     */
     public OnSubscribeNotCalledException(Throwable cause) {
         super(cause);
     }

@@ -19,7 +19,7 @@ package hu.akarnokd.rxjava4.processors;
 import java.util.concurrent.Flow.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import hu.akarnokd.rxjava4.internal.SubscriptionHelper;
+import hu.akarnokd.rxjava4.internal.rxcopy.SubscriptionHelper;
 import io.reactivex.rxjava4.processors.FlowableProcessor;
 
 final class FlowableProcessorWrap<T> extends FlowableProcessor<T> {

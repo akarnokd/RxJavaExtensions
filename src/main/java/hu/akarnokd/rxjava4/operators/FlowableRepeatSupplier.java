@@ -19,7 +19,7 @@ package hu.akarnokd.rxjava4.operators;
 import java.util.Objects;
 import java.util.concurrent.Flow.Subscriber;
 
-import hu.akarnokd.rxjava4.internal.*;
+import hu.akarnokd.rxjava4.internal.rxcopy.*;
 import io.reactivex.rxjava4.core.Flowable;
 import io.reactivex.rxjava4.exceptions.Exceptions;
 import io.reactivex.rxjava4.functions.Supplier;

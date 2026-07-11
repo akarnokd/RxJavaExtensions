@@ -26,47 +26,19 @@ import io.reactivex.rxjava4.functions.Function5;
  * @param <T3> the third value type
  * @param <T4> the fourth value type
  * @param <T5> the fifth value type
+ * @param o1 the first source
+ * @param o2 the second source
+ * @param o3 the third source
+ * @param o4 the fourth source
+ * @param o5 the fifth source
  */
-public final class Pattern5<T1, T2, T3, T4, T5> {
-    private final Observable<T1> o1;
-    private final Observable<T2> o2;
-    private final Observable<T3> o3;
-    private final Observable<T4> o4;
-    private final Observable<T5> o5;
-
-    public Pattern5(
-            Observable<T1> o1,
-            Observable<T2> o2,
-            Observable<T3> o3,
-            Observable<T4> o4,
-            Observable<T5> o5
-            ) {
-        this.o1 = o1;
-        this.o2 = o2;
-        this.o3 = o3;
-        this.o4 = o4;
-        this.o5 = o5;
-    }
-
-    Observable<T1> o1() {
-        return o1;
-    }
-
-    Observable<T2> o2() {
-        return o2;
-    }
-
-    Observable<T3> o3() {
-        return o3;
-    }
-
-    Observable<T4> o4() {
-        return o4;
-    }
-
-    Observable<T5> o5() {
-        return o5;
-    }
+public record Pattern5<T1, T2, T3, T4, T5>(
+        Observable<T1> o1,
+        Observable<T2> o2,
+        Observable<T3> o3,
+        Observable<T4> o4,
+        Observable<T5> o5
+        ) {
 
     /**
      * Creates a pattern that matches when all five observable sequences have an available element.

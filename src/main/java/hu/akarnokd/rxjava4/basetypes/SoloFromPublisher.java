@@ -19,7 +19,7 @@ package hu.akarnokd.rxjava4.basetypes;
 import java.util.NoSuchElementException;
 import java.util.concurrent.Flow.*;
 
-import hu.akarnokd.rxjava4.internal.DeferredScalarSubscriber;
+import hu.akarnokd.rxjava4.internal.rxcopy.DeferredScalarSubscriber;
 import io.reactivex.rxjava4.plugins.RxJavaPlugins;
 
 /**
@@ -86,4 +86,4 @@ final class SoloFromPublisher<T> extends Solo<T> {
             }
         }
     }
- }
+}

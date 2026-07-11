@@ -20,7 +20,7 @@ import java.util.Objects;
 import java.util.concurrent.Flow.*;
 import java.util.concurrent.atomic.AtomicReference;
 
-import hu.akarnokd.rxjava4.internal.EmptySubscription;
+import hu.akarnokd.rxjava4.internal.rxcopy.EmptySubscription;
 import io.reactivex.rxjava4.core.*;
 import io.reactivex.rxjava4.exceptions.*;
 

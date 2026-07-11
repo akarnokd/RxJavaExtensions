@@ -23,9 +23,20 @@ package hu.akarnokd.rxjava4.operators;
  */
 public interface BasicEmitter<T> {
 
+    /**
+     * Handle an item.
+     * @param t the item
+     */
     void doNext(T t);
 
+    /**
+     * Handle a throwable.
+     * @param t the throwable
+     */
     void doError(Throwable t);
 
+    /**
+     * Handle completion.
+     */
     void doComplete();
 }

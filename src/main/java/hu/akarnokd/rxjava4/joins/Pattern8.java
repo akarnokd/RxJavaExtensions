@@ -27,70 +27,27 @@ import io.reactivex.rxjava4.functions.Function8;
  * @param <T4> the fourth value type
  * @param <T5> the fifth value type
  * @param <T6> the sixth value type
- * @param <T7> the sevent value type
+ * @param <T7> the seventh value type
  * @param <T8> the eighth value type
+ * @param o1 the first source
+ * @param o2 the second source
+ * @param o3 the third source
+ * @param o4 the fourth source
+ * @param o5 the fifth source
+ * @param o6 the sixth source
+ * @param o7 the seventh source
+ * @param o8 the eight source
  */
-public final class Pattern8<T1, T2, T3, T4, T5, T6, T7, T8> {
-    private final Observable<T1> o1;
-    private final Observable<T2> o2;
-    private final Observable<T3> o3;
-    private final Observable<T4> o4;
-    private final Observable<T5> o5;
-    private final Observable<T6> o6;
-    private final Observable<T7> o7;
-    private final Observable<T8> o8;
-
-    public Pattern8(
-            Observable<T1> o1,
-            Observable<T2> o2,
-            Observable<T3> o3,
-            Observable<T4> o4,
-            Observable<T5> o5,
-            Observable<T6> o6,
-            Observable<T7> o7,
-            Observable<T8> o8
-            ) {
-        this.o1 = o1;
-        this.o2 = o2;
-        this.o3 = o3;
-        this.o4 = o4;
-        this.o5 = o5;
-        this.o6 = o6;
-        this.o7 = o7;
-        this.o8 = o8;
-    }
-
-    Observable<T1> o1() {
-        return o1;
-    }
-
-    Observable<T2> o2() {
-        return o2;
-    }
-
-    Observable<T3> o3() {
-        return o3;
-    }
-
-    Observable<T4> o4() {
-        return o4;
-    }
-
-    Observable<T5> o5() {
-        return o5;
-    }
-
-    Observable<T6> o6() {
-        return o6;
-    }
-
-    Observable<T7> o7() {
-        return o7;
-    }
-
-    Observable<T8> o8() {
-        return o8;
-    }
+public record Pattern8<T1, T2, T3, T4, T5, T6, T7, T8>(
+        Observable<T1> o1,
+        Observable<T2> o2,
+        Observable<T3> o3,
+        Observable<T4> o4,
+        Observable<T5> o5,
+        Observable<T6> o6,
+        Observable<T7> o7,
+        Observable<T8> o8
+        ) {
 
     /**
      * Creates a pattern that matches when all eight observable sequences have an available element.

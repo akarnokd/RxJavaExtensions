@@ -19,7 +19,7 @@ package hu.akarnokd.rxjava4.consumers;
 import java.util.concurrent.Flow.Subscription;
 import java.util.concurrent.atomic.AtomicReference;
 
-import hu.akarnokd.rxjava4.internal.SubscriptionHelper;
+import hu.akarnokd.rxjava4.internal.rxcopy.SubscriptionHelper;
 import io.reactivex.rxjava4.core.FlowableSubscriber;
 import io.reactivex.rxjava4.disposables.*;
 import io.reactivex.rxjava4.exceptions.*;

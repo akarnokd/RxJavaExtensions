@@ -18,7 +18,7 @@ package hu.akarnokd.rxjava4.consumers;
 
 import java.util.Objects;
 
-import hu.akarnokd.rxjava4.internal.Functions;
+import hu.akarnokd.rxjava4.internal.rxcopy.Functions;
 import io.reactivex.rxjava4.core.Single;
 import io.reactivex.rxjava4.disposables.*;
 import io.reactivex.rxjava4.functions.Consumer;

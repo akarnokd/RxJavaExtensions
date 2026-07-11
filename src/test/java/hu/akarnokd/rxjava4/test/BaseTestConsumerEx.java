@@ -18,7 +18,7 @@ package hu.akarnokd.rxjava4.test;
 
 import java.util.*;
 
-import hu.akarnokd.rxjava4.internal.ExceptionHelper;
+import hu.akarnokd.rxjava4.internal.rxcopy.ExceptionHelper;
 import io.reactivex.rxjava4.functions.Predicate;
 import io.reactivex.rxjava4.observers.BaseTestConsumer;
 import io.reactivex.rxjava4.operators.QueueFuseable;

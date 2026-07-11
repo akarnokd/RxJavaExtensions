@@ -16,7 +16,7 @@
 
 package hu.akarnokd.rxjava4.consumers;
 
-import hu.akarnokd.rxjava4.internal.DisposableHelper;
+import hu.akarnokd.rxjava4.internal.rxcopy.DisposableHelper;
 import io.reactivex.rxjava4.core.Observer;
 import io.reactivex.rxjava4.disposables.CompositeDisposable;
 import io.reactivex.rxjava4.exceptions.Exceptions;

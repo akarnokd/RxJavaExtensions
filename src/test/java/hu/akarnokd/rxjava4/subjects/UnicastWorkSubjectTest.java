@@ -113,7 +113,7 @@ public class UnicastWorkSubjectTest {
     public void nullOnError() {
         assertThrows(NullPointerException.class, () -> {
             UnicastWorkSubject<Integer> uws = UnicastWorkSubject.create();
-    
+
             uws.onError(null);
         });
     }

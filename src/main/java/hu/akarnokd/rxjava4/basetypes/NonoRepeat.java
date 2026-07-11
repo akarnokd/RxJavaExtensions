@@ -19,7 +19,7 @@ package hu.akarnokd.rxjava4.basetypes;
 import java.util.concurrent.Flow.*;
 import java.util.concurrent.atomic.AtomicReference;
 
-import hu.akarnokd.rxjava4.internal.SubscriptionHelper;
+import hu.akarnokd.rxjava4.internal.rxcopy.SubscriptionHelper;
 
 /**
  * Repeatedly re-subscribe to the source Nono.

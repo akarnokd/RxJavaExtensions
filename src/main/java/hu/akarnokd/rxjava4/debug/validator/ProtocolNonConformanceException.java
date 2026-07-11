@@ -24,18 +24,34 @@ public abstract class ProtocolNonConformanceException extends IllegalStateExcept
 
     private static final long serialVersionUID = -6096755460680899745L;
 
+    /**
+     * Constructs an empty instance.
+     */
     public ProtocolNonConformanceException() {
         super();
     }
 
+    /**
+     * Constructs an instance with a message and cause.
+     * @param message the message
+     * @param cause the cause
+     */
     public ProtocolNonConformanceException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public ProtocolNonConformanceException(String s) {
-        super(s);
+    /**
+     * Constructs an instance with a message.
+     * @param message the message
+     */
+    public ProtocolNonConformanceException(String message) {
+        super(message);
     }
 
+    /**
+     * Constructs an instance with a cause.
+     * @param cause the cause
+     */
     public ProtocolNonConformanceException(Throwable cause) {
         super(cause);
     }

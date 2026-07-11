@@ -25,40 +25,17 @@ import io.reactivex.rxjava4.functions.Function4;
  * @param <T2> the second value type
  * @param <T3> the third value type
  * @param <T4> the fourth value type
+ * @param o1 the first source
+ * @param o2 the second source
+ * @param o3 the third source
+ * @param o4 the fourth source
  */
-public final class Pattern4<T1, T2, T3, T4> {
-    private final Observable<T1> o1;
-    private final Observable<T2> o2;
-    private final Observable<T3> o3;
-    private final Observable<T4> o4;
-
-    public Pattern4(
-            Observable<T1> o1,
-            Observable<T2> o2,
-            Observable<T3> o3,
-            Observable<T4> o4
-            ) {
-        this.o1 = o1;
-        this.o2 = o2;
-        this.o3 = o3;
-        this.o4 = o4;
-    }
-
-    Observable<T1> o1() {
-        return o1;
-    }
-
-    Observable<T2> o2() {
-        return o2;
-    }
-
-    Observable<T3> o3() {
-        return o3;
-    }
-
-    Observable<T4> o4() {
-        return o4;
-    }
+public record Pattern4<T1, T2, T3, T4>(
+        Observable<T1> o1,
+        Observable<T2> o2,
+        Observable<T3> o3,
+        Observable<T4> o4
+        ) {
 
     /**
      * Creates a pattern that matches when all four observable sequences have an available element.

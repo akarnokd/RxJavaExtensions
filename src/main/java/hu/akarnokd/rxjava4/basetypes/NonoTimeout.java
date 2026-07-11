@@ -20,7 +20,7 @@ import java.util.concurrent.Flow.*;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.*;
 
-import hu.akarnokd.rxjava4.internal.SubscriptionHelper;
+import hu.akarnokd.rxjava4.internal.rxcopy.SubscriptionHelper;
 import io.reactivex.rxjava4.plugins.RxJavaPlugins;
 
 /**

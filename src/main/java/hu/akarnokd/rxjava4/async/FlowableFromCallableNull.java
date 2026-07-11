@@ -18,7 +18,7 @@ package hu.akarnokd.rxjava4.async;
 
 import java.util.concurrent.Flow.Subscriber;
 
-import hu.akarnokd.rxjava4.internal.DeferredScalarSubscription;
+import hu.akarnokd.rxjava4.internal.rxcopy.DeferredScalarSubscription;
 import io.reactivex.rxjava4.core.Flowable;
 import io.reactivex.rxjava4.exceptions.Exceptions;
 import io.reactivex.rxjava4.functions.Supplier;

@@ -93,11 +93,23 @@ public class CheckLocalVariablesInTests {
 
                                         if (!line.startsWith("//") && !line.startsWith("*")) {
                                             if (p.matcher(line).find()) {
+
+                                                int j = u.getAbsolutePath().lastIndexOf("rxjava4");
+                                                var classPathName = u.getAbsolutePath().substring(j + 7).replace('\\', '.').replace('/', '.');
+
                                                 fail
                                                 .append(fname)
                                                 .append("#L").append(lineNum)
                                                 .append("    ").append(line)
-                                                .append("\n");
+                                                .append("\n")
+                                                .append(" at hu.akarnokd.rxjava4")
+                                                .append(classPathName)
+                                                .append("Method(")
+                                                .append(fname)
+                                                .append(":")
+                                                .append(lineNum)
+                                                .append(")\n")
+                                                ;
                                                 total++;
                                             }
                                         }

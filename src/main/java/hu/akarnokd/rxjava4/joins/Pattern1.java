@@ -20,19 +20,11 @@ import io.reactivex.rxjava4.core.Observable;
 import io.reactivex.rxjava4.functions.Function;
 
 /**
- * Represents a join pattern over Observable sequences.
+ * Represents a join pattern over {@link Observable} sequences.
  * @param <T1> the first value type
+ * @param o1 the first {@code Observable}
  */
-public final class Pattern1<T1> {
-    private final Observable<T1> o1;
-
-    public Pattern1(Observable<T1> o1) {
-        this.o1 = o1;
-    }
-
-    Observable<T1> o1() {
-        return o1;
-    }
+public record Pattern1<T1>(Observable<T1> o1) {
 
     /**
      * Matches when all observable sequences have an available

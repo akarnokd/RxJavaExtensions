@@ -21,7 +21,7 @@ import java.util.concurrent.Flow.Subscriber;
 
 import org.junit.jupiter.api.Test;
 
-import hu.akarnokd.rxjava4.internal.BooleanSubscription;
+import hu.akarnokd.rxjava4.internal.rxcopy.BooleanSubscription;
 import io.reactivex.rxjava4.core.Flowable;
 import io.reactivex.rxjava4.functions.Predicate;
 

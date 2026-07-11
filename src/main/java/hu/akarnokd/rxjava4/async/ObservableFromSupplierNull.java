@@ -16,7 +16,7 @@
 
 package hu.akarnokd.rxjava4.async;
 
-import hu.akarnokd.rxjava4.internal.DeferredScalarDisposable;
+import hu.akarnokd.rxjava4.internal.rxcopy.DeferredScalarDisposable;
 import io.reactivex.rxjava4.core.*;
 import io.reactivex.rxjava4.exceptions.Exceptions;
 import io.reactivex.rxjava4.functions.Supplier;

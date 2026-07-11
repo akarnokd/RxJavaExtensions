@@ -24,6 +24,9 @@ public final class OnNextAfterTerminationException extends ProtocolNonConformanc
 
     private static final long serialVersionUID = -6096755460680899745L;
 
+    /**
+     * Constructs the exception without message or cause.
+     */
     public OnNextAfterTerminationException() {
         super();
     }

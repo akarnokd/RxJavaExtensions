@@ -18,7 +18,7 @@ package hu.akarnokd.rxjava4.basetypes;
 
 import java.util.concurrent.Flow.Subscriber;
 
-import hu.akarnokd.rxjava4.internal.HideSubscriber;
+import hu.akarnokd.rxjava4.internal.rxcopy.HideSubscriber;
 
 /**
  * Hides the identity of the upstream and downstream including

@@ -19,7 +19,7 @@ package hu.akarnokd.rxjava4.basetypes;
 import java.util.Objects;
 import java.util.concurrent.Flow.Subscriber;
 
-import hu.akarnokd.rxjava4.internal.EmptySubscription;
+import hu.akarnokd.rxjava4.internal.rxcopy.EmptySubscription;
 import io.reactivex.rxjava4.exceptions.Exceptions;
 import io.reactivex.rxjava4.functions.Function;
 

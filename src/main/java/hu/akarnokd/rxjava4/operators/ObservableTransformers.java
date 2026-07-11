@@ -18,7 +18,7 @@ package hu.akarnokd.rxjava4.operators;
 
 import java.util.Objects;
 
-import hu.akarnokd.rxjava4.internal.ObjectHelper;
+import hu.akarnokd.rxjava4.internal.rxcopy.ObjectHelper;
 import hu.akarnokd.rxjava4.util.BiFunctionSecondIdentity;
 import io.reactivex.rxjava4.annotations.*;
 import io.reactivex.rxjava4.core.*;
@@ -274,7 +274,8 @@ public final class ObservableTransformers {
      * @return the new ObservableTransformer instance
      * @since 0.20.4
      */
-    public static <T, U, R> ObservableTransformer<T, R> mapAsync(Function<? super T, ? extends ObservableSource<? extends U>> mapper, BiFunction<? super T, ? super U, ? extends R> combiner) {
+    public static <T, U, R> ObservableTransformer<T, R> mapAsync(
+            Function<? super T, ? extends ObservableSource<? extends U>> mapper, BiFunction<? super T, ? super U, ? extends R> combiner) {
         return mapAsync(mapper, combiner, Flowable.bufferSize());
     }
 
@@ -298,7 +299,8 @@ public final class ObservableTransformers {
      * @return the new ObservableTransformer instance
      * @since 0.20.4
      */
-    public static <T, U, R> ObservableTransformer<T, R> mapAsync(Function<? super T, ? extends ObservableSource<? extends U>> mapper, BiFunction<? super T, ? super U, ? extends R> combiner, int capacityHint) {
+    public static <T, U, R> ObservableTransformer<T, R> mapAsync(Function<? super T, ? extends ObservableSource<? extends U>> mapper,
+            BiFunction<? super T, ? super U, ? extends R> combiner, int capacityHint) {
         Objects.requireNonNull(mapper, "mapper is null");
         Objects.requireNonNull(combiner, "combiner is null");
         ObjectHelper.verifyPositive(capacityHint, "capacityHint");

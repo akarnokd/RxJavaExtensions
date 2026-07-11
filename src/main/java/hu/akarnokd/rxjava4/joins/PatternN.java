@@ -27,10 +27,19 @@ import io.reactivex.rxjava4.functions.Function;
 public final class PatternN {
     private final List<Observable<? extends Object>> observables;
 
+    /**
+     * Constructs a multi-valued pattern from the list of {@link Observable}s.
+     * @param observables the list of {@code Observable}s to work with
+     */
     public PatternN(List<Observable<? extends Object>> observables) {
         this.observables = observables;
     }
 
+    /**
+     * Constructs a multi-valued pattern from the list of {@link Observable}s.
+     * @param observables the list of {@code Observable}s to work with
+     * @param other the extra {@code Observable} to work with
+     */
     public PatternN(List<Observable<? extends Object>> observables, Observable<? extends Object> other) {
         this.observables = new ArrayList<>(observables);
         this.observables.add(other);

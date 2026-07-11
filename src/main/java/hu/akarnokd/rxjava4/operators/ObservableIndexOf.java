@@ -16,7 +16,7 @@
 
 package hu.akarnokd.rxjava4.operators;
 
-import hu.akarnokd.rxjava4.internal.DeferredScalarObserver;
+import hu.akarnokd.rxjava4.internal.rxcopy.DeferredScalarObserver;
 import io.reactivex.rxjava4.core.*;
 import io.reactivex.rxjava4.exceptions.Exceptions;
 import io.reactivex.rxjava4.functions.Predicate;

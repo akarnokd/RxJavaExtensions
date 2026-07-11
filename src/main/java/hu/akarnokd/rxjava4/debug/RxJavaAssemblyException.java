@@ -27,10 +27,19 @@ public final class RxJavaAssemblyException extends RuntimeException {
 
     final String stacktrace;
 
+    /**
+     * Constructs the exception without message or cause and captures the stacktrace.
+     */
     public RxJavaAssemblyException() {
         this.stacktrace = buildStackTrace();
     }
 
+    /**
+     * Converts the current thread's stacktrace into a String,
+     * without using {@code printStackTrace()} and all sorts
+     * of buffers and writers
+     * @return the String of the stacktrace
+     */
     public static String buildStackTrace() {
         StringBuilder b = new StringBuilder();
 

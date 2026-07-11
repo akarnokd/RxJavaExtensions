@@ -25,15 +25,15 @@ import io.reactivex.rxjava4.functions.Function;
 import io.reactivex.rxjava4.schedulers.Schedulers;
 
 public class ParallelOrderedMergeTest {
-  @Test
-  public void testBasicOrder() throws InterruptedException {
-    final Random rnd = new Random();
-    ParallelTransformers.orderedMerge(Flowable.range(1, 5).parallel(4).runOn(Schedulers.computation()).map(new Function<Integer, Integer>() {
-      @Override
-      public Integer apply(Integer t) throws Exception {
-        Thread.sleep(0, 50 + rnd.nextInt(1000));
-        return t;
-      }
-    })).test().await().assertResult(1, 2, 3, 4, 5);
-  }
+    @Test
+    public void testBasicOrder() throws InterruptedException {
+        final Random rnd = new Random();
+        ParallelTransformers.orderedMerge(Flowable.range(1, 5).parallel(4).runOn(Schedulers.computation()).map(new Function<Integer, Integer>() {
+            @Override
+            public Integer apply(Integer t) throws Exception {
+                Thread.sleep(0, 50 + rnd.nextInt(1000));
+                return t;
+            }
+        })).test().await().assertResult(1, 2, 3, 4, 5);
+    }
 }

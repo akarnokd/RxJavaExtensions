@@ -20,7 +20,7 @@ import java.util.Objects;
 import java.util.concurrent.*;
 import java.util.concurrent.Flow.*;
 
-import hu.akarnokd.rxjava4.internal.*;
+import hu.akarnokd.rxjava4.internal.rxcopy.*;
 import io.reactivex.rxjava4.core.*;
 import io.reactivex.rxjava4.core.config.*;
 import io.reactivex.rxjava4.disposables.Disposable;

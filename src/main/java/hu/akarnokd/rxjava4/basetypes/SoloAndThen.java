@@ -19,7 +19,7 @@ package hu.akarnokd.rxjava4.basetypes;
 import java.util.concurrent.Flow.*;
 import java.util.concurrent.atomic.AtomicReference;
 
-import hu.akarnokd.rxjava4.internal.*;
+import hu.akarnokd.rxjava4.internal.rxcopy.*;
 
 /**
  * Run the given Nono after this Solo completes successfully and

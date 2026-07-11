@@ -20,7 +20,7 @@ import java.util.*;
 import java.util.concurrent.Flow.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import hu.akarnokd.rxjava4.internal.*;
+import hu.akarnokd.rxjava4.internal.rxcopy.*;
 import io.reactivex.rxjava4.exceptions.Exceptions;
 
 /**

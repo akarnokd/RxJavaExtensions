@@ -20,7 +20,7 @@ import java.util.concurrent.*;
 import java.util.concurrent.Flow.*;
 
 import hu.akarnokd.rxjava4.functions.*;
-import hu.akarnokd.rxjava4.internal.*;
+import hu.akarnokd.rxjava4.internal.rxcopy.*;
 import io.reactivex.rxjava4.core.*;
 import io.reactivex.rxjava4.disposables.Disposable;
 import io.reactivex.rxjava4.exceptions.*;
@@ -356,7 +356,8 @@ public final class AsyncFlowable {
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Async-Operators#wiki-toasync-or-asyncaction-or-asyncfunc">RxJava Wiki: toAsync()</a>
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh229577.aspx">MSDN: Observable.ToAsync</a>
      */
-    public static <T1, T2, T3, T4, T5> PlainFunction5<T1, T2, T3, T4, T5, Flowable<Object>> toAsync(Consumer5<? super T1, ? super T2, ? super T3, ? super T4, ? super T5> action) {
+    public static <T1, T2, T3, T4, T5> PlainFunction5<T1, T2, T3, T4, T5, Flowable<Object>> toAsync(
+            Consumer5<? super T1, ? super T2, ? super T3, ? super T4, ? super T5> action) {
         return toAsync(action, Schedulers.computation());
     }
 
@@ -382,7 +383,8 @@ public final class AsyncFlowable {
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Async-Operators#wiki-toasync-or-asyncaction-or-asyncfunc">RxJava Wiki: toAsync()</a>
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh229571.aspx">MSDN: Observable.ToAsync</a>
      */
-    public static <T1, T2, T3, T4, T5, R> PlainFunction5<T1, T2, T3, T4, T5, Flowable<R>> toAsync(Function5<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? extends R> func) {
+    public static <T1, T2, T3, T4, T5, R> PlainFunction5<T1, T2, T3, T4, T5, Flowable<R>> toAsync(
+            Function5<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? extends R> func) {
         return toAsync(func, Schedulers.computation());
     }
 
@@ -408,7 +410,8 @@ public final class AsyncFlowable {
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Async-Operators#wiki-toasync-or-asyncaction-or-asyncfunc">RxJava Wiki: toAsync()</a>
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh211773.aspx">MSDN: Observable.ToAsync</a>
      */
-    public static <T1, T2, T3, T4, T5, T6> PlainFunction6<T1, T2, T3, T4, T5, T6, Flowable<Object>> toAsync(Consumer6<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? super T6> action) {
+    public static <T1, T2, T3, T4, T5, T6> PlainFunction6<T1, T2, T3, T4, T5, T6, Flowable<Object>> toAsync(
+            Consumer6<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? super T6> action) {
         return toAsync(action, Schedulers.computation());
     }
 
@@ -435,7 +438,8 @@ public final class AsyncFlowable {
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Async-Operators#wiki-toasync-or-asyncaction-or-asyncfunc">RxJava Wiki: toAsync()</a>
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh229716.aspx">MSDN: Observable.ToAsync</a>
      */
-    public static <T1, T2, T3, T4, T5, T6, R> PlainFunction6<T1, T2, T3, T4, T5, T6, Flowable<R>> toAsync(Function6<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? super T6, ? extends R> func) {
+    public static <T1, T2, T3, T4, T5, T6, R> PlainFunction6<T1, T2, T3, T4, T5, T6, Flowable<R>> toAsync(
+            Function6<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? super T6, ? extends R> func) {
         return toAsync(func, Schedulers.computation());
     }
 
@@ -462,7 +466,8 @@ public final class AsyncFlowable {
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Async-Operators#wiki-toasync-or-asyncaction-or-asyncfunc">RxJava Wiki: toAsync()</a>
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh211812.aspx">MSDN: Observable.ToAsync</a>
      */
-    public static <T1, T2, T3, T4, T5, T6, T7> PlainFunction7<T1, T2, T3, T4, T5, T6, T7, Flowable<Object>> toAsync(Consumer7<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? super T6, ? super T7> action) {
+    public static <T1, T2, T3, T4, T5, T6, T7> PlainFunction7<T1, T2, T3, T4, T5, T6, T7, Flowable<Object>> toAsync(
+            Consumer7<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? super T6, ? super T7> action) {
         return toAsync(action, Schedulers.computation());
     }
 
@@ -490,7 +495,8 @@ public final class AsyncFlowable {
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Async-Operators#wiki-toasync-or-asyncaction-or-asyncfunc">RxJava Wiki: toAsync()</a>
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh229773.aspx">MSDN: Observable.ToAsync</a>
      */
-    public static <T1, T2, T3, T4, T5, T6, T7, R> PlainFunction7<T1, T2, T3, T4, T5, T6, T7, Flowable<R>> toAsync(Function7<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? super T6, ? super T7, ? extends R> func) {
+    public static <T1, T2, T3, T4, T5, T6, T7, R> PlainFunction7<T1, T2, T3, T4, T5, T6, T7, Flowable<R>> toAsync(
+            Function7<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? super T6, ? super T7, ? extends R> func) {
         return toAsync(func, Schedulers.computation());
     }
 
@@ -518,7 +524,8 @@ public final class AsyncFlowable {
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Async-Operators#wiki-toasync-or-asyncaction-or-asyncfunc">RxJava Wiki: toAsync()</a>
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh228993.aspx">MSDN: Observable.ToAsync</a>
      */
-    public static <T1, T2, T3, T4, T5, T6, T7, T8> PlainFunction8<T1, T2, T3, T4, T5, T6, T7, T8, Flowable<Object>> toAsync(Consumer8<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? super T6, ? super T7, ? super T8> action) {
+    public static <T1, T2, T3, T4, T5, T6, T7, T8> PlainFunction8<T1, T2, T3, T4, T5, T6, T7, T8, Flowable<Object>> toAsync(
+            Consumer8<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? super T6, ? super T7, ? super T8> action) {
         return toAsync(action, Schedulers.computation());
     }
 
@@ -547,7 +554,8 @@ public final class AsyncFlowable {
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Async-Operators#wiki-toasync-or-asyncaction-or-asyncfunc">RxJava Wiki: toAsync()</a>
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh229910.aspx">MSDN: Observable.ToAsync</a>
      */
-    public static <T1, T2, T3, T4, T5, T6, T7, T8, R> PlainFunction8<T1, T2, T3, T4, T5, T6, T7, T8, Flowable<R>> toAsync(Function8<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? super T6, ? super T7, ? super T8, ? extends R> func) {
+    public static <T1, T2, T3, T4, T5, T6, T7, T8, R> PlainFunction8<T1, T2, T3, T4, T5, T6, T7, T8, Flowable<R>> toAsync(
+            Function8<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? super T6, ? super T7, ? super T8, ? extends R> func) {
         return toAsync(func, Schedulers.computation());
     }
 
@@ -576,7 +584,8 @@ public final class AsyncFlowable {
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Async-Operators#wiki-toasync-or-asyncaction-or-asyncfunc">RxJava Wiki: toAsync()</a>
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh211702.aspx">MSDN: Observable.ToAsync</a>
      */
-    public static <T1, T2, T3, T4, T5, T6, T7, T8, T9> PlainFunction9<T1, T2, T3, T4, T5, T6, T7, T8, T9, Flowable<Object>> toAsync(Consumer9<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? super T6, ? super T7, ? super T8, ? super T9> action) {
+    public static <T1, T2, T3, T4, T5, T6, T7, T8, T9> PlainFunction9<T1, T2, T3, T4, T5, T6, T7, T8, T9, Flowable<Object>> toAsync(
+            Consumer9<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? super T6, ? super T7, ? super T8, ? super T9> action) {
         return toAsync(action, Schedulers.computation());
     }
 
@@ -606,7 +615,8 @@ public final class AsyncFlowable {
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Async-Operators#wiki-toasync-or-asyncaction-or-asyncfunc">RxJava Wiki: toAsync()</a>
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh212074.aspx">MSDN: Observable.ToAsync</a>
      */
-    public static <T1, T2, T3, T4, T5, T6, T7, T8, T9, R> PlainFunction9<T1, T2, T3, T4, T5, T6, T7, T8, T9, Flowable<R>> toAsync(Function9<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? super T6, ? super T7, ? super T8, ? super T9, ? extends R> func) {
+    public static <T1, T2, T3, T4, T5, T6, T7, T8, T9, R> PlainFunction9<T1, T2, T3, T4, T5, T6, T7, T8, T9, Flowable<R>> toAsync(
+            Function9<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? super T6, ? super T7, ? super T8, ? super T9, ? extends R> func) {
         return toAsync(func, Schedulers.computation());
     }
 
@@ -928,7 +938,8 @@ public final class AsyncFlowable {
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Async-Operators#wiki-toasync-or-asyncaction-or-asyncfunc">RxJava Wiki: toAsync()</a>
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh229450.aspx">MSDN: Observable.ToAsync</a>
      */
-    public static <T1, T2, T3, R> PlainFunction3<T1, T2, T3, Flowable<R>> toAsync(final Function3<? super T1, ? super T2, ? super T3, ? extends R> func, final Scheduler scheduler) {
+    public static <T1, T2, T3, R> PlainFunction3<T1, T2, T3, Flowable<R>> toAsync(
+            final Function3<? super T1, ? super T2, ? super T3, ? extends R> func, final Scheduler scheduler) {
         return new PlainFunction3<T1, T2, T3, Flowable<R>>() {
             @Override
             public Flowable<R> apply(final T1 t1, final T2 t2, final T3 t3) {
@@ -964,7 +975,8 @@ public final class AsyncFlowable {
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Async-Operators#wiki-toasync-or-asyncaction-or-asyncfunc">RxJava Wiki: toAsync()</a>
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh229769.aspx">MSDN: Observable.ToAsync</a>
      */
-    public static <T1, T2, T3, T4> PlainFunction4<T1, T2, T3, T4, Flowable<Object>> toAsync(final Consumer4<? super T1, ? super T2, ? super T3, ? super T4> action, final Scheduler scheduler) {
+    public static <T1, T2, T3, T4> PlainFunction4<T1, T2, T3, T4, Flowable<Object>> toAsync(
+            final Consumer4<? super T1, ? super T2, ? super T3, ? super T4> action, final Scheduler scheduler) {
         return new PlainFunction4<T1, T2, T3, T4, Flowable<Object>>() {
             @Override
             public Flowable<Object> apply(final T1 t1, final T2 t2, final T3 t3, final T4 t4) {
@@ -1002,7 +1014,8 @@ public final class AsyncFlowable {
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Async-Operators#wiki-toasync-or-asyncaction-or-asyncfunc">RxJava Wiki: toAsync()</a>
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh229911.aspx">MSDN: Observable.ToAsync</a>
      */
-    public static <T1, T2, T3, T4, R> PlainFunction4<T1, T2, T3, T4, Flowable<R>> toAsync(final Function4<? super T1, ? super T2, ? super T3, ? super T4, ? extends R> func, final Scheduler scheduler) {
+    public static <T1, T2, T3, T4, R> PlainFunction4<T1, T2, T3, T4, Flowable<R>> toAsync(
+            final Function4<? super T1, ? super T2, ? super T3, ? super T4, ? extends R> func, final Scheduler scheduler) {
         return new PlainFunction4<T1, T2, T3, T4, Flowable<R>>() {
             @Override
             public Flowable<R> apply(final T1 t1, final T2 t2, final T3 t3, final T4 t4) {
@@ -1039,7 +1052,8 @@ public final class AsyncFlowable {
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Async-Operators#wiki-toasync-or-asyncaction-or-asyncfunc">RxJava Wiki: toAsync()</a>
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh229577.aspx">MSDN: Observable.ToAsync</a>
      */
-    public static <T1, T2, T3, T4, T5> PlainFunction5<T1, T2, T3, T4, T5, Flowable<Object>> toAsync(final Consumer5<? super T1, ? super T2, ? super T3, ? super T4, ? super T5> action, final Scheduler scheduler) {
+    public static <T1, T2, T3, T4, T5> PlainFunction5<T1, T2, T3, T4, T5, Flowable<Object>> toAsync(
+            final Consumer5<? super T1, ? super T2, ? super T3, ? super T4, ? super T5> action, final Scheduler scheduler) {
         return new PlainFunction5<T1, T2, T3, T4, T5, Flowable<Object>>() {
             @Override
             public Flowable<Object> apply(final T1 t1, final T2 t2, final T3 t3, final T4 t4, final T5 t5) {
@@ -1078,7 +1092,8 @@ public final class AsyncFlowable {
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Async-Operators#wiki-toasync-or-asyncaction-or-asyncfunc">RxJava Wiki: toAsync()</a>
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh229571.aspx">MSDN: Observable.ToAsync</a>
      */
-    public static <T1, T2, T3, T4, T5, R> PlainFunction5<T1, T2, T3, T4, T5, Flowable<R>> toAsync(final Function5<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? extends R> func, final Scheduler scheduler) {
+    public static <T1, T2, T3, T4, T5, R> PlainFunction5<T1, T2, T3, T4, T5, Flowable<R>> toAsync(
+            final Function5<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? extends R> func, final Scheduler scheduler) {
         return new PlainFunction5<T1, T2, T3, T4, T5, Flowable<R>>() {
             @Override
             public Flowable<R> apply(final T1 t1, final T2 t2, final T3 t3, final T4 t4, final T5 t5) {
@@ -1116,7 +1131,8 @@ public final class AsyncFlowable {
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Async-Operators#wiki-toasync-or-asyncaction-or-asyncfunc">RxJava Wiki: toAsync()</a>
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh211773.aspx">MSDN: Observable.ToAsync</a>
      */
-    public static <T1, T2, T3, T4, T5, T6> PlainFunction6<T1, T2, T3, T4, T5, T6, Flowable<Object>> toAsync(final Consumer6<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? super T6> action, final Scheduler scheduler) {
+    public static <T1, T2, T3, T4, T5, T6> PlainFunction6<T1, T2, T3, T4, T5, T6, Flowable<Object>> toAsync(
+            final Consumer6<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? super T6> action, final Scheduler scheduler) {
         return new PlainFunction6<T1, T2, T3, T4, T5, T6, Flowable<Object>>() {
             @Override
             public Flowable<Object> apply(final T1 t1, final T2 t2, final T3 t3, final T4 t4, final T5 t5, final T6 t6) {
@@ -1156,7 +1172,8 @@ public final class AsyncFlowable {
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Async-Operators#wiki-toasync-or-asyncaction-or-asyncfunc">RxJava Wiki: toAsync()</a>
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh229716.aspx">MSDN: Observable.ToAsync</a>
      */
-    public static <T1, T2, T3, T4, T5, T6, R> PlainFunction6<T1, T2, T3, T4, T5, T6, Flowable<R>> toAsync(final Function6<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? super T6, ? extends R> func, final Scheduler scheduler) {
+    public static <T1, T2, T3, T4, T5, T6, R> PlainFunction6<T1, T2, T3, T4, T5, T6, Flowable<R>> toAsync(
+            final Function6<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? super T6, ? extends R> func, final Scheduler scheduler) {
         return new PlainFunction6<T1, T2, T3, T4, T5, T6, Flowable<R>>() {
             @Override
             public Flowable<R> apply(final T1 t1, final T2 t2, final T3 t3, final T4 t4, final T5 t5, final T6 t6) {
@@ -1408,7 +1425,8 @@ public final class AsyncFlowable {
      * @see <a href="http://msdn.microsoft.com/en-us/library/hh212074.aspx">MSDN: Observable.ToAsync</a>
      */
     public static <T1, T2, T3, T4, T5, T6, T7, T8, T9, R> PlainFunction9<T1, T2, T3, T4, T5, T6, T7, T8, T9, Flowable<R>> toAsync(
-            final Function9<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? super T6, ? super T7, ? super T8, ? super T9, ? extends R> func, final Scheduler scheduler) {
+            final Function9<? super T1, ? super T2, ? super T3, ? super T4, ? super T5, ? super T6, ? super T7, ? super T8, ? super T9, ? extends R> func,
+            final Scheduler scheduler) {
         return new PlainFunction9<T1, T2, T3, T4, T5, T6, T7, T8, T9, Flowable<R>>() {
             @Override
             public Flowable<R> apply(final T1 t1, final T2 t2, final T3 t3, final T4 t4, final T5 t5, final T6 t6, final T7 t7, final T8 t8, final T9 t9) {

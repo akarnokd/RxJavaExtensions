@@ -23,7 +23,6 @@ import java.util.concurrent.*;
 
 import org.junit.jupiter.api.Test;
 
-import hu.akarnokd.rxjava4.test.TestHelper;
 import io.reactivex.rxjava4.core.*;
 import io.reactivex.rxjava4.disposables.Disposable;
 import io.reactivex.rxjava4.functions.Action;
@@ -96,7 +95,7 @@ public class RxJava3AssemblyTrackingTest {
             TestSubscriber<Integer> ts = source.test()
             .assertFailure(IOException.class, 1, 2, 3, 4, 5);
 
-            String st = RxJavaAssemblyException.find(TestHelper.errors(ts).get(0)).stacktrace();
+            String st = RxJavaAssemblyException.find(ts.errors().get(0)).stacktrace();
 
             assertTrue(st.contains("RxJava3AssemblyTrackingTest.createFlowable"), st);
 
@@ -109,7 +108,7 @@ public class RxJava3AssemblyTrackingTest {
         TestSubscriber<Integer> ts = source.test()
         .assertFailure(IOException.class, 1, 2, 3, 4, 5);
 
-        assertNull(RxJavaAssemblyException.find(TestHelper.errors(ts).get(0)));
+        assertNull(RxJavaAssemblyException.find(ts.errors().get(0)));
     }
 
     @Test
@@ -121,7 +120,7 @@ public class RxJava3AssemblyTrackingTest {
             TestObserver<Integer> to = source.test()
             .assertFailure(IOException.class, 1, 2, 3, 4, 5);
 
-            String st = RxJavaAssemblyException.find(TestHelper.errors(to).get(0)).stacktrace();
+            String st = RxJavaAssemblyException.find(to.errors().get(0)).stacktrace();
 
             assertTrue(st.contains("RxJava3AssemblyTrackingTest.createObservable"), st);
 
@@ -134,7 +133,7 @@ public class RxJava3AssemblyTrackingTest {
         TestSubscriber<Integer> ts = source.test()
         .assertFailure(IOException.class, 1, 2, 3, 4, 5);
 
-        assertNull(RxJavaAssemblyException.find(TestHelper.errors(ts).get(0)));
+        assertNull(RxJavaAssemblyException.find(ts.errors().get(0)));
     }
 
     @Test
@@ -146,7 +145,7 @@ public class RxJava3AssemblyTrackingTest {
             TestObserver<Integer> to = source.test()
             .assertFailure(IOException.class);
 
-            String st = RxJavaAssemblyException.find(TestHelper.errors(to).get(0)).stacktrace();
+            String st = RxJavaAssemblyException.find(to.errors().get(0)).stacktrace();
 
             assertTrue(st.contains("RxJava3AssemblyTrackingTest.createSingle"), st);
 
@@ -159,7 +158,7 @@ public class RxJava3AssemblyTrackingTest {
         TestObserver<Integer> to = source.test()
         .assertFailure(IOException.class);
 
-        assertNull(RxJavaAssemblyException.find(TestHelper.errors(to).get(0)));
+        assertNull(RxJavaAssemblyException.find(to.errors().get(0)));
     }
 
     @Test
@@ -171,7 +170,7 @@ public class RxJava3AssemblyTrackingTest {
             TestObserver<Integer> to = source.test()
             .assertFailure(IOException.class);
 
-            String st = RxJavaAssemblyException.find(TestHelper.errors(to).get(0)).stacktrace();
+            String st = RxJavaAssemblyException.find(to.errors().get(0)).stacktrace();
 
             assertTrue(st.contains("RxJava3AssemblyTrackingTest.createMaybe"), st);
 
@@ -184,7 +183,7 @@ public class RxJava3AssemblyTrackingTest {
         TestObserver<Integer> to = source.test()
         .assertFailure(IOException.class);
 
-        assertNull(RxJavaAssemblyException.find(TestHelper.errors(to).get(0)));
+        assertNull(RxJavaAssemblyException.find(to.errors().get(0)));
     }
 
     @Test
@@ -196,7 +195,7 @@ public class RxJava3AssemblyTrackingTest {
             TestObserver<Void> to = source.test()
             .assertFailure(IOException.class);
 
-            String st = RxJavaAssemblyException.find(TestHelper.errors(to).get(0)).stacktrace();
+            String st = RxJavaAssemblyException.find(to.errors().get(0)).stacktrace();
 
             assertTrue(st.contains("RxJava3AssemblyTrackingTest.createCompletable"), st);
 
@@ -209,7 +208,7 @@ public class RxJava3AssemblyTrackingTest {
         TestObserver<Void> to = source.test()
         .assertFailure(IOException.class);
 
-        assertNull(RxJavaAssemblyException.find(TestHelper.errors(to).get(0)));
+        assertNull(RxJavaAssemblyException.find(to.errors().get(0)));
     }
 
     @Test
@@ -221,7 +220,7 @@ public class RxJava3AssemblyTrackingTest {
             TestSubscriber<Integer> ts = source.sequential().test()
             .assertFailure(IOException.class, 1, 2, 3, 4, 5);
 
-            String st = RxJavaAssemblyException.find(TestHelper.errors(ts).get(0)).stacktrace();
+            String st = RxJavaAssemblyException.find(ts.errors().get(0)).stacktrace();
 
             assertTrue(st.contains("RxJava3AssemblyTrackingTest.createParallelFlowable"), st);
 
@@ -234,7 +233,7 @@ public class RxJava3AssemblyTrackingTest {
         TestSubscriber<Integer> ts = source.sequential().test()
         .assertFailure(IOException.class, 1, 2, 3, 4, 5);
 
-        assertNull(RxJavaAssemblyException.find(TestHelper.errors(ts).get(0)));
+        assertNull(RxJavaAssemblyException.find(ts.errors().get(0)));
     }
 
     @Test

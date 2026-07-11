@@ -25,7 +25,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.api.Test;
 
-import hu.akarnokd.rxjava4.internal.BooleanSubscription;
+import hu.akarnokd.rxjava4.internal.rxcopy.BooleanSubscription;
 import hu.akarnokd.rxjava4.test.*;
 import io.reactivex.rxjava4.core.*;
 import io.reactivex.rxjava4.functions.*;

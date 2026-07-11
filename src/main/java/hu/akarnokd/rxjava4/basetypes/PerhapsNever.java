@@ -18,7 +18,7 @@ package hu.akarnokd.rxjava4.basetypes;
 
 import java.util.concurrent.Flow.Subscriber;
 
-import hu.akarnokd.rxjava4.internal.EmptySubscription;
+import hu.akarnokd.rxjava4.internal.rxcopy.EmptySubscription;
 
 /**
  * Never signals an event other than onSubscribe.

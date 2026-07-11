@@ -20,7 +20,7 @@ import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Flow.Subscriber;
 
-import hu.akarnokd.rxjava4.internal.DeferredScalarSubscription;
+import hu.akarnokd.rxjava4.internal.rxcopy.DeferredScalarSubscription;
 import io.reactivex.rxjava4.exceptions.Exceptions;
 
 /**

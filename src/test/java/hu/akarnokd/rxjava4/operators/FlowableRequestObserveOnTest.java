@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.Test;
 
-import hu.akarnokd.rxjava4.internal.ImmediateThinScheduler;
+import hu.akarnokd.rxjava4.internal.rxcopy.ImmediateThinScheduler;
 import io.reactivex.rxjava4.core.Flowable;
 import io.reactivex.rxjava4.schedulers.*;
 import io.reactivex.rxjava4.subscribers.TestSubscriber;

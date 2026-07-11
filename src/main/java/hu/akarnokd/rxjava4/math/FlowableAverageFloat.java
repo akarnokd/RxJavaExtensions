@@ -18,7 +18,7 @@ package hu.akarnokd.rxjava4.math;
 
 import java.util.concurrent.Flow.*;
 
-import hu.akarnokd.rxjava4.internal.DeferredScalarSubscriber;
+import hu.akarnokd.rxjava4.internal.rxcopy.DeferredScalarSubscriber;
 
 final class FlowableAverageFloat extends FlowableSource<Number, Float> {
 

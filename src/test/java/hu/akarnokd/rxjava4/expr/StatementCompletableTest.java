@@ -81,11 +81,11 @@ public class StatementCompletableTest {
         };
     }
 
-     void observe(Completable source) {
+    void observe(Completable source) {
         source.test().assertComplete();
     }
 
-     void observeError(Completable source, Class<? extends Throwable> error) {
+    void observeError(Completable source, Class<? extends Throwable> error) {
         source.test().assertFailure(error);
     }
 

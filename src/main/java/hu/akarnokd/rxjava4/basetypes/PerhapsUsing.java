@@ -21,7 +21,7 @@ import java.util.Objects;
 import java.util.concurrent.Flow.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import hu.akarnokd.rxjava4.internal.*;
+import hu.akarnokd.rxjava4.internal.rxcopy.*;
 import io.reactivex.rxjava4.core.FlowableSubscriber;
 import io.reactivex.rxjava4.exceptions.*;
 import io.reactivex.rxjava4.functions.*;
@@ -92,7 +92,7 @@ final class PerhapsUsing<T, R> extends Perhaps<T> {
 
         np.subscribe(new UsingSubscriber<T, R>(s, resource, disposer, eager));
     }
-    
+
     static final class UsingSubscriber<T, D> extends AtomicBoolean implements FlowableSubscriber<T>, Subscription {
 
         @Serial
@@ -105,8 +105,8 @@ final class PerhapsUsing<T, R> extends Perhaps<T> {
 
         Subscription upstream;
 
-        UsingSubscriber(Subscriber<? super T> actual, D resource, Consumer<? super D> disposer, boolean eager) {
-            this.downstream = actual;
+        UsingSubscriber(Subscriber<? super T> downstream, D resource, Consumer<? super D> disposer, boolean eager) {
+            this.downstream = downstream;
             this.resource = resource;
             this.disposer = disposer;
             this.eager = eager;

@@ -19,7 +19,7 @@ package hu.akarnokd.rxjava4.operators;
 import java.util.Objects;
 import java.util.concurrent.atomic.*;
 
-import hu.akarnokd.rxjava4.internal.*;
+import hu.akarnokd.rxjava4.internal.rxcopy.*;
 import io.reactivex.rxjava4.core.*;
 import io.reactivex.rxjava4.disposables.Disposable;
 import io.reactivex.rxjava4.exceptions.Exceptions;

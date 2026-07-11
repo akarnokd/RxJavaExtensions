@@ -18,8 +18,7 @@ package hu.akarnokd.rxjava4.basetypes;
 
 import java.util.concurrent.Flow.*;
 
-import hu.akarnokd.rxjava4.internal.BasicIntQueueSubscription;
-import hu.akarnokd.rxjava4.util.CompositeSubscription;
+import hu.akarnokd.rxjava4.internal.rxcopy.BasicIntQueueSubscription;
 import io.reactivex.rxjava4.exceptions.Exceptions;
 import io.reactivex.rxjava4.plugins.RxJavaPlugins;
 

@@ -19,7 +19,7 @@ package hu.akarnokd.rxjava4.basetypes;
 import java.util.concurrent.Flow.*;
 import java.util.concurrent.atomic.*;
 
-import hu.akarnokd.rxjava4.internal.*;
+import hu.akarnokd.rxjava4.internal.rxcopy.*;
 
 /**
  * Retries the source Solo at most the given number of times.

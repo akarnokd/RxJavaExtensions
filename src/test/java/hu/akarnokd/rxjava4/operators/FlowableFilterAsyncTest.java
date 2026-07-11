@@ -26,7 +26,7 @@ import java.util.concurrent.Flow.*;
 import org.junit.jupiter.api.Test;
 
 import hu.akarnokd.rxjava4.basetypes.Solo;
-import hu.akarnokd.rxjava4.internal.*;
+import hu.akarnokd.rxjava4.internal.rxcopy.*;
 import hu.akarnokd.rxjava4.test.TestHelper;
 import io.reactivex.rxjava4.core.Flowable;
 import io.reactivex.rxjava4.functions.*;

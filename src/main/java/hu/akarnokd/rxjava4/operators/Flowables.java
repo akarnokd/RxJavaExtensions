@@ -20,7 +20,7 @@ import java.util.*;
 import java.util.concurrent.Flow.*;
 import java.util.concurrent.TimeUnit;
 
-import hu.akarnokd.rxjava4.internal.*;
+import hu.akarnokd.rxjava4.internal.rxcopy.*;
 import io.reactivex.rxjava4.annotations.*;
 import io.reactivex.rxjava4.core.*;
 import io.reactivex.rxjava4.functions.*;
@@ -614,7 +614,8 @@ public final class Flowables {
      */
     @BackpressureSupport(BackpressureKind.UNBOUNDED_IN)
     @SchedulerSupport(SchedulerSupport.CUSTOM)
-    public static <T1, T2, R> Flowable<R> zipLatest(Publisher<T1> source1, Publisher<T2> source2, BiFunction<? super T1, ? super T2, ? extends R> combiner, Scheduler scheduler) {
+    public static <T1, T2, R> Flowable<R> zipLatest(Publisher<T1> source1, Publisher<T2> source2,
+            BiFunction<? super T1, ? super T2, ? extends R> combiner, Scheduler scheduler) {
         Objects.requireNonNull(source1, "source1 is null");
         Objects.requireNonNull(source2, "source2 is null");
         Objects.requireNonNull(combiner, "combiner is null");

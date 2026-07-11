@@ -23,23 +23,10 @@ import io.reactivex.rxjava4.functions.BiFunction;
  * Represents a join pattern over observable sequences.
  * @param <T1> the first value type
  * @param <T2> the second value type
+ * @param o1 the first source
+ * @param o2 the second source
  */
-public final class Pattern2<T1, T2> {
-    private final Observable<T1> o1;
-    private final Observable<T2> o2;
-
-    public Pattern2(Observable<T1> o1, Observable<T2> o2) {
-        this.o1 = o1;
-        this.o2 = o2;
-    }
-
-    Observable<T1> o1() {
-        return o1;
-    }
-
-    Observable<T2> o2() {
-        return o2;
-    }
+public record Pattern2<T1, T2>(Observable<T1> o1, Observable<T2> o2) {
 
     /**
      * Creates a pattern that matches when all three observable sequences have an available element.

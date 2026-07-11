@@ -24,10 +24,17 @@ public final class MultipleTerminationsException extends ProtocolNonConformanceE
 
     private static final long serialVersionUID = -6096755460680899745L;
 
+    /**
+     * Constructs the exception without message or cause.
+     */
     public MultipleTerminationsException() {
         super();
     }
 
+    /**
+     * Constructs the exception with a cause.
+     * @param cause the cause
+     */
     public MultipleTerminationsException(Throwable cause) {
         super(cause);
     }

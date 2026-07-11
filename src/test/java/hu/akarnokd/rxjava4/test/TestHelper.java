@@ -32,14 +32,14 @@ import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-import hu.akarnokd.rxjava4.internal.*;
+import hu.akarnokd.rxjava4.internal.rxcopy.*;
 import io.reactivex.rxjava4.core.*;
 import io.reactivex.rxjava4.core.Observable;
 import io.reactivex.rxjava4.core.Observer;
 import io.reactivex.rxjava4.disposables.Disposable;
 import io.reactivex.rxjava4.exceptions.*;
 import io.reactivex.rxjava4.functions.*;
-import io.reactivex.rxjava4.observers.*;
+import io.reactivex.rxjava4.observers.TestObserver;
 import io.reactivex.rxjava4.operators.*;
 import io.reactivex.rxjava4.parallel.ParallelFlowable;
 import io.reactivex.rxjava4.plugins.RxJavaPlugins;
@@ -220,7 +220,7 @@ public enum TestHelper {
     }
 
     public static void assertError(TestObserver<?> to, int index, Class<? extends Throwable> clazz) {
-        Throwable ex = TestHelper.errors(to).get(0);
+        Throwable ex = to.errors().get(0);
         try {
             if (ex instanceof CompositeException) {
                 CompositeException ce = (CompositeException) ex;
@@ -236,7 +236,7 @@ public enum TestHelper {
     }
 
     public static void assertError(TestSubscriber<?> ts, int index, Class<? extends Throwable> clazz) {
-        Throwable ex = TestHelper.errors(ts).get(0);
+        Throwable ex = ts.errors().get(0);
         if (ex instanceof CompositeException) {
             CompositeException ce = (CompositeException) ex;
             List<Throwable> cel = ce.getExceptions();
@@ -247,7 +247,7 @@ public enum TestHelper {
     }
 
     public static void assertError(TestObserver<?> to, int index, Class<? extends Throwable> clazz, String message) {
-        Throwable ex = TestHelper.errors(to).get(0);
+        Throwable ex = to.errors().get(0);
         if (ex instanceof CompositeException) {
             CompositeException ce = (CompositeException) ex;
             List<Throwable> cel = ce.getExceptions();
@@ -259,7 +259,7 @@ public enum TestHelper {
     }
 
     public static void assertError(TestSubscriber<?> ts, int index, Class<? extends Throwable> clazz, String message) {
-        Throwable ex = TestHelper.errors(ts).get(0);
+        Throwable ex = ts.errors().get(0);
         if (ex instanceof CompositeException) {
             CompositeException ce = (CompositeException) ex;
             List<Throwable> cel = ce.getExceptions();
@@ -2246,7 +2246,7 @@ public enum TestHelper {
         .assertError(CompositeException.class)
         .assertNotComplete();
 
-        List<Throwable> list = compositeList(TestHelper.errors(ts).get(0));
+        List<Throwable> list = compositeList(ts.errors().get(0));
 
         assertEquals(classes.length, list.size() * 2);
 
@@ -2267,7 +2267,7 @@ public enum TestHelper {
         .assertError(CompositeException.class)
         .assertNotComplete();
 
-        List<Throwable> list = compositeList(TestHelper.errors(to).get(0));
+        List<Throwable> list = compositeList(to.errors().get(0));
 
         assertEquals(classes.length, list.size());
 
@@ -2289,7 +2289,7 @@ public enum TestHelper {
         .assertError(CompositeException.class)
         .assertNotComplete();
 
-        List<Throwable> list = compositeList(TestHelper.errors(to).get(0));
+        List<Throwable> list = compositeList(to.errors().get(0));
 
         assertEquals(classes.length, list.size() * 2);
 
@@ -2464,7 +2464,7 @@ public enum TestHelper {
      * @return the list
      */
     public static List<Throwable> errorList(TestObserver<?> to) {
-        return compositeList(TestHelper.errors(to).get(0));
+        return compositeList(to.errors().get(0));
     }
 
     /**
@@ -2473,7 +2473,7 @@ public enum TestHelper {
      * @return the list
      */
     public static List<Throwable> errorList(TestSubscriber<?> ts) {
-        return compositeList(TestHelper.errors(ts).get(0));
+        return compositeList(ts.errors().get(0));
     }
 
     /**
@@ -2852,17 +2852,6 @@ public enum TestHelper {
         return ts;
     }
 
-    @SuppressWarnings("unchecked")
-    public static List<Throwable> errors(BaseTestConsumer<?, ?> testConsumer) {
-        try {
-            Field f = BaseTestConsumer.class.getDeclaredField("errors");
-            f.setAccessible(true);
-            return (List<Throwable>)f.get(testConsumer);
-        } catch (Throwable ex) {
-            throw Exceptions.propagate(ex);
-        }
-    }
-
     /**
      * Find the base source directory of this project.
      * @return the File pointing to the source
@@ -2884,7 +2873,7 @@ public enum TestHelper {
         // find end of any potential postfix to /RxJava
         int j = path.indexOf("/", i + 6);
 
-        String p = path.substring(0, j + 1) + "src/main/java/hu/akarnokd/rxjava3";
+        String p = path.substring(0, j + 1) + "src/main/java/hu/akarnokd/rxjava4";
 
         File f = new File(p);
 

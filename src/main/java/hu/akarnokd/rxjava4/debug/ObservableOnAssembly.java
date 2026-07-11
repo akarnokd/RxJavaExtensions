@@ -16,7 +16,7 @@
 
 package hu.akarnokd.rxjava4.debug;
 
-import hu.akarnokd.rxjava4.internal.BasicFuseableObserver;
+import hu.akarnokd.rxjava4.internal.rxcopy.BasicFuseableObserver;
 import io.reactivex.rxjava4.core.*;
 import io.reactivex.rxjava4.operators.QueueDisposable;
 

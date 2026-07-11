@@ -19,7 +19,7 @@ package hu.akarnokd.rxjava4.test;
 import java.util.concurrent.Flow.*;
 import java.util.concurrent.atomic.*;
 
-import hu.akarnokd.rxjava4.internal.SubscriptionHelper;
+import hu.akarnokd.rxjava4.internal.rxcopy.SubscriptionHelper;
 import io.reactivex.rxjava4.core.FlowableSubscriber;
 import io.reactivex.rxjava4.operators.*;
 

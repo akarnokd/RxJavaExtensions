@@ -19,7 +19,7 @@ package hu.akarnokd.rxjava4.basetypes;
 import java.util.concurrent.Flow.*;
 import java.util.concurrent.atomic.*;
 
-import hu.akarnokd.rxjava4.internal.DeferredScalarSubscription;
+import hu.akarnokd.rxjava4.internal.rxcopy.DeferredScalarSubscription;
 
 /**
  * Cache the success value or error from upstream and relay/replay

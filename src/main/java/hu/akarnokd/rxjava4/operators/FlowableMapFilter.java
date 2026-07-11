@@ -18,7 +18,7 @@ package hu.akarnokd.rxjava4.operators;
 
 import java.util.concurrent.Flow.*;
 
-import hu.akarnokd.rxjava4.internal.*;
+import hu.akarnokd.rxjava4.internal.rxcopy.*;
 import io.reactivex.rxjava4.core.*;
 import io.reactivex.rxjava4.exceptions.*;
 import io.reactivex.rxjava4.functions.BiConsumer;

@@ -20,7 +20,7 @@ import java.util.Objects;
 import java.util.concurrent.Flow.*;
 import java.util.concurrent.atomic.AtomicReference;
 
-import hu.akarnokd.rxjava4.internal.*;
+import hu.akarnokd.rxjava4.internal.rxcopy.*;
 import io.reactivex.rxjava4.exceptions.Exceptions;
 import io.reactivex.rxjava4.functions.*;
 
@@ -44,8 +44,8 @@ final class PerhapsFlatMapSignal<T, R> extends Perhaps<R> {
     PerhapsFlatMapSignal(Perhaps<T> source,
             Function<? super T, ? extends Perhaps<? extends R>> onSuccessMapper,
             Function<? super Throwable, ? extends Perhaps<? extends R>> onErrorMapper,
-                    Supplier<? extends Perhaps<? extends R>> onCompleteMapper
-   ) {
+            Supplier<? extends Perhaps<? extends R>> onCompleteMapper
+    ) {
         this.source = source;
         this.onSuccessMapper = onSuccessMapper;
         this.onErrorMapper = onErrorMapper;

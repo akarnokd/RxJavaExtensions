@@ -24,6 +24,9 @@ public final class NullOnSuccessParameterException extends ProtocolNonConformanc
 
     private static final long serialVersionUID = -6096755460680899745L;
 
+    /**
+     * Constructs the exception without message or cause.
+     */
     public NullOnSuccessParameterException() {
         super();
     }

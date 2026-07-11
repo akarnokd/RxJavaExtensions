@@ -20,7 +20,7 @@ import java.io.Serial;
 import java.util.concurrent.Flow.*;
 import java.util.concurrent.atomic.*;
 
-import hu.akarnokd.rxjava4.internal.*;
+import hu.akarnokd.rxjava4.internal.rxcopy.*;
 import io.reactivex.rxjava4.core.*;
 import io.reactivex.rxjava4.core.Scheduler.Worker;
 
@@ -68,8 +68,8 @@ final class PerhapsSubscribeOn<T> extends Perhaps<T> {
 
         Publisher<T> source;
 
-        SubscribeOnSubscriber(Subscriber<? super T> actual, Scheduler.Worker worker, Publisher<T> source, boolean requestOn) {
-            this.downstream = actual;
+        SubscribeOnSubscriber(Subscriber<? super T> downstream, Scheduler.Worker worker, Publisher<T> source, boolean requestOn) {
+            this.downstream = downstream;
             this.worker = worker;
             this.source = source;
             this.upstream = new AtomicReference<>();

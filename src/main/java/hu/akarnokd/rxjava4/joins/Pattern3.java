@@ -24,30 +24,12 @@ import io.reactivex.rxjava4.functions.Function3;
  * @param <T1> the first value type
  * @param <T2> the second value type
  * @param <T3> the third value type
+ * @param o1 the first source
+ * @param o2 the second source
+ * @param o3 the third source
  */
-public final class Pattern3<T1, T2, T3> {
-    private final Observable<T1> o1;
-    private final Observable<T2> o2;
-    private final Observable<T3> o3;
-
-    public Pattern3(Observable<T1> o1, Observable<T2> o2,
-            Observable<T3> o3) {
-        this.o1 = o1;
-        this.o2 = o2;
-        this.o3 = o3;
-    }
-
-    Observable<T1> o1() {
-        return o1;
-    }
-
-    Observable<T2> o2() {
-        return o2;
-    }
-
-    Observable<T3> o3() {
-        return o3;
-    }
+public record Pattern3<T1, T2, T3>(Observable<T1> o1, Observable<T2> o2,
+        Observable<T3> o3) {
 
     /**
      * Creates a pattern that matches when all three observable sequences have an available element.

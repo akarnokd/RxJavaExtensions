@@ -19,7 +19,7 @@ package hu.akarnokd.rxjava4.joins;
 import java.util.*;
 import java.util.concurrent.atomic.*;
 
-import hu.akarnokd.rxjava4.internal.DisposableHelper;
+import hu.akarnokd.rxjava4.internal.rxcopy.DisposableHelper;
 import io.reactivex.rxjava4.core.Notification;
 import io.reactivex.rxjava4.core.Observable;
 import io.reactivex.rxjava4.core.Observer;

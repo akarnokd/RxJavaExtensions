@@ -17,7 +17,7 @@
 package hu.akarnokd.rxjava4.util;
 
 /**
- * Utility class to throw arbitrary Throwables.
+ * Utility class to throw arbitrary {@link Throwable}s.
  */
 public final class SneakyThrows {
 
@@ -25,6 +25,13 @@ public final class SneakyThrows {
         throw new IllegalStateException("No instances!");
     }
 
+    /**
+     * Sneakily throw.
+     * @param <E> the throwable subclass
+     * @param error the error to throw
+     * @return never
+     * @throws E the exception type
+     */
     @SuppressWarnings("unchecked")
     public static <E extends Throwable> E justThrowX(Throwable error) throws E {
         throw (E)error;

@@ -18,7 +18,7 @@ package hu.akarnokd.rxjava4.operators;
 
 import org.junit.jupiter.api.Test;
 
-import hu.akarnokd.rxjava4.internal.Functions;
+import hu.akarnokd.rxjava4.internal.rxcopy.Functions;
 import hu.akarnokd.rxjava4.test.TestHelper;
 
 public class FlowablesTest {

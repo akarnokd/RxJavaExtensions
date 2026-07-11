@@ -21,7 +21,7 @@ import java.io.IOException;
 
 import org.junit.jupiter.api.Test;
 
-import hu.akarnokd.rxjava4.internal.Functions;
+import hu.akarnokd.rxjava4.internal.rxcopy.Functions;
 import hu.akarnokd.rxjava4.test.*;
 import io.reactivex.rxjava4.core.Flowable;
 import io.reactivex.rxjava4.functions.BiConsumer;

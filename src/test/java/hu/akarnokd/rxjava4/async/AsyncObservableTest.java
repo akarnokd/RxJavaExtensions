@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Test;
 
 import hu.akarnokd.rxjava4.async.AsyncFlowableTest.MultiFunction;
 import hu.akarnokd.rxjava4.functions.*;
-import hu.akarnokd.rxjava4.internal.Functions;
+import hu.akarnokd.rxjava4.internal.rxcopy.Functions;
 import io.reactivex.rxjava4.core.Observable;
 import io.reactivex.rxjava4.core.Observer;
 import io.reactivex.rxjava4.disposables.Disposable;

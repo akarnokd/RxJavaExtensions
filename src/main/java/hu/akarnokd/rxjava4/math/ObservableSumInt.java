@@ -16,7 +16,7 @@
 
 package hu.akarnokd.rxjava4.math;
 
-import hu.akarnokd.rxjava4.internal.DeferredScalarObserver;
+import hu.akarnokd.rxjava4.internal.rxcopy.DeferredScalarObserver;
 import io.reactivex.rxjava4.core.*;
 
 final class ObservableSumInt extends ObservableWithSource<Integer, Integer> {

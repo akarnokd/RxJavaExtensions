@@ -16,7 +16,7 @@
 
 package hu.akarnokd.rxjava4.expr;
 
-import hu.akarnokd.rxjava4.internal.EmptyDisposable;
+import hu.akarnokd.rxjava4.internal.rxcopy.EmptyDisposable;
 import io.reactivex.rxjava4.core.*;
 import io.reactivex.rxjava4.exceptions.Exceptions;
 import io.reactivex.rxjava4.functions.BooleanSupplier;
