@@ -1939,14 +1939,16 @@ public class SoloTest implements Consumer<Object>, Action, LongConsumer, Cancell
         .assertResult(1);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void toThrows() {
-        Solo.just(1)
-        .to(new Function<Solo<Integer>, Object>() {
-            @Override
-            public Object apply(Solo<Integer> sp) throws Exception {
-                throw new IllegalArgumentException();
-            }
+        assertThrows(IllegalArgumentException.class, () -> {
+            Solo.just(1)
+            .to(new Function<Solo<Integer>, Object>() {
+                @Override
+                public Object apply(Solo<Integer> sp) throws Exception {
+                    throw new IllegalArgumentException();
+                }
+            });
         });
     }
 
@@ -2006,10 +2008,12 @@ public class SoloTest implements Consumer<Object>, Action, LongConsumer, Cancell
         .assertResult(1, 1, 1, 1, 1);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void repeatTimesNegative() {
-        Solo.just(1)
-        .repeat(-5);
+        assertThrows(IllegalArgumentException.class, () -> {
+            Solo.just(1)
+            .repeat(-5);
+        });
     }
 
     @Test
@@ -2087,10 +2091,12 @@ public class SoloTest implements Consumer<Object>, Action, LongConsumer, Cancell
         .assertFailure(IOException.class);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void retryTimesNegative() {
-        Solo.just(1)
-        .retry(-5);
+        assertThrows(IllegalArgumentException.class, () -> {
+            Solo.just(1)
+            .retry(-5);
+        });
     }
 
     @Test
@@ -2304,15 +2310,17 @@ public class SoloTest implements Consumer<Object>, Action, LongConsumer, Cancell
         .assertFailure(IOException.class);
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void subscribeActualError() {
-        new Solo<Integer>() {
-            @Override
-            protected void subscribeActual(Subscriber<? super Integer> s) {
-                throw new NullPointerException();
+        assertThrows(NullPointerException.class, () -> {
+            new Solo<Integer>() {
+                @Override
+                protected void subscribeActual(Subscriber<? super Integer> s) {
+                    throw new NullPointerException();
+                }
             }
-        }
-        .subscribe();
+            .subscribe();
+        });
     }
 
     @Test
@@ -2326,7 +2334,7 @@ public class SoloTest implements Consumer<Object>, Action, LongConsumer, Cancell
             }
             .subscribe();
         } catch (NullPointerException ex) {
-            assertTrue(ex.toString(), ex.getCause() instanceof IllegalArgumentException);
+            assertTrue(ex.getCause() instanceof IllegalArgumentException, ex.toString());
         }
     }
 
@@ -2488,9 +2496,11 @@ public class SoloTest implements Consumer<Object>, Action, LongConsumer, Cancell
         assertEquals(1, Solo.just(1).toFuture().get().intValue());
     }
 
-    @Test(expected = ExecutionException.class)
+    @Test
     public void toFutureError() throws Exception {
-        Solo.error(new IOException()).toFuture().get();
+        assertThrows(ExecutionException.class, () -> {
+            Solo.error(new IOException()).toFuture().get();
+        });
     }
 
     @Test

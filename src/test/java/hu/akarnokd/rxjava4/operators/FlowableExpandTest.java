@@ -16,13 +16,15 @@
 
 package hu.akarnokd.rxjava4.operators;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.Flow.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import hu.akarnokd.rxjava4.internal.Functions;
 import hu.akarnokd.rxjava4.test.TestHelper;
@@ -113,7 +115,7 @@ public class FlowableExpandTest {
 
                 List<Integer> list = ts.values();
                 for (int j = 0; j <= i; j++) {
-                    Assert.assertEquals(tag + ", " + list, i - j, list.get(j).intValue());
+                    assertEquals(i - j, list.get(j).intValue(), tag + ", " + list);
                 }
             }
         }
@@ -247,7 +249,8 @@ public class FlowableExpandTest {
         );
     }
 
-    @Test(timeout = 5000)
+    @Test
+    @Timeout(5)
     public void depthFirst() {
         Node root = createTest();
 
@@ -275,7 +278,8 @@ public class FlowableExpandTest {
         );
     }
 
-    @Test(timeout = 5000)
+    @Test
+    @Timeout(5)
     public void depthFirstAsync() {
         Node root = createTest();
 
@@ -304,7 +308,8 @@ public class FlowableExpandTest {
         );
     }
 
-    @Test(timeout = 5000)
+    @Test
+    @Timeout(5)
     public void breadthFirst() {
         Node root = createTest();
 
@@ -331,7 +336,8 @@ public class FlowableExpandTest {
         );
     }
 
-    @Test(timeout = 5000)
+    @Test
+    @Timeout(5)
     public void breadthFirstAsync() {
         Node root = createTest();
 
@@ -399,7 +405,7 @@ public class FlowableExpandTest {
         .compose(FlowableTransformers.expand(Functions.justFunction(pp), ExpandStrategy.DEPTH_FIRST))
         .subscribe(s);
 
-        Assert.assertFalse(pp.hasSubscribers());
+        assertFalse(pp.hasSubscribers());
 
         ts.assertResult(1);
     }
@@ -517,7 +523,7 @@ public class FlowableExpandTest {
 
             source.subscribe(ts);
 
-            Assert.assertTrue(cdl.await(5, TimeUnit.SECONDS));
+            assertTrue(cdl.await(5, TimeUnit.SECONDS));
         }
     }
 

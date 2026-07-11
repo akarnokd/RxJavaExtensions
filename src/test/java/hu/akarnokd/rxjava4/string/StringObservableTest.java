@@ -16,7 +16,7 @@
 
 package hu.akarnokd.rxjava4.string;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import hu.akarnokd.rxjava4.test.BaseTest;
 

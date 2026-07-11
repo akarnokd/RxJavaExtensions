@@ -16,12 +16,12 @@
 
 package hu.akarnokd.rxjava4.subjects;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import hu.akarnokd.rxjava4.test.*;
 import io.reactivex.rxjava4.disposables.Disposable;
@@ -100,18 +100,22 @@ public class UnicastWorkSubjectTest {
         assertNull(uws.getThrowable());
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void nullOnNext() {
-        UnicastWorkSubject<Integer> uws = UnicastWorkSubject.create();
+        assertThrows(NullPointerException.class, () -> {
+            UnicastWorkSubject<Integer> uws = UnicastWorkSubject.create();
 
-        uws.onNext(null);
+            uws.onNext(null);
+        });
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void nullOnError() {
-        UnicastWorkSubject<Integer> uws = UnicastWorkSubject.create();
-
-        uws.onError(null);
+        assertThrows(NullPointerException.class, () -> {
+            UnicastWorkSubject<Integer> uws = UnicastWorkSubject.create();
+    
+            uws.onError(null);
+        });
     }
 
     @Test

@@ -17,13 +17,13 @@
 package hu.akarnokd.rxjava4.operators;
 
 import java.io.IOException;
+import java.util.concurrent.Flow.Subscriber;
 
-import org.junit.Test;
-import org.reactivestreams.Subscriber;
+import org.junit.jupiter.api.Test;
 
+import hu.akarnokd.rxjava4.internal.BooleanSubscription;
 import io.reactivex.rxjava4.core.Flowable;
 import io.reactivex.rxjava4.functions.Predicate;
-import io.reactivex.rxjava4.internal.subscriptions.BooleanSubscription;
 
 public class FlowableIndexOfTest {
 

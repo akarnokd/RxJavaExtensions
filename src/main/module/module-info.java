@@ -25,7 +25,6 @@ module hu.akarnokd.rxjava4 {
     exports hu.akarnokd.rxjava4.operators;
     exports hu.akarnokd.rxjava4.parallel;
     exports hu.akarnokd.rxjava4.processors;
-    exports hu.akarnokd.rxjava4.schedulers;
     exports hu.akarnokd.rxjava4.string;
     exports hu.akarnokd.rxjava4.subjects;
     exports hu.akarnokd.rxjava4.util;
@@ -33,7 +32,9 @@ module hu.akarnokd.rxjava4 {
     requires java.management;
     requires transitive io.reactivex.rxjava4;
 
- // === Add these for JUnit 6 / Jupiter in tests (Eclipse + modular) ===
+    /*
     requires static org.junit.jupiter.api;
+    requires static org.mockito;
     requires static org.junit.platform.commons;
+    */
 }

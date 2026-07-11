@@ -16,18 +16,18 @@
 
 package hu.akarnokd.rxjava4.operators;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
+import java.util.concurrent.Flow.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.junit.Test;
-import org.reactivestreams.*;
+import org.junit.jupiter.api.Test;
 
+import hu.akarnokd.rxjava4.internal.BooleanSubscription;
 import hu.akarnokd.rxjava4.test.*;
 import io.reactivex.rxjava4.core.Flowable;
 import io.reactivex.rxjava4.functions.*;
-import io.reactivex.rxjava4.internal.subscriptions.BooleanSubscription;
 import io.reactivex.rxjava4.plugins.RxJavaPlugins;
 import io.reactivex.rxjava4.processors.PublishProcessor;
 import io.reactivex.rxjava4.subscribers.TestSubscriber;

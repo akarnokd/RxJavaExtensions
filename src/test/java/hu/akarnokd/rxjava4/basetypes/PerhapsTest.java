@@ -167,9 +167,11 @@ public class PerhapsTest implements Consumer<Object>, Action, LongConsumer, Canc
         assertNull(Perhaps.empty().toFuture().get());
     }
 
-    @Test(expected = ExecutionException.class)
+    @Test
     public void toFutureError() throws Exception {
-        Perhaps.error(new IOException()).toFuture().get();
+        assertThrows(ExecutionException.class, () -> {
+            Perhaps.error(new IOException()).toFuture().get();
+        });
     }
 
     @Test
@@ -2011,14 +2013,16 @@ public class PerhapsTest implements Consumer<Object>, Action, LongConsumer, Canc
         .assertResult(1);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void toThrows() {
-        Perhaps.just(1)
-        .to(new Function<Perhaps<Integer>, Object>() {
-            @Override
-            public Object apply(Perhaps<Integer> sp) throws Exception {
-                throw new IllegalArgumentException();
-            }
+        assertThrows(IllegalArgumentException.class, () -> {
+            Perhaps.just(1)
+            .to(new Function<Perhaps<Integer>, Object>() {
+                @Override
+                public Object apply(Perhaps<Integer> sp) throws Exception {
+                    throw new IllegalArgumentException();
+                }
+            });
         });
     }
 
@@ -2078,10 +2082,12 @@ public class PerhapsTest implements Consumer<Object>, Action, LongConsumer, Canc
         .assertResult(1, 1, 1, 1, 1);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void repeatTimesNegative() {
-        Perhaps.just(1)
-        .repeat(-5);
+        assertThrows(IllegalArgumentException.class, () -> {
+            Perhaps.just(1)
+            .repeat(-5);
+        });
     }
 
     @Test
@@ -2159,10 +2165,12 @@ public class PerhapsTest implements Consumer<Object>, Action, LongConsumer, Canc
         .assertFailure(IOException.class);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void retryTimesNegative() {
-        Perhaps.just(1)
-        .retry(-5);
+        assertThrows(IllegalArgumentException.class, () -> {
+            Perhaps.just(1)
+            .retry(-5);
+        });
     }
 
     @Test
@@ -2376,15 +2384,17 @@ public class PerhapsTest implements Consumer<Object>, Action, LongConsumer, Canc
         .assertFailure(IOException.class);
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void subscribeActualError() {
-        new Perhaps<Integer>() {
-            @Override
-            protected void subscribeActual(Subscriber<? super Integer> s) {
-                throw new NullPointerException();
+        assertThrows(NullPointerException.class, () -> {
+            new Perhaps<Integer>() {
+                @Override
+                protected void subscribeActual(Subscriber<? super Integer> s) {
+                    throw new NullPointerException();
+                }
             }
-        }
-        .subscribe();
+            .subscribe();
+        });
     }
 
     @Test
@@ -2398,7 +2408,7 @@ public class PerhapsTest implements Consumer<Object>, Action, LongConsumer, Canc
             }
             .subscribe();
         } catch (NullPointerException ex) {
-            assertTrue(ex.toString(), ex.getCause() instanceof IllegalArgumentException);
+            assertTrue(ex.getCause() instanceof IllegalArgumentException, ex.toString());
         }
     }
 

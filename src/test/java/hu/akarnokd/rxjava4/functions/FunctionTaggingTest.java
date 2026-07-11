@@ -16,17 +16,17 @@
 
 package hu.akarnokd.rxjava4.functions;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import hu.akarnokd.rxjava4.functions.FunctionTagging.FunctionTaggingException;
+import hu.akarnokd.rxjava4.internal.Functions;
 import hu.akarnokd.rxjava4.test.TestHelper;
 import io.reactivex.rxjava4.functions.*;
-import io.reactivex.rxjava4.internal.functions.Functions;
 import io.reactivex.rxjava4.plugins.RxJavaPlugins;
 
 public class FunctionTaggingTest {
@@ -50,7 +50,7 @@ public class FunctionTaggingTest {
 
         new FunctionTaggingException("Tag").appendLast(ex);
 
-        assertTrue(ex.getCause().getCause().toString(), ex.getCause().getCause().toString().contains("Tag"));
+        assertTrue(ex.getCause().getCause().toString().contains("Tag"), ex.getCause().getCause().toString());
     }
 
     @Test
@@ -109,7 +109,7 @@ public class FunctionTaggingTest {
                 f.apply(null);
                 throw new AssertionError("Should have thrown!");
             } catch (NullPointerException ex) {
-                assertTrue(ex.getMessage(), ex.getMessage().contains("Custom tag"));
+                assertTrue(ex.getMessage().contains("Custom tag"), ex.getMessage());
             }
 
             f = FunctionTagging.tagFunction(new Function<Integer, Integer>() {
@@ -123,7 +123,7 @@ public class FunctionTaggingTest {
                 f.apply(1);
                 fail("Should have thrown!");
             } catch (NullPointerException ex) {
-                assertTrue(ex.getMessage(), ex.getMessage().contains("Custom tag"));
+                assertTrue(ex.getMessage().contains("Custom tag"), ex.getMessage());
             }
 
             f = FunctionTagging.tagFunction(new Function<Integer, Integer>() {
@@ -137,7 +137,7 @@ public class FunctionTaggingTest {
                 f.apply(1);
                 fail("Should have thrown!");
             } catch (IOException ex) {
-                assertTrue(ex.getCause().getMessage(), ex.getCause().getMessage().contains("Custom tag"));
+                assertTrue(ex.getCause().getMessage().contains("Custom tag"), ex.getCause().getMessage());
             }
 
         } finally {
@@ -190,7 +190,7 @@ public class FunctionTaggingTest {
                 f.apply(null, 2);
                 throw new AssertionError("Should have thrown!");
             } catch (NullPointerException ex) {
-                assertTrue(ex.getMessage(), ex.getMessage().contains("Custom tag"));
+                assertTrue(ex.getMessage().contains("Custom tag"), ex.getMessage());
             }
 
             f = FunctionTagging.tagBiFunction(new BiFunction<Integer, Integer, Integer>() {
@@ -206,7 +206,7 @@ public class FunctionTaggingTest {
                 f.apply(1, null);
                 throw new AssertionError("Should have thrown!");
             } catch (NullPointerException ex) {
-                assertTrue(ex.getMessage(), ex.getMessage().contains("Custom tag"));
+                assertTrue(ex.getMessage().contains("Custom tag"), ex.getMessage());
             }
 
             // oooooooooooooooooooooooooooooooo
@@ -222,7 +222,7 @@ public class FunctionTaggingTest {
                 f.apply(1, 2);
                 fail("Should have thrown!");
             } catch (NullPointerException ex) {
-                assertTrue(ex.getMessage(), ex.getMessage().contains("Custom tag"));
+                assertTrue(ex.getMessage().contains("Custom tag"), ex.getMessage());
             }
 
             f = FunctionTagging.tagBiFunction(new BiFunction<Integer, Integer, Integer>() {
@@ -236,7 +236,7 @@ public class FunctionTaggingTest {
                 f.apply(1, 2);
                 fail("Should have thrown!");
             } catch (IOException ex) {
-                assertTrue(ex.getCause().getMessage(), ex.getCause().getMessage().contains("Custom tag"));
+                assertTrue(ex.getCause().getMessage().contains("Custom tag"), ex.getCause().getMessage());
             }
 
         } finally {
@@ -299,7 +299,7 @@ public class FunctionTaggingTest {
                 f.apply(null, 2, 3);
                 throw new AssertionError("Should have thrown!");
             } catch (NullPointerException ex) {
-                assertTrue(ex.getMessage(), ex.getMessage().contains("Custom tag"));
+                assertTrue(ex.getMessage().contains("Custom tag"), ex.getMessage());
             }
 
             f = FunctionTagging.tagFunction3(new Function3<Integer, Integer, Integer, Integer>() {
@@ -315,7 +315,7 @@ public class FunctionTaggingTest {
                 f.apply(1, null, 3);
                 throw new AssertionError("Should have thrown!");
             } catch (NullPointerException ex) {
-                assertTrue(ex.getMessage(), ex.getMessage().contains("Custom tag"));
+                assertTrue(ex.getMessage().contains("Custom tag"), ex.getMessage());
             }
 
             f = FunctionTagging.tagFunction3(new Function3<Integer, Integer, Integer, Integer>() {
@@ -331,7 +331,7 @@ public class FunctionTaggingTest {
                 f.apply(1, 2, null);
                 throw new AssertionError("Should have thrown!");
             } catch (NullPointerException ex) {
-                assertTrue(ex.getMessage(), ex.getMessage().contains("Custom tag"));
+                assertTrue(ex.getMessage().contains("Custom tag"), ex.getMessage());
             }
 
             // oooooooooooooooooooooooooooooooo
@@ -347,7 +347,7 @@ public class FunctionTaggingTest {
                 f.apply(1, 2, 3);
                 fail("Should have thrown!");
             } catch (NullPointerException ex) {
-                assertTrue(ex.getMessage(), ex.getMessage().contains("Custom tag"));
+                assertTrue(ex.getMessage().contains("Custom tag"), ex.getMessage());
             }
 
             f = FunctionTagging.tagFunction3(new Function3<Integer, Integer, Integer, Integer>() {
@@ -361,7 +361,7 @@ public class FunctionTaggingTest {
                 f.apply(1, 2, 3);
                 fail("Should have thrown!");
             } catch (IOException ex) {
-                assertTrue(ex.getCause().getMessage(), ex.getCause().getMessage().contains("Custom tag"));
+                assertTrue(ex.getCause().getMessage().contains("Custom tag"), ex.getCause().getMessage());
             }
 
         } finally {
@@ -439,7 +439,7 @@ public class FunctionTaggingTest {
                 f.apply(null, 2, 3, 4);
                 throw new AssertionError("Should have thrown!");
             } catch (NullPointerException ex) {
-                assertTrue(ex.getMessage(), ex.getMessage().contains("Custom tag"));
+                assertTrue(ex.getMessage().contains("Custom tag"), ex.getMessage());
             }
 
             f = FunctionTagging.tagFunction4(
@@ -456,7 +456,7 @@ public class FunctionTaggingTest {
                 f.apply(1, null, 3, 4);
                 throw new AssertionError("Should have thrown!");
             } catch (NullPointerException ex) {
-                assertTrue(ex.getMessage(), ex.getMessage().contains("Custom tag"));
+                assertTrue(ex.getMessage().contains("Custom tag"), ex.getMessage());
             }
 
             f = FunctionTagging.tagFunction4(
@@ -473,7 +473,7 @@ public class FunctionTaggingTest {
                 f.apply(1, 2, null, 4);
                 throw new AssertionError("Should have thrown!");
             } catch (NullPointerException ex) {
-                assertTrue(ex.getMessage(), ex.getMessage().contains("Custom tag"));
+                assertTrue(ex.getMessage().contains("Custom tag"), ex.getMessage());
             }
 
             f = FunctionTagging.tagFunction4(
@@ -490,7 +490,7 @@ public class FunctionTaggingTest {
                 f.apply(1, 2, 3, null);
                 throw new AssertionError("Should have thrown!");
             } catch (NullPointerException ex) {
-                assertTrue(ex.getMessage(), ex.getMessage().contains("Custom tag"));
+                assertTrue(ex.getMessage().contains("Custom tag"), ex.getMessage());
             }
 
             // oooooooooooooooooooooooooooooooo
@@ -507,7 +507,7 @@ public class FunctionTaggingTest {
                 f.apply(1, 2, 3, 4);
                 fail("Should have thrown!");
             } catch (NullPointerException ex) {
-                assertTrue(ex.getMessage(), ex.getMessage().contains("Custom tag"));
+                assertTrue(ex.getMessage().contains("Custom tag"), ex.getMessage());
             }
 
             f = FunctionTagging.tagFunction4(
@@ -522,7 +522,7 @@ public class FunctionTaggingTest {
                 f.apply(1, 2, 3, 4);
                 fail("Should have thrown!");
             } catch (IOException ex) {
-                assertTrue(ex.getCause().getMessage(), ex.getCause().getMessage().contains("Custom tag"));
+                assertTrue(ex.getCause().getMessage().contains("Custom tag"), ex.getCause().getMessage());
             }
 
         } finally {
@@ -585,8 +585,8 @@ public class FunctionTaggingTest {
                     f.apply(t1, t2, t3, t4, t5);
                     throw new AssertionError("Should have thrown!");
                 } catch (NullPointerException ex) {
-                    assertTrue(ex.getMessage(), ex.getMessage().contains("Custom tag"));
-                    assertTrue(ex.getMessage(), ex.getMessage().contains("t" + i + " is null"));
+                    assertTrue(ex.getMessage().contains("Custom tag"), ex.getMessage());
+                    assertTrue(ex.getMessage().contains("t" + i + " is null"), ex.getMessage());
                 }
             }
 
@@ -599,7 +599,7 @@ public class FunctionTaggingTest {
                 f.apply(1, 2, 3, 4, 5);
                 fail("Should have thrown!");
             } catch (NullPointerException ex) {
-                assertTrue(ex.getMessage(), ex.getMessage().contains("Custom tag"));
+                assertTrue(ex.getMessage().contains("Custom tag"), ex.getMessage());
             }
 
             f = FunctionTagging.tagFunction5(
@@ -609,7 +609,7 @@ public class FunctionTaggingTest {
                 f.apply(1, 2, 3, 4, 5);
                 fail("Should have thrown!");
             } catch (IOException ex) {
-                assertTrue(ex.getCause().getMessage(), ex.getCause().getMessage().contains("Custom tag"));
+                assertTrue(ex.getCause().getMessage().contains("Custom tag"), ex.getCause().getMessage());
             }
 
         } finally {
@@ -679,8 +679,8 @@ public class FunctionTaggingTest {
                     f.apply(t1, t2, t3, t4, t5, t6);
                     throw new AssertionError("Should have thrown!");
                 } catch (NullPointerException ex) {
-                    assertTrue(ex.getMessage(), ex.getMessage().contains("Custom tag"));
-                    assertTrue(ex.getMessage(), ex.getMessage().contains("t" + i + " is null"));
+                    assertTrue(ex.getMessage().contains("Custom tag"), ex.getMessage());
+                    assertTrue(ex.getMessage().contains("t" + i + " is null"), ex.getMessage());
                 }
             }
 
@@ -700,7 +700,7 @@ public class FunctionTaggingTest {
                 f.apply(t1, t2, t3, t4, t5, t6);
                 fail("Should have thrown!");
             } catch (NullPointerException ex) {
-                assertTrue(ex.getMessage(), ex.getMessage().contains("Custom tag"));
+                assertTrue(ex.getMessage().contains("Custom tag"), ex.getMessage());
             }
 
             f = FunctionTagging.tagFunction6(
@@ -710,7 +710,7 @@ public class FunctionTaggingTest {
                 f.apply(t1, t2, t3, t4, t5, t6);
                 fail("Should have thrown!");
             } catch (IOException ex) {
-                assertTrue(ex.getCause().getMessage(), ex.getCause().getMessage().contains("Custom tag"));
+                assertTrue(ex.getCause().getMessage().contains("Custom tag"), ex.getCause().getMessage());
             }
 
         } finally {
@@ -784,8 +784,8 @@ public class FunctionTaggingTest {
                     f.apply(t1, t2, t3, t4, t5, t6, t7);
                     throw new AssertionError("Should have thrown!");
                 } catch (NullPointerException ex) {
-                    assertTrue(ex.getMessage(), ex.getMessage().contains("Custom tag"));
-                    assertTrue(ex.getMessage(), ex.getMessage().contains("t" + i + " is null"));
+                    assertTrue(ex.getMessage().contains("Custom tag"), ex.getMessage());
+                    assertTrue(ex.getMessage().contains("t" + i + " is null"), ex.getMessage());
                 }
             }
 
@@ -806,7 +806,7 @@ public class FunctionTaggingTest {
                 f.apply(t1, t2, t3, t4, t5, t6, t7);
                 fail("Should have thrown!");
             } catch (NullPointerException ex) {
-                assertTrue(ex.getMessage(), ex.getMessage().contains("Custom tag"));
+                assertTrue(ex.getMessage().contains("Custom tag"), ex.getMessage());
             }
 
             f = FunctionTagging.tagFunction7(
@@ -816,7 +816,7 @@ public class FunctionTaggingTest {
                 f.apply(t1, t2, t3, t4, t5, t6, t7);
                 fail("Should have thrown!");
             } catch (IOException ex) {
-                assertTrue(ex.getCause().getMessage(), ex.getCause().getMessage().contains("Custom tag"));
+                assertTrue(ex.getCause().getMessage().contains("Custom tag"), ex.getCause().getMessage());
             }
 
         } finally {
@@ -894,8 +894,8 @@ public class FunctionTaggingTest {
                     f.apply(t1, t2, t3, t4, t5, t6, t7, t8);
                     throw new AssertionError("Should have thrown!");
                 } catch (NullPointerException ex) {
-                    assertTrue(ex.getMessage(), ex.getMessage().contains("Custom tag"));
-                    assertTrue(ex.getMessage(), ex.getMessage().contains("t" + i + " is null"));
+                    assertTrue(ex.getMessage().contains("Custom tag"), ex.getMessage());
+                    assertTrue(ex.getMessage().contains("t" + i + " is null"), ex.getMessage());
                 }
             }
 
@@ -917,7 +917,7 @@ public class FunctionTaggingTest {
                 f.apply(t1, t2, t3, t4, t5, t6, t7, t8);
                 fail("Should have thrown!");
             } catch (NullPointerException ex) {
-                assertTrue(ex.getMessage(), ex.getMessage().contains("Custom tag"));
+                assertTrue(ex.getMessage().contains("Custom tag"), ex.getMessage());
             }
 
             f = FunctionTagging.tagFunction8(
@@ -927,7 +927,7 @@ public class FunctionTaggingTest {
                 f.apply(t1, t2, t3, t4, t5, t6, t7, t8);
                 fail("Should have thrown!");
             } catch (IOException ex) {
-                assertTrue(ex.getCause().getMessage(), ex.getCause().getMessage().contains("Custom tag"));
+                assertTrue(ex.getCause().getMessage().contains("Custom tag"), ex.getCause().getMessage());
             }
 
         } finally {
@@ -1009,8 +1009,8 @@ public class FunctionTaggingTest {
                     f.apply(t1, t2, t3, t4, t5, t6, t7, t8, t9);
                     throw new AssertionError("Should have thrown!");
                 } catch (NullPointerException ex) {
-                    assertTrue(ex.getMessage(), ex.getMessage().contains("Custom tag"));
-                    assertTrue(ex.getMessage(), ex.getMessage().contains("t" + i + " is null"));
+                    assertTrue(ex.getMessage().contains("Custom tag"), ex.getMessage());
+                    assertTrue(ex.getMessage().contains("t" + i + " is null"), ex.getMessage());
                 }
             }
 
@@ -1033,7 +1033,7 @@ public class FunctionTaggingTest {
                 f.apply(t1, t2, t3, t4, t5, t6, t7, t8, t9);
                 fail("Should have thrown!");
             } catch (NullPointerException ex) {
-                assertTrue(ex.getMessage(), ex.getMessage().contains("Custom tag"));
+                assertTrue(ex.getMessage().contains("Custom tag"), ex.getMessage());
             }
 
             f = FunctionTagging.tagFunction9(
@@ -1043,7 +1043,7 @@ public class FunctionTaggingTest {
                 f.apply(t1, t2, t3, t4, t5, t6, t7, t8, t9);
                 fail("Should have thrown!");
             } catch (IOException ex) {
-                assertTrue(ex.getCause().getMessage(), ex.getCause().getMessage().contains("Custom tag"));
+                assertTrue(ex.getCause().getMessage().contains("Custom tag"), ex.getCause().getMessage());
             }
 
         } finally {

@@ -16,17 +16,17 @@
 
 package hu.akarnokd.rxjava4.debug.multihook;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
 import java.lang.Thread.UncaughtExceptionHandler;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
+import hu.akarnokd.rxjava4.internal.Functions;
 import hu.akarnokd.rxjava4.test.TestHelper;
 import io.reactivex.rxjava4.disposables.Disposable;
 import io.reactivex.rxjava4.functions.*;
-import io.reactivex.rxjava4.internal.functions.Functions;
 import io.reactivex.rxjava4.plugins.RxJavaPlugins;
 import io.reactivex.rxjava4.schedulers.Schedulers;
 

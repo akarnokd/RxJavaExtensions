@@ -16,12 +16,12 @@
 
 package hu.akarnokd.rxjava4.operators;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import hu.akarnokd.rxjava4.test.TestHelper;
 import io.reactivex.rxjava4.core.Flowable;

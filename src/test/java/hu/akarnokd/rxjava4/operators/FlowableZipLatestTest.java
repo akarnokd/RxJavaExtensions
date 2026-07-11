@@ -16,18 +16,20 @@
 
 package hu.akarnokd.rxjava4.operators;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.Flow.*;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.*;
-import org.reactivestreams.*;
+import org.junit.jupiter.api.Test;
 
+import hu.akarnokd.rxjava4.internal.BooleanSubscription;
 import hu.akarnokd.rxjava4.test.*;
 import io.reactivex.rxjava4.core.Flowable;
 import io.reactivex.rxjava4.exceptions.ProtocolViolationException;
 import io.reactivex.rxjava4.functions.*;
-import io.reactivex.rxjava4.internal.subscriptions.BooleanSubscription;
 import io.reactivex.rxjava4.plugins.RxJavaPlugins;
 import io.reactivex.rxjava4.processors.PublishProcessor;
 import io.reactivex.rxjava4.schedulers.*;
@@ -262,7 +264,7 @@ public class FlowableZipLatestTest {
 
         pp1.onError(new IOException());
 
-        Assert.assertFalse(pp2.hasSubscribers());
+        assertFalse(pp2.hasSubscribers());
 
         ts.assertFailure(IOException.class, "[1, 2]");
     }
@@ -287,7 +289,7 @@ public class FlowableZipLatestTest {
 
         pp2.onError(new IOException());
 
-        Assert.assertFalse(pp1.hasSubscribers());
+        assertFalse(pp1.hasSubscribers());
 
         ts.assertFailure(IOException.class, "[1, 2]");
     }
@@ -312,7 +314,7 @@ public class FlowableZipLatestTest {
 
         pp1.onError(new IOException());
 
-        Assert.assertFalse(pp2.hasSubscribers());
+        assertFalse(pp2.hasSubscribers());
 
         ts.assertFailure(IOException.class, "[1, 2]");
     }
@@ -337,7 +339,7 @@ public class FlowableZipLatestTest {
 
         pp1.onComplete();
 
-        Assert.assertFalse(pp2.hasSubscribers());
+        assertFalse(pp2.hasSubscribers());
 
         ts.assertResult("[1, 2]");
     }
@@ -369,8 +371,8 @@ public class FlowableZipLatestTest {
 
         ts.cancel();
 
-        Assert.assertFalse(pp1.hasSubscribers());
-        Assert.assertFalse(pp2.hasSubscribers());
+        assertFalse(pp1.hasSubscribers());
+        assertFalse(pp2.hasSubscribers());
 
         ts.assertValue("[1, 2]")
         .assertNotComplete()
@@ -397,8 +399,8 @@ public class FlowableZipLatestTest {
 
         ts.cancel();
 
-        Assert.assertFalse(pp1.hasSubscribers());
-        Assert.assertFalse(pp2.hasSubscribers());
+        assertFalse(pp1.hasSubscribers());
+        assertFalse(pp2.hasSubscribers());
 
         ts.assertValue("[1, 2]")
         .assertNotComplete()
@@ -444,7 +446,7 @@ public class FlowableZipLatestTest {
         pp1.onNext(1);
         pp1.onComplete();
 
-        Assert.assertTrue(pp2.hasSubscribers());
+        assertTrue(pp2.hasSubscribers());
 
         ts.assertEmpty();
 
@@ -452,7 +454,7 @@ public class FlowableZipLatestTest {
 
         ts.assertResult("[1, 2]");
 
-        Assert.assertFalse(pp2.hasSubscribers());
+        assertFalse(pp2.hasSubscribers());
     }
 
     @Test
@@ -468,7 +470,7 @@ public class FlowableZipLatestTest {
         pp1.onNext(1);
         pp1.onComplete();
 
-        Assert.assertTrue(pp2.hasSubscribers());
+        assertTrue(pp2.hasSubscribers());
 
         ts.assertEmpty();
 
@@ -480,7 +482,7 @@ public class FlowableZipLatestTest {
 
         ts.assertResult("[1, 2]");
 
-        Assert.assertFalse(pp2.hasSubscribers());
+        assertFalse(pp2.hasSubscribers());
     }
 
     @Test
@@ -562,7 +564,7 @@ public class FlowableZipLatestTest {
 
                 if (ts.errors().size() != 0) {
                     ts.assertFailure(IOException.class);
-                    Assert.assertTrue(errors.toString(), errors.isEmpty());
+                    assertTrue(errors.isEmpty(), errors.toString());
                 } else {
                     ts.assertResult();
                     if (!errors.isEmpty()) {
@@ -597,8 +599,8 @@ public class FlowableZipLatestTest {
                     BooleanSubscription bs2 = new BooleanSubscription();
                     s.onSubscribe(bs2);
 
-                    Assert.assertFalse(bs1.isCancelled());
-                    Assert.assertTrue(bs2.isCancelled());
+                    assertFalse(bs1.isCancelled());
+                    assertTrue(bs2.isCancelled());
                 }
             };
 

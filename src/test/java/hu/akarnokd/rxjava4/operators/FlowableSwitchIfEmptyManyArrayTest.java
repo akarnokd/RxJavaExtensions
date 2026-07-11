@@ -18,17 +18,16 @@ package hu.akarnokd.rxjava4.operators;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.concurrent.Flow.Publisher;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.Test;
-import org.reactivestreams.Publisher;
+import org.junit.jupiter.api.Test;
 
 import io.reactivex.rxjava4.core.*;
 import io.reactivex.rxjava4.schedulers.Schedulers;
 
 public class FlowableSwitchIfEmptyManyArrayTest {
 
-    @SuppressWarnings("unchecked")
     @Test
     public void normalNonEmpty() {
         Flowable.range(1, 5)
@@ -55,7 +54,6 @@ public class FlowableSwitchIfEmptyManyArrayTest {
         .assertFailure(NullPointerException.class);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void normalNonEmptyBackpressured() {
         Flowable.range(1, 5)

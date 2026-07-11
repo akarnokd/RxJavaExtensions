@@ -16,13 +16,13 @@
 
 package hu.akarnokd.rxjava4.operators;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.*;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import hu.akarnokd.rxjava4.operators.FlowableGenerateAsync.AtomicCancellable;
 import hu.akarnokd.rxjava4.test.*;

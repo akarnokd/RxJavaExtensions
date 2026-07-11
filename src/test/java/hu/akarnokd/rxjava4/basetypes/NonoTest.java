@@ -23,7 +23,7 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.Flow.*;
 
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import hu.akarnokd.rxjava4.internal.*;
 import hu.akarnokd.rxjava4.test.TestHelper;
@@ -122,19 +122,19 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
             }
         });
 
-        Assert.assertEquals(0, counter[0]);
+        assertEquals(0, counter[0]);
 
         np.test().assertFailure(IOException.class);
 
-        Assert.assertEquals(1, counter[0]);
+        assertEquals(1, counter[0]);
 
         np.test().assertFailure(IllegalArgumentException.class);
 
-        Assert.assertEquals(2, counter[0]);
+        assertEquals(2, counter[0]);
 
         np.test().assertFailure(IllegalArgumentException.class);
 
-        Assert.assertEquals(3, counter[0]);
+        assertEquals(3, counter[0]);
     }
 
     @Test
@@ -160,15 +160,15 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
             }
         });
 
-        Assert.assertEquals(0, counter[0]);
+        assertEquals(0, counter[0]);
 
         np.test().assertResult();
 
-        Assert.assertEquals(1, counter[0]);
+        assertEquals(1, counter[0]);
 
         np.test().assertResult();
 
-        Assert.assertEquals(2, counter[0]);
+        assertEquals(2, counter[0]);
     }
 
     @Test
@@ -201,7 +201,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .awaitDone(5, TimeUnit.SECONDS)
         .assertResult();
 
-        Assert.assertEquals(1, counter[0]);
+        assertEquals(1, counter[0]);
     }
 
     @Test
@@ -222,7 +222,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .awaitDone(5, TimeUnit.SECONDS)
         .assertFailure(IOException.class);
 
-        Assert.assertEquals(1, counter[0]);
+        assertEquals(1, counter[0]);
     }
 
     @Test
@@ -243,7 +243,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .awaitDone(5, TimeUnit.SECONDS)
         .assertResult();
 
-        Assert.assertEquals(1, counter[0]);
+        assertEquals(1, counter[0]);
     }
 
     @Test
@@ -264,7 +264,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .awaitDone(5, TimeUnit.SECONDS)
         .assertFailure(IOException.class);
 
-        Assert.assertEquals(1, counter[0]);
+        assertEquals(1, counter[0]);
     }
 
     @Test
@@ -285,7 +285,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .awaitDone(5, TimeUnit.SECONDS)
         .assertFailure(TimeoutException.class);
 
-        Assert.assertEquals(0, counter[0]);
+        assertEquals(0, counter[0]);
     }
 
     @Test
@@ -350,7 +350,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .test()
         .assertResult();
 
-        Assert.assertEquals(2, count);
+        assertEquals(2, count);
     }
 
     @Test
@@ -359,7 +359,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .test()
         .assertResult();
 
-        Assert.assertEquals(2, count);
+        assertEquals(2, count);
     }
 
     @Test
@@ -369,7 +369,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .test()
         .assertResult();
 
-        Assert.assertEquals(2, count);
+        assertEquals(2, count);
     }
 
     @Test
@@ -378,7 +378,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .test()
         .assertResult();
 
-        Assert.assertEquals(2, count);
+        assertEquals(2, count);
     }
 
     @Test
@@ -387,7 +387,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .test()
         .assertFailure(IOException.class);
 
-        Assert.assertEquals(1, count);
+        assertEquals(1, count);
     }
 
     @Test
@@ -396,7 +396,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .test()
         .assertFailure(IOException.class);
 
-        Assert.assertEquals(1, count);
+        assertEquals(1, count);
     }
 
     @Test
@@ -405,7 +405,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .test()
         .assertFailure(IOException.class);
 
-        Assert.assertEquals(0, count);
+        assertEquals(0, count);
     }
 
     @Test
@@ -414,7 +414,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .test()
         .assertFailure(IOException.class);
 
-        Assert.assertEquals(1, count);
+        assertEquals(1, count);
     }
 
     @Test
@@ -426,7 +426,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .test()
         .assertFailure(IOException.class);
 
-        Assert.assertEquals(2, count);
+        assertEquals(2, count);
     }
 
     @Test
@@ -438,7 +438,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .test()
         .assertFailure(IOException.class);
 
-        Assert.assertEquals(2, count);
+        assertEquals(2, count);
     }
 
     @Test
@@ -452,7 +452,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .test()
         .assertFailure(IOException.class);
 
-        Assert.assertEquals(2, count);
+        assertEquals(2, count);
     }
 
     @Test
@@ -464,7 +464,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .test()
         .assertFailure(IOException.class);
 
-        Assert.assertEquals(1, count);
+        assertEquals(1, count);
     }
 
     @Test
@@ -476,7 +476,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .test()
         .assertFailure(IOException.class);
 
-        Assert.assertEquals(2, count);
+        assertEquals(2, count);
     }
 
     @Test
@@ -739,7 +739,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .test()
         .assertResult();
 
-        Assert.assertEquals(1, count);
+        assertEquals(1, count);
     }
 
     @Test
@@ -752,7 +752,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .test()
         .assertFailure(IOException.class);
 
-        Assert.assertEquals(1, count);
+        assertEquals(1, count);
     }
 
     @Test
@@ -765,7 +765,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .test()
         .assertResult();
 
-        Assert.assertEquals(1, count);
+        assertEquals(1, count);
     }
 
     @Test
@@ -778,7 +778,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .test()
         .assertFailure(IOException.class);
 
-        Assert.assertEquals(1, count);
+        assertEquals(1, count);
     }
 
     @Test
@@ -959,7 +959,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .test()
         .assertResult();
 
-        Assert.assertSame(np, Nono.complete());
+        assertSame(np, Nono.complete());
     }
 
     @Test
@@ -1074,7 +1074,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .test()
         .assertResult();
 
-        Assert.assertEquals(2, count);
+        assertEquals(2, count);
     }
 
     @Test
@@ -1083,7 +1083,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .test()
         .assertFailure(IOException.class);
 
-        Assert.assertEquals(1, count);
+        assertEquals(1, count);
     }
 
     @Test
@@ -1092,7 +1092,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .test()
         .assertFailure(IOException.class);
 
-        Assert.assertEquals(0, count);
+        assertEquals(0, count);
     }
 
     @Test
@@ -1101,7 +1101,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .test()
         .assertResult();
 
-        Assert.assertEquals(1, count);
+        assertEquals(1, count);
     }
 
     @Test
@@ -1110,7 +1110,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .test()
         .assertResult();
 
-        Assert.assertEquals(1, count);
+        assertEquals(1, count);
     }
 
     @Test
@@ -1119,7 +1119,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .test()
         .assertResult();
 
-        Assert.assertEquals(1, count);
+        assertEquals(1, count);
     }
 
     @Test
@@ -1128,7 +1128,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .test()
         .assertFailure(IOException.class);
 
-        Assert.assertEquals(0, count);
+        assertEquals(0, count);
     }
 
     @Test
@@ -1137,7 +1137,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .test()
         .assertFailure(IOException.class);
 
-        Assert.assertEquals(0, count);
+        assertEquals(0, count);
     }
 
     @Test
@@ -1147,7 +1147,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .awaitDone(5, TimeUnit.SECONDS)
         .assertResult();
 
-        Assert.assertEquals(1, count);
+        assertEquals(1, count);
     }
 
     @Test
@@ -1157,7 +1157,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .awaitDone(5, TimeUnit.SECONDS)
         .assertResult();
 
-        Assert.assertEquals(1, count);
+        assertEquals(1, count);
     }
 
     @Test
@@ -1174,7 +1174,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .test()
         .assertResult();
 
-        Assert.assertEquals(1, count);
+        assertEquals(1, count);
     }
 
     @Test
@@ -1183,7 +1183,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .test()
         .assertResult();
 
-        Assert.assertEquals(2, count);
+        assertEquals(2, count);
     }
 
     @Test
@@ -1192,7 +1192,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .test()
         .assertFailure(IOException.class);
 
-        Assert.assertEquals(1, count);
+        assertEquals(1, count);
     }
 
     @Test
@@ -1201,7 +1201,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .test()
         .assertFailure(TimeoutException.class);
 
-        Assert.assertEquals(1, count);
+        assertEquals(1, count);
     }
 
     @Test
@@ -1213,7 +1213,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .awaitDone(5, TimeUnit.SECONDS)
         .assertResult();
 
-        Assert.assertEquals(1, count);
+        assertEquals(1, count);
     }
 
     @Test
@@ -1225,7 +1225,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .awaitDone(5, TimeUnit.SECONDS)
         .assertFailure(TimeoutException.class);
 
-        Assert.assertEquals(1, count);
+        assertEquals(1, count);
     }
 
     @Test
@@ -1237,7 +1237,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .awaitDone(5, TimeUnit.SECONDS)
         .assertResult();
 
-        Assert.assertEquals(2, count);
+        assertEquals(2, count);
     }
 
     @Test
@@ -1250,7 +1250,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .awaitDone(5, TimeUnit.SECONDS)
         .assertResult();
 
-        Assert.assertEquals(2, count);
+        assertEquals(2, count);
     }
 
     @Test
@@ -1262,7 +1262,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .awaitDone(5, TimeUnit.SECONDS)
         .assertResult();
 
-        Assert.assertEquals(1, count);
+        assertEquals(1, count);
     }
 
     @Test
@@ -1274,7 +1274,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .awaitDone(5, TimeUnit.SECONDS)
         .assertFailure(IOException.class);
 
-        Assert.assertEquals(1, count);
+        assertEquals(1, count);
     }
 
     @Test
@@ -1284,7 +1284,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .test()
         .assertFailure(IOException.class);
 
-        Assert.assertFalse(pp.hasSubscribers());
+        assertFalse(pp.hasSubscribers());
     }
 
     @Test
@@ -1300,7 +1300,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .test()
         .assertResult();
 
-        Assert.assertEquals(1, count);
+        assertEquals(1, count);
     }
 
     @Test
@@ -1316,7 +1316,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .test()
         .assertResult();
 
-        Assert.assertEquals(1, count);
+        assertEquals(1, count);
     }
 
     @Test
@@ -1332,7 +1332,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .test()
         .assertResult();
 
-        Assert.assertEquals(1, count);
+        assertEquals(1, count);
     }
 
     @Test
@@ -1341,7 +1341,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .test()
         .assertResult();
 
-        Assert.assertEquals(1, count);
+        assertEquals(1, count);
     }
 
     @Test
@@ -1365,7 +1365,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .test()
         .assertResult(10, 11, 12, 13, 14);
 
-        Assert.assertEquals(1, count);
+        assertEquals(1, count);
     }
 
     @Test
@@ -1393,7 +1393,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .test()
         .assertFailure(IllegalArgumentException.class);
 
-        Assert.assertEquals(1, count);
+        assertEquals(1, count);
     }
 
     @Test
@@ -1402,7 +1402,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .test()
         .assertResult();
 
-        Assert.assertEquals(0, count);
+        assertEquals(0, count);
     }
 
     @Test
@@ -1415,17 +1415,19 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
                 }
             });
         } catch (RuntimeException ex) {
-            Assert.assertTrue(ex.toString(), ex.getCause() instanceof IOException);
+            assertTrue(ex.getCause() instanceof IOException, ex.toString());
         }
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void toError2() {
-        Nono.fromAction(this).to(new Function<Nono, Object>() {
-            @Override
-            public Object apply(Nono np) throws Exception {
-                throw new IllegalArgumentException();
-            }
+        assertThrows(IllegalArgumentException.class, () -> {
+            Nono.fromAction(this).to(new Function<Nono, Object>() {
+                @Override
+                public Object apply(Nono np) throws Exception {
+                    throw new IllegalArgumentException();
+                }
+            });
         });
     }
 
@@ -1435,7 +1437,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .test()
         .assertResult();
 
-        Assert.assertEquals(1, count);
+        assertEquals(1, count);
     }
 
     @Test
@@ -1444,7 +1446,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .test()
         .assertResult();
 
-        Assert.assertEquals(1, count);
+        assertEquals(1, count);
     }
 
     @Test
@@ -1460,7 +1462,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .test()
         .assertResult();
 
-        Assert.assertEquals(1, count);
+        assertEquals(1, count);
     }
 
     @Test
@@ -1476,7 +1478,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .test()
         .assertResult();
 
-        Assert.assertEquals(1, count);
+        assertEquals(1, count);
     }
 
     @Test
@@ -1492,7 +1494,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .test()
         .assertResult();
 
-        Assert.assertEquals(1, count);
+        assertEquals(1, count);
     }
 
     @Test
@@ -1517,8 +1519,8 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .awaitDone(5, TimeUnit.SECONDS)
         .assertResult();
 
-        Assert.assertNotNull(on[0]);
-        Assert.assertNotEquals(main, on[0]);
+        assertNotNull(on[0]);
+        assertNotEquals(main, on[0]);
     }
 
     @Test
@@ -1537,8 +1539,8 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .awaitDone(5, TimeUnit.SECONDS)
         .assertFailure(IOException.class);
 
-        Assert.assertNotNull(on[0]);
-        Assert.assertNotEquals(main, on[0]);
+        assertNotNull(on[0]);
+        assertNotEquals(main, on[0]);
     }
 
     @Test
@@ -1556,8 +1558,8 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .awaitDone(5, TimeUnit.SECONDS)
         .assertResult();
 
-        Assert.assertNotNull(on[0]);
-        Assert.assertEquals(main, on[0]);
+        assertNotNull(on[0]);
+        assertEquals(main, on[0]);
     }
 
     @Test
@@ -1576,8 +1578,8 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .awaitDone(5, TimeUnit.SECONDS)
         .assertFailure(IOException.class);
 
-        Assert.assertNotNull(on[0]);
-        Assert.assertEquals(main, on[0]);
+        assertNotNull(on[0]);
+        assertEquals(main, on[0]);
     }
 
     @Test
@@ -1600,8 +1602,8 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
 
         cdl.await();
 
-        Assert.assertNotNull(on[0]);
-        Assert.assertNotEquals(main, on[0]);
+        assertNotNull(on[0]);
+        assertNotEquals(main, on[0]);
     }
 
     @Test
@@ -1611,7 +1613,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .test()
         .assertResult();
 
-        Assert.assertEquals(1, count);
+        assertEquals(1, count);
     }
 
     @Test
@@ -1621,7 +1623,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .test()
         .assertFailure(IOException.class);
 
-        Assert.assertEquals(0, count);
+        assertEquals(0, count);
     }
 
     @Test
@@ -1636,7 +1638,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .test()
         .assertFailure(IOException.class);
 
-        Assert.assertEquals(0, count);
+        assertEquals(0, count);
     }
 
     @Test
@@ -1646,7 +1648,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .test()
         .assertResult();
 
-        Assert.assertEquals(0, count);
+        assertEquals(0, count);
     }
 
     @Test
@@ -1656,7 +1658,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .test()
         .assertFailure(IOException.class);
 
-        Assert.assertEquals(1, count);
+        assertEquals(1, count);
     }
 
     @Test
@@ -1682,7 +1684,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         })
         ;
 
-        Assert.assertEquals(1, count);
+        assertEquals(1, count);
     }
 
     @Test
@@ -1692,7 +1694,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .test()
         .assertResult();
 
-        Assert.assertEquals(1, count);
+        assertEquals(1, count);
     }
 
     @Test
@@ -1702,7 +1704,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .test()
         .assertFailure(IOException.class);
 
-        Assert.assertEquals(1, count);
+        assertEquals(1, count);
     }
 
     @Test
@@ -1725,7 +1727,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .test()
         .assertResult();
 
-        Assert.assertEquals(1, count);
+        assertEquals(1, count);
     }
 
     @Test
@@ -1735,7 +1737,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .test()
         .assertFailure(IOException.class);
 
-        Assert.assertEquals(1, count);
+        assertEquals(1, count);
     }
 
     @Test
@@ -1753,7 +1755,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
             .test()
             .assertResult();
 
-            Assert.assertEquals(1, count);
+            assertEquals(1, count);
 
             TestHelper.assertUndeliverable(errors, 0, IOException.class);
         } finally {
@@ -1776,7 +1778,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .test()
         .assertFailure(IOException.class);
 
-        Assert.assertEquals(1, count);
+        assertEquals(1, count);
     }
 
     @Test
@@ -1794,7 +1796,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
             .test()
             .assertResult();
 
-            Assert.assertEquals(1, count);
+            assertEquals(1, count);
 
             TestHelper.assertUndeliverable(errors, 0, IOException.class);
         } finally {
@@ -1817,7 +1819,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
             .test()
             .assertFailure(IOException.class);
 
-            Assert.assertEquals(1, count);
+            assertEquals(1, count);
 
             TestHelper.assertError(errors, 0, IllegalArgumentException.class);
         } finally {
@@ -1832,7 +1834,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .test()
         .assertResult();
 
-        Assert.assertEquals(1, count);
+        assertEquals(1, count);
     }
 
     @Test
@@ -1842,7 +1844,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .test()
         .assertFailure(IOException.class);
 
-        Assert.assertEquals(1, count);
+        assertEquals(1, count);
     }
 
     @Test
@@ -1856,7 +1858,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
 
         ts.assertEmpty();
 
-        Assert.assertEquals(1, count);
+        assertEquals(1, count);
     }
 
     @Test
@@ -1874,7 +1876,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
             .test()
             .assertFailure(IOException.class);
 
-            Assert.assertEquals(1, count);
+            assertEquals(1, count);
 
             TestHelper.assertError(errors, 0, IllegalArgumentException.class);
         } finally {
@@ -1882,7 +1884,8 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         }
     }
 
-    @Test(timeout = 5000)
+    @Test
+    @Timeout(value = 5000, unit = TimeUnit.MILLISECONDS)
     public void repeat() {
         final int[] counter = { 0 };
 
@@ -1897,7 +1900,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .test()
         .assertFailure(CancellationException.class);
 
-        Assert.assertEquals(6, counter[0]);
+        assertEquals(6, counter[0]);
     }
 
     @Test
@@ -1907,7 +1910,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .test()
         .assertResult();
 
-        Assert.assertEquals(5, count);
+        assertEquals(5, count);
     }
 
     @Test
@@ -1922,7 +1925,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .test()
         .assertResult();
 
-        Assert.assertEquals(5, count);
+        assertEquals(5, count);
     }
 
     @Test
@@ -1937,7 +1940,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .test()
         .assertFailure(IOException.class);
 
-        Assert.assertEquals(0, count);
+        assertEquals(0, count);
     }
 
     @Test
@@ -1952,7 +1955,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .test()
         .assertFailure(IOException.class);
 
-        Assert.assertEquals(1, count);
+        assertEquals(1, count);
     }
 
     @Test
@@ -2022,7 +2025,8 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .assertFailure(IOException.class);
     }
 
-    @Test(timeout = 5000)
+    @Test
+    @Timeout(value = 5000, unit = TimeUnit.MILLISECONDS)
     public void retry() {
         Nono.fromAction(new Action() {
             @Override
@@ -2036,14 +2040,15 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .assertResult();
     }
 
-    @Test(timeout = 5000)
+    @Test
+    @Timeout(value = 5000, unit = TimeUnit.MILLISECONDS)
     public void retryNoError() {
         Nono.fromAction(this)
         .retry()
         .test()
         .assertResult();
 
-        Assert.assertEquals(1, count);
+        assertEquals(1, count);
     }
 
     @Test
@@ -2072,14 +2077,15 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .assertResult();
     }
 
-    @Test(timeout = 5000)
+    @Test
+    @Timeout(value = 5000, unit = TimeUnit.MILLISECONDS)
     public void retryLimitNoError() {
         Nono.fromAction(this)
         .retry(5)
         .test()
         .assertResult();
 
-        Assert.assertEquals(1, count);
+        assertEquals(1, count);
     }
 
     @Test
@@ -2090,7 +2096,8 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .assertResult();
     }
 
-    @Test(timeout = 5000)
+    @Test
+    @Timeout(value = 5000, unit = TimeUnit.MILLISECONDS)
     public void retryPredicateNoRetry() {
         ioError
         .retry(Functions.alwaysFalse())
@@ -2209,14 +2216,17 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         .assertFailure(IllegalArgumentException.class);
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
+    @Timeout(value = 5000, unit = TimeUnit.MILLISECONDS)
     public void subscribeActual() {
-        new Nono() {
-            @Override
-            protected void subscribeActual(Subscriber<? super Void> s) {
-                throw new NullPointerException();
-            }
-        }.test();
+        assertThrows(NullPointerException.class, () -> {
+            new Nono() {
+                @Override
+                protected void subscribeActual(Subscriber<? super Void> s) {
+                    throw new NullPointerException();
+                }
+            }.test();
+        })
     }
 
     @Test
@@ -2229,7 +2239,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
                 }
             }.test(false);
         } catch (NullPointerException ex) {
-            Assert.assertTrue(ex.toString(), ex.getCause() instanceof IllegalArgumentException);
+            assertTrue(ex.getCause() instanceof IllegalArgumentException, ex.toString());
         }
     }
 
@@ -2237,12 +2247,12 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
     public void subscribeWith() {
         TestSubscriber<Void> ts = new TestSubscriber<>();
 
-        Assert.assertSame(ts, Nono.complete().subscribeWith(ts));
+        assertSame(ts, Nono.complete().subscribeWith(ts));
     }
 
     @Test
     public void onAssembly() {
-        Assert.assertNull(Nono.getOnAssemblyHandler());
+        assertNull(Nono.getOnAssemblyHandler());
         try {
             Nono.setOnAssemblyHandler(new Function<Nono, Nono>() {
                 @Override
@@ -2251,24 +2261,24 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
                     return f;
                 }
             });
-            Assert.assertNotNull(Nono.getOnAssemblyHandler());
+            assertNotNull(Nono.getOnAssemblyHandler());
 
             Nono.complete().delay(1, TimeUnit.MILLISECONDS);
 
-            Assert.assertEquals(2, count);
+            assertEquals(2, count);
         } finally {
             Nono.setOnAssemblyHandler(null);
         }
-        Assert.assertNull(Nono.getOnAssemblyHandler());
+        assertNull(Nono.getOnAssemblyHandler());
 
         Nono.complete().delay(1, TimeUnit.MILLISECONDS);
 
-        Assert.assertEquals(2, count);
+        assertEquals(2, count);
     }
 
     @Test
     public void onAssemblyThrows() {
-        Assert.assertNull(Nono.getOnAssemblyHandler());
+        assertNull(Nono.getOnAssemblyHandler());
         try {
             Nono.setOnAssemblyHandler(new Function<Nono, Nono>() {
                 @Override
@@ -2276,11 +2286,11 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
                     throw new IllegalArgumentException();
                 }
             });
-            Assert.assertNotNull(Nono.getOnAssemblyHandler());
+            assertNotNull(Nono.getOnAssemblyHandler());
 
             try {
                 Nono.complete().delay(1, TimeUnit.MILLISECONDS);
-                Assert.fail("Should have thrown");
+                fail("Should have thrown");
             } catch (IllegalArgumentException ex) {
                 // expected
             }
@@ -2288,11 +2298,11 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         } finally {
             Nono.setOnAssemblyHandler(null);
         }
-        Assert.assertNull(Nono.getOnAssemblyHandler());
+        assertNull(Nono.getOnAssemblyHandler());
 
         Nono.complete().delay(1, TimeUnit.MILLISECONDS);
 
-        Assert.assertEquals(0, count);
+        assertEquals(0, count);
     }
 
     @Test
@@ -2300,7 +2310,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         Nono.complete()
         .subscribe(this);
 
-        Assert.assertEquals(1, count);
+        assertEquals(1, count);
     }
 
     @Test
@@ -2310,7 +2320,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
             ioError
             .subscribe(this);
 
-            Assert.assertEquals(0, count);
+            assertEquals(0, count);
 
             TestHelper.assertUndeliverable(errors, 0, IOException.class);
         } finally {
@@ -2323,7 +2333,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         Nono.complete()
         .subscribe(this, this);
 
-        Assert.assertEquals(1, count);
+        assertEquals(1, count);
     }
 
     @Test
@@ -2331,75 +2341,75 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         ioError
         .subscribe(this, this);
 
-        Assert.assertEquals(1, count);
+        assertEquals(1, count);
     }
 
     @Test
     public void blockingAwaitScalar() {
-        Assert.assertNull(Nono.complete().blockingAwait());
+        assertNull(Nono.complete().blockingAwait());
     }
 
     @Test
     public void blockingAwait() {
-        Assert.assertNull(Nono.complete().doOnComplete(this).blockingAwait());
+        assertNull(Nono.complete().doOnComplete(this).blockingAwait());
 
-        Assert.assertEquals(1, count);
+        assertEquals(1, count);
     }
 
     @Test
     public void blockingAwaitErrorScalar() {
-        Assert.assertNotNull(ioError.blockingAwait());
+        assertNotNull(ioError.blockingAwait());
     }
 
     @Test
     public void blockingAwaitError() {
-        Assert.assertNotNull(ioError.doOnError(this).blockingAwait());
+        assertNotNull(ioError.doOnError(this).blockingAwait());
 
-        Assert.assertEquals(1, count);
+        assertEquals(1, count);
     }
 
     @Test
     public void blockingAwaitDelayed() {
-        Assert.assertNull(Nono.complete().delay(10, TimeUnit.MILLISECONDS).blockingAwait());
+        assertNull(Nono.complete().delay(10, TimeUnit.MILLISECONDS).blockingAwait());
     }
 
     @Test
     public void blockingAwaitDelayedError() {
-        Assert.assertNotNull(ioError.delay(10, TimeUnit.MILLISECONDS).blockingAwait());
+        assertNotNull(ioError.delay(10, TimeUnit.MILLISECONDS).blockingAwait());
     }
 
     @Test
     public void blockingAwaitScalarWithTimeout() {
-        Assert.assertNull(Nono.complete().blockingAwait(5, TimeUnit.SECONDS));
+        assertNull(Nono.complete().blockingAwait(5, TimeUnit.SECONDS));
     }
 
     @Test
     public void blockingAwaitWithTimeoutDoTimeout() {
         Throwable t = Nono.never().blockingAwait(200, TimeUnit.MILLISECONDS);
-        Assert.assertTrue(t.toString(), t instanceof TimeoutException);
+        assertTrue(t instanceof TimeoutException, t.toString());
     }
 
     @Test
     public void blockingAwaitErrorScalarWithTimeout() {
         Throwable t = ioError.blockingAwait(5, TimeUnit.SECONDS);
-        Assert.assertTrue(t.toString(), t instanceof IOException);
+        assertTrue(t instanceof IOException, t.toString());
     }
 
     @Test
     public void blockingAwaitErrorWithTimeout() {
-        Assert.assertNotNull(ioError.doOnError(this).blockingAwait(5, TimeUnit.SECONDS));
+        assertNotNull(ioError.doOnError(this).blockingAwait(5, TimeUnit.SECONDS));
 
-        Assert.assertEquals(1, count);
+        assertEquals(1, count);
     }
 
     @Test
     public void blockingAwaitDelayedWithTimeout() {
-        Assert.assertNull(Nono.complete().delay(10, TimeUnit.MILLISECONDS).blockingAwait(5, TimeUnit.SECONDS));
+        assertNull(Nono.complete().delay(10, TimeUnit.MILLISECONDS).blockingAwait(5, TimeUnit.SECONDS));
     }
 
     @Test
     public void blockingAwaitDelayedErrorWithTimeout() {
-        Assert.assertNotNull(ioError.delay(10, TimeUnit.MILLISECONDS).blockingAwait(5, TimeUnit.SECONDS));
+        assertNotNull(ioError.delay(10, TimeUnit.MILLISECONDS).blockingAwait(5, TimeUnit.SECONDS));
     }
 
     @Test
@@ -2407,7 +2417,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         try {
             Thread.currentThread().interrupt();
             Throwable t = Nono.never().blockingAwait();
-            Assert.assertTrue(String.valueOf(t), t instanceof InterruptedException);
+            assertTrue(t instanceof InterruptedException, String.valueOf(t));
         } finally {
             Thread.interrupted();
         }
@@ -2418,7 +2428,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         try {
             Thread.currentThread().interrupt();
             Throwable t = Nono.never().blockingAwait(5, TimeUnit.SECONDS);
-            Assert.assertTrue(String.valueOf(t), t instanceof InterruptedException);
+            assertTrue(t instanceof InterruptedException, String.valueOf(t));
         } finally {
             Thread.interrupted();
         }
@@ -2429,7 +2439,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         Nono.complete()
         .blockingSubscribe(this);
 
-        Assert.assertEquals(1, count);
+        assertEquals(1, count);
     }
 
     @Test
@@ -2439,7 +2449,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
             ioError
             .blockingSubscribe(this);
 
-            Assert.assertEquals(0, count);
+            assertEquals(0, count);
 
             TestHelper.assertUndeliverable(errors, 0, IOException.class);
         } finally {
@@ -2452,7 +2462,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         Nono.complete()
         .blockingSubscribe(this, this);
 
-        Assert.assertEquals(1, count);
+        assertEquals(1, count);
     }
 
     @Test
@@ -2460,7 +2470,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         ioError
         .blockingSubscribe(this, this);
 
-        Assert.assertEquals(1, count);
+        assertEquals(1, count);
     }
 
     @Test
@@ -2509,7 +2519,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
 
             @Override
             public void onSubscribe(Subscription s) {
-                Assert.assertFalse(s instanceof QueueSubscription);
+                assertFalse(s instanceof QueueSubscription);
             }
 
             @Override
@@ -2652,7 +2662,7 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
     public void subscribe() {
         Nono.fromAction(this).subscribe();
 
-        Assert.assertEquals(1, count);
+        assertEquals(1, count);
     }
 
     @Test
@@ -2782,9 +2792,11 @@ public class NonoTest implements Action, Consumer<Object>, LongConsumer, Cancell
         assertNull(Nono.complete().toFuture().get());
     }
 
-    @Test(expected = ExecutionException.class)
+    @Test
     public void toFutureError() throws Exception {
-        Nono.error(new IOException()).toFuture().get();
+        assertThrows(ExecutionException.class, () -> {
+            Nono.error(new IOException()).toFuture().get();
+        });
     }
 
     @Test

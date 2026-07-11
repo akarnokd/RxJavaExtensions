@@ -24,6 +24,7 @@ import java.util.concurrent.Flow.*;
 
 import org.junit.jupiter.api.Test;
 
+import hu.akarnokd.rxjava4.internal.BooleanSubscription;
 import hu.akarnokd.rxjava4.test.TestHelper;
 import io.reactivex.rxjava4.plugins.RxJavaPlugins;
 import io.reactivex.rxjava4.schedulers.Schedulers;
@@ -73,7 +74,7 @@ public class NonoProcessorTest {
 
         assertFalse(ms.hasComplete());
         assertTrue(ms.hasThrowable());
-        assertTrue(ms.getThrowable().toString(), ms.getThrowable() instanceof IOException);
+        assertTrue(ms.getThrowable() instanceof IOException, ms.getThrowable().toString());
         assertFalse(ms.hasSubscribers());
         assertEquals(0, ms.subscriberCount());
 
@@ -83,7 +84,7 @@ public class NonoProcessorTest {
 
         assertFalse(ms.hasComplete());
         assertTrue(ms.hasThrowable());
-        assertTrue(ms.getThrowable().toString(), ms.getThrowable() instanceof IOException);
+        assertTrue(ms.getThrowable() instanceof IOException, ms.getThrowable().toString());
         assertFalse(ms.hasSubscribers());
         assertEquals(0, ms.subscriberCount());
     }
@@ -223,9 +224,11 @@ public class NonoProcessorTest {
         }
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void onNextNpe() {
-        NonoProcessor.create().onNext(null);
+        assertThrows(NullPointerException.class, () -> {
+            NonoProcessor.create().onNext(null);
+        });
     }
 
     @Test

@@ -16,13 +16,13 @@
 
 package hu.akarnokd.rxjava4.subjects;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import hu.akarnokd.rxjava4.test.*;
 import io.reactivex.rxjava4.core.Single;

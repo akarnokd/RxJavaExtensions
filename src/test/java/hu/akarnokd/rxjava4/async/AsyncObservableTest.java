@@ -787,7 +787,7 @@ public class AsyncObservableTest {
 
             fail("Should have thrown");
         } catch (ExecutionException ex) {
-            assertTrue(ex.toString(), ex.getCause() instanceof IOException);
+            assertTrue(ex.getCause() instanceof IOException, ex.toString());
         }
 
         assertTrue(list.isEmpty());
@@ -832,7 +832,7 @@ public class AsyncObservableTest {
 
             fail("Should have thrown");
         } catch (ExecutionException ex) {
-            assertTrue(ex.toString(), ex.getCause() instanceof IOException);
+            assertTrue(ex.getCause() instanceof IOException, ex.toString());
         }
 
         assertEquals(Arrays.asList(100), list);
@@ -887,7 +887,7 @@ public class AsyncObservableTest {
 
             fail("Should have thrown");
         } catch (ExecutionException ex) {
-            assertTrue(ex.toString(), ex.getCause() instanceof IOException);
+            assertTrue(ex.getCause() instanceof IOException, ex.toString());
         }
 
         assertEquals(Arrays.asList(100), list);
@@ -923,7 +923,7 @@ public class AsyncObservableTest {
 
             fail("Should have thrown");
         } catch (ExecutionException ex) {
-            assertTrue(ex.toString(), ex.getCause() instanceof IOException);
+            assertTrue(ex.getCause() instanceof IOException, ex.toString());
         }
 
         assertTrue(list.isEmpty());
@@ -968,7 +968,7 @@ public class AsyncObservableTest {
 
             fail("Should have thrown");
         } catch (ExecutionException ex) {
-            assertTrue(ex.toString(), ex.getCause() instanceof IOException);
+            assertTrue(ex.getCause() instanceof IOException, ex.toString());
         }
 
         assertEquals(Arrays.asList(100), list);
@@ -1023,7 +1023,7 @@ public class AsyncObservableTest {
 
             fail("Should have thrown");
         } catch (ExecutionException ex) {
-            assertTrue(ex.toString(), ex.getCause() instanceof IOException);
+            assertTrue(ex.getCause() instanceof IOException, ex.toString());
         }
 
         assertEquals(Arrays.asList(100), list);

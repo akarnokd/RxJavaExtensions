@@ -16,12 +16,12 @@
 
 package hu.akarnokd.rxjava4.operators;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import hu.akarnokd.rxjava4.test.TestHelper;
 import io.reactivex.rxjava4.core.*;
@@ -39,8 +39,7 @@ public class ObservableObserveOnLatestTest {
         .awaitDone(5, TimeUnit.SECONDS)
         .assertComplete();
 
-        assertTrue("" + to.values().size(),
-                to.values().size() >= 1 && to.values().size() <= 1000000);
+        assertTrue(to.values().size() >= 1 && to.values().size() <= 1000000, "" + to.values().size());
     }
 
     @Test

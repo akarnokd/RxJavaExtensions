@@ -16,19 +16,19 @@
 
 package hu.akarnokd.rxjava4.processors;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
+import hu.akarnokd.rxjava4.internal.BooleanSubscription;
 import hu.akarnokd.rxjava4.test.*;
 import io.reactivex.rxjava4.core.*;
 import io.reactivex.rxjava4.functions.*;
-import io.reactivex.rxjava4.internal.subscriptions.BooleanSubscription;
 import io.reactivex.rxjava4.observers.TestObserver;
 import io.reactivex.rxjava4.plugins.RxJavaPlugins;
 import io.reactivex.rxjava4.schedulers.Schedulers;
@@ -390,7 +390,7 @@ public class DispatchWorkProcessorTest {
         assertEquals(n, set.size());
 
         for (int i = 0; i < n; i++) {
-            assertTrue("" + i, set.remove(i));
+            assertTrue(set.remove(i), "" + i);
         }
 
         assertTrue(set.isEmpty());
@@ -428,7 +428,7 @@ public class DispatchWorkProcessorTest {
         assertEquals(n, set.size());
 
         for (int i = 0; i < n; i++) {
-            assertTrue("" + i, set.remove(i));
+            assertTrue(set.remove(i), "" + i);
         }
 
         assertTrue(set.isEmpty());
@@ -476,7 +476,7 @@ public class DispatchWorkProcessorTest {
         assertEquals(n, set.size());
 
         for (int i = 0; i < n; i++) {
-            assertTrue("" + i, set.remove(i));
+            assertTrue(set.remove(i), "" + i);
         }
 
         assertTrue(set.isEmpty());

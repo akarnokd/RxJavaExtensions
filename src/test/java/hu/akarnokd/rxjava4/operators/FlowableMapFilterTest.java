@@ -15,11 +15,11 @@
  */
 package hu.akarnokd.rxjava4.operators;
 
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.io.IOException;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import hu.akarnokd.rxjava4.test.*;
 import io.reactivex.rxjava4.core.Flowable;

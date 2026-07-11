@@ -18,7 +18,7 @@ package hu.akarnokd.rxjava4.expr;
 
 import java.util.*;
 
-import org.junit.*;
+import org.junit.jupiter.api.*;
 import org.mockito.MockitoAnnotations;
 
 import io.reactivex.rxjava4.core.Maybe;
@@ -32,7 +32,7 @@ public class StatementMaybeTest {
     BooleanSupplier condition;
     BooleanSupplier conditionError;
 
-    @Before
+    @BeforeEach
     public void before() {
         MockitoAnnotations.openMocks(this);
         scheduler = new TestScheduler();

@@ -16,11 +16,11 @@
 
 package hu.akarnokd.rxjava4.subjects;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import hu.akarnokd.rxjava4.test.TestHelper;
 import io.reactivex.rxjava4.core.Observer;

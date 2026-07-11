@@ -16,12 +16,12 @@
 
 package hu.akarnokd.rxjava4.consumers;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
 import java.util.*;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import hu.akarnokd.rxjava4.test.TestHelper;
 import io.reactivex.rxjava4.core.*;
@@ -62,7 +62,7 @@ public class CompletableConsumersTest implements Consumer<Object>, Action {
 
         assertTrue(composite.size() > 0);
 
-        assertTrue(events.toString(), events.isEmpty());
+        assertTrue(events.isEmpty(), events.toString());
 
         processor.onComplete();
 
@@ -77,15 +77,15 @@ public class CompletableConsumersTest implements Consumer<Object>, Action {
 
         Disposable d = CompletableConsumers.subscribeAutoDispose(processor, composite, this, this);
 
-        assertTrue(d.getClass().toString(), ((LambdaConsumerIntrospection)d).hasCustomOnError());
+        assertTrue(((LambdaConsumerIntrospection)d).hasCustomOnError(), d.getClass().toString());
 
         assertTrue(composite.size() > 0);
 
-        assertTrue(events.toString(), events.isEmpty());
+        assertTrue(events.isEmpty(), events.toString());
 
         processor.onError(new IOException());
 
-        assertTrue(events.toString(), events.get(0) instanceof IOException);
+        assertTrue(events.get(0) instanceof IOException, events.toString());
 
         assertEquals(0, composite.size());
     }
@@ -97,7 +97,7 @@ public class CompletableConsumersTest implements Consumer<Object>, Action {
 
         assertTrue(composite.size() > 0);
 
-        assertTrue(events.toString(), events.isEmpty());
+        assertTrue(events.isEmpty(), events.toString());
 
         processor.onComplete();
 
@@ -114,11 +114,11 @@ public class CompletableConsumersTest implements Consumer<Object>, Action {
 
         assertTrue(composite.size() > 0);
 
-        assertTrue(events.toString(), events.isEmpty());
+        assertTrue(events.isEmpty(), events.toString());
 
         processor.onError(new IOException());
 
-        assertTrue(events.toString(), events.get(0) instanceof IOException);
+        assertTrue(events.get(0) instanceof IOException, events.toString());
 
         assertEquals(0, composite.size());
     }
@@ -130,7 +130,7 @@ public class CompletableConsumersTest implements Consumer<Object>, Action {
 
         assertTrue(composite.size() > 0);
 
-        assertTrue(events.toString(), events.isEmpty());
+        assertTrue(events.isEmpty(), events.toString());
 
         assertFalse(d.isDisposed());
 
@@ -157,7 +157,7 @@ public class CompletableConsumersTest implements Consumer<Object>, Action {
 
             processor.onError(new IllegalArgumentException());
 
-            assertTrue(events.toString(), events.isEmpty());
+            assertTrue(events.isEmpty(), events.toString());
 
             TestHelper.assertError(errors, 0, CompositeException.class);
             List<Throwable> inners = TestHelper.compositeList(errors.get(0));
@@ -181,7 +181,7 @@ public class CompletableConsumersTest implements Consumer<Object>, Action {
 
             processor.onComplete();
 
-            assertTrue(events.toString(), events.isEmpty());
+            assertTrue(events.isEmpty(), events.toString());
 
             TestHelper.assertUndeliverable(errors, 0, IOException.class);
         } finally {

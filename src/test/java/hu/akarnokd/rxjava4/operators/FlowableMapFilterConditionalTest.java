@@ -15,16 +15,16 @@
  */
 package hu.akarnokd.rxjava4.operators;
 
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.io.IOException;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
+import hu.akarnokd.rxjava4.internal.Functions;
 import hu.akarnokd.rxjava4.test.*;
 import io.reactivex.rxjava4.core.Flowable;
 import io.reactivex.rxjava4.functions.BiConsumer;
-import io.reactivex.rxjava4.internal.functions.Functions;
 import io.reactivex.rxjava4.operators.QueueFuseable;
 import io.reactivex.rxjava4.processors.*;
 

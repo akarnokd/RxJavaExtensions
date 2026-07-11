@@ -16,8 +16,9 @@
 
 package hu.akarnokd.rxjava4.string;
 
-import org.junit.Test;
-import org.reactivestreams.Publisher;
+import java.util.concurrent.Flow.Publisher;
+
+import org.junit.jupiter.api.Test;
 
 import io.reactivex.rxjava4.core.Flowable;
 import io.reactivex.rxjava4.functions.Function;

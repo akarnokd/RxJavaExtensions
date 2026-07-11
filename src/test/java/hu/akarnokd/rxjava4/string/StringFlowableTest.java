@@ -18,7 +18,7 @@ package hu.akarnokd.rxjava4.string;
 
 import java.io.IOException;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import hu.akarnokd.rxjava4.test.BaseTest;
 import io.reactivex.rxjava4.core.Flowable;

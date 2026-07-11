@@ -16,13 +16,12 @@
 
 package hu.akarnokd.rxjava4.test;
 
+import java.util.concurrent.Flow.*;
 import java.util.concurrent.atomic.*;
 
-import org.reactivestreams.*;
-
+import hu.akarnokd.rxjava4.internal.SubscriptionHelper;
 import io.reactivex.rxjava4.core.FlowableSubscriber;
 import io.reactivex.rxjava4.operators.*;
-import io.reactivex.rxjava4.internal.subscriptions.SubscriptionHelper;
 
 /**
  * An extended test subscriber that records events and allows making assertions about them.

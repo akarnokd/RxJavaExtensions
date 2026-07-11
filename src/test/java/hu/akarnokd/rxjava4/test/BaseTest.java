@@ -16,7 +16,7 @@
 
 package hu.akarnokd.rxjava4.test;
 
-import org.reactivestreams.Publisher;
+import java.util.concurrent.Flow.Publisher;
 
 import io.reactivex.rxjava4.core.*;
 import io.reactivex.rxjava4.observers.TestObserver;

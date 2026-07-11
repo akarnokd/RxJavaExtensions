@@ -16,9 +16,11 @@
 
 package hu.akarnokd.rxjava4.parallel;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.io.IOException;
 
-import org.junit.*;
+import org.junit.jupiter.api.Test;
 
 import hu.akarnokd.rxjava4.test.TestHelper;
 import io.reactivex.rxjava4.core.Flowable;
@@ -163,6 +165,6 @@ public class ParallelSumTest {
         })
         .blockingLast();
 
-        Assert.assertEquals(999999L * 500000L, n);
+        assertEquals(999999L * 500000L, n);
     }
 }

@@ -18,7 +18,7 @@ package hu.akarnokd.rxjava4.operators;
 
 import java.util.*;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import hu.akarnokd.rxjava4.test.*;
 import io.reactivex.rxjava4.core.*;

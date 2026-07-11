@@ -18,7 +18,7 @@ package hu.akarnokd.rxjava4.operators;
 
 import java.util.concurrent.TimeUnit;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.reactivex.rxjava4.schedulers.*;
 import io.reactivex.rxjava4.subscribers.TestSubscriber;

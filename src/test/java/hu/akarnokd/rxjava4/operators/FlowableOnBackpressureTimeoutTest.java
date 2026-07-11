@@ -16,11 +16,13 @@
 
 package hu.akarnokd.rxjava4.operators;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.*;
+import org.junit.jupiter.api.Test;
 
 import hu.akarnokd.rxjava4.test.TestHelper;
 import io.reactivex.rxjava4.core.Flowable;
@@ -146,7 +148,7 @@ public class FlowableOnBackpressureTimeoutTest implements Consumer<Object> {
         .requestMore(1)
         .assertResult(5);
 
-        Assert.assertEquals(Arrays.asList(1, 2, 3, 4), evicted);
+        assertEquals(Arrays.asList(1, 2, 3, 4), evicted);
     }
 
     @Test
@@ -188,7 +190,7 @@ public class FlowableOnBackpressureTimeoutTest implements Consumer<Object> {
         .requestMore(1)
         .assertResult(5);
 
-        Assert.assertEquals(Arrays.asList(1, 2, 3, 4), evicted);
+        assertEquals(Arrays.asList(1, 2, 3, 4), evicted);
     }
 
     @Test
@@ -208,7 +210,7 @@ public class FlowableOnBackpressureTimeoutTest implements Consumer<Object> {
 
         ts.cancel();
 
-        Assert.assertEquals(Arrays.asList(1, 2, 3, 4, 5), evicted);
+        assertEquals(Arrays.asList(1, 2, 3, 4, 5), evicted);
     }
 
     @Test
@@ -225,7 +227,7 @@ public class FlowableOnBackpressureTimeoutTest implements Consumer<Object> {
         .requestMore(1)
         .assertResult();
 
-        Assert.assertEquals(Arrays.asList(1, 2, 3, 4, 5), evicted);
+        assertEquals(Arrays.asList(1, 2, 3, 4, 5), evicted);
     }
 
     @Test
@@ -250,7 +252,7 @@ public class FlowableOnBackpressureTimeoutTest implements Consumer<Object> {
 
         scheduler.advanceTimeBy(1, TimeUnit.MINUTES);
 
-        Assert.assertEquals(Arrays.asList(1, 2, 3, 4, 5), evicted);
+        assertEquals(Arrays.asList(1, 2, 3, 4, 5), evicted);
     }
 
     @Test
@@ -311,6 +313,6 @@ public class FlowableOnBackpressureTimeoutTest implements Consumer<Object> {
         .awaitDone(5, TimeUnit.SECONDS)
         .assertResult();
 
-        Assert.assertEquals(Arrays.asList(1L, 2L, 3L, 4L, 5L), evicted);
+        assertEquals(Arrays.asList(1L, 2L, 3L, 4L, 5L), evicted);
     }
 }

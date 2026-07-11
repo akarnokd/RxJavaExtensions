@@ -19,10 +19,10 @@ package hu.akarnokd.rxjava4.operators;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
+import hu.akarnokd.rxjava4.internal.ImmediateThinScheduler;
 import io.reactivex.rxjava4.core.Flowable;
-import io.reactivex.rxjava4.internal.schedulers.ImmediateThinScheduler;
 import io.reactivex.rxjava4.schedulers.*;
 import io.reactivex.rxjava4.subscribers.TestSubscriber;
 

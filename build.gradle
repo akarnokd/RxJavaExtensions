@@ -21,6 +21,7 @@ ext {
     guavaVersion = "33.6.0-jre"
     jupiterVersion = "6.1.1"
     jupiterLauncherVersion = "6.1.1"
+    rxJavaVersion = "4.0.0-alpha-19"
 }
 group = "com.github.akarnokd" 
 ext.githubProjectName = 'RxJavaExtensions'
@@ -38,7 +39,7 @@ repositories {
 
 dependencies {
 
-    implementation "io.reactivex.rxjava4:rxjava:4.0.0+"
+    implementation "io.reactivex.rxjava4:rxjava:$rxJavaVersion"
 
     testImplementation "org.mockito:mockito-core:$mockitoVersion"
     testImplementation "org.mockito:mockito-junit-jupiter:$mockitoJUnitVersion"
@@ -78,8 +79,10 @@ checkstyle {
     configFile = project.file("config/checkstyle/checkstyle.xml")
     configProperties = [
             "checkstyle.suppressions.file": project.file("config/checkstyle/suppressions.xml"),
-            "checkstyle.header.file"      : project.file("config/license/HEADER_JAVA")
+            "checkstyle.header.file"      : project.file("config/license/HEADER_JAVA"),
+            "project_loc"                 : project.projectDir.absolutePath
     ]
+    checkstyleMain.exclude '**/module-info.java'
 }
 
 apply plugin: "com.vanniktech.maven.publish"
@@ -163,12 +166,36 @@ tasks.register('bundle', Bundle) {
     }
 }
 
+def isCI = System.getenv("CI") != null
+def testLoggingConfig = ["skipped", "failed"]
+def parallelism = Runtime.runtime.availableProcessors()
+
+if (!isCI) {
+    testLoggingConfig = ["failed"]
+    parallelism = parallelism.intdiv(2) ?: 1
+}
+
 test {
-    maxHeapSize = "2g"
-    testLogging  {
-        events "started", "failed" // "skipped", "passed"
-    //    showStandardStreams = true
-      exceptionFormat="full"
+    maxHeapSize = "1200m"
+    maxParallelForks = parallelism
+    timeout = Duration.ofMinutes(30)
+
+    useJUnitPlatform()
+}
+
+tasks.withType(Test) {
+    testLogging {
+        events = testLoggingConfig
+        exceptionFormat = "full"
+
+        debug.events = testLoggingConfig
+        debug.exceptionFormat = "full"
+
+        info.events = testLoggingConfig
+        info.exceptionFormat = "full"
+
+        warn.events = testLoggingConfig
+        warn.exceptionFormat = "full"
     }
 }
 

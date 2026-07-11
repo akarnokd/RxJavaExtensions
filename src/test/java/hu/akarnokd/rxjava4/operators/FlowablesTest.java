@@ -16,10 +16,10 @@
 
 package hu.akarnokd.rxjava4.operators;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
+import hu.akarnokd.rxjava4.internal.Functions;
 import hu.akarnokd.rxjava4.test.TestHelper;
-import io.reactivex.rxjava4.internal.functions.Functions;
 
 public class FlowablesTest {
 

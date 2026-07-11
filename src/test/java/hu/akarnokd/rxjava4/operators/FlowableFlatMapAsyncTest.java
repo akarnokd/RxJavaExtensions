@@ -16,10 +16,10 @@
 
 package hu.akarnokd.rxjava4.operators;
 
+import java.util.concurrent.Flow.Publisher;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.Test;
-import org.reactivestreams.Publisher;
+import org.junit.jupiter.api.*;
 
 import io.reactivex.rxjava4.core.Flowable;
 import io.reactivex.rxjava4.functions.Function;
@@ -27,7 +27,8 @@ import io.reactivex.rxjava4.schedulers.Schedulers;
 
 public class FlowableFlatMapAsyncTest {
 
-    @Test(timeout = 10000)
+    @Test
+    @Timeout(10)
     public void normal() {
         for (final int n : new int[] { 0, 1, 2, 10, 100, 1000 }) {
             Flowable.range(1, 1000)
@@ -45,7 +46,8 @@ public class FlowableFlatMapAsyncTest {
         }
     }
 
-    @Test(timeout = 10000)
+    @Test
+    @Timeout(10)
     public void normalHidden() {
         for (final int n : new int[] { 0, 1, 2, 10, 100, 1000 }) {
             Flowable.range(1, 1000)
@@ -63,7 +65,8 @@ public class FlowableFlatMapAsyncTest {
         }
     }
 
-    @Test(timeout = 10000)
+    @Test
+    @Timeout(10)
     public void normalAsync() {
         for (final int n : new int[] { 0, 1, 2, 10, 100, 1000 }) {
             Flowable.range(1, 1000)
@@ -81,7 +84,8 @@ public class FlowableFlatMapAsyncTest {
         }
     }
 
-    @Test(timeout = 10000)
+    @Test
+    @Timeout(10)
     public void normalAsyncHidden() {
         for (final int n : new int[] { 0, 1, 2, 10, 100, 1000 }) {
             Flowable.range(1, 1000)
@@ -99,7 +103,8 @@ public class FlowableFlatMapAsyncTest {
         }
     }
 
-    @Test(timeout = 1000000)
+    @Test
+    @Timeout(10)
     public void normalAsyncHidden2() {
         for (int m = 1; m < 1011; m = m < 16 ? m + 1 : m + 10) {
 //            System.out.println(m);
@@ -121,7 +126,8 @@ public class FlowableFlatMapAsyncTest {
         }
     }
 
-    @Test(timeout = 10000)
+    @Test
+    @Timeout(10)
     public void breadth() {
         for (final int n : new int[] { 0, 1, 2, 10, 100, 1000 }) {
             Flowable.range(1, 1000)
@@ -139,7 +145,8 @@ public class FlowableFlatMapAsyncTest {
         }
     }
 
-    @Test(timeout = 10000)
+    @Test
+    @Timeout(10)
     public void breadthHidden() {
         for (final int n : new int[] { 0, 1, 2, 10, 100, 1000 }) {
             Flowable.range(1, 1000)
@@ -157,7 +164,8 @@ public class FlowableFlatMapAsyncTest {
         }
     }
 
-    @Test(timeout = 10000)
+    @Test
+    @Timeout(10)
     public void breadthAsync() {
         for (final int n : new int[] { 0, 1, 2, 10, 100, 1000 }) {
             Flowable.range(1, 1000)
@@ -175,7 +183,8 @@ public class FlowableFlatMapAsyncTest {
         }
     }
 
-    @Test(timeout = 10000)
+    @Test
+    @Timeout(10)
     public void breadthAsyncHidden() {
         for (final int n : new int[] { 0, 1, 2, 10, 100, 1000 }) {
             Flowable.range(1, 1000)
@@ -213,7 +222,8 @@ public class FlowableFlatMapAsyncTest {
         }
     }
 
-    @Test(timeout = 60000)
+    @Test
+    @Timeout(60)
     public void breadthAsyncHidden2() {
         for (int m = 1; m < 1011; m = m < 16 ? m + 1 : m + 10) {
 //            System.out.println(m);

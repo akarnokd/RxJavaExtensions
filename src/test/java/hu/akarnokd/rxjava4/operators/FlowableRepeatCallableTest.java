@@ -18,11 +18,11 @@ package hu.akarnokd.rxjava4.operators;
 
 import java.io.IOException;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
+import hu.akarnokd.rxjava4.internal.Functions;
 import io.reactivex.rxjava4.core.Flowable;
 import io.reactivex.rxjava4.functions.Supplier;
-import io.reactivex.rxjava4.internal.functions.Functions;
 import io.reactivex.rxjava4.subscribers.TestSubscriber;
 
 public class FlowableRepeatCallableTest {

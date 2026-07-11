@@ -26,6 +26,7 @@ import org.junit.jupiter.api.*;
 
 import hu.akarnokd.rxjava4.debug.*;
 import hu.akarnokd.rxjava4.functions.PlainConsumer;
+import hu.akarnokd.rxjava4.internal.BooleanSubscription;
 import hu.akarnokd.rxjava4.test.TestHelper;
 import io.reactivex.rxjava4.core.*;
 import io.reactivex.rxjava4.disposables.Disposable;
@@ -93,7 +94,7 @@ public class RxJavaProtocolValidatorTest implements PlainConsumer<ProtocolNonCon
             TestHelper.assertError(errors, 2, OnSubscribeNotCalledException.class);
             TestHelper.assertError(errors, 3, MultipleTerminationsException.class);
             TestHelper.assertError(errors, 4, OnSubscribeNotCalledException.class);
-            assertTrue("" + errors.get(4).getCause(), errors.get(4).getCause() instanceof IOException);
+            assertTrue(errors.get(4).getCause() instanceof IOException, "" + errors.get(4).getCause());
             TestHelper.assertError(errors, 5, MultipleTerminationsException.class);
             TestHelper.assertError(errors, 6, NullOnSubscribeParameterException.class);
             TestHelper.assertError(errors, 7, MultipleOnSubscribeCallsException.class);
@@ -144,7 +145,7 @@ public class RxJavaProtocolValidatorTest implements PlainConsumer<ProtocolNonCon
             TestHelper.assertError(errors, 2, OnSubscribeNotCalledException.class);
             TestHelper.assertError(errors, 3, MultipleTerminationsException.class);
             TestHelper.assertError(errors, 4, OnSubscribeNotCalledException.class);
-            assertTrue("" + errors.get(4).getCause(), errors.get(4).getCause() instanceof IOException);
+            assertTrue(errors.get(4).getCause() instanceof IOException, "" + errors.get(4).getCause());
             TestHelper.assertError(errors, 5, MultipleTerminationsException.class);
             TestHelper.assertError(errors, 6, NullOnSuccessParameterException.class);
             TestHelper.assertError(errors, 7, OnSubscribeNotCalledException.class);
@@ -198,7 +199,7 @@ public class RxJavaProtocolValidatorTest implements PlainConsumer<ProtocolNonCon
             TestHelper.assertError(errors, 1, OnSubscribeNotCalledException.class);
             TestHelper.assertError(errors, 2, OnSubscribeNotCalledException.class);
             TestHelper.assertError(errors, 3, MultipleTerminationsException.class);
-            assertTrue("" + errors.get(3).getCause(), errors.get(3).getCause() instanceof IOException);
+            assertTrue(errors.get(3).getCause() instanceof IOException, "" + errors.get(3).getCause());
             TestHelper.assertError(errors, 4, NullOnSuccessParameterException.class);
             TestHelper.assertError(errors, 5, OnSubscribeNotCalledException.class);
             TestHelper.assertError(errors, 6, OnSuccessAfterTerminationException.class);
@@ -254,7 +255,7 @@ public class RxJavaProtocolValidatorTest implements PlainConsumer<ProtocolNonCon
             TestHelper.assertError(errors, 2, OnSubscribeNotCalledException.class);
             TestHelper.assertError(errors, 3, MultipleTerminationsException.class);
             TestHelper.assertError(errors, 4, OnSubscribeNotCalledException.class);
-            assertTrue("" + errors.get(4).getCause(), errors.get(4).getCause() instanceof IOException);
+            assertTrue(errors.get(4).getCause() instanceof IOException, "" + errors.get(4).getCause());
             TestHelper.assertError(errors, 5, MultipleTerminationsException.class);
             TestHelper.assertError(errors, 6, NullOnNextParameterException.class);
             TestHelper.assertError(errors, 7, OnSubscribeNotCalledException.class);
@@ -311,7 +312,7 @@ public class RxJavaProtocolValidatorTest implements PlainConsumer<ProtocolNonCon
             TestHelper.assertError(errors, 2, OnSubscribeNotCalledException.class);
             TestHelper.assertError(errors, 3, MultipleTerminationsException.class);
             TestHelper.assertError(errors, 4, OnSubscribeNotCalledException.class);
-            assertTrue("" + errors.get(4).getCause(), errors.get(4).getCause() instanceof IOException);
+            assertTrue(errors.get(4).getCause() instanceof IOException, "" + errors.get(4).getCause());
             TestHelper.assertError(errors, 5, MultipleTerminationsException.class);
             TestHelper.assertError(errors, 6, NullOnNextParameterException.class);
             TestHelper.assertError(errors, 7, OnSubscribeNotCalledException.class);
@@ -378,7 +379,7 @@ public class RxJavaProtocolValidatorTest implements PlainConsumer<ProtocolNonCon
             TestHelper.assertError(errors, 2, OnSubscribeNotCalledException.class);
             TestHelper.assertError(errors, 3, MultipleTerminationsException.class);
             TestHelper.assertError(errors, 4, OnSubscribeNotCalledException.class);
-            assertTrue("" + errors.get(4).getCause(), errors.get(4).getCause() instanceof IOException);
+            assertTrue(errors.get(4).getCause() instanceof IOException, "" + errors.get(4).getCause());
             TestHelper.assertError(errors, 5, MultipleTerminationsException.class);
             TestHelper.assertError(errors, 6, NullOnNextParameterException.class);
             TestHelper.assertError(errors, 7, OnSubscribeNotCalledException.class);
@@ -446,7 +447,7 @@ public class RxJavaProtocolValidatorTest implements PlainConsumer<ProtocolNonCon
             TestHelper.assertError(errors, 2, OnSubscribeNotCalledException.class);
             TestHelper.assertError(errors, 3, MultipleTerminationsException.class);
             TestHelper.assertError(errors, 4, OnSubscribeNotCalledException.class);
-            assertTrue("" + errors.get(4).getCause(), errors.get(4).getCause() instanceof IOException);
+            assertTrue(errors.get(4).getCause() instanceof IOException, "" + errors.get(4).getCause());
             TestHelper.assertError(errors, 5, MultipleTerminationsException.class);
             TestHelper.assertError(errors, 6, NullOnNextParameterException.class);
             TestHelper.assertError(errors, 7, OnSubscribeNotCalledException.class);
@@ -510,7 +511,7 @@ public class RxJavaProtocolValidatorTest implements PlainConsumer<ProtocolNonCon
             TestHelper.assertError(errors, 2, OnSubscribeNotCalledException.class);
             TestHelper.assertError(errors, 3, MultipleTerminationsException.class);
             TestHelper.assertError(errors, 4, OnSubscribeNotCalledException.class);
-            assertTrue("" + errors.get(4).getCause(), errors.get(4).getCause() instanceof IOException);
+            assertTrue(errors.get(4).getCause() instanceof IOException, "" + errors.get(4).getCause());
             TestHelper.assertError(errors, 5, MultipleTerminationsException.class);
             TestHelper.assertError(errors, 6, NullOnNextParameterException.class);
             TestHelper.assertError(errors, 7, OnSubscribeNotCalledException.class);

@@ -16,19 +16,20 @@
 
 package hu.akarnokd.rxjava4.operators;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.Flow.*;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.*;
-import org.reactivestreams.*;
+import org.junit.jupiter.api.Test;
 
 import hu.akarnokd.rxjava4.basetypes.Perhaps;
+import hu.akarnokd.rxjava4.internal.*;
 import hu.akarnokd.rxjava4.test.TestHelper;
 import io.reactivex.rxjava4.core.Flowable;
 import io.reactivex.rxjava4.functions.*;
-import io.reactivex.rxjava4.internal.functions.Functions;
-import io.reactivex.rxjava4.internal.subscriptions.BooleanSubscription;
 import io.reactivex.rxjava4.plugins.RxJavaPlugins;
 import io.reactivex.rxjava4.processors.PublishProcessor;
 import io.reactivex.rxjava4.subscribers.TestSubscriber;
@@ -321,7 +322,7 @@ public class FlowableMapAsyncTest {
         .test()
         .cancel();
 
-        Assert.assertFalse(pp.hasSubscribers());
+        assertFalse(pp.hasSubscribers());
     }
 
     @Test
@@ -447,6 +448,6 @@ public class FlowableMapAsyncTest {
         .test()
         .assertResult();
 
-        Assert.assertEquals(1000, calls[0]);
+        assertEquals(1000, calls[0]);
     }
 }

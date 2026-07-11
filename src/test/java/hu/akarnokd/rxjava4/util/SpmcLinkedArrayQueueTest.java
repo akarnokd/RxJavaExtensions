@@ -16,17 +16,18 @@
 
 package hu.akarnokd.rxjava4.util;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.*;
 
-import org.junit.Test;
+import org.junit.jupiter.api.*;
 
 import hu.akarnokd.rxjava4.test.TestHelper;
 
 public class SpmcLinkedArrayQueueTest {
 
-    @Test(timeout = 5000)
+    @Test
+    @Timeout(5)
     public void simple() {
         SpmcLinkedArrayQueue<Integer> q = new SpmcLinkedArrayQueue<>(32);
 
@@ -35,7 +36,7 @@ public class SpmcLinkedArrayQueueTest {
             assertTrue(q.offer(i));
             assertFalse(q.isEmpty());
             assertEquals(i, q.poll().intValue());
-            assertTrue("" + i, q.isEmpty());
+            assertTrue(q.isEmpty(), "" + i);
             assertNull(q.poll());
         }
 
@@ -58,7 +59,8 @@ public class SpmcLinkedArrayQueueTest {
         assertTrue(q.isEmpty());
     }
 
-    @Test(timeout = 5000)
+    @Test
+    @Timeout(5)
     public void simple2() {
         SpmcLinkedArrayQueue<Integer> q = new SpmcLinkedArrayQueue<>(32);
 
@@ -68,7 +70,7 @@ public class SpmcLinkedArrayQueueTest {
             assertFalse(q.isEmpty());
             assertEquals(i, q.poll().intValue());
             assertEquals(i, q.poll().intValue());
-            assertTrue("" + i, q.isEmpty());
+            assertTrue(q.isEmpty(), "" + i);
             assertNull(q.poll());
         }
 

@@ -18,16 +18,15 @@ package hu.akarnokd.rxjava4.operators;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.Flow.Subscriber;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.Test;
-import org.reactivestreams.Subscriber;
+import org.junit.jupiter.api.Test;
 
+import hu.akarnokd.rxjava4.internal.*;
 import hu.akarnokd.rxjava4.test.TestHelper;
 import io.reactivex.rxjava4.core.Flowable;
 import io.reactivex.rxjava4.exceptions.MissingBackpressureException;
-import io.reactivex.rxjava4.internal.functions.Functions;
-import io.reactivex.rxjava4.internal.subscriptions.BooleanSubscription;
 import io.reactivex.rxjava4.plugins.RxJavaPlugins;
 import io.reactivex.rxjava4.schedulers.Schedulers;
 

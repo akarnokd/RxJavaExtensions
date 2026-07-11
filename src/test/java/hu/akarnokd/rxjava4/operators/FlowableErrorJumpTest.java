@@ -17,9 +17,9 @@
 package hu.akarnokd.rxjava4.operators;
 
 import java.util.*;
+import java.util.concurrent.Flow.Publisher;
 
-import org.junit.Test;
-import org.reactivestreams.Publisher;
+import org.junit.jupiter.api.Test;
 
 import hu.akarnokd.rxjava4.test.*;
 import io.reactivex.rxjava4.core.*;

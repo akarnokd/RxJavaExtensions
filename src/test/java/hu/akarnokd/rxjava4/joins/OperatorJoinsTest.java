@@ -16,19 +16,19 @@
 
 package hu.akarnokd.rxjava4.joins;
 
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import java.util.concurrent.Callable;
 
-import org.junit.*;
+import org.junit.jupiter.api.*;
 import org.mockito.*;
 
+import hu.akarnokd.rxjava4.internal.Functions;
 import hu.akarnokd.rxjava4.test.TestException;
 import io.reactivex.rxjava4.core.*;
 import io.reactivex.rxjava4.functions.*;
-import io.reactivex.rxjava4.internal.functions.Functions;
 import io.reactivex.rxjava4.observers.TestObserver;
 import io.reactivex.rxjava4.subjects.PublishSubject;
 
@@ -190,19 +190,23 @@ public class OperatorJoinsTest {
 
     Observable<Integer> error = Observable.error(new TestException("Forced failure"));
 
-    @Before
+    @BeforeEach
     public void before() {
         MockitoAnnotations.openMocks(this);
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void and2ArgumentNull() {
-        JoinObservable.from(some).and(null);
+        assertThrows(NullPointerException.class, () -> {
+            JoinObservable.from(some).and(null);
+        });
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void and3argumentNull() {
-        JoinObservable.from(some).and(some).and(null);
+        assertThrows(NullPointerException.class, () -> {
+            JoinObservable.from(some).and(some).and(null);
+        });
     }
 
     void verifyAnd(JoinObservable<Integer> m, int count) {
@@ -262,49 +266,67 @@ public class OperatorJoinsTest {
         verifyError(JoinObservable.when(JoinObservable.from(some).and(some).and(error).then(add)));
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void thenArgumentNull() {
-        JoinObservable.from(some).then(null);
+        assertThrows(NullPointerException.class, () -> {
+            JoinObservable.from(some).then(null);
+        });
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void then2ArgumentNull() {
-        JoinObservable.from(some).and(some).then(null);
+        assertThrows(NullPointerException.class, () -> {
+            JoinObservable.from(some).and(some).then(null);
+        });
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void then3ArgumentNull() {
-        JoinObservable.from(some).and(some).and(some).then(null);
+        assertThrows(NullPointerException.class, () -> {
+            JoinObservable.from(some).and(some).and(some).then(null);
+        });
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void then4ArgumentNull() {
-        JoinObservable.from(some).and(some).and(some).and(some).then(null);
+        assertThrows(NullPointerException.class, () -> {
+            JoinObservable.from(some).and(some).and(some).and(some).then(null);
+        });
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void then5ArgumentNull() {
-        JoinObservable.from(some).and(some).and(some).and(some).and(some).then(null);
+        assertThrows(NullPointerException.class, () -> {
+            JoinObservable.from(some).and(some).and(some).and(some).and(some).then(null);
+        });
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void then6ArgumentNull() {
-        JoinObservable.from(some).and(some).and(some).and(some).and(some).and(some).then(null);
+        assertThrows(NullPointerException.class, () -> {
+            JoinObservable.from(some).and(some).and(some).and(some).and(some).and(some).then(null);
+        });
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void then7ArgumentNull() {
-        JoinObservable.from(some).and(some).and(some).and(some).and(some).and(some).and(some).then(null);
+        assertThrows(NullPointerException.class, () -> {
+            JoinObservable.from(some).and(some).and(some).and(some).and(some).and(some).and(some).then(null);
+        });
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void then8ArgumentNull() {
-        JoinObservable.from(some).and(some).and(some).and(some).and(some).and(some).and(some).and(some).then(null);
+        assertThrows(NullPointerException.class, () -> {
+            JoinObservable.from(some).and(some).and(some).and(some).and(some).and(some).and(some).and(some).then(null);
+        });
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void then9ArgumentNull() {
-        JoinObservable.from(some).and(some).and(some).and(some).and(some).and(some).and(some).and(some).and(some).then(null);
+        assertThrows(NullPointerException.class, () -> {
+            JoinObservable.from(some).and(some).and(some).and(some).and(some).and(some).and(some).and(some).and(some).then(null);
+        });
     }
 
     @Test
@@ -327,9 +349,12 @@ public class OperatorJoinsTest {
         }
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void then10ArgumentNull() {
-        JoinObservable.from(some).and(some).and(some).and(some).and(some).and(some).and(some).and(some).and(some).and(some).then(null);
+        assertThrows(NullPointerException.class, () -> {
+            JoinObservable.from(some).and(some).and(some).and(some).and(some).and(some)
+                .and(some).and(some).and(some).and(some).then(null);
+        });
     }
 
     @Test
@@ -357,14 +382,18 @@ public class OperatorJoinsTest {
         verifyError(JoinObservable.when(JoinObservable.from(some).and(some).and(some).then(throwFunc)));
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void whenArgumentNull1() {
-        JoinObservable.when((Plan<Object>[]) null);
+        assertThrows(NullPointerException.class, () -> {
+            JoinObservable.when((Plan<Object>[]) null);
+        });
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void whenArgumentNull2() {
-        JoinObservable.when((Iterable<Plan<Object>>) null);
+        assertThrows(NullPointerException.class, () -> {
+            JoinObservable.when((Iterable<Plan<Object>>) null);
+        });
     }
 
     @Test

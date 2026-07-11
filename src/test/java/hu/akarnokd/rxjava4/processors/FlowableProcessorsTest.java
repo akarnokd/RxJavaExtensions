@@ -16,15 +16,15 @@
 
 package hu.akarnokd.rxjava4.processors;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
+import java.util.concurrent.Flow.*;
 
-import org.junit.Test;
-import org.reactivestreams.*;
+import org.junit.jupiter.api.Test;
 
+import hu.akarnokd.rxjava4.internal.BooleanSubscription;
 import hu.akarnokd.rxjava4.test.TestHelper;
-import io.reactivex.rxjava4.internal.subscriptions.BooleanSubscription;
 import io.reactivex.rxjava4.processors.*;
 import io.reactivex.rxjava4.subscribers.TestSubscriber;
 
@@ -171,9 +171,11 @@ public class FlowableProcessorsTest {
         TestHelper.checkUtilityClass(FlowableProcessors.class);
     }
 
-    @Test(expected = UnsupportedOperationException.class)
+    @Test
     public void hasSubscribers() {
-        FlowableProcessors.wrap(sp).hasSubscribers();
+        assertThrows(UnsupportedOperationException.class, () -> {
+            FlowableProcessors.wrap(sp).hasSubscribers();
+        });
     }
 
     @Test

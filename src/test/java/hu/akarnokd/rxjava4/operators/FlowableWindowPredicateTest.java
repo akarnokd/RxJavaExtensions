@@ -18,15 +18,15 @@ package hu.akarnokd.rxjava4.operators;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.Flow.Subscriber;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.Test;
-import org.reactivestreams.Subscriber;
+import org.junit.jupiter.api.Test;
 
+import hu.akarnokd.rxjava4.internal.BooleanSubscription;
 import hu.akarnokd.rxjava4.test.TestHelper;
 import io.reactivex.rxjava4.core.*;
 import io.reactivex.rxjava4.functions.*;
-import io.reactivex.rxjava4.internal.subscriptions.BooleanSubscription;
 import io.reactivex.rxjava4.plugins.RxJavaPlugins;
 
 public class FlowableWindowPredicateTest {
@@ -505,7 +505,7 @@ public class FlowableWindowPredicateTest {
     @Test
     public void whileDrainQueue() {
         // test that window is emitted right away, not when next value arrives
-        Flowable.concat(Flowable.just(1L, 2L, -1L), Flowable.timer(1, TimeUnit.SECONDS))
+        Flowable.concatArray(Flowable.just(1L, 2L, -1L), Flowable.timer(1, TimeUnit.SECONDS))
         .compose(FlowableTransformers.windowWhile(new Predicate<Long>() {
             @Override
             public boolean test(Long v) throws Exception {

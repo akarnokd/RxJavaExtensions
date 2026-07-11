@@ -18,7 +18,7 @@ package hu.akarnokd.rxjava4.expr;
 
 import java.util.*;
 
-import org.junit.*;
+import org.junit.jupiter.api.*;
 import org.mockito.MockitoAnnotations;
 
 import io.reactivex.rxjava4.core.Flowable;
@@ -33,7 +33,7 @@ public class StatementFlowableTest {
     BooleanSupplier conditionError;
     int numRecursion = 250;
 
-    @Before
+    @BeforeEach
     public void before() {
         MockitoAnnotations.openMocks(this);
         scheduler = new TestScheduler();
@@ -301,7 +301,7 @@ public class StatementFlowableTest {
 
     @Test
     public void testDoWhileSourceThrows() {
-        Flowable<Integer> source1 = Flowable.concat(Flowable.just(1, 2, 3),
+        Flowable<Integer> source1 = Flowable.concatArray(Flowable.just(1, 2, 3),
                 Flowable.<Integer> error(new RuntimeException("Forced failure!")));
 
         Flowable<Integer> result = StatementFlowable.doWhile(source1, condition);
@@ -395,7 +395,7 @@ public class StatementFlowableTest {
 
     @Test
     public void testWhileDoSourceThrows() {
-        Flowable<Integer> source1 = Flowable.concat(Flowable.just(1, 2, 3),
+        Flowable<Integer> source1 = Flowable.concatArray(Flowable.just(1, 2, 3),
                 Flowable.<Integer> error(new RuntimeException("Forced failure!")));
 
         Flowable<Integer> result = StatementFlowable.whileDo(source1, condition);

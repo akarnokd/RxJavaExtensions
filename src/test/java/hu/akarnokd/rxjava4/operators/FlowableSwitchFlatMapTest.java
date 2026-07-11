@@ -16,20 +16,19 @@
 
 package hu.akarnokd.rxjava4.operators;
 
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.Flow.*;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.Test;
-import org.reactivestreams.*;
+import org.junit.jupiter.api.Test;
 
+import hu.akarnokd.rxjava4.internal.*;
 import hu.akarnokd.rxjava4.test.TestHelper;
 import io.reactivex.rxjava4.core.Flowable;
 import io.reactivex.rxjava4.functions.Function;
-import io.reactivex.rxjava4.internal.functions.Functions;
-import io.reactivex.rxjava4.internal.subscriptions.BooleanSubscription;
 import io.reactivex.rxjava4.plugins.RxJavaPlugins;
 import io.reactivex.rxjava4.processors.*;
 import io.reactivex.rxjava4.schedulers.Schedulers;

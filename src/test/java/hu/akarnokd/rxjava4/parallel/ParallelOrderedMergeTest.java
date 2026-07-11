@@ -18,7 +18,7 @@ package hu.akarnokd.rxjava4.parallel;
 
 import java.util.Random;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.reactivex.rxjava4.core.Flowable;
 import io.reactivex.rxjava4.functions.Function;

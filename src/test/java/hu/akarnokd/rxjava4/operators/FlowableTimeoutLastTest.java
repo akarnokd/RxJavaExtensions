@@ -17,10 +17,10 @@
 package hu.akarnokd.rxjava4.operators;
 
 import java.io.IOException;
+import java.util.concurrent.Flow.Publisher;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.Test;
-import org.reactivestreams.Publisher;
+import org.junit.jupiter.api.Test;
 
 import io.reactivex.rxjava4.core.Flowable;
 import io.reactivex.rxjava4.functions.Function;

@@ -16,16 +16,16 @@
 
 package hu.akarnokd.rxjava4.processors;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
+import java.util.concurrent.Flow.Subscription;
 
-import org.junit.Test;
-import org.reactivestreams.Subscription;
+import org.junit.jupiter.api.Test;
 
+import hu.akarnokd.rxjava4.internal.BooleanSubscription;
 import hu.akarnokd.rxjava4.test.TestHelper;
 import io.reactivex.rxjava4.core.FlowableSubscriber;
-import io.reactivex.rxjava4.internal.subscriptions.BooleanSubscription;
 import io.reactivex.rxjava4.processors.*;
 import io.reactivex.rxjava4.schedulers.Schedulers;
 import io.reactivex.rxjava4.subscribers.TestSubscriber;

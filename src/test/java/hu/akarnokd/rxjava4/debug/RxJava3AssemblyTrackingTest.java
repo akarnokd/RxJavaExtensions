@@ -16,12 +16,12 @@
 
 package hu.akarnokd.rxjava4.debug;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
 import java.util.concurrent.*;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import hu.akarnokd.rxjava4.test.TestHelper;
 import io.reactivex.rxjava4.core.*;
@@ -98,7 +98,7 @@ public class RxJava3AssemblyTrackingTest {
 
             String st = RxJavaAssemblyException.find(TestHelper.errors(ts).get(0)).stacktrace();
 
-            assertTrue(st, st.contains("RxJava3AssemblyTrackingTest.createFlowable"));
+            assertTrue(st.contains("RxJava3AssemblyTrackingTest.createFlowable"), st);
 
         } finally {
             RxJavaAssemblyTracking.disable();
@@ -123,7 +123,7 @@ public class RxJava3AssemblyTrackingTest {
 
             String st = RxJavaAssemblyException.find(TestHelper.errors(to).get(0)).stacktrace();
 
-            assertTrue(st, st.contains("RxJava3AssemblyTrackingTest.createObservable"));
+            assertTrue(st.contains("RxJava3AssemblyTrackingTest.createObservable"), st);
 
         } finally {
             RxJavaAssemblyTracking.disable();
@@ -148,7 +148,7 @@ public class RxJava3AssemblyTrackingTest {
 
             String st = RxJavaAssemblyException.find(TestHelper.errors(to).get(0)).stacktrace();
 
-            assertTrue(st, st.contains("RxJava3AssemblyTrackingTest.createSingle"));
+            assertTrue(st.contains("RxJava3AssemblyTrackingTest.createSingle"), st);
 
         } finally {
             RxJavaAssemblyTracking.disable();
@@ -173,7 +173,7 @@ public class RxJava3AssemblyTrackingTest {
 
             String st = RxJavaAssemblyException.find(TestHelper.errors(to).get(0)).stacktrace();
 
-            assertTrue(st, st.contains("RxJava3AssemblyTrackingTest.createMaybe"));
+            assertTrue(st.contains("RxJava3AssemblyTrackingTest.createMaybe"), st);
 
         } finally {
             RxJavaAssemblyTracking.disable();
@@ -198,7 +198,7 @@ public class RxJava3AssemblyTrackingTest {
 
             String st = RxJavaAssemblyException.find(TestHelper.errors(to).get(0)).stacktrace();
 
-            assertTrue(st, st.contains("RxJava3AssemblyTrackingTest.createCompletable"));
+            assertTrue(st.contains("RxJava3AssemblyTrackingTest.createCompletable"), st);
 
         } finally {
             RxJavaAssemblyTracking.disable();
@@ -223,7 +223,7 @@ public class RxJava3AssemblyTrackingTest {
 
             String st = RxJavaAssemblyException.find(TestHelper.errors(ts).get(0)).stacktrace();
 
-            assertTrue(st, st.contains("RxJava3AssemblyTrackingTest.createParallelFlowable"));
+            assertTrue(st.contains("RxJava3AssemblyTrackingTest.createParallelFlowable"), st);
 
         } finally {
             RxJavaAssemblyTracking.disable();

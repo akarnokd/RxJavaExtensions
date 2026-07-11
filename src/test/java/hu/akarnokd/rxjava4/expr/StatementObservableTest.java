@@ -18,7 +18,7 @@ package hu.akarnokd.rxjava4.expr;
 
 import java.util.*;
 
-import org.junit.*;
+import org.junit.jupiter.api.*;
 import org.mockito.MockitoAnnotations;
 
 import io.reactivex.rxjava4.core.Observable;
@@ -33,7 +33,7 @@ public class StatementObservableTest {
     BooleanSupplier conditionError;
     int numRecursion = 250;
 
-    @Before
+    @BeforeEach
     public void before() {
         MockitoAnnotations.openMocks(this);
         scheduler = new TestScheduler();
@@ -301,7 +301,7 @@ public class StatementObservableTest {
 
     @Test
     public void testDoWhileSourceThrows() {
-        Observable<Integer> source1 = Observable.concat(Observable.just(1, 2, 3),
+        Observable<Integer> source1 = Observable.concatArray(Observable.just(1, 2, 3),
                 Observable.<Integer> error(new RuntimeException("Forced failure!")));
 
         Observable<Integer> result = StatementObservable.doWhile(source1, condition);
@@ -395,7 +395,7 @@ public class StatementObservableTest {
 
     @Test
     public void testWhileDoSourceThrows() {
-        Observable<Integer> source1 = Observable.concat(Observable.just(1, 2, 3),
+        Observable<Integer> source1 = Observable.concatArray(Observable.just(1, 2, 3),
                 Observable.<Integer> error(new RuntimeException("Forced failure!")));
 
         Observable<Integer> result = StatementObservable.whileDo(source1, condition);

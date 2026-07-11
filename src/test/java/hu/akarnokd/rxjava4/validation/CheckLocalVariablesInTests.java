@@ -20,7 +20,7 @@ import java.io.*;
 import java.util.*;
 import java.util.regex.Pattern;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import hu.akarnokd.rxjava4.test.TestHelper;
 

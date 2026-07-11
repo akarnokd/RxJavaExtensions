@@ -16,20 +16,20 @@
 
 package hu.akarnokd.rxjava4.operators;
 
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.util.List;
+import java.util.concurrent.Flow.*;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.Test;
-import org.reactivestreams.*;
+import org.junit.jupiter.api.Test;
 
+import hu.akarnokd.rxjava4.internal.*;
 import hu.akarnokd.rxjava4.test.*;
 import io.reactivex.rxjava4.core.Flowable;
+import io.reactivex.rxjava4.core.config.StandardBufferedConfig;
 import io.reactivex.rxjava4.exceptions.MissingBackpressureException;
 import io.reactivex.rxjava4.functions.*;
-import io.reactivex.rxjava4.internal.functions.Functions;
-import io.reactivex.rxjava4.internal.subscriptions.BooleanSubscription;
 import io.reactivex.rxjava4.plugins.RxJavaPlugins;
 import io.reactivex.rxjava4.processors.PublishProcessor;
 import io.reactivex.rxjava4.schedulers.Schedulers;
@@ -480,7 +480,7 @@ public class FlowablePartialCollectTest {
                 System.out.println("Item: " + s);
             }
         })
-        .observeOn(Schedulers.computation(), false, 1)
+        .observeOn(Schedulers.computation(), new StandardBufferedConfig(false, 1))
         .test()
         .awaitDone(10, TimeUnit.SECONDS)
         .assertResult(

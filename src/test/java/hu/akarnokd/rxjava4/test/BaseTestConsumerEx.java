@@ -18,10 +18,10 @@ package hu.akarnokd.rxjava4.test;
 
 import java.util.*;
 
+import hu.akarnokd.rxjava4.internal.ExceptionHelper;
 import io.reactivex.rxjava4.functions.Predicate;
-import io.reactivex.rxjava4.operators.QueueFuseable;
-import io.reactivex.rxjava4.internal.util.ExceptionHelper;
 import io.reactivex.rxjava4.observers.BaseTestConsumer;
+import io.reactivex.rxjava4.operators.QueueFuseable;
 
 /**
  * Base class with shared infrastructure to support TestSubscriber and TestObserver.
@@ -40,12 +40,6 @@ extends BaseTestConsumer<T, U> {
      * @since 2.0.7
      */
     protected CharSequence tag;
-
-    /**
-     * Indicates that one of the awaitX method has timed out.
-     * @since 2.0.7
-     */
-    protected boolean timeout;
 
     public BaseTestConsumerEx() {
         super();
@@ -203,68 +197,6 @@ extends BaseTestConsumer<T, U> {
                 .assertError(error)
                 .assertErrorMessage(message)
                 .assertNotComplete();
-    }
-
-    /**
-     * Returns true if an await timed out.
-     * @return true if one of the timeout-based await methods has timed out.
-     * <p>History: 2.0.7 - experimental
-     * @see #clearTimeout()
-     * @see #assertTimeout()
-     * @see #assertNoTimeout()
-     * @since 2.1
-     */
-    public final boolean isTimeout() {
-        return timeout;
-    }
-
-    /**
-     * Clears the timeout flag set by the await methods when they timed out.
-     * <p>History: 2.0.7 - experimental
-     * @return this
-     * @since 2.1
-     * @see #isTimeout()
-     */
-    @SuppressWarnings("unchecked")
-    public final U clearTimeout() {
-        timeout = false;
-        return (U)this;
-    }
-
-    /**
-     * Asserts that some awaitX method has timed out.
-     * <p>History: 2.0.7 - experimental
-     * @return this
-     * @since 2.1
-     */
-    @SuppressWarnings("unchecked")
-    public final U assertTimeout() {
-        if (!timeout) {
-            throw fail("No timeout?!");
-        }
-        return (U)this;
-    }
-
-    /**
-     * Asserts that some awaitX method has not timed out.
-     * <p>History: 2.0.7 - experimental
-     * @return this
-     * @since 2.1
-     */
-    @SuppressWarnings("unchecked")
-    public final U assertNoTimeout() {
-        if (timeout) {
-            throw fail("Timeout?!");
-        }
-        return (U)this;
-    }
-
-    /**
-     * Returns the internal shared list of errors.
-     * @return Returns the internal shared list of errors.
-     */
-    public final List<Throwable> errors() {
-        return errors;
     }
 
     /**

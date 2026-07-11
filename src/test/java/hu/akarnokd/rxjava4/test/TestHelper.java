@@ -16,7 +16,7 @@
 
 package hu.akarnokd.rxjava4.test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 
@@ -25,29 +25,24 @@ import java.lang.reflect.*;
 import java.net.URL;
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.concurrent.Flow.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-import org.reactivestreams.*;
 
+import hu.akarnokd.rxjava4.internal.*;
 import io.reactivex.rxjava4.core.*;
 import io.reactivex.rxjava4.core.Observable;
 import io.reactivex.rxjava4.core.Observer;
 import io.reactivex.rxjava4.disposables.Disposable;
 import io.reactivex.rxjava4.exceptions.*;
 import io.reactivex.rxjava4.functions.*;
-import io.reactivex.rxjava4.operators.*;
-import io.reactivex.rxjava4.internal.operators.completable.CompletableToFlowable;
-import io.reactivex.rxjava4.internal.operators.maybe.MaybeToFlowable;
-import io.reactivex.rxjava4.internal.operators.single.SingleToFlowable;
-import io.reactivex.rxjava4.internal.subscriptions.BooleanSubscription;
-import io.reactivex.rxjava4.internal.util.ExceptionHelper;
 import io.reactivex.rxjava4.observers.*;
+import io.reactivex.rxjava4.operators.*;
 import io.reactivex.rxjava4.parallel.ParallelFlowable;
 import io.reactivex.rxjava4.plugins.RxJavaPlugins;
-import io.reactivex.rxjava4.processors.PublishProcessor;
 import io.reactivex.rxjava4.schedulers.Schedulers;
 import io.reactivex.rxjava4.subjects.Subject;
 import io.reactivex.rxjava4.subscribers.TestSubscriber;
@@ -230,7 +225,7 @@ public enum TestHelper {
             if (ex instanceof CompositeException) {
                 CompositeException ce = (CompositeException) ex;
                 List<Throwable> cel = ce.getExceptions();
-                assertTrue(cel.get(index).toString(), clazz.isInstance(cel.get(index)));
+                assertTrue(clazz.isInstance(cel.get(index)), cel.get(index).toString());
             } else {
                 fail(ex.toString() + ": not a CompositeException");
             }
@@ -245,7 +240,7 @@ public enum TestHelper {
         if (ex instanceof CompositeException) {
             CompositeException ce = (CompositeException) ex;
             List<Throwable> cel = ce.getExceptions();
-            assertTrue(cel.get(index).toString(), clazz.isInstance(cel.get(index)));
+            assertTrue(clazz.isInstance(cel.get(index)), cel.get(index).toString());
         } else {
             fail(ex.toString() + ": not a CompositeException");
         }
@@ -256,7 +251,7 @@ public enum TestHelper {
         if (ex instanceof CompositeException) {
             CompositeException ce = (CompositeException) ex;
             List<Throwable> cel = ce.getExceptions();
-            assertTrue(cel.get(index).toString(), clazz.isInstance(cel.get(index)));
+            assertTrue(clazz.isInstance(cel.get(index)), cel.get(index).toString());
             assertEquals(message, cel.get(index).getMessage());
         } else {
             fail(ex.toString() + ": not a CompositeException");
@@ -268,7 +263,7 @@ public enum TestHelper {
         if (ex instanceof CompositeException) {
             CompositeException ce = (CompositeException) ex;
             List<Throwable> cel = ce.getExceptions();
-            assertTrue(cel.get(index).toString(), clazz.isInstance(cel.get(index)));
+            assertTrue(clazz.isInstance(cel.get(index)), cel.get(index).toString());
             assertEquals(message, cel.get(index).getMessage());
         } else {
             fail(ex.toString() + ": not a CompositeException");
@@ -352,7 +347,7 @@ public enum TestHelper {
                 throw new AssertionError(ex.getMessage());
             }
 
-            assertTrue(list.toString(), list.get(0) instanceof IllegalArgumentException);
+            assertTrue(list.get(0) instanceof IllegalArgumentException, list.toString());
             assertEquals("n > 0 required but it was -99", list.get(0).getMessage());
         } finally {
             RxJavaPlugins.setErrorHandler(null);
@@ -739,13 +734,13 @@ public enum TestHelper {
         });
 
         try {
-            assertTrue("Timed out", cdl.await(5, TimeUnit.SECONDS));
+            assertTrue(cdl.await(5, TimeUnit.SECONDS), "Timed out");
         } catch (InterruptedException ex) {
             throw ExceptionHelper.wrapOrThrow(ex);
         }
 
-        assertEquals("Reports disposed upfront?", false, b[0]);
-        assertEquals("Didn't report disposed after?", true, b[1]);
+        assertEquals(false, b[0], "Reports disposed upfront?");
+        assertEquals(true, b[1], "Didn't report disposed after?");
     }
 
     /**
@@ -790,13 +785,13 @@ public enum TestHelper {
         });
 
         try {
-            assertTrue("Timed out", cdl.await(5, TimeUnit.SECONDS));
+            assertTrue(cdl.await(5, TimeUnit.SECONDS), "Timed out");
         } catch (InterruptedException ex) {
             throw ExceptionHelper.wrapOrThrow(ex);
         }
 
-        assertEquals("Reports disposed upfront?", false, b[0]);
-        assertEquals("Didn't report disposed after?", true, b[1]);
+        assertEquals(false, b[0], "Reports disposed upfront?");
+        assertEquals(true, b[1], "Didn't report disposed after?");
     }
 
     /**
@@ -836,13 +831,13 @@ public enum TestHelper {
         });
 
         try {
-            assertTrue("Timed out", cdl.await(5, TimeUnit.SECONDS));
+            assertTrue(cdl.await(5, TimeUnit.SECONDS), "Timed out");
         } catch (InterruptedException ex) {
             throw ExceptionHelper.wrapOrThrow(ex);
         }
 
-        assertEquals("Reports disposed upfront?", false, b[0]);
-        assertEquals("Didn't report disposed after?", true, b[1]);
+        assertEquals(false, b[0], "Reports disposed upfront?");
+        assertEquals(true, b[1], "Didn't report disposed after?");
     }
 
     /**
@@ -882,13 +877,13 @@ public enum TestHelper {
         });
 
         try {
-            assertTrue("Timed out", cdl.await(5, TimeUnit.SECONDS));
+            assertTrue(cdl.await(5, TimeUnit.SECONDS), "Timed out");
         } catch (InterruptedException ex) {
             throw ExceptionHelper.wrapOrThrow(ex);
         }
 
-        assertEquals("Reports disposed upfront?", false, b[0]);
-        assertEquals("Didn't report disposed after?", true, b[1]);
+        assertEquals(false, b[0], "Reports disposed upfront?");
+        assertEquals(true, b[1], "Didn't report disposed after?");
     }
 
     /**
@@ -966,13 +961,13 @@ public enum TestHelper {
             out.subscribe(NoOpConsumer.INSTANCE);
 
             try {
-                assertTrue("Timed out", cdl.await(5, TimeUnit.SECONDS));
+                assertTrue(cdl.await(5, TimeUnit.SECONDS), "Timed out");
             } catch (InterruptedException ex) {
                 throw ExceptionHelper.wrapOrThrow(ex);
             }
 
-            assertEquals("First disposed?", false, b[0]);
-            assertEquals("Second not disposed?", true, b[1]);
+            assertEquals(false, b[0], "First disposed?");
+            assertEquals(true, b[1], "Second not disposed?");
 
             assertError(errors, 0, IllegalStateException.class, "Disposable already set!");
         } catch (Throwable ex) {
@@ -1020,13 +1015,13 @@ public enum TestHelper {
             out.subscribe(NoOpConsumer.INSTANCE);
 
             try {
-                assertTrue("Timed out", cdl.await(5, TimeUnit.SECONDS));
+                assertTrue(cdl.await(5, TimeUnit.SECONDS), "Timed out");
             } catch (InterruptedException ex) {
                 throw ExceptionHelper.wrapOrThrow(ex);
             }
 
-            assertEquals("First disposed?", false, b[0]);
-            assertEquals("Second not disposed?", true, b[1]);
+            assertEquals(false, b[0], "First disposed?");
+            assertEquals(true, b[1], "Second not disposed?");
 
             assertError(errors, 0, IllegalStateException.class, "Disposable already set!");
         } catch (Throwable ex) {
@@ -1074,13 +1069,13 @@ public enum TestHelper {
             out.subscribe(NoOpConsumer.INSTANCE);
 
             try {
-                assertTrue("Timed out", cdl.await(5, TimeUnit.SECONDS));
+                assertTrue(cdl.await(5, TimeUnit.SECONDS), "Timed out");
             } catch (InterruptedException ex) {
                 throw ExceptionHelper.wrapOrThrow(ex);
             }
 
-            assertEquals("First disposed?", false, b[0]);
-            assertEquals("Second not disposed?", true, b[1]);
+            assertEquals(false, b[0], "First disposed?");
+            assertEquals(true, b[1], "Second not disposed?");
 
             assertError(errors, 0, IllegalStateException.class, "Disposable already set!");
         } catch (Throwable ex) {
@@ -1128,13 +1123,13 @@ public enum TestHelper {
             out.subscribe(NoOpConsumer.INSTANCE);
 
             try {
-                assertTrue("Timed out", cdl.await(5, TimeUnit.SECONDS));
+                assertTrue(cdl.await(5, TimeUnit.SECONDS), "Timed out");
             } catch (InterruptedException ex) {
                 throw ExceptionHelper.wrapOrThrow(ex);
             }
 
-            assertEquals("First disposed?", false, b[0]);
-            assertEquals("Second not disposed?", true, b[1]);
+            assertEquals(false, b[0], "First disposed?");
+            assertEquals(true, b[1], "Second not disposed?");
 
             assertError(errors, 0, IllegalStateException.class, "Disposable already set!");
         } catch (Throwable ex) {
@@ -1182,13 +1177,13 @@ public enum TestHelper {
             out.subscribe(NoOpConsumer.INSTANCE);
 
             try {
-                assertTrue("Timed out", cdl.await(5, TimeUnit.SECONDS));
+                assertTrue(cdl.await(5, TimeUnit.SECONDS), "Timed out");
             } catch (InterruptedException ex) {
                 throw ExceptionHelper.wrapOrThrow(ex);
             }
 
-            assertEquals("First disposed?", false, b[0]);
-            assertEquals("Second not disposed?", true, b[1]);
+            assertEquals(false, b[0], "First disposed?");
+            assertEquals(true, b[1], "Second not disposed?");
 
             assertError(errors, 0, IllegalStateException.class, "Disposable already set!");
         } catch (Throwable ex) {
@@ -1235,13 +1230,13 @@ public enum TestHelper {
             out.subscribe(NoOpConsumer.INSTANCE);
 
             try {
-                assertTrue("Timed out", cdl.await(5, TimeUnit.SECONDS));
+                assertTrue(cdl.await(5, TimeUnit.SECONDS), "Timed out");
             } catch (InterruptedException ex) {
                 throw ExceptionHelper.wrapOrThrow(ex);
             }
 
-            assertEquals("First disposed?", false, b[0]);
-            assertEquals("Second not disposed?", true, b[1]);
+            assertEquals(false, b[0], "First disposed?");
+            assertEquals(true, b[1], "Second not disposed?");
 
             assertError(errors, 0, IllegalStateException.class, "Disposable already set!");
         } catch (Throwable ex) {
@@ -1289,13 +1284,13 @@ public enum TestHelper {
             out.subscribe(NoOpConsumer.INSTANCE);
 
             try {
-                assertTrue("Timed out", cdl.await(5, TimeUnit.SECONDS));
+                assertTrue(cdl.await(5, TimeUnit.SECONDS), "Timed out");
             } catch (InterruptedException ex) {
                 throw ExceptionHelper.wrapOrThrow(ex);
             }
 
-            assertEquals("First disposed?", false, b[0]);
-            assertEquals("Second not disposed?", true, b[1]);
+            assertEquals(false, b[0], "First disposed?");
+            assertEquals(true, b[1], "Second not disposed?");
 
             assertError(errors, 0, IllegalStateException.class, "Disposable already set!");
         } catch (Throwable ex) {
@@ -1343,13 +1338,13 @@ public enum TestHelper {
             out.subscribe(NoOpConsumer.INSTANCE);
 
             try {
-                assertTrue("Timed out", cdl.await(5, TimeUnit.SECONDS));
+                assertTrue(cdl.await(5, TimeUnit.SECONDS), "Timed out");
             } catch (InterruptedException ex) {
                 throw ExceptionHelper.wrapOrThrow(ex);
             }
 
-            assertEquals("First disposed?", false, b[0]);
-            assertEquals("Second not disposed?", true, b[1]);
+            assertEquals(false, b[0], "First disposed?");
+            assertEquals(true, b[1], "Second not disposed?");
 
             assertError(errors, 0, IllegalStateException.class, "Disposable already set!");
         } catch (Throwable ex) {
@@ -1396,13 +1391,13 @@ public enum TestHelper {
             out.subscribe(NoOpConsumer.INSTANCE);
 
             try {
-                assertTrue("Timed out", cdl.await(5, TimeUnit.SECONDS));
+                assertTrue(cdl.await(5, TimeUnit.SECONDS), "Timed out");
             } catch (InterruptedException ex) {
                 throw ExceptionHelper.wrapOrThrow(ex);
             }
 
-            assertEquals("First disposed?", false, b[0]);
-            assertEquals("Second not disposed?", true, b[1]);
+            assertEquals(false, b[0], "First disposed?");
+            assertEquals(true, b[1], "Second not disposed?");
 
             assertError(errors, 0, IllegalStateException.class, "Disposable already set!");
         } catch (Throwable ex) {
@@ -1450,13 +1445,13 @@ public enum TestHelper {
             out.subscribe(NoOpConsumer.INSTANCE);
 
             try {
-                assertTrue("Timed out", cdl.await(5, TimeUnit.SECONDS));
+                assertTrue(cdl.await(5, TimeUnit.SECONDS), "Timed out");
             } catch (InterruptedException ex) {
                 throw ExceptionHelper.wrapOrThrow(ex);
             }
 
-            assertEquals("First disposed?", false, b[0]);
-            assertEquals("Second not disposed?", true, b[1]);
+            assertEquals(false, b[0], "First disposed?");
+            assertEquals(true, b[1], "Second not disposed?");
 
             assertError(errors, 0, IllegalStateException.class, "Disposable already set!");
         } catch (Throwable ex) {
@@ -1504,13 +1499,13 @@ public enum TestHelper {
             out.subscribe(NoOpConsumer.INSTANCE);
 
             try {
-                assertTrue("Timed out", cdl.await(5, TimeUnit.SECONDS));
+                assertTrue(cdl.await(5, TimeUnit.SECONDS), "Timed out");
             } catch (InterruptedException ex) {
                 throw ExceptionHelper.wrapOrThrow(ex);
             }
 
-            assertEquals("First disposed?", false, b[0]);
-            assertEquals("Second not disposed?", true, b[1]);
+            assertEquals(false, b[0], "First disposed?");
+            assertEquals(true, b[1], "Second not disposed?");
 
             assertError(errors, 0, IllegalStateException.class, "Subscription already set!");
         } catch (Throwable ex) {
@@ -1558,13 +1553,13 @@ public enum TestHelper {
             out.subscribe(NoOpConsumer.INSTANCE);
 
             try {
-                assertTrue("Timed out", cdl.await(5, TimeUnit.SECONDS));
+                assertTrue(cdl.await(5, TimeUnit.SECONDS), "Timed out");
             } catch (InterruptedException ex) {
                 throw ExceptionHelper.wrapOrThrow(ex);
             }
 
-            assertEquals("First disposed?", false, b[0]);
-            assertEquals("Second not disposed?", true, b[1]);
+            assertEquals(false, b[0], "First disposed?");
+            assertEquals(true, b[1], "Second not disposed?");
 
             assertError(errors, 0, IllegalStateException.class, "Disposable already set!");
         } catch (Throwable ex) {
@@ -1612,13 +1607,13 @@ public enum TestHelper {
             out.subscribe(NoOpConsumer.INSTANCE);
 
             try {
-                assertTrue("Timed out", cdl.await(5, TimeUnit.SECONDS));
+                assertTrue(cdl.await(5, TimeUnit.SECONDS), "Timed out");
             } catch (InterruptedException ex) {
                 throw ExceptionHelper.wrapOrThrow(ex);
             }
 
-            assertEquals("First disposed?", false, b[0]);
-            assertEquals("Second not disposed?", true, b[1]);
+            assertEquals(false, b[0], "First disposed?");
+            assertEquals(true, b[1], "Second not disposed?");
 
             assertError(errors, 0, IllegalStateException.class, "Disposable already set!");
         } catch (Throwable ex) {
@@ -1666,13 +1661,13 @@ public enum TestHelper {
             out.subscribe(NoOpConsumer.INSTANCE);
 
             try {
-                assertTrue("Timed out", cdl.await(5, TimeUnit.SECONDS));
+                assertTrue(cdl.await(5, TimeUnit.SECONDS), "Timed out");
             } catch (InterruptedException ex) {
                 throw ExceptionHelper.wrapOrThrow(ex);
             }
 
-            assertEquals("First disposed?", false, b[0]);
-            assertEquals("Second not disposed?", true, b[1]);
+            assertEquals(false, b[0], "First disposed?");
+            assertEquals(true, b[1], "Second not disposed?");
 
             assertError(errors, 0, IllegalStateException.class, "Disposable already set!");
         } catch (Throwable ex) {
@@ -1719,13 +1714,13 @@ public enum TestHelper {
             out.subscribe(NoOpConsumer.INSTANCE);
 
             try {
-                assertTrue("Timed out", cdl.await(5, TimeUnit.SECONDS));
+                assertTrue(cdl.await(5, TimeUnit.SECONDS), "Timed out");
             } catch (InterruptedException ex) {
                 throw ExceptionHelper.wrapOrThrow(ex);
             }
 
-            assertEquals("First disposed?", false, b[0]);
-            assertEquals("Second not disposed?", true, b[1]);
+            assertEquals(false, b[0], "First disposed?");
+            assertEquals(true, b[1], "Second not disposed?");
 
             assertError(errors, 0, IllegalStateException.class, "Disposable already set!");
         } catch (Throwable ex) {
@@ -1773,13 +1768,13 @@ public enum TestHelper {
             out.subscribe(NoOpConsumer.INSTANCE);
 
             try {
-                assertTrue("Timed out", cdl.await(5, TimeUnit.SECONDS));
+                assertTrue(cdl.await(5, TimeUnit.SECONDS), "Timed out");
             } catch (InterruptedException ex) {
                 throw ExceptionHelper.wrapOrThrow(ex);
             }
 
-            assertEquals("First cancelled?", false, b[0]);
-            assertEquals("Second not cancelled?", true, b[1]);
+            assertEquals(false, b[0], "First cancelled?");
+            assertEquals(true, b[1], "Second not cancelled?");
 
             assertError(errors, 0, IllegalStateException.class, "Subscription already set!");
         } catch (Throwable ex) {
@@ -1827,13 +1822,13 @@ public enum TestHelper {
             out.subscribe(NoOpConsumer.INSTANCE);
 
             try {
-                assertTrue("Timed out", cdl.await(5, TimeUnit.SECONDS));
+                assertTrue(cdl.await(5, TimeUnit.SECONDS), "Timed out");
             } catch (InterruptedException ex) {
                 throw ExceptionHelper.wrapOrThrow(ex);
             }
 
-            assertEquals("First cancelled?", false, b[0]);
-            assertEquals("Second not cancelled?", true, b[1]);
+            assertEquals(false, b[0], "First cancelled?");
+            assertEquals(true, b[1], "Second not cancelled?");
 
             assertError(errors, 0, IllegalStateException.class, "Subscription already set!");
         } catch (Throwable ex) {
@@ -1881,13 +1876,13 @@ public enum TestHelper {
             out.subscribe(NoOpConsumer.INSTANCE);
 
             try {
-                assertTrue("Timed out", cdl.await(5, TimeUnit.SECONDS));
+                assertTrue(cdl.await(5, TimeUnit.SECONDS), "Timed out");
             } catch (InterruptedException ex) {
                 throw ExceptionHelper.wrapOrThrow(ex);
             }
 
-            assertEquals("First cancelled?", false, b[0]);
-            assertEquals("Second not cancelled?", true, b[1]);
+            assertEquals(false, b[0], "First cancelled?");
+            assertEquals(true, b[1], "Second not cancelled?");
 
             assertError(errors, 0, IllegalStateException.class, "Subscription already set!");
         } catch (Throwable ex) {
@@ -1934,13 +1929,13 @@ public enum TestHelper {
             out.subscribe(NoOpConsumer.INSTANCE);
 
             try {
-                assertTrue("Timed out", cdl.await(5, TimeUnit.SECONDS));
+                assertTrue(cdl.await(5, TimeUnit.SECONDS), "Timed out");
             } catch (InterruptedException ex) {
                 throw ExceptionHelper.wrapOrThrow(ex);
             }
 
-            assertEquals("First cancelled?", false, b[0]);
-            assertEquals("Second not cancelled?", true, b[1]);
+            assertEquals(false, b[0], "First cancelled?");
+            assertEquals(true, b[1], "Second not cancelled?");
 
             assertError(errors, 0, IllegalStateException.class, "Subscription already set!");
         } catch (Throwable ex) {
@@ -1986,13 +1981,13 @@ public enum TestHelper {
             out.subscribe(NoOpConsumer.INSTANCE);
 
             try {
-                assertTrue("Timed out", cdl.await(5, TimeUnit.SECONDS));
+                assertTrue(cdl.await(5, TimeUnit.SECONDS), "Timed out");
             } catch (InterruptedException ex) {
                 throw ExceptionHelper.wrapOrThrow(ex);
             }
 
-            assertEquals("First disposed?", false, b[0]);
-            assertEquals("Second not disposed?", true, b[1]);
+            assertEquals(false, b[0], "First disposed?");
+            assertEquals(true, b[1], "Second not disposed?");
 
             assertError(errors, 0, IllegalStateException.class, "Disposable already set!");
         } catch (Throwable ex) {
@@ -2039,13 +2034,13 @@ public enum TestHelper {
             out.subscribe(NoOpConsumer.INSTANCE);
 
             try {
-                assertTrue("Timed out", cdl.await(5, TimeUnit.SECONDS));
+                assertTrue(cdl.await(5, TimeUnit.SECONDS), "Timed out");
             } catch (InterruptedException ex) {
                 throw ExceptionHelper.wrapOrThrow(ex);
             }
 
-            assertEquals("First disposed?", false, b[0]);
-            assertEquals("Second not disposed?", true, b[1]);
+            assertEquals(false, b[0], "First disposed?");
+            assertEquals(true, b[1], "Second not disposed?");
 
             assertError(errors, 0, IllegalStateException.class, "Disposable already set!");
         } catch (Throwable ex) {
@@ -2092,13 +2087,13 @@ public enum TestHelper {
             out.subscribe(NoOpConsumer.INSTANCE);
 
             try {
-                assertTrue("Timed out", cdl.await(5, TimeUnit.SECONDS));
+                assertTrue(cdl.await(5, TimeUnit.SECONDS), "Timed out");
             } catch (InterruptedException ex) {
                 throw ExceptionHelper.wrapOrThrow(ex);
             }
 
-            assertEquals("First disposed?", false, b[0]);
-            assertEquals("Second not disposed?", true, b[1]);
+            assertEquals(false, b[0], "First disposed?");
+            assertEquals(true, b[1], "Second not disposed?");
 
             assertError(errors, 0, IllegalStateException.class, "Disposable already set!");
         } catch (Throwable ex) {
@@ -2144,13 +2139,13 @@ public enum TestHelper {
             out.subscribe(NoOpConsumer.INSTANCE);
 
             try {
-                assertTrue("Timed out", cdl.await(5, TimeUnit.SECONDS));
+                assertTrue(cdl.await(5, TimeUnit.SECONDS), "Timed out");
             } catch (InterruptedException ex) {
                 throw ExceptionHelper.wrapOrThrow(ex);
             }
 
-            assertEquals("First disposed?", false, b[0]);
-            assertEquals("Second not disposed?", true, b[1]);
+            assertEquals(false, b[0], "First disposed?");
+            assertEquals(true, b[1], "Second not disposed?");
 
             assertError(errors, 0, IllegalStateException.class, "Disposable already set!");
         } catch (Throwable ex) {
@@ -2196,13 +2191,13 @@ public enum TestHelper {
             out.subscribe(NoOpConsumer.INSTANCE);
 
             try {
-                assertTrue("Timed out", cdl.await(5, TimeUnit.SECONDS));
+                assertTrue(cdl.await(5, TimeUnit.SECONDS), "Timed out");
             } catch (InterruptedException ex) {
                 throw ExceptionHelper.wrapOrThrow(ex);
             }
 
-            assertEquals("First disposed?", false, b[0]);
-            assertEquals("Second not disposed?", true, b[1]);
+            assertEquals(false, b[0], "First disposed?");
+            assertEquals(true, b[1], "Second not disposed?");
 
             assertError(errors, 0, IllegalStateException.class, "Disposable already set!");
         } catch (Throwable ex) {
@@ -2210,76 +2205,6 @@ public enum TestHelper {
         } finally {
             RxJavaPlugins.reset();
         }
-    }
-
-    /**
-     * Check if the operator applied to a Maybe source propagates dispose properly.
-     * @param <T> the source value type
-     * @param <U> the output value type
-     * @param composer the function to apply an operator to the provided Maybe source
-     */
-    public static <T, U> void checkDisposedMaybe(Function<Maybe<T>, ? extends MaybeSource<U>> composer) {
-        PublishProcessor<T> pp = PublishProcessor.create();
-
-        TestSubscriber<U> ts = new TestSubscriber<>();
-
-        try {
-            new MaybeToFlowable<>(composer.apply(pp.singleElement())).subscribe(ts);
-        } catch (Throwable ex) {
-            throw ExceptionHelper.wrapOrThrow(ex);
-        }
-
-        assertTrue("Not subscribed to source!", pp.hasSubscribers());
-
-        ts.cancel();
-
-        assertFalse("Dispose not propagated!", pp.hasSubscribers());
-    }
-
-    /**
-     * Check if the operator applied to a Completable source propagates dispose properly.
-     * @param composer the function to apply an operator to the provided Completable source
-     */
-    public static void checkDisposedCompletable(Function<Completable, ? extends CompletableSource> composer) {
-        PublishProcessor<Integer> pp = PublishProcessor.create();
-
-        TestSubscriber<Integer> ts = new TestSubscriber<>();
-
-        try {
-            new CompletableToFlowable<Integer>(composer.apply(pp.ignoreElements())).subscribe(ts);
-        } catch (Throwable ex) {
-            throw ExceptionHelper.wrapOrThrow(ex);
-        }
-
-        assertTrue("Not subscribed to source!", pp.hasSubscribers());
-
-        ts.cancel();
-
-        assertFalse("Dispose not propagated!", pp.hasSubscribers());
-    }
-
-    /**
-     * Check if the operator applied to a Maybe source propagates dispose properly.
-     * @param <T> the source value type
-     * @param <U> the output value type
-     * @param composer the function to apply an operator to the provided Maybe source
-     */
-    public static <T, U> void checkDisposedMaybeToSingle(Function<Maybe<T>, ? extends SingleSource<U>> composer) {
-        PublishProcessor<T> pp = PublishProcessor.create();
-
-        TestSubscriber<U> ts = new TestSubscriber<>();
-
-        try {
-            new SingleToFlowable<>(composer.apply(pp.singleElement())).subscribe(ts);
-        } catch (Throwable ex) {
-            throw ExceptionHelper.wrapOrThrow(ex);
-        }
-
-        assertTrue(pp.hasSubscribers());
-
-        ts.cancel();
-
-        assertFalse(pp.hasSubscribers());
     }
 
     /**
@@ -2457,11 +2382,11 @@ public enum TestHelper {
         try {
             assertTrue(cdl.await(5, TimeUnit.SECONDS));
 
-            assertTrue("Not fuseable", state[0]);
-            assertTrue("Fusion rejected", state[1]);
+            assertTrue(state[0], "Not fuseable");
+            assertTrue(state[1], "Fusion rejected");
 
             assertNotNull(state[2]);
-            assertTrue("Did not empty", state[3]);
+            assertTrue(state[3], "Did not empty");
         } catch (InterruptedException ex) {
             throw new RuntimeException(ex);
         }
@@ -2523,11 +2448,11 @@ public enum TestHelper {
         try {
             assertTrue(cdl.await(5, TimeUnit.SECONDS));
 
-            assertTrue("Not fuseable", state[0]);
-            assertTrue("Fusion rejected", state[1]);
+            assertTrue(state[0], "Not fuseable");
+            assertTrue(state[1], "Fusion rejected");
 
             assertNotNull(state[2]);
-            assertTrue("Did not empty", state[3]);
+            assertTrue(state[3], "Did not empty");
         } catch (InterruptedException ex) {
             throw new RuntimeException(ex);
         }

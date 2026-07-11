@@ -19,7 +19,7 @@ package hu.akarnokd.rxjava4.operators;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.reactivex.rxjava4.core.Flowable;
 import io.reactivex.rxjava4.processors.PublishProcessor;
@@ -177,7 +177,7 @@ public class FlowableSpanoutTest {
     @Test
     public void normal4() {
         Flowable.range(1, 3)
-        .compose(FlowableTransformers.<Integer>spanout(100L, TimeUnit.MILLISECONDS, Schedulers.io()))
+        .compose(FlowableTransformers.<Integer>spanout(100L, TimeUnit.MILLISECONDS, Schedulers.cached()))
         .test()
         .awaitDone(5, TimeUnit.SECONDS)
         .assertResult(1, 2, 3);
@@ -186,7 +186,7 @@ public class FlowableSpanoutTest {
     @Test
     public void normal5() {
         Flowable.range(1, 3)
-        .compose(FlowableTransformers.<Integer>spanout(100L, TimeUnit.MILLISECONDS, Schedulers.io(), true))
+        .compose(FlowableTransformers.<Integer>spanout(100L, TimeUnit.MILLISECONDS, Schedulers.cached(), true))
         .test()
         .awaitDone(5, TimeUnit.SECONDS)
         .assertResult(1, 2, 3);
@@ -213,7 +213,7 @@ public class FlowableSpanoutTest {
     @Test
     public void normalInitial4() {
         Flowable.range(1, 3)
-        .compose(FlowableTransformers.<Integer>spanout(50L, 100L, TimeUnit.MILLISECONDS, Schedulers.io()))
+        .compose(FlowableTransformers.<Integer>spanout(50L, 100L, TimeUnit.MILLISECONDS, Schedulers.cached()))
         .test()
         .awaitDone(5, TimeUnit.SECONDS)
         .assertResult(1, 2, 3);
@@ -222,7 +222,7 @@ public class FlowableSpanoutTest {
     @Test
     public void normalInitial5() {
         Flowable.range(1, 3)
-        .compose(FlowableTransformers.<Integer>spanout(50L, 100L, TimeUnit.MILLISECONDS, Schedulers.io(), true))
+        .compose(FlowableTransformers.<Integer>spanout(50L, 100L, TimeUnit.MILLISECONDS, Schedulers.cached(), true))
         .test()
         .awaitDone(5, TimeUnit.SECONDS)
         .assertResult(1, 2, 3);
