@@ -2,7 +2,7 @@
 
 [![Maven Central](https://maven-badges.sml.io/sonatype-central/com.github.akarnokd/rxjava-extensions/badge.svg)](https://maven-badges.sml.io/sonatype-central/com.github.akarnokd/rxjava-extensions)
 [![codecov.io](http://codecov.io/github/akarnokd/RxJavaExtensions/coverage.svg?branch=4.x)](https://codecov.io/gh/akarnokd/RxJavaExtensions/branch/4.x)
-<a href='https://github.com/akarnokd/RxJavaExtensions/actions?query=workflow%3AJava%20CI%20with%20Gradle'><img src='https://github.com/akarnokd/RxJavaExtensions/workflows/Java%20CI%20with%20Gradle/badge.svg'></a>
+[![Java CI with Gradle](https://github.com/akarnokd/RxJavaExtensions/actions/workflows/gradle.yml/badge.svg)](https://github.com/akarnokd/RxJavaExtensions/actions/workflows/gradle.yml)
 
 [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/akarnokd/RxJavaExtensions/badge)](https://securityscorecards.dev/viewer/?uri=github.com/akarnokd/RxJavaExtensions)
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/12264/badge)](https://www.bestpractices.dev/projects/12264)
