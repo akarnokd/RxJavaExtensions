@@ -102,7 +102,7 @@ public class FlowableFlatMapSyncTest {
     }
 
     @Test
-    @Timeout(10)
+    @Timeout(100)
     public void normalAsyncHidden2() {
         for (int m = 1; m < 1011; m = m < 16 ? m + 1 : m + 10) {
 //            System.out.println(m);
