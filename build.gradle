@@ -21,7 +21,7 @@ ext {
     guavaVersion = "33.6.0-jre"
     jupiterVersion = "6.1.2"
     jupiterLauncherVersion = "6.1.2"
-    rxJavaVersion = "4.0.0-alpha-19"
+    rxJavaVersion = "4.0.0-SNAPSHOT"
 }
 group = "com.github.akarnokd" 
 ext.githubProjectName = 'RxJavaExtensions'
