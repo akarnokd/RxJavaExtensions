@@ -1,0 +1,97 @@
+name: Post Entropy Beauty Comment
+
+on:
+  workflow_run:
+    # The workflows filter is a glob pattern: '+' is a quantifier there,
+    # so a literal plus sign in the workflow name must be escaped with \+
+    workflows: ['Entropy Beauty \+ TruffleHog Scan']
+    types: [completed]
+
+permissions:
+  contents: read
+  pull-requests: write
+  actions: read          # needed to download artifacts from other runs
+
+jobs:
+  comment:
+    if: >
+      github.event.workflow_run.event == 'pull_request' &&
+      github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download scan results
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: scan-results
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: results
+
+      - name: Post summary comment
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+
+            const summaryPath = path.join('results', 'scan-summary.json');
+            if (!fs.existsSync(summaryPath)) {
+              core.setFailed('scan-summary.json missing — analysis did not produce results');
+              return;
+            }
+
+            const summary = JSON.parse(fs.readFileSync(summaryPath, 'utf8'));
+            const beauty = summary.beauty || {};
+            const findingsCount = summary.findings_count || 0;
+
+            let body = `## 🐷 TruffleHog + Entropy Beauty Scan\n\n`;
+            body += `**Average entropy of changed code:** ${beauty.average_entropy} bits/char\n`;
+            body += `**Verdict:** ${beauty.verdict}\n\n`;
+
+            if (beauty.files && beauty.files.length) {
+              body += `**Changed files entropy:**\n\`\`\`\n${beauty.files.join('\n')}\n\`\`\`\n\n`;
+            }
+
+            if (findingsCount > 0) {
+              body += `⚠️ **TruffleHog found ${findingsCount} potential issue(s)**\n`;
+            } else {
+              body += `✅ No secrets or suspicious high-entropy strings found.\n`;
+            }
+
+            body += `\n*Mid-4 beauty heuristic in action — powered by our entropy chats! 😊*`;
+
+            // Inside github-script, `github` is the Octokit client;
+            // the event payload lives on context.payload.
+            const workflowRun = context.payload.workflow_run;
+
+            // Robust PR number lookup
+            let prNumber = null;
+            const prs = workflowRun.pull_requests || [];
+            if (prs.length > 0) {
+              prNumber = prs[0].number;
+            } else {
+              // Fallback: workflow_run.pull_requests is empty for fork PRs,
+              // so look up open PRs by head "owner:branch"
+              const { data: found } = await github.rest.pulls.list({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                state: 'open',
+                head: `${workflowRun.head_repository.owner.login}:${workflowRun.head_branch}`
+              });
+              if (found.length > 0) {
+                prNumber = found[0].number;
+              }
+            }
+
+            if (!prNumber) {
+              console.log('No associated PR found (even after fallback lookup)');
+              console.log(JSON.stringify(workflowRun, null, 2));
+              return;
+            }
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber,
+              body: body
+            });
