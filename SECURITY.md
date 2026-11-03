@@ -7,6 +7,8 @@
 | 4.x     | :white_check_mark: |
 | < 4.0   | :x:                |
 
+⚠️ Do not report memory or resource leaks as security issues or exploits. Those are bugs. Report them via Issues or better yet, post a Pull Request.
+
 ## Reporting a Vulnerability
 
 If you believe you have found a **real** security vulnerability in RxJavaExtensions, please report it privately via [GitHub Security Advisories](https://github.com/akarnokd/RxJavaExtensions/security/advisories/new).
